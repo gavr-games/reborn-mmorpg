@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  engine:
+    build: ./engine
+    command: ./bin/start.sh
+    env_file: ./engine/.env
+    volumes:
+      - ./engine:/src:cached
