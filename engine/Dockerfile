@@ -1,2 +1,4 @@
 FROM golang:1.16.6-alpine
-WORKDIR /src
+RUN mkdir -p /src/github.com/gavr-games/reborn-mmorpg
+WORKDIR /src/github.com/gavr-games/reborn-mmorpg
+EXPOSE 8080

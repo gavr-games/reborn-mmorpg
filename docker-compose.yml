@@ -6,4 +6,6 @@ services:
     command: ./bin/start.sh
     env_file: ./engine/.env
     volumes:
-      - ./engine:/src:cached
+      - ./engine:/src/github.com/gavr-games/reborn-mmorpg:cached
+    ports:
+      - 8080:8080
