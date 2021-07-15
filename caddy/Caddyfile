@@ -1,0 +1,11 @@
+localhost:80 {
+  proxy /api api:4567 {
+    transparent
+  }
+  proxy /engine engine:8080 {
+    transparent
+  }
+	log stdout
+	errors stdout
+  tls self_signed
+}

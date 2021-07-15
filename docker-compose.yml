@@ -1,11 +1,40 @@
 version: '3.7'
 
 services:
+  caddy:
+    image: abiosoft/caddy:0.11.5
+    volumes:
+      - ./caddy/Caddyfile:/etc/Caddyfile:cached
+    ports:
+      - 80:80
+
+  api:
+    build: ./api
+    command: ./bin/start.sh
+    env_file: .env
+    volumes:
+      - ./api:/usr/src/api/:cached
+      - bundle-cache:/usr/local/bundle:cached
+    ports:
+      - 4567:4567
+
   engine:
     build: ./engine
     command: ./bin/start.sh
-    env_file: ./engine/.env
+    env_file: .env
     volumes:
       - ./engine:/src/github.com/gavr-games/reborn-mmorpg:cached
     ports:
       - 8080:8080
+  
+  db:
+    image: postgres:12-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data:cached
+    env_file: .env
+    ports:
+      - 5432
+
+volumes:
+  db-data: null
+  bundle-cache: null
