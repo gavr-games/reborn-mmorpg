@@ -6,3 +6,5 @@ ruby '3.0.2'
 
 gem 'sinatra'
 gem 'thin'
+gem 'pg'
+gem 'sequel'

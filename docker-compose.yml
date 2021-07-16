@@ -26,7 +26,24 @@ services:
       - ./engine:/src/github.com/gavr-games/reborn-mmorpg:cached
     ports:
       - 8080:8080
-  
+
+  frontend:
+    image: node:16-alpine
+    working_dir: /frontend
+    command:
+      - /bin/sh
+      - '-c'
+      - |
+        yarn install
+        yarn dev
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./frontend:/frontend:cached
+    ports:
+      - 3000
+    env_file: .env
+
   db:
     image: postgres:12-alpine
     volumes:

@@ -5,6 +5,9 @@ localhost:80 {
   proxy /engine engine:8080 {
     transparent
   }
+  proxy / frontend:3000 {
+    transparent
+  }
 	log stdout
 	errors stdout
   tls self_signed
