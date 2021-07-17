@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.9'
 
 services:
   caddy:
@@ -13,10 +13,14 @@ services:
     command: ./bin/start.sh
     env_file: .env
     volumes:
-      - ./api:/usr/src/api/:cached
+      - ./api:/usr/src/api
       - bundle-cache:/usr/local/bundle:cached
     ports:
       - 4567:4567
+    depends_on:
+      - db
+    stdin_open: true
+    tty: true
 
   engine:
     build: ./engine
@@ -26,6 +30,8 @@ services:
       - ./engine:/src/github.com/gavr-games/reborn-mmorpg:cached
     ports:
       - 8080:8080
+    stdin_open: true
+    tty: true
 
   frontend:
     build: ./frontend

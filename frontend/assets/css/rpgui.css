@@ -243,7 +243,6 @@ inside your html file.
 /* game div without background image*/
 .rpgui-container {
   /* position style and default z */
-  position: fixed;
   z-index: 10;
   overflow: show; }
 

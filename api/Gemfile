@@ -5,6 +5,12 @@ source 'https://rubygems.org'
 ruby '3.0.2'
 
 gem 'sinatra'
+gem 'sinatra-contrib'
+gem 'rack-contrib'
 gem 'thin'
 gem 'pg'
 gem 'sequel'
+gem 'dry-validation'
+gem 'bcrypt'
+
+gem 'pry', '~> 0.13.1'

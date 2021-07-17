@@ -21,4 +21,13 @@ $sides: (top, bottom, left, right);
   .main-title {
     font-size: 30px;
   }
+  .error {
+    color: red;
+  }
+}
+
+.container {
+  &.small {
+    width: 400px;
+  }
 }

@@ -12,4 +12,5 @@ DB = Sequel.connect(
 
 Sequel.extension :migration
 Sequel::Model.plugin :force_encoding, 'UTF-8'
+Sequel::Model.plugin :timestamps, update_on_create: true
 Sequel::Migrator.run(DB, File.join(File.dirname(__FILE__), '../migrations'))

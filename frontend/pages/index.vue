@@ -9,7 +9,7 @@
         </header>
 
         <div class="rpgui-center">
-          <a href="/"><button type="button" class="rpgui-button"><p>Register</p></button></a>
+          <NuxtLink to="/register"><button type="button" class="rpgui-button"><p>Register</p></button></NuxtLink>
           <a href="/"><button type="button" class="rpgui-button"><p>Login</p></button></a>
 		    </div>
 		    <br /><br />
