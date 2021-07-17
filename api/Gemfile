@@ -12,5 +12,7 @@ gem 'pg'
 gem 'sequel'
 gem 'dry-validation'
 gem 'bcrypt'
+gem 'jwt'
 
+gem 'rerun'
 gem 'pry', '~> 0.13.1'

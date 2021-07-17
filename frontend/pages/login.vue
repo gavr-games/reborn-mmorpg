@@ -5,7 +5,7 @@
         <header>
           <h1 class="main-title">REBORN</h1>
 		      <hr class="golden" />
-          <h2>Register</h2>
+          <h2>Login</h2>
         </header>
 
         <div class="rpgui-center">
@@ -13,24 +13,17 @@
             <input type="text" v-model="username" placeholder="myusername">
             <br/><br/>
 
-            <label>Your email:</label>
-            <input type="text" v-model="email" placeholder="myemail@example.com">
-            <br /><br />
-
             <label>Your password:</label>
             <input type="password" v-model="password">
             <br/><br/>
 		    </div>
         <br/><br/>
         <div class="rpgui-center">
-          <a @click="register()"><button type="button" class="rpgui-button golden"><p>Register</p></button></a>
+          <a @click="login()"><button type="button" class="rpgui-button golden"><p>Login</p></button></a>
           <br />
           <NuxtLink to="/"><button type="button" class="rpgui-button"><p>Back</p></button></NuxtLink>
         </div>
         <br /><br />
-			  <p v-show="showSuccessMessage">
-          Thank you for registration, you can now <NuxtLink to="/login">login</NuxtLink>.
-			  </p>
         <p v-show="showErrorMessage" class="error">
           {{ errorMessage }}
 			  </p>
@@ -47,28 +40,22 @@ export default {
   data() {
     return {
       username: '',
-      email: '',
       password: '',
       errorMessage: '',
-      showSuccessMessage: false,
       showErrorMessage: false,
     }
   },
   methods: {
-    async register() {
-      this.showSuccessMessage = false
+    async login() {
       this.showErrorMessage = false
       const context = this
-      this.$axios.$post('/players', {
+      this.$axios.$post('/login', {
         username: this.username,
-        email: this.email,
         password: this.password
       })
       .then(response => {
-        context.showSuccessMessage = true
-        context.username = ''
-        context.email = ''
-        context.password = ''
+
+        console.log(response)
       })
       .catch(error => {
         if (error.response) {

@@ -40,6 +40,11 @@ GEM
       dry-initializer (~> 3.0)
       dry-schema (~> 1.5, >= 1.5.2)
     eventmachine (1.2.7)
+    ffi (1.15.3)
+    jwt (2.2.3)
+    listen (3.5.1)
+      rb-fsevent (~> 0.10, >= 0.10.3)
+      rb-inotify (~> 0.9, >= 0.9.10)
     method_source (1.0.0)
     multi_json (1.15.0)
     mustermann (1.1.1)
@@ -53,6 +58,11 @@ GEM
       rack (~> 2.0)
     rack-protection (2.1.0)
       rack
+    rb-fsevent (0.11.0)
+    rb-inotify (0.10.1)
+      ffi (~> 1.0)
+    rerun (0.13.1)
+      listen (~> 3.0)
     ruby2_keywords (0.0.4)
     sequel (5.46.0)
     sinatra (2.1.0)
@@ -78,9 +88,11 @@ PLATFORMS
 DEPENDENCIES
   bcrypt
   dry-validation
+  jwt
   pg
   pry (~> 0.13.1)
   rack-contrib
+  rerun
   sequel
   sinatra
   sinatra-contrib
