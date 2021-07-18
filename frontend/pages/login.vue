@@ -19,7 +19,7 @@
 		    </div>
         <br/><br/>
         <div class="rpgui-center">
-          <a @click="login()"><button type="button" class="rpgui-button golden"><p>Login</p></button></a>
+          <a @click.prevent="login()"><button type="button" class="rpgui-button golden"><p>Login</p></button></a>
           <br />
           <NuxtLink to="/"><button type="button" class="rpgui-button"><p>Back</p></button></NuxtLink>
         </div>
@@ -49,20 +49,20 @@ export default {
     async login() {
       this.showErrorMessage = false
       const context = this
-      this.$axios.$post('/login', {
-        username: this.username,
-        password: this.password
-      })
-      .then(response => {
-
-        console.log(response)
-      })
-      .catch(error => {
-        if (error.response) {
-          context.errorMessage = error.response.data.error
+      try {
+        await this.$auth.loginWith('local', {
+          data: {
+            username: this.username,
+            password: this.password
+          }
+        })
+        context.$router.push('/characters');
+      } catch (err) {
+        if (err.response) {
+          context.errorMessage = err.response.data.error
           context.showErrorMessage = true
         }
-      });
+      }
     }
   }
 }

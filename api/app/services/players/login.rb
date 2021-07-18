@@ -43,15 +43,14 @@ module Players
 
     def to_hash
       {
-        id: @player.id,
-        username: @player.username,
-        email: @player.email,
         token: @token
       }
     end
 
     def payload(player)
       {
+        exp: Time.now.to_i + 60 * 60,
+        iat: Time.now.to_i,
         id: player.id
       }
     end

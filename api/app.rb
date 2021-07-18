@@ -13,6 +13,8 @@ set :bind, '0.0.0.0'
 
 use Rack::JSONBodyParser
 
+helpers Auth
+
 namespace '/api/v1' do
   post '/players' do
     json Players::Register.call(params.to_h.transform_keys(&:to_sym)).to_hash
@@ -22,6 +24,19 @@ namespace '/api/v1' do
 
   post '/login' do
     json Players::Login.call(params.to_h.transform_keys(&:to_sym)).to_hash
+  rescue ServiceError => e
+    halt(422, json(error: e.message))
+  end
+
+  get '/profile' do
+    protected!
+    json({
+      user: {
+        id: @player.id,
+        username: @player.username,
+        email: @player.email
+      }
+    })
   rescue ServiceError => e
     halt(422, json(error: e.message))
   end

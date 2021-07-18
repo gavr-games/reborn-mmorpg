@@ -40,11 +40,35 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    '@nuxtjs/axios',
+    { src: '@nuxtjs/axios', mode: 'client' },
+    { src: '@nuxtjs/auth-next', mode: 'client' }
   ],
 
   axios: {
     baseURL: '/api/v1',
+  },
+
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'token',
+          global: true
+        },
+        user: {
+          property: 'user'
+        },
+        endpoints: {
+          login: { url: '/login', method: 'post' },
+          user: { url: '/profile', method: 'get' }
+        }
+      }
+    },
+    cookie: {
+      options: {
+        secure: process.env.NODE_ENV && process.env.NODE_ENV === 'production'
+      }
+    }
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
