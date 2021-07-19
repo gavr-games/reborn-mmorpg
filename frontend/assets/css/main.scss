@@ -24,6 +24,21 @@ $sides: (top, bottom, left, right);
   .error {
     color: red;
   }
+  .rpgui-icon {
+    &.add {
+      color: white;
+      font-size: 46px;
+      p {
+        margin: 0;
+        margin-top: 24px;
+        margin-left: 8px;
+      }
+    }
+  }
+  .add-character-form {
+    margin: 20px auto;
+    width: 400px;
+  }
 }
 
 .container {
