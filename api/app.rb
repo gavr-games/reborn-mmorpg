@@ -48,6 +48,13 @@ namespace '/api/v1' do
     halt(422, json(error: e.message))
   end
 
+  get '/characters/:id' do
+    protected!
+    json Characters::Get.call(params[:id], @player)
+  rescue ServiceError => e
+    halt(422, json(error: e.message))
+  end
+
   post '/characters' do
     protected!
     json Characters::Create.call(params.to_h.transform_keys(&:to_sym).merge(player_id: @player.id)).to_hash

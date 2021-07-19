@@ -29,7 +29,7 @@ module Players
 
     def find_player
       @player = Player[username: @params[:username]]
-      raise ServiceError, 'Username or password are wrong' if @player == nil
+      raise ServiceError, 'Username or password are wrong' if @player.nil?
     end
 
     def check_password

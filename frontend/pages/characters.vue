@@ -14,7 +14,7 @@
 		    <br /><br />
 
         <div class="row">
-          <div class="col-3 rpgui-container framed-golden-2" v-for="char in characters" :key="char.id">
+          <div class="col-3 rpgui-container framed-golden-2" v-for="char in characters" :key="char.id" @click="selectCharacter(char.id)">
             <div class="rpgui-icon helmet-slot add rpgui-cursor-point"></div>
             {{ char.name }}
           </div>
@@ -111,6 +111,10 @@ export default {
       .then(response => {
         this.characters = response
       })
+    },
+    selectCharacter(id) {
+      this.$store.commit('characters/set', id)
+      this.$router.push('/game');
     }
   }
 }
