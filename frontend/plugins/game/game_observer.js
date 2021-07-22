@@ -65,10 +65,15 @@ class GameObserver {
     );
 
     window.addEventListener("resize", () => {
-      this.canvas.width = document.body.clientWidth;
-      this.canvas.height = document.body.clientHeight;
-      this.engine.resize();
+      this.resizeCanvas()
     });
+    this.resizeCanvas()
+  }
+
+  resizeCanvas() {
+    this.canvas.width = document.body.clientWidth;
+    this.canvas.height = document.body.clientHeight;
+    this.engine.resize();
   }
 
   createObjects() {
