@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 const (
@@ -44,6 +45,9 @@ type Client struct {
 	// The websocket connection.
 	conn *websocket.Conn
 
+	// Character info
+	character *utils.Character
+
 	// Buffered channel of outbound messages.
 	send chan []byte
 }
@@ -70,7 +74,7 @@ func (c *Client) readPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- message
+		c.hub.broadcast <- append([]byte("[" + time.Now().Format("15:04") + "] " + c.character.Name + ": "), message...)
 	}
 }
 
@@ -122,12 +126,19 @@ func (c *Client) writePump() {
 
 // serveWs handles websocket requests from the peer.
 func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+	character, ok := utils.GetCharacter(r)
+	if !ok {
+		log.Println("Unable to get character for chat ws")
+		return
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+
+	client := &Client{hub: hub, conn: conn, character: character, send: make(chan []byte, 256)}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in

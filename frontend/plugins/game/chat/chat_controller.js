@@ -14,7 +14,7 @@ class ChatController {
   init(token, character_id) {
     console.log(token, character_id)
     if (window["WebSocket"]) {
-      this.conn = new WebSocket("ws://" + document.location.host + "/chat/ws");
+      this.conn = new WebSocket("ws://" + document.location.host + "/chat/ws?token=" + token + "&character_id=" + character_id);
       this.conn.onclose = function (evt) {
           console.log("Chat ws connection is closed")
       };
