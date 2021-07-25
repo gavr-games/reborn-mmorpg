@@ -6,6 +6,7 @@ import Camera from "~/plugins/game/camera/camera";
 import Light from "~/plugins/game/light/light";
 import Character from "~/plugins/game/character/character";
 import { EventBus } from "~/plugins/game/event_bus";
+import showWorldAxis from "~/plugins/game/utils/world_axis";
 
 class GameObserver {
   constructor() {
@@ -77,14 +78,16 @@ class GameObserver {
   }
 
   createObjects() {
-    this.camera = new Camera(this.scene, this.canvas);
-    this.camera.create();
-
     let character = new Character(this.scene, this.canvas);
     character.create();
 
     this.light = new Light(this.scene);
     this.light.create();
+
+    this.camera = new Camera(this.scene, this.canvas, character);
+    this.camera.create();
+
+    showWorldAxis(1, this.scene)
   }
 
   runRenderLoop() {
