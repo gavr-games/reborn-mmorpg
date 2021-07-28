@@ -1,7 +1,8 @@
-package chat
+package game
 
 import (
 	"bytes"
+	"encoding/json"
 	"log"
 	"net/http"
 	"time"
@@ -39,9 +40,9 @@ var upgrader = websocket.Upgrader{
 	},
 }
 
-// Client is a middleman between the websocket connection and the hub.
+// Client is a middleman between the websocket connection and the engine.
 type Client struct {
-	hub *Hub
+	engine *Engine
 
 	// The websocket connection.
 	conn *websocket.Conn
@@ -53,14 +54,23 @@ type Client struct {
 	send chan []byte
 }
 
-// readPump pumps messages from the websocket connection to the hub.
+// ClientCommand is a message sent to engine from clients
+type ClientCommand struct {
+	// Character Id to identify from which player the command is coming from
+	characterId int
+
+	// player command in json
+	command map[string]interface{}
+}
+
+// readPump pumps messages from the websocket connection to the engine.
 //
 // The application runs readPump in a per-connection goroutine. The application
 // ensures that there is at most one reader on a connection by executing all
 // reads from this goroutine.
 func (c *Client) readPump() {
 	defer func() {
-		c.hub.unregister <- c
+		c.engine.unregister <- c
 		c.conn.Close()
 	}()
 	c.conn.SetReadLimit(maxMessageSize)
@@ -75,11 +85,14 @@ func (c *Client) readPump() {
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.hub.broadcast <- append([]byte("[" + time.Now().Format("15:04") + "] " + c.character.Name + ": "), message...)
+		var command map[string]interface{}
+		json.Unmarshal(message, &command)
+		cc := &ClientCommand{characterId: c.character.Id, command: command}
+		c.engine.commands <- cc
 	}
 }
 
-// writePump pumps messages from the hub to the websocket connection.
+// writePump pumps messages from the engine to the websocket connection.
 //
 // A goroutine running writePump is started for each connection. The
 // application ensures that there is at most one writer to a connection by
@@ -95,7 +108,7 @@ func (c *Client) writePump() {
 		case message, ok := <-c.send:
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				// The hub closed the channel.
+				// The engine closed the channel.
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
@@ -126,7 +139,7 @@ func (c *Client) writePump() {
 }
 
 // serveWs handles websocket requests from the peer.
-func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+func ServeWs(engine *Engine, w http.ResponseWriter, r *http.Request) {
 	character, ok := utils.GetCharacter(r)
 	if !ok {
 		log.Println("Unable to get character for chat ws")
@@ -139,8 +152,8 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := &Client{hub: hub, conn: conn, character: character, send: make(chan []byte, 256)}
-	client.hub.register <- client
+	client := &Client{engine: engine, conn: conn, character: character, send: make(chan []byte, 256)}
+	client.engine.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.

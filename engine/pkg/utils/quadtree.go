@@ -260,7 +260,7 @@ func (qt *Quadtree) Insert(pRect IBounds) {
 }
 
 // Find object in quadtree via filter and removes it
-func (qt *Quadtree) FilteredRemove(pRect IBounds, fn filter) {
+func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
 	index := qt.getIndex(pRect)
 
 	//if we have subnodes ...
@@ -272,11 +272,11 @@ func (qt *Quadtree) FilteredRemove(pRect IBounds, fn filter) {
 	} else {
 		// Find and remove item in current tree
 		for i := 0; i < len(qt.Objects); i++ {
-			result = filter(qt.Objects[i]) // check filtering condition
+			result := filter(qt.Objects[i]) // check filtering condition
 			if result {
-				qt.Objects[i] = qt.Objects[len(qt.Objects)-1] // Copy last element to index i.
-				qt.Object[len(qt.Object)-1] = nil // Erase last element (write zero value).
-				qt.Object = qt.Object[:len(qt.Object)-1] // Truncate slice.
+				qt.Objects[i] = qt.Objects[len(qt.Objects) - 1] // Copy last element to index i.
+				qt.Objects[len(qt.Objects) - 1] = nil // Erase last element (write zero value).
+				qt.Objects = qt.Objects[:len(qt.Objects) - 1] // Truncate slice.
 			}
 		}
 	}
