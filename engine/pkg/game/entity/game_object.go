@@ -12,11 +12,12 @@ type GameObject struct {
 
 	Id int
 	Type string
+	Floor int
 	Properties map[string]interface{}
 }
 
-func (obj *GameObject) HitBox() *utils.Bounds {
-	return &utils.Bounds{
+func (obj GameObject) HitBox() utils.Bounds {
+	return utils.Bounds{
 		X: obj.X,
 		Y: obj.Y,
 		Width: obj.Width,
@@ -25,7 +26,7 @@ func (obj *GameObject) HitBox() *utils.Bounds {
 }
 
 //IsPoint - Checks if a bounds object is a point or not (has no width or height)
-func (obj *GameObject) IsPoint() bool {
+func (obj GameObject) IsPoint() bool {
 	if obj.Width == 0 && obj.Height == 0 {
 		return true
 	}
@@ -33,7 +34,7 @@ func (obj *GameObject) IsPoint() bool {
 }
 
 // Intersects - Checks if a Bounds object intersects with another Bounds
-func (a *GameObject) Intersects(b utils.Bounds) bool {
+func (a GameObject) Intersects(b utils.Bounds) bool {
 	aMaxX := a.X + a.Width
 	aMaxY := a.Y + a.Height
 	bMaxX := b.X + b.Width

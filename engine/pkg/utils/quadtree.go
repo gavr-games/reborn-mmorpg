@@ -12,7 +12,7 @@ type Quadtree struct {
 }
 
 type IBounds interface {
-	HitBox() *Bounds
+	HitBox() Bounds
 	IsPoint() bool
 	Intersects(Bounds) bool
 }
@@ -25,12 +25,12 @@ type Bounds struct {
 	Height float64
 }
 
-func (b *Bounds) HitBox() *Bounds {
+func (b Bounds) HitBox() Bounds {
 	return b
 }
 
 //IsPoint - Checks if a bounds object is a point or not (has no width or height)
-func (b *Bounds) IsPoint() bool {
+func (b Bounds) IsPoint() bool {
 
 	if b.Width == 0 && b.Height == 0 {
 		return true
@@ -41,7 +41,7 @@ func (b *Bounds) IsPoint() bool {
 }
 
 // Intersects - Checks if a Bounds object intersects with another Bounds
-func (b *Bounds) Intersects(a Bounds) bool {
+func (b Bounds) Intersects(a Bounds) bool {
 
 	aMaxX := a.X + a.Width
 	aMaxY := a.Y + a.Height
@@ -306,7 +306,6 @@ func (qt *Quadtree) Retrieve(pRect IBounds) []IBounds {
 
 // RetrievePoints - Return all points that collide
 func (qt *Quadtree) RetrievePoints(find IBounds) []IBounds {
-
 	var foundPoints []IBounds
 	potentials := qt.Retrieve(find)
 
@@ -322,28 +321,24 @@ func (qt *Quadtree) RetrievePoints(find IBounds) []IBounds {
 	}
 
 	return foundPoints
-
 }
 
 // RetrieveIntersections - Bring back all the bounds in a Quadtree that intersect with a provided bounds
 func (qt *Quadtree) RetrieveIntersections(find IBounds) []IBounds {
-
 	var foundIntersections []IBounds
 
 	potentials := qt.Retrieve(find)
 	for o := 0; o < len(potentials); o++ {
-		if potentials[o].Intersects(*find.HitBox()) {
+		if potentials[o].Intersects(find.HitBox()) {
 			foundIntersections = append(foundIntersections, potentials[o])
 		}
 	}
 
 	return foundIntersections
-
 }
 
 //Clear - Clear the Quadtree
 func (qt *Quadtree) Clear() {
-
 	qt.Objects = []IBounds{}
 
 	if len(qt.Nodes)-1 > 0 {
@@ -354,5 +349,4 @@ func (qt *Quadtree) Clear() {
 
 	qt.Nodes = []Quadtree{}
 	qt.Total = 0
-
 }

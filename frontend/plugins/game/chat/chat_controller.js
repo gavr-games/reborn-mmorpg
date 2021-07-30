@@ -12,17 +12,16 @@ class ChatController {
   }
 
   init(token, character_id) {
-    console.log(token, character_id)
     if (window["WebSocket"]) {
       this.conn = new WebSocket("ws://" + document.location.host + "/chat/ws?token=" + token + "&character_id=" + character_id);
       this.conn.onclose = function (evt) {
-          console.log("Chat ws connection is closed")
+        console.log("Chat ws connection is closed")
       };
       this.conn.onmessage = function (evt) {
-          var messages = evt.data.split('\n');
-          for (var i = 0; i < messages.length; i++) {
-            EventBus.$emit("new-chat-message", messages[i])
-          }
+        var messages = evt.data.split('\n');
+        for (var i = 0; i < messages.length; i++) {
+          EventBus.$emit("new-chat-message", messages[i])
+        }
       };
     }
   }
