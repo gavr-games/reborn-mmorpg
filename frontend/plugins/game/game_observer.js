@@ -2,11 +2,10 @@ import * as BABYLON from "babylonjs";
 import * as Loaders from "babylonjs-loaders";
 import Atlas from "~/plugins/game/atlas/atlas";
 import Loader from "~/plugins/game/atlas/loader";
-import Camera from "~/plugins/game/camera/camera";
 import Light from "~/plugins/game/light/light";
-import Character from "~/plugins/game/character/character";
 import { EventBus } from "~/plugins/game/event_bus";
 import showWorldAxis from "~/plugins/game/utils/world_axis";
+import Grid from "~/plugins/game/utils/grid";
 
 class GameObserver {
   constructor() {
@@ -14,9 +13,9 @@ class GameObserver {
     this.engine = null;
     this.scene = null;
     this.loader = null;
-    this.camera = null;
     this.light = null;
     this.fpsEl = null;
+    this.grid = null;
     this.renderObservers = [];
   }
 
@@ -40,7 +39,7 @@ class GameObserver {
       () => {
         this.createObjects();
         this.runRenderLoop();
-        EventBus.$emit("scene-created", this.scene);
+        EventBus.$emit("scene-created", this.scene, this.canvas);
       },
       Atlas
     );
@@ -78,14 +77,11 @@ class GameObserver {
   }
 
   createObjects() {
-    let character = new Character(this.scene, this.canvas);
-    character.create();
-
     this.light = new Light(this.scene);
     this.light.create();
 
-    this.camera = new Camera(this.scene, this.canvas, character);
-    this.camera.create();
+    this.grid = new Grid(this.scene);
+    //this.grid.create();
 
     showWorldAxis(1, this.scene)
   }

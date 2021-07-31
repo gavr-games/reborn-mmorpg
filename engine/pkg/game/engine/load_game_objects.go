@@ -23,7 +23,8 @@ func LoadGameObjects(floors []*utils.Quadtree, gameObjects map[int]*entity.GameO
 	for x := 0; x < 100; x++ {
     for y := 0; y < 100; y++ {
 			*gameObjectsId++
-			gameObj := CreateGameObject("grass", *gameObjectsId, float64(x), float64(y), nil)
+			// + 0.5 because we want to place the center point
+			gameObj := CreateGameObject("grass", *gameObjectsId, float64(x) + 0.5, float64(y) + 0.5, nil)
 			gameObj.Floor = 0
 			gameObjects[*gameObjectsId] = gameObj
 			floors[0].Insert(gameObj)

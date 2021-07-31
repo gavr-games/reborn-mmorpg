@@ -12,8 +12,8 @@ func CreateGameObject(objKind string, id int, x float64, y float64, additionalPr
 	switch t := objKind; t {
 	case "grass":
 		gameObj := &entity.GameObject{
-			X: x,
-			Y: y,
+			X: x - 0.5,
+			Y: y - 0.5,
 			Width: 1,
 			Height: 1,
 			Id: id,

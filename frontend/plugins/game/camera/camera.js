@@ -28,6 +28,7 @@ class Camera {
     this.camera.attachControl(this.canvas, true);
 
     this.camera.lockedTarget = this.character.mesh;
+    this.scene.activeCamera = this.camera
   }
 }
 

@@ -93,7 +93,7 @@ func (e *Engine) RegisterClient(client *Client) {
 		} else {
 			e.CreatePlayerVisionArea(player)
 			e.gameObjects[player.CharacterGameObjectId].Properties["visible"] = true
-			player.VisibleObjects = make([]int, 100)
+			player.VisibleObjects = make([]int, 100, 10000)
 		}
 		player.Client = client
 	} else {
@@ -114,10 +114,12 @@ func (e *Engine) RegisterClient(client *Client) {
 			if visible, ok := val.(*entity.GameObject).Properties["visible"]; ok {
 				if visible.(bool) {
 					visibleObjects[n] = val
+					player.VisibleObjects = append(player.VisibleObjects, val.(*entity.GameObject).Id) //TODO: append performance
 					n++
 				}
 			} else {
 				visibleObjects[n] = val
+				player.VisibleObjects = append(player.VisibleObjects, val.(*entity.GameObject).Id)
 				n++
 			}
     }
@@ -160,6 +162,8 @@ func (e *Engine) Run() {
 				})
 				e.gameObjects[player.VisionAreaGameObjectId] = nil
 				e.gameObjects[player.CharacterGameObjectId].Properties["visible"] = false
+				e.gameObjects[player.CharacterGameObjectId].Properties["speed_x"] = 0
+				e.gameObjects[player.CharacterGameObjectId].Properties["speed_y"] = 0
 				player.VisibleObjects = nil
 			}
 		default:

@@ -109,7 +109,25 @@ class Loader {
     task.onSuccess = task => {
       this.atlas.set("baseCharacter", task.loadedContainer);
     };
+    this.loadSurfaces();
     this.assetsManager.load();
+  }
+
+  loadSurfaces() {
+    let surfaces = [
+      "grass",
+    ];
+    surfaces.forEach(surface => {
+      let task = this.assetsManager.addContainerTask(
+        surface,
+        surface,
+        "/game_assets/surfaces/",
+        surface + ".glb"
+      );
+      task.onSuccess = task => {
+        this.atlas.set(surface + "Surface", task.loadedContainer);
+      };
+    });
   }
 }
 

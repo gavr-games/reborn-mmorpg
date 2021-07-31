@@ -58,9 +58,16 @@ func GetCharacter(r *http.Request) (char *Character, ok bool) {
 	}
 
 	character := Character{}
+
 	jsonErr := json.Unmarshal(body, &character)
 	if jsonErr != nil {
 		log.Println(err)
+		return nil, false
+	}
+
+	if character.Id == 0 {
+		log.Println("Unable to get character")
+		log.Println(string(body))
 		return nil, false
 	}
 

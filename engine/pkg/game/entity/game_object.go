@@ -5,11 +5,13 @@ import (
 )
 
 type GameObject struct {
+	// params for quadtree
 	X      float64
 	Y      float64
 	Width  float64
 	Height float64
 
+	// game params
 	Id int
 	Type string
 	Floor int
