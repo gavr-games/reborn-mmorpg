@@ -12,7 +12,7 @@ type GameObject struct {
 	Height float64
 
 	// game params
-	Id int
+	Id string
 	Type string
 	Floor int
 	Properties map[string]interface{}

@@ -26,8 +26,7 @@ type Engine struct {
 
 	players map[int]*Player
 
-	gameObjectsId int
-	gameObjects map[int]*entity.GameObject
+	gameObjects map[string]*entity.GameObject
 
 	// Inbound messages from the clients.
 	commands chan *ClientCommand
@@ -42,8 +41,7 @@ type Engine struct {
 func NewEngine() *Engine {
 	return &Engine{
 		players:     make(map[int]*Player),
-		gameObjectsId: 0, //TODO: migrate to UUID
-		gameObjects: make(map[int]*entity.GameObject),
+		gameObjects: make(map[string]*entity.GameObject),
 		floors:      make([]*utils.Quadtree, FloorCount),
 		commands:    make(chan *ClientCommand),
 		register:    make(chan *Client),
@@ -53,32 +51,30 @@ func NewEngine() *Engine {
 
 func (e *Engine) CreatePlayerVisionArea(player *Player) *entity.GameObject {
 	charGameObj := e.gameObjects[player.CharacterGameObjectId]
-	e.gameObjectsId++
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := engine.CreateGameObject("player_vision_area", e.gameObjectsId, charGameObj.X, charGameObj.Y, additionalProps)
+	gameObj := engine.CreateGameObject("player_vision_area", charGameObj.X, charGameObj.Y, additionalProps)
 	gameObj.Floor = 0
-	e.gameObjects[e.gameObjectsId] = gameObj
+	e.gameObjects[gameObj.Id] = gameObj
 	e.floors[0].Insert(gameObj)
 	player.VisionAreaGameObjectId = gameObj.Id
 	return gameObj
 }
 
 func (e *Engine) CreatePlayer(client *Client) *Player {
-	e.gameObjectsId++
 	player := &Player{
 		Id: client.character.Id,
-		CharacterGameObjectId: 0,
-		VisionAreaGameObjectId: 0,
+		CharacterGameObjectId: "",
+		VisionAreaGameObjectId: "",
 		Client: client,
-		VisibleObjects: make([]int, 100),
+		VisibleObjects: make([]string, 100, 10000),
 	}
 	e.players[player.Id] = player
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := engine.CreateGameObject("player", e.gameObjectsId, InitialPlayerX, InitialPlayerY, additionalProps)
+	gameObj := engine.CreateGameObject("player", InitialPlayerX, InitialPlayerY, additionalProps)
 	gameObj.Floor = 0
-	e.gameObjects[e.gameObjectsId] = gameObj
+	e.gameObjects[gameObj.Id] = gameObj
 	e.floors[0].Insert(gameObj)
 	player.CharacterGameObjectId = gameObj.Id
 	return player
@@ -93,7 +89,7 @@ func (e *Engine) RegisterClient(client *Client) {
 		} else {
 			e.CreatePlayerVisionArea(player)
 			e.gameObjects[player.CharacterGameObjectId].Properties["visible"] = true
-			player.VisibleObjects = make([]int, 100, 10000)
+			player.VisibleObjects = make([]string, 100, 10000)
 		}
 		player.Client = client
 	} else {
@@ -147,7 +143,7 @@ func (e *Engine) RegisterClient(client *Client) {
 
 // Main engine loop
 func (e *Engine) Run() {
-	engine.LoadGameObjects(e.floors, e.gameObjects, &e.gameObjectsId, FloorSize)
+	engine.LoadGameObjects(e.floors, e.gameObjects, FloorSize)
 	//log.Println("Objects count %v", e.gameObjects[1])
 	for {
 		select {

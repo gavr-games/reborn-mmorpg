@@ -1,6 +1,7 @@
 package engine
 
 import (
+	"github.com/satori/go.uuid"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
@@ -8,7 +9,8 @@ const PlayerRadius = 0.5
 const PlayerVisionArea = 50.0
 
 //TODO: optimize the memory by using integers instead of string constants
-func CreateGameObject(objKind string, id int, x float64, y float64, additionalProps map[string]interface{}) *entity.GameObject {
+func CreateGameObject(objKind string, x float64, y float64, additionalProps map[string]interface{}) *entity.GameObject {
+	id := uuid.NewV4().String()
 	switch t := objKind; t {
 	case "grass":
 		gameObj := &entity.GameObject{

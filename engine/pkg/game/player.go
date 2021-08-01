@@ -2,8 +2,8 @@ package game
 
 type Player struct {
 	Id int // equals to Character.Id
-	CharacterGameObjectId int
-	VisionAreaGameObjectId int
+	CharacterGameObjectId string
+	VisionAreaGameObjectId string
 	Client *Client
-	VisibleObjects []int
+	VisibleObjects []string
 }
