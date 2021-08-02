@@ -1,6 +1,8 @@
 package game
 
 import (
+	"log"
+
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
@@ -68,16 +70,8 @@ func (e *Engine) Run() {
 		case client := <-e.unregister:
 			engine.UnregisterClient(e, client)
 		default:
-			//main game loop
-		/*case cmd := <-e.commands:
-			for client := range e.clients {
-				select {
-				case client.send <- message:
-				default:
-					close(client.send)
-					delete(e.clients, client)
-				}
-			}*/
+		case cmd := <-e.commands:
+			log.Println(cmd)
 		}
 	}
 }

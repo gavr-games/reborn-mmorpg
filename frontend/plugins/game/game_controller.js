@@ -3,10 +3,10 @@ import ChatController from "~/plugins/game/chat/chat_controller";
 import { EventBus } from "~/plugins/game/event_bus";
 import SurfaceController from "./objects/surface/surface_controller";
 import CharacterController from "./objects/character/character_controller";
+import GameConnnection from "./game_connection";
 
 class GameController {
   constructor() {
-    this.conn = null
     this.gameObjects = []
     this.token = null
     this.characterId = null
@@ -15,6 +15,7 @@ class GameController {
       a: false,
       s: false,
       d: false,
+      lastCmd: ""
     }
     this.initGameObjectsHandler = gameObjects => {
       this.initGameObjects(gameObjects)
@@ -25,27 +26,18 @@ class GameController {
     this.keyDownHandler = key => {
       this.handleKeyDown(key)
     };
-    EventBus.$on("init_game", this.initGameObjectsHandler);
-    EventBus.$on("keyup", this.keyUpHandler);
-    EventBus.$on("keydown", this.keyDownHandler);
+    EventBus.$on("init_game", this.initGameObjectsHandler)
+    EventBus.$on("keyup", this.keyUpHandler)
+    EventBus.$on("keydown", this.keyDownHandler)
   }
 
   init(token, character_id) {
     this.token = token
     this.characterId = character_id
-    if (window["WebSocket"]) {
-      this.conn = new WebSocket("ws://" + document.location.host + "/engine/ws?token=" + token + "&character_id=" + character_id);
-      this.conn.onclose = function (evt) {
-        console.log("Engine ws connection is closed")
-        window.location.href = "/login"
-      };
-      this.conn.onmessage = function (evt) {
-        const data = JSON.parse(evt.data);
-        EventBus.$emit(data["ResponseType"], data["ResponseData"])
-      };
-    }
-    GameObserver.init();
-    ChatController.init(token, character_id);
+
+    GameConnnection.init(token, character_id)
+    GameObserver.init()
+    ChatController.init(token, character_id)
   }
 
   initGameObjects(gameObjects) {
@@ -70,7 +62,7 @@ class GameController {
     }
   }
 
-  handleDownUp() {
+  handleKeyDown(key) {
     if (['w', 'a', 's', 'd'].includes(key)) {
       this.controls[key] = true
       this.moveCharacter()
@@ -78,12 +70,42 @@ class GameController {
   }
 
   moveCharacter() {
-    if (!this.controls.w && !this.controls.a &&
-      !this.controls.s && !this.controls.d) {
-        //Send stop
-        return
-      }
-    //if
+    let directionSum = 0
+    if (this.controls.w) directionSum += 1
+    if (this.controls.a) directionSum += 10
+    if (this.controls.s) directionSum += 100
+    if (this.controls.d) directionSum += 1000
+    let cmd = "stop"
+    switch (directionSum) {
+      case 1:
+        cmd = "move_north_west"
+        break;
+      case 10:
+        cmd = "move_south_west"
+        break;
+      case 100:
+        cmd = "move_south_east"
+        break;
+      case 1000:
+        cmd = "move_north_east"
+        break;
+      case 11:
+        cmd = "move_west"
+        break;
+      case 110:
+        cmd = "move_south"
+        break;
+      case 1100:
+        cmd = "move_east"
+        break;
+      case 1001:
+        cmd = "move_north"
+        break;
+    }
+    if (cmd != this.controls.lastCmd) {
+      GameConnnection.sendCmd(cmd)
+      this.controls.lastCmd = cmd
+    }
   }
 
   destroy() {
