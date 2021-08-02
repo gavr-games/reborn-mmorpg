@@ -54,6 +54,14 @@ type Client struct {
 	send chan []byte
 }
 
+func (c Client) GetSendChannel() chan []byte {
+	return c.send
+}
+
+func (c Client) GetCharacter() *utils.Character {
+	return c.character
+}
+
 // ClientCommand is a message sent to engine from clients
 type ClientCommand struct {
 	// Character Id to identify from which player the command is coming from

@@ -1,9 +1,9 @@
-package game
+package entity
 
 type Player struct {
 	Id int // equals to Character.Id
 	CharacterGameObjectId string
 	VisionAreaGameObjectId string
-	Client *Client
+	Client IClient
 	VisibleObjects []string
 }

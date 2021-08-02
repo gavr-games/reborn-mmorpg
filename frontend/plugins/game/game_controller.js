@@ -10,10 +10,24 @@ class GameController {
     this.gameObjects = []
     this.token = null
     this.characterId = null
+    this.controls = {
+      w: false,
+      a: false,
+      s: false,
+      d: false,
+    }
     this.initGameObjectsHandler = gameObjects => {
       this.initGameObjects(gameObjects)
     };
+    this.keyUpHandler = key => {
+      this.handleKeyUp(key)
+    };
+    this.keyDownHandler = key => {
+      this.handleKeyDown(key)
+    };
     EventBus.$on("init_game", this.initGameObjectsHandler);
+    EventBus.$on("keyup", this.keyUpHandler);
+    EventBus.$on("keydown", this.keyDownHandler);
   }
 
   init(token, character_id) {
@@ -47,6 +61,29 @@ class GameController {
         break;
       }
     });
+  }
+
+  handleKeyUp(key) {
+    if (['w', 'a', 's', 'd'].includes(key)) {
+      this.controls[key] = false
+      this.moveCharacter()
+    }
+  }
+
+  handleDownUp() {
+    if (['w', 'a', 's', 'd'].includes(key)) {
+      this.controls[key] = true
+      this.moveCharacter()
+    }
+  }
+
+  moveCharacter() {
+    if (!this.controls.w && !this.controls.a &&
+      !this.controls.s && !this.controls.d) {
+        //Send stop
+        return
+      }
+    //if
   }
 
   destroy() {

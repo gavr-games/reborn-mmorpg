@@ -13,6 +13,7 @@ func main() {
 	flag.Parse()
 	engine := game.NewEngine()
 	go engine.Run()
+	go engine.RunWorld()
 	http.HandleFunc("/engine/ws", func(w http.ResponseWriter, r *http.Request) {
 		game.ServeWs(engine, w, r)
 	})
