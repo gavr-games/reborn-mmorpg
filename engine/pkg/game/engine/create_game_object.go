@@ -7,6 +7,7 @@ import (
 
 const PlayerRadius = 0.5
 const PlayerVisionArea = 50.0
+const PlayerSpeed = 2.0
 
 //TODO: optimize the memory by using integers instead of string constants
 func CreateGameObject(objKind string, x float64, y float64, additionalProps map[string]interface{}) *entity.GameObject {
@@ -49,7 +50,7 @@ func CreateGameObject(objKind string, x float64, y float64, additionalProps map[
 		gameObj.Properties["y"] = y
 		gameObj.Properties["shape"] = "circle"
 		gameObj.Properties["kind"] = objKind
-		gameObj.Properties["speed"] = 1.0
+		gameObj.Properties["speed"] = PlayerSpeed
 		gameObj.Properties["speed_x"] = 0.0
 		gameObj.Properties["speed_y"] = 0.0
 		gameObj.Properties["visible"] = true

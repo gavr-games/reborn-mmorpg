@@ -42,6 +42,7 @@ func CreatePlayerVisionArea(e IEngine, player *entity.Player) *entity.GameObject
 	return gameObj
 }
 
+// Process when new player logs into the game
 func RegisterClient(e IEngine, client entity.IClient) {
 	// lookup if engine has already created player object
 	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
@@ -97,8 +98,8 @@ func RegisterClient(e IEngine, client entity.IClient) {
 		select {
 		case client.GetSendChannel() <- message:
 		default:
-			//close(client.send)
-			//delete(h.clients, client)
+			UnregisterClient(e, client)
 		}
+		SendGameObjectUpdate(e, e.GameObjects()[player.CharacterGameObjectId], "add_object")
 	}
 }

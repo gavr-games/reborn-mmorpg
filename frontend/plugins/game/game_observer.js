@@ -16,6 +16,8 @@ class GameObserver {
     this.light = null;
     this.fpsEl = null;
     this.grid = null;
+    this.lastTick = 0;
+    this.loaded = false;
     this.renderObservers = [];
   }
 
@@ -39,6 +41,7 @@ class GameObserver {
       () => {
         this.createObjects();
         this.runRenderLoop();
+        this.loaded = true;
         EventBus.$emit("scene-created", this.scene, this.canvas);
       },
       Atlas
@@ -87,13 +90,16 @@ class GameObserver {
   }
 
   runRenderLoop() {
+    this.lastTick = Date.now()
     this.engine.runRenderLoop(() => {
       if (this.scene.activeCamera) {
         this.scene.render();
       }
+      const ms = Date.now();
       this.renderObservers.forEach(observer => {
-        observer.obj.update();
+        observer.obj.update(ms - this.lastTick);
       });
+      this.lastTick = ms;
       if (this.fpsEl) {
         this.fpsEl.innerHTML = this.engine.getFps().toFixed() + " fps";
       } else {

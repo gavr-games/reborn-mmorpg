@@ -1,8 +1,6 @@
 package game
 
 import (
-	"log"
-
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
@@ -10,9 +8,11 @@ import (
 
 const FloorSize = 1000.0
 const FloorCount = 4
+const TickSize = 10 // Game tick size in ms
 
 // Engine runs the game
 type Engine struct {
+	tickTime int64 //last tick time in milliseconds
 	floors []*utils.Quadtree // slice of global game areas, underground, etc
 	players map[int]*entity.Player // map of all players
 	gameObjects map[string]*entity.GameObject // map of ALL objects in the game
@@ -35,6 +35,7 @@ func (e Engine) Players() map[int]*entity.Player {
 
 func NewEngine() *Engine {
 	return &Engine{
+		tickTime:    0,
 		players:     make(map[int]*entity.Player),
 		gameObjects: make(map[string]*entity.GameObject),
 		floors:      make([]*utils.Quadtree, FloorCount),
@@ -59,26 +60,26 @@ func (e *Engine) Init() {
 		Nodes:      make([]utils.Quadtree, 0),
 	}
 	engine.LoadGameObjects(e, FloorSize)
+	e.tickTime = utils.MakeTimestamp()
 }
 
-// Main engine communication loop
+// Main engine loop
 func (e *Engine) Run() {
+	e.Init()
 	for {
 		select {
 		case client := <-e.register:
 			engine.RegisterClient(e, client)
 		case client := <-e.unregister:
 			engine.UnregisterClient(e, client)
-		default:
 		case cmd := <-e.commands:
-			log.Println(cmd)
+			engine.ProcessCommand(e, cmd.characterId, cmd.command)
+		default:
+			newTickTime := utils.MakeTimestamp()
+			if newTickTime - e.tickTime >= TickSize {
+				engine.MovePlayers(e, newTickTime - e.tickTime)
+				e.tickTime = newTickTime
+			}
 		}
-	}
-}
-
-func (e *Engine) RunWorld() {
-	e.Init()
-	for {
-		// move players
 	}
 }

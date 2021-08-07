@@ -268,6 +268,16 @@ func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
 		//if pRect fits into a subnode ..
 		if index != -1 {
 			qt.Nodes[index].FilteredRemove(pRect, filter)
+		} else {
+			// Find and remove item in current tree
+			for i := 0; i < len(qt.Objects); i++ {
+				result := filter(qt.Objects[i]) // check filtering condition
+				if result {
+					qt.Objects[i] = qt.Objects[len(qt.Objects) - 1] // Copy last element to index i.
+					qt.Objects[len(qt.Objects) - 1] = nil // Erase last element (write zero value).
+					qt.Objects = qt.Objects[:len(qt.Objects) - 1] // Truncate slice.
+				}
+			}
 		}
 	} else {
 		// Find and remove item in current tree

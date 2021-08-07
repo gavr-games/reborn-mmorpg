@@ -30,6 +30,12 @@ class Camera {
     this.camera.lockedTarget = this.character.mesh;
     this.scene.activeCamera = this.camera
   }
+
+  update(charPosition) {
+    this.camera.position.x = charPosition.x + 20,
+    this.camera.position.y = charPosition.y + 20,
+    this.camera.position.z = charPosition.z - 20
+  }
 }
 
 export default Camera;

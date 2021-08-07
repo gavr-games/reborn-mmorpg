@@ -13,8 +13,24 @@ class GameConnnection {
         window.location.href = "/login"
       };
       this.conn.onmessage = function (evt) {
-        const data = JSON.parse(evt.data);
-        EventBus.$emit(data["ResponseType"], data["ResponseData"])
+        const messages = evt.data.split("\n")
+        messages.forEach(message => {
+          const data = JSON.parse(message);
+          switch(data["ResponseType"]) {
+            case "update_object":
+              EventBus.$emit(data["ResponseType"] + "_" + data["ResponseData"]["object"]["Id"], data["ResponseData"]["object"])
+              break;
+            case "remove_object":
+              EventBus.$emit(data["ResponseType"] + "_" + data["ResponseData"]["object"]["Id"], data["ResponseData"]["object"])
+              EventBus.$emit(data["ResponseType"], data["ResponseData"]["object"])
+              break;
+            case "add_object":
+              EventBus.$emit(data["ResponseType"], data["ResponseData"]["object"])
+              break;
+            default:
+              EventBus.$emit(data["ResponseType"], data["ResponseData"])
+          }
+        });
       };
     }
   }

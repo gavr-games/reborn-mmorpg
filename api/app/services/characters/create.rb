@@ -26,7 +26,7 @@ module Characters
     end
 
     def validate_limit
-      characters_count = Character.count(player_id: @params[:player_id])
+      characters_count = Character.where(player_id: @params[:player_id]).count
       raise ServiceError, "Cannot create more than #{LIMIT} characters" if characters_count >= LIMIT
     end
 

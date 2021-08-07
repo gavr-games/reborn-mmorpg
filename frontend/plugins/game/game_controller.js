@@ -26,9 +26,17 @@ class GameController {
     this.keyDownHandler = key => {
       this.handleKeyDown(key)
     };
+    this.addObjectHandler = gameObj => {
+      this.createObject(gameObj)
+    };
+    this.removeObjectHandler = gameObj => {
+      this.gameObjects[gameObj["Id"]] = null
+    };
     EventBus.$on("init_game", this.initGameObjectsHandler)
     EventBus.$on("keyup", this.keyUpHandler)
     EventBus.$on("keydown", this.keyDownHandler)
+    EventBus.$on("add_object", this.addObjectHandler)
+    EventBus.$on("remove_object", this.removeObjectHandler)
   }
 
   init(token, character_id) {
@@ -42,17 +50,19 @@ class GameController {
 
   initGameObjects(gameObjects) {
     gameObjects["visible_objects"].forEach(gameObj => {
-      switch(gameObj["Type"]) {
-        case "surface":
-          this.gameObjects[gameObj["Id"]] = new SurfaceController(gameObj)
-        break;
-        case "player":
-          if (gameObj["Properties"]["player_id"] == this.characterId) {
-            this.gameObjects[gameObj["Id"]] = new CharacterController(gameObj)
-          }
-        break;
-      }
+      this.createObject(gameObj)
     });
+  }
+
+  createObject(gameObj) {
+    switch(gameObj["Type"]) {
+      case "surface":
+        this.gameObjects[gameObj["Id"]] = new SurfaceController(gameObj)
+      break;
+      case "player":
+        this.gameObjects[gameObj["Id"]] = new CharacterController(gameObj, this.characterId)
+      break;
+    }
   }
 
   handleKeyUp(key) {
@@ -109,7 +119,12 @@ class GameController {
   }
 
   destroy() {
-    ChatController.destroy();
+    ChatController.destroy()
+    EventBus.$off("init_game", this.initGameObjectsHandler)
+    EventBus.$off("keyup", this.keyUpHandler)
+    EventBus.$off("keydown", this.keyDownHandler)
+    EventBus.$off("add_object", this.addObjectHandler)
+    EventBus.$off("remove_object", this.removeObjectHandler)
   }
 }
 
