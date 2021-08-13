@@ -1,5 +1,6 @@
 import { EventBus } from "~/plugins/game/event_bus";
 import Atlas from "~/plugins/game/atlas/atlas";
+import GameObserver from "~/plugins/game/game_observer";
 
 class SurfaceObserver {
   constructor(state) {
@@ -7,10 +8,16 @@ class SurfaceObserver {
     this.state = state;
     this.container = null;
     this.mesh = null;
-    EventBus.$on("scene-created", scene => {
-      this.scene = scene;
+    if (GameObserver.loaded) {
+      this.scene = GameObserver.scene;
       this.create();
-    });
+    } else {
+      EventBus.$on("scene-created", scene => {
+        this.scene = scene;
+        this.create();
+      });
+    }
+
   }
 
   create() {
@@ -31,6 +38,13 @@ class SurfaceObserver {
     mesh.freezeWorldMatrix();
     mesh.doNotSyncBoundingInfo = true;
     this.mesh = mesh;
+  }
+
+  remove() {
+    EventBus.$off("scene-created", this.sceneCreatedCallback);
+    this.mesh.dispose();
+    this.mesh = null;
+    this.state = null;
   }
 }
 

@@ -1,10 +1,6 @@
 package engine
 
 import (
-	"encoding/json"
-	"fmt"
-
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
@@ -17,7 +13,7 @@ func CreatePlayer(e IEngine, client entity.IClient) *entity.Player {
 		CharacterGameObjectId: "",
 		VisionAreaGameObjectId: "",
 		Client: client,
-		VisibleObjects: make([]string, 100, 10000),
+		VisibleObjects: make(map[string]bool),
 	}
 	e.Players()[player.Id] = player
 	additionalProps := make(map[string]interface{})
@@ -52,7 +48,7 @@ func RegisterClient(e IEngine, client entity.IClient) {
 		} else {
 			CreatePlayerVisionArea(e, player)
 			e.GameObjects()[player.CharacterGameObjectId].Properties["visible"] = true
-			player.VisibleObjects = make([]string, 100, 10000)
+			player.VisibleObjects = make(map[string]bool)
 		}
 		player.Client = client
 	} else {
@@ -60,46 +56,14 @@ func RegisterClient(e IEngine, client entity.IClient) {
 		CreatePlayerVisionArea(e, player)
 	}
 	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
-		visionArea := e.GameObjects()[player.VisionAreaGameObjectId]
-		visibleObjects := e.Floors()[0].RetrieveIntersections(utils.Bounds{
-			X:      visionArea.X,
-			Y:      visionArea.Y,
-			Width:  visionArea.Width,
-			Height: visionArea.Height,
-		})
-		// Filter visible objects
-		n := 0
-    for _, val := range visibleObjects {
-			if visible, ok := val.(*entity.GameObject).Properties["visible"]; ok {
-				if visible.(bool) {
-					visibleObjects[n] = val
-					player.VisibleObjects = append(player.VisibleObjects, val.(*entity.GameObject).Id) //TODO: append performance
-					n++
-				}
-			} else {
-				visibleObjects[n] = val
-				player.VisibleObjects = append(player.VisibleObjects, val.(*entity.GameObject).Id)
-				n++
-			}
-    }
-    visibleObjects = visibleObjects[:n]
+		visibleObjects := GetPlayerVisibleObjects(e, player)
+		for _, val := range visibleObjects {
+			player.VisibleObjects[val.(*entity.GameObject).Id] = true
+		}
 		//Send json with VisibleObjects from vision area
-		resp := EngineResponse{
-			ResponseType: "init_game",
-			ResponseData: map[string]interface{}{
-				"visible_objects": visibleObjects,
-			},
-		}
-		message, err := json.Marshal(resp)
-    if err != nil {
-        fmt.Println(err)
-        return
-    }
-		select {
-		case client.GetSendChannel() <- message:
-		default:
-			UnregisterClient(e, client)
-		}
+		SendResponse(e, "init_game", map[string]interface{}{
+			"visible_objects": visibleObjects,
+		}, player)
 		SendGameObjectUpdate(e, e.GameObjects()[player.CharacterGameObjectId], "add_object")
 	}
 }

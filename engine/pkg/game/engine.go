@@ -75,6 +75,7 @@ func (e *Engine) Run() {
 		case cmd := <-e.commands:
 			engine.ProcessCommand(e, cmd.characterId, cmd.command)
 		default:
+			// Run world once in TickSize
 			newTickTime := utils.MakeTimestamp()
 			if newTickTime - e.tickTime >= TickSize {
 				engine.MovePlayers(e, newTickTime - e.tickTime)
