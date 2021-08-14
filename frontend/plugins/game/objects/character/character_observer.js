@@ -13,6 +13,7 @@ class Character {
     this.mesh = null
     this.meshRotation = Math.PI / 2
     this.camera = null
+    this.currentAnimation = null
     this.sceneCreatedCallback = (scene, canvas) => {
       this.scene = scene
       this.canvas = canvas
@@ -29,6 +30,7 @@ class Character {
     this.container = Atlas.get("baseCharacter").instantiateModelsToScene();
     this.playAnimation("Idle");
     this.mesh = this.container.rootNodes[0];
+    this.mesh.setParent(null)
     this.mesh.setEnabled(true);
     this.mesh.position.x = this.state.x;
     this.mesh.position.z = this.state.y;
@@ -74,7 +76,7 @@ class Character {
   }
 
   playAnimation(name, loop = true) {
-    if (this.container) {
+    if (this.container && this.currentAnimation != name) {
       this.container.animationGroups.forEach(ag => {
         if (ag.name === name) {
           ag.start(loop);

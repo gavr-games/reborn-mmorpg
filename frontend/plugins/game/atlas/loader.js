@@ -105,12 +105,13 @@ class Loader {
       "baseCharacter",
       "/game_assets/characters/",
       "base_character.glb"
-    );
+    )
     task.onSuccess = task => {
       this.atlas.set("baseCharacter", task.loadedContainer);
-    };
-    this.loadSurfaces();
-    this.assetsManager.load();
+    }
+    this.loadSurfaces()
+    this.loadRocks()
+    this.assetsManager.load()
   }
 
   loadSurfaces() {
@@ -126,6 +127,23 @@ class Loader {
       );
       task.onSuccess = task => {
         this.atlas.set(surface + "Surface", task.loadedContainer);
+      };
+    });
+  }
+
+  loadRocks() {
+    let rocks = [
+      "rock_moss",
+    ];
+    rocks.forEach(rock => {
+      let task = this.assetsManager.addContainerTask(
+        rock,
+        rock,
+        "/game_assets/rocks/",
+        rock + ".glb"
+      );
+      task.onSuccess = task => {
+        this.atlas.set(rock + "Rock", task.loadedContainer);
       };
     });
   }

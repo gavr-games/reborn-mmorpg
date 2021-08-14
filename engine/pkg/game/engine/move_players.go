@@ -14,24 +14,36 @@ func MovePlayers(e IEngine, tickDelta int64) {
 			speedX := charGameObj.Properties["speed_x"].(float64)
 			speedY := charGameObj.Properties["speed_y"].(float64)
 			if speedX != 0 || speedY != 0 {
-				//TODO: check for collisions and revert back player position to previous one in case of any
+				dx := speedX / 1000.0 * float64(tickDelta)
+				dy := speedY / 1000.0 * float64(tickDelta)
+
+				dx, dy = CheckObjectMove(e, charGameObj, dx, dy)
+
+				// Stop the object
+				if dx == 0.0 && dy == 0.0 {
+					charGameObj.Properties["speed_x"] = 0.0
+					charGameObj.Properties["speed_y"] = 0.0
+					SendGameObjectUpdate(e, charGameObj, "update_object")
+					continue
+				}
+
 				// Update player character game object
 				e.Floors()[charGameObj.Floor].FilteredRemove(charGameObj, func(b utils.IBounds) bool {
 					return charGameObj.Id == b.(*entity.GameObject).Id
 				})
-				charGameObj.X = charGameObj.X + speedX / 1000.0 * float64(tickDelta)
-				charGameObj.Y = charGameObj.Y + speedY / 1000.0 * float64(tickDelta)
-				charGameObj.Properties["x"] = charGameObj.X
-				charGameObj.Properties["y"] = charGameObj.Y
+				charGameObj.X += dx
+				charGameObj.Y += dy
+				charGameObj.Properties["x"] = charGameObj.Properties["x"].(float64) + dx
+				charGameObj.Properties["y"] = charGameObj.Properties["y"].(float64) + dy
 				e.Floors()[charGameObj.Floor].Insert(charGameObj)
 				// Update vision area game object
 				e.Floors()[visionAreaGameObj.Floor].FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
 					return visionAreaGameObj.Id == b.(*entity.GameObject).Id
 				})
-				visionAreaGameObj.X = visionAreaGameObj.X + speedX / 1000.0 * float64(tickDelta)
-				visionAreaGameObj.Y = visionAreaGameObj.Y + speedY / 1000.0 * float64(tickDelta)
-				visionAreaGameObj.Properties["x"] = visionAreaGameObj.X
-				visionAreaGameObj.Properties["y"] = visionAreaGameObj.Y
+				visionAreaGameObj.X += dx
+				visionAreaGameObj.Y += dy
+				visionAreaGameObj.Properties["x"] = visionAreaGameObj.Properties["x"].(float64) + dx
+				visionAreaGameObj.Properties["y"] = visionAreaGameObj.Properties["y"].(float64) + dy
 				e.Floors()[visionAreaGameObj.Floor].Insert(visionAreaGameObj)
 
 				// determine new and old visible objects, send updates to client

@@ -2,6 +2,7 @@ import GameObserver from "~/plugins/game/game_observer";
 import ChatController from "~/plugins/game/chat/chat_controller";
 import { EventBus } from "~/plugins/game/event_bus";
 import SurfaceController from "./objects/surface/surface_controller";
+import RockController from "./objects/rock/rock_controller";
 import CharacterController from "./objects/character/character_controller";
 import GameConnnection from "./game_connection";
 
@@ -58,10 +59,13 @@ class GameController {
     switch(gameObj["Type"]) {
       case "surface":
         this.gameObjects[gameObj["Id"]] = new SurfaceController(gameObj)
-      break;
+        break;
       case "player":
         this.gameObjects[gameObj["Id"]] = new CharacterController(gameObj, this.characterId)
-      break;
+        break;
+      case "rock":
+        this.gameObjects[gameObj["Id"]] = new RockController(gameObj, this.characterId)
+        break;
     }
   }
 

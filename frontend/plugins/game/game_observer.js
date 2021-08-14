@@ -86,7 +86,7 @@ class GameObserver {
     this.grid = new Grid(this.scene);
     //this.grid.create();
 
-    showWorldAxis(1, this.scene)
+    showWorldAxis(1, this.scene);
   }
 
   runRenderLoop() {

@@ -35,6 +35,29 @@ func CreateGameObject(objKind string, x float64, y float64, additionalProps map[
 			}
 		}
 		return gameObj
+	case "rock_moss":
+		gameObj := &entity.GameObject{
+			X: x - 0.438,
+			Y: y - 0.549,
+			Width: 0.876,
+			Height: 1.098,
+			Id: id,
+			Type: "rock",
+			Properties: make(map[string]interface{}),
+		}
+		gameObj.Properties["width"] = 0.876
+		gameObj.Properties["height"] = 1.098
+		gameObj.Properties["x"] = x
+		gameObj.Properties["y"] = y
+		gameObj.Properties["shape"] = "rectangle"
+		gameObj.Properties["kind"] = objKind
+		gameObj.Properties["collidable"] = true
+		if additionalProps != nil {
+			for k, v := range additionalProps {
+				gameObj.Properties[k] = v
+			}
+		}
+		return gameObj
 	case "player":
 		gameObj := &entity.GameObject{
 			X: x - PlayerRadius,

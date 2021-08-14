@@ -2,7 +2,7 @@ import { EventBus } from "~/plugins/game/event_bus";
 import Atlas from "~/plugins/game/atlas/atlas";
 import GameObserver from "~/plugins/game/game_observer";
 
-class SurfaceObserver {
+class RockObserver {
   constructor(state) {
     this.scene = null;
     this.state = state;
@@ -21,11 +21,11 @@ class SurfaceObserver {
   }
 
   create() {
-    this.container = Atlas.get(this.state.kind + "Surface").instantiateModelsToScene();
+    this.container = Atlas.get(this.state.kind + "Rock").instantiateModelsToScene();
     let mesh = this.container.rootNodes[0];
     mesh.setParent(null)
     mesh.setEnabled(true);
-    mesh.name = "surface-" + this.state.id;
+    mesh.name = "rock-" + this.state.id;
     mesh.position.x = this.state.x
     mesh.position.y = 0
     mesh.position.z = this.state.y
@@ -49,4 +49,4 @@ class SurfaceObserver {
   }
 }
 
-export default SurfaceObserver;
+export default RockObserver;
