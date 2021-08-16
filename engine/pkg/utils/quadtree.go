@@ -207,7 +207,6 @@ func (qt *Quadtree) getIndex(pRect IBounds) int {
 // Insert - Insert the object into the node. If the node exceeds the capacity,
 // it will split and add all objects to their corresponding subnodes.
 func (qt *Quadtree) Insert(pRect IBounds) {
-
 	qt.Total++
 
 	i := 0
@@ -215,9 +214,7 @@ func (qt *Quadtree) Insert(pRect IBounds) {
 
 	// If we have subnodes within the Quadtree
 	if len(qt.Nodes) > 0 == true {
-
 		index = qt.getIndex(pRect)
-
 		if index != -1 {
 			qt.Nodes[index].Insert(pRect)
 			return
@@ -229,34 +226,22 @@ func (qt *Quadtree) Insert(pRect IBounds) {
 
 	// If total objects is greater than max objects and level is less than max levels
 	if (len(qt.Objects) > qt.MaxObjects) && (qt.Level < qt.MaxLevels) {
-
 		// split if we don't already have subnodes
 		if len(qt.Nodes) > 0 == false {
 			qt.split()
 		}
-
 		// Add all objects to there corresponding subNodes
 		for i < len(qt.Objects) {
-
 			index = qt.getIndex(qt.Objects[i])
-
 			if index != -1 {
-
 				splice := qt.Objects[i]                                  // Get the object out of the slice
 				qt.Objects = append(qt.Objects[:i], qt.Objects[i+1:]...) // Remove the object from the slice
-
 				qt.Nodes[index].Insert(splice)
-
 			} else {
-
 				i++
-
 			}
-
 		}
-
 	}
-
 }
 
 // Find object in quadtree via filter and removes it

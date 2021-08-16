@@ -4,11 +4,14 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-const FloorSize = 1000.0
-const FloorCount = 4
-const TickSize = 10 // Game tick size in ms
+const (
+	FloorSize = 1000.0
+	FloorCount = 4
+	TickSize = 10 // Game tick size in ms
+)
 
 // Engine runs the game
 type Engine struct {
@@ -46,6 +49,9 @@ func NewEngine() *Engine {
 }
 
 func (e *Engine) Init() {
+	// Start routine to process game objects updates and save them in game storage
+	go storage.GetClient().Run()
+
 	e.floors[0] = &utils.Quadtree{
 		Bounds: utils.Bounds{
 			X:      0,

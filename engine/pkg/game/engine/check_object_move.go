@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"log"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
@@ -26,8 +25,7 @@ func CheckObjectMove(e IEngine, obj *entity.GameObject, dx float64, dy float64) 
 		}
 	}
 	possibleCollidableObjects = possibleCollidableObjects[:n]
-	
-	log.Println(len(possibleCollidableObjects))
+
 	if len(possibleCollidableObjects) == 0 {
 		return dx, dy
 	} else {

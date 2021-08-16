@@ -41,6 +41,8 @@ services:
       - ./engine:/src/github.com/gavr-games/reborn-mmorpg:cached
     ports:
       - 8080:8080
+    depends_on:
+      - redis
     stdin_open: true
     tty: true
 
@@ -67,7 +69,17 @@ services:
     env_file: .env
     ports:
       - 5432:5432
+  
+  #TODO: use RDB to backup game data once in X minutes
+  redis:
+    container_name: redis
+    image: redis:6.2-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - redis-data:/data
 
 volumes:
   db-data: null
   bundle-cache: null
+  redis-data: null
