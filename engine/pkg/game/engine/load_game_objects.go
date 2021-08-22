@@ -44,5 +44,14 @@ func LoadGameObjects(e IEngine, floorSize float64) {
 			e.GameObjects()[gameObj.Id] = gameObj
 			e.Floors()[gameObj.Floor].Insert(gameObj)
 		}
+		// trees
+		for i := 0; i < 20; i++ {
+			x := 1.0 + rand.Float64() * (99.0 - 1.0)
+			y := 1.0 + rand.Float64() * (99.0 - 1.0)
+			gameObj := CreateGameObject("tree_5", x, y, nil)
+			gameObj.Floor = 0
+			e.GameObjects()[gameObj.Id] = gameObj
+			e.Floors()[gameObj.Floor].Insert(gameObj)
+		}
 	}
 }

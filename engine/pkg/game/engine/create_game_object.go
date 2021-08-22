@@ -60,6 +60,28 @@ func CreateGameObject(objKind string, x float64, y float64, additionalProps map[
 				gameObj.Properties[k] = v
 			}
 		}
+	case "tree_5":
+		gameObj = &entity.GameObject{
+			X: x - 0.5,
+			Y: y - 0.5,
+			Width: 1.0,
+			Height: 1.0,
+			Id: id,
+			Type: "tree",
+			Properties: make(map[string]interface{}),
+		}
+		gameObj.Properties["width"] = 1.0
+		gameObj.Properties["height"] = 1.0
+		gameObj.Properties["x"] = x
+		gameObj.Properties["y"] = y
+		gameObj.Properties["shape"] = "circle"
+		gameObj.Properties["kind"] = objKind
+		gameObj.Properties["collidable"] = true
+		if additionalProps != nil {
+			for k, v := range additionalProps {
+				gameObj.Properties[k] = v
+			}
+		}
 	case "player":
 		gameObj = &entity.GameObject{
 			X: x - PlayerRadius,
