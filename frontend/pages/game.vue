@@ -1,5 +1,6 @@
 <template>
   <div class="rpgui-content" style="overflow-y:scroll;">
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
     <canvas id="game-canvas"></canvas>
     <div id="fps" class="rpgui-container framed-golden">0</div>
     <div id="chat" class="rpgui-container framed-golden">

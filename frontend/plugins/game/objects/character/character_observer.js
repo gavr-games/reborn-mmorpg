@@ -78,7 +78,7 @@ class Character {
   playAnimation(name, loop = true) {
     if (this.container && this.currentAnimation != name) {
       this.container.animationGroups.forEach(ag => {
-        if (ag.name === name) {
+        if (ag.name.includes(name)) {
           ag.start(loop);
           this.currentAnimation = name;
         } else {

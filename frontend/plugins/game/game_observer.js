@@ -36,6 +36,11 @@ class GameObserver {
     this.scene.actionManager = new BABYLON.ActionManager(this.scene);
     this.registerActions(this.scene);
 
+    // TODO: Remove in prod
+    this.scene.debugLayer.show({
+      embedMode: true,
+    });
+
     this.loader = new Loader(
       this.scene,
       () => {
