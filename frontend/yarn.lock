@@ -1900,34 +1900,14 @@ babylonjs-gltf2interface@^5.22.1:
   resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-5.22.1.tgz#1415020ae399e3ee1d9a2af5d592478529041cd6"
   integrity sha512-6BYKE5ZLsfu7nJ4IbldTB80ewbVH6G5Xyy/lakKvm+4GYtMcbSrlkt4EA7a7g1M8hys7y7kKABnqf+PppE6GAA==
 
-babylonjs-gui-editor@^5.22.1:
-  version "5.22.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-gui-editor/-/babylonjs-gui-editor-5.22.1.tgz#bd3b6a511138b5f02d936fd4de60731153b3dbe1"
-  integrity sha512-/RGybMJZwzEwi4wofvTc9ErYNKq43FQwwI9fYUBRMZIATH3hJWd0VVIZkHcTkpIkxws3ewAr+72bh7KrYrKRgQ==
-  dependencies:
-    babylonjs "^5.22.1"
-    babylonjs-gui "^5.22.1"
-
-babylonjs-gui@5.22.1, babylonjs-gui@^5.22.1:
+babylonjs-gui@5.22.1:
   version "5.22.1"
   resolved "https://registry.yarnpkg.com/babylonjs-gui/-/babylonjs-gui-5.22.1.tgz#fd1ce83c7b253a37465e582865953814371d510e"
   integrity sha512-CRA9d7DaOOYlvjoUXdZgDSKnBSZiFkvDsXCBieo9a5Pjx2NNGAUFi9XAoara5LZ2Lyoqm60z5i7/AM8YM43tqA==
   dependencies:
     babylonjs "^5.22.1"
 
-babylonjs-inspector@5.22.1:
-  version "5.22.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-inspector/-/babylonjs-inspector-5.22.1.tgz#4c4b63b37913b967ce8bc9e801923353b33fcf80"
-  integrity sha512-le3ZCr1ZCSG9FdeiKsv7iEHyGLHqUfLRvVj3oYnDNZY1dLIeG/t7SeFMSDpBWG8qOYU5SAWGVYle0nrOoa8Pog==
-  dependencies:
-    babylonjs "^5.22.1"
-    babylonjs-gui "^5.22.1"
-    babylonjs-gui-editor "^5.22.1"
-    babylonjs-loaders "^5.22.1"
-    babylonjs-materials "^5.22.1"
-    babylonjs-serializers "^5.22.1"
-
-babylonjs-loaders@5.22.1, babylonjs-loaders@^5.22.1:
+babylonjs-loaders@5.22.1:
   version "5.22.1"
   resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-5.22.1.tgz#f561558789004aac9a0f0d641592c99d47e479ed"
   integrity sha512-0mwzvXKbwgoj9CD/R65JNBvbi0Ptn2+W4i3GSbDoAZ0bLS6cSGei41t5Xgo5jrhiNfcAOe+Aycv4XU17LVUH/g==
@@ -1935,20 +1915,12 @@ babylonjs-loaders@5.22.1, babylonjs-loaders@^5.22.1:
     babylonjs "^5.22.1"
     babylonjs-gltf2interface "^5.22.1"
 
-babylonjs-materials@5.22.1, babylonjs-materials@^5.22.1:
+babylonjs-materials@5.22.1:
   version "5.22.1"
   resolved "https://registry.yarnpkg.com/babylonjs-materials/-/babylonjs-materials-5.22.1.tgz#bd765e7e24bf1878cec79859984d19b92b039c39"
   integrity sha512-vAxx2U1RqVXKGKiV0SQSLO8A6yr4CUCbU9Y+2rzMb/1/wiRYzYC+k+1QY93kZukxlcpvJ28spulIQiSCZ6L1Rg==
   dependencies:
     babylonjs "^5.22.1"
-
-babylonjs-serializers@^5.22.1:
-  version "5.22.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-serializers/-/babylonjs-serializers-5.22.1.tgz#9427fd9f689ecff63e96120e6bdb1917e5ccbf23"
-  integrity sha512-tgSIbv78ktUNDlBjH5hf9MMStBpCbztbSN0Tv1ajiISCy8wwY0HvW9KTtdmNCM1RuR0fY1Z7EmI5XaXKKI7d1Q==
-  dependencies:
-    babylonjs "^5.22.1"
-    babylonjs-gltf2interface "^5.22.1"
 
 babylonjs@5.22.1, babylonjs@^5.22.1:
   version "5.22.1"

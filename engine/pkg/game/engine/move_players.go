@@ -64,7 +64,9 @@ func MovePlayers(e IEngine, tickDelta int64) {
 				for id, visible := range player.VisibleObjects {
 					if !visible {
 						SendResponse(e, "remove_object", map[string]interface{}{
-							"object": e.GameObjects()[id],
+							"object": map[string]interface{}{
+								"Id": id,
+							},
 						}, player)
 						delete(player.VisibleObjects, id)
 					}

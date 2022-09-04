@@ -24,8 +24,8 @@ class SurfaceObserver {
     this.container = Atlas.get(this.state.kind + "Surface").instantiateModelsToScene();
     let mesh = this.container.rootNodes[0];
     mesh.setParent(null)
-    mesh.setEnabled(true);
-    mesh.name = "surface-" + this.state.id;
+    mesh.isPickable = false
+    mesh.name = "surface-" + this.state.id
     mesh.position.x = this.state.x
     mesh.position.y = 0
     mesh.position.z = this.state.y

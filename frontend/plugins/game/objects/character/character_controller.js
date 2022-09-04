@@ -7,19 +7,14 @@ class CharacterController {
     this.myCharacterId = myCharacterId
     this.state = new CharacterState(gameObject);
     this.observer = new CharacterObserver(this.state, this.myCharacterId);
-    this.updateHandler = (gameObject) => {
-      this.state.update(gameObject)
-    };
-    this.removeHandler = () => {
-      this.remove()
-    };
-    EventBus.$on(`update_object_${this.state.id}`, this.updateHandler);
-    EventBus.$on(`remove_object_${this.state.id}`, this.removeHandler);
+    console.log(gameObject)
+  }
+
+  update(gameObject) {
+    this.state.update(gameObject)
   }
 
   remove() {
-    EventBus.$off(`update_object_${this.state.id}`, this.updateHandler);
-    EventBus.$off(`remove_object_${this.state.id}`, this.removeHandler);
     this.state = null
     this.observer.remove()
   }

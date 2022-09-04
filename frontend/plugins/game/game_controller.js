@@ -31,13 +31,18 @@ class GameController {
     this.addObjectHandler = gameObj => {
       this.createObject(gameObj)
     };
+    this.updateObjectHandler = gameObj => {
+      this.gameObjects[gameObj["Id"]].update(gameObj)
+    };
     this.removeObjectHandler = gameObj => {
+      this.gameObjects[gameObj["Id"]].remove()
       this.gameObjects[gameObj["Id"]] = null
     };
     EventBus.$on("init_game", this.initGameObjectsHandler)
     EventBus.$on("keyup", this.keyUpHandler)
     EventBus.$on("keydown", this.keyDownHandler)
     EventBus.$on("add_object", this.addObjectHandler)
+    EventBus.$on("update_object", this.updateObjectHandler)
     EventBus.$on("remove_object", this.removeObjectHandler)
   }
 
@@ -57,6 +62,9 @@ class GameController {
   }
 
   createObject(gameObj) {
+    if (this.gameObjects[gameObj["Id"]] != null) {
+      return
+    }
     switch(gameObj["Type"]) {
       case "surface":
         this.gameObjects[gameObj["Id"]] = new SurfaceController(gameObj)
@@ -132,6 +140,7 @@ class GameController {
     EventBus.$off("keyup", this.keyUpHandler)
     EventBus.$off("keydown", this.keyDownHandler)
     EventBus.$off("add_object", this.addObjectHandler)
+    EventBus.$off("update_object", this.updateObjectHandler)
     EventBus.$off("remove_object", this.removeObjectHandler)
   }
 }

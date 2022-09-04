@@ -80,7 +80,6 @@ services:
 
   #TODO: use RDB to backup game data once in X minutes
   redis:
-    container_name: redis
     image: redis:6.2-alpine
     ports:
       - 6379:6379

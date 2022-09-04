@@ -1,4 +1,5 @@
 import { EventBus } from "~/plugins/game/event_bus";
+import GameObserver from "~/plugins/game/game_observer";
 
 class GameConnnection {
   constructor() {
@@ -14,14 +15,16 @@ class GameConnnection {
       };
       this.conn.onmessage = function (evt) {
         const messages = evt.data.split("\n")
+        if (GameObserver.loaded) {
+          GameObserver.scene.blockfreeActiveMeshesAndRenderingGroups = true
+        }
         messages.forEach(message => {
           const data = JSON.parse(message);
           switch(data["ResponseType"]) {
             case "update_object":
-              EventBus.$emit(data["ResponseType"] + "_" + data["ResponseData"]["object"]["Id"], data["ResponseData"]["object"])
+              EventBus.$emit(data["ResponseType"], data["ResponseData"]["object"])
               break;
             case "remove_object":
-              EventBus.$emit(data["ResponseType"] + "_" + data["ResponseData"]["object"]["Id"], data["ResponseData"]["object"])
               EventBus.$emit(data["ResponseType"], data["ResponseData"]["object"])
               break;
             case "add_object":
@@ -31,6 +34,9 @@ class GameConnnection {
               EventBus.$emit(data["ResponseType"], data["ResponseData"])
           }
         });
+        if (GameObserver.loaded) {
+          GameObserver.scene.blockfreeActiveMeshesAndRenderingGroups = false
+        }
       };
     }
   }
