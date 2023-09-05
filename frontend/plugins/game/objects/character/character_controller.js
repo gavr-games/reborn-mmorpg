@@ -6,8 +6,8 @@ class CharacterController {
   constructor(gameObject, myCharacterId) {
     this.myCharacterId = myCharacterId
     this.state = new CharacterState(gameObject);
+    console.log(this.state)
     this.observer = new CharacterObserver(this.state, this.myCharacterId);
-    console.log(gameObject)
   }
 
   update(gameObject) {

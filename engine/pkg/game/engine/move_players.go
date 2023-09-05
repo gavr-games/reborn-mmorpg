@@ -52,6 +52,7 @@ func MovePlayers(e IEngine, tickDelta int64) {
 					player.VisibleObjects[id] = false
 				}
 				// send add new visible objects
+				// TODO: add serializers to minimize traffic
 				for _, val := range visibleObjects {
 					if _, ok := player.VisibleObjects[val.(*entity.GameObject).Id]; !ok {
 						SendResponse(e, "add_object", map[string]interface{}{
