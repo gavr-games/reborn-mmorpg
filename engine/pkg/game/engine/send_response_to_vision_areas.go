@@ -26,7 +26,7 @@ func SendResponseToVisionAreas(e IEngine, gameObj *entity.GameObject, responseTy
 			return
 	}
 	for _, obj := range intersectingObjects {
-		if obj.(*entity.GameObject).Type == "player_vision_area" {
+		if obj.(*entity.GameObject).Type == "player" && obj.(*entity.GameObject).Properties["kind"].(string) != "player_vision_area" {
 			playerId := obj.(*entity.GameObject).Properties["player_id"]
 			if player, ok := e.Players()[playerId.(int)]; ok {
 				select {

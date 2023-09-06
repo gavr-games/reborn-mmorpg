@@ -35,8 +35,10 @@ class GameController {
       this.gameObjects[gameObj["Id"]].update(gameObj)
     };
     this.removeObjectHandler = gameObj => {
-      this.gameObjects[gameObj["Id"]].remove()
-      this.gameObjects[gameObj["Id"]] = null
+      if (this.gameObjects[gameObj["Id"]]) {
+        this.gameObjects[gameObj["Id"]].remove()
+        this.gameObjects[gameObj["Id"]] = null
+      }
     };
     EventBus.$on("init_game", this.initGameObjectsHandler)
     EventBus.$on("keyup", this.keyUpHandler)

@@ -1,4 +1,4 @@
-localhost:80 {
+localhost:80, localhost:443 {
   proxy /api api:4567 {
     transparent
   }

@@ -152,6 +152,7 @@ class Loader {
   loadTrees() {
     let trees = [
       "tree_5",
+      "pine_5",
     ];
     trees.forEach(tree => {
       let task = this.assetsManager.addContainerTask(

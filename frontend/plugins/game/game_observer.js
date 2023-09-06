@@ -40,6 +40,8 @@ class GameObserver {
     this.scene.useMaterialMeshMap = true
     this.scene.useClonedMeshMap = true
 
+    this.scene.performancePriority === BABYLON.ScenePerformancePriority.Aggressive
+
     this.loader = new Loader(
       this.scene,
       () => {

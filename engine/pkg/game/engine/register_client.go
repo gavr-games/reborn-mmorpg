@@ -18,7 +18,7 @@ func CreatePlayer(e IEngine, client entity.IClient) *entity.Player {
 	e.Players()[player.Id] = player
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := CreateGameObject("player", InitialPlayerX, InitialPlayerY, additionalProps)
+	gameObj := CreateGameObject("player/player", InitialPlayerX, InitialPlayerY, additionalProps)
 	gameObj.Floor = 0
 	e.GameObjects()[gameObj.Id] = gameObj
 	e.Floors()[gameObj.Floor].Insert(gameObj)
@@ -31,7 +31,7 @@ func CreatePlayerVisionArea(e IEngine, player *entity.Player) *entity.GameObject
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := CreateGameObject("player_vision_area", charGameObj.X, charGameObj.Y, additionalProps)
+	gameObj := CreateGameObject("player/player_vision_area", charGameObj.X, charGameObj.Y, additionalProps)
 	gameObj.Floor = 0
 	e.GameObjects()[gameObj.Id] = gameObj
 	e.Floors()[gameObj.Floor].Insert(gameObj)
@@ -44,17 +44,13 @@ func CreatePlayerItems(e IEngine, player *entity.Player) {
 	// Backpack
 	additionalProps := make(map[string]interface{})
 	additionalProps["owner_id"] = charGameObj.Id
-	initialBackpack := CreateGameObject("backpack", charGameObj.X, charGameObj.Y, additionalProps)
+	initialBackpack := CreateGameObject("container/backpack", charGameObj.X, charGameObj.Y, additionalProps)
 	charGameObj.Properties["slots"].(map[string]interface{})["back"] = initialBackpack.Id
-	initialBackpack.Floor = 0
 	e.GameObjects()[initialBackpack.Id] = initialBackpack
-	e.Floors()[initialBackpack.Floor].Insert(initialBackpack) // TODO: should we insert items in bags? Should we insert bag itself?
 	// Axe
-	initialAxe := CreateGameObject("axe", charGameObj.X, charGameObj.Y, nil)
-	PutToContainer(e, player, initialBackpack.Id, initialAxe.Id, -1)
-	initialAxe.Floor = 0
+	initialAxe := CreateGameObject("tool/axe", charGameObj.X, charGameObj.Y, nil)
 	e.GameObjects()[initialAxe.Id] = initialAxe
-	e.Floors()[initialAxe.Floor].Insert(initialAxe) // TODO: should we insert items in bags?
+	PutToContainer(e, player, initialBackpack.Id, initialAxe.Id, -1)
 }
 
 // Process when new player logs into the game

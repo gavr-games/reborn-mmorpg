@@ -11,10 +11,10 @@
   "dependencies": {
     "@nuxtjs/auth-next": "5.0.0-1624817847.21691f1",
     "@nuxtjs/axios": "^5.13.6",
-    "babylonjs": "5.22.1",
-    "babylonjs-gui": "5.22.1",
-    "babylonjs-loaders": "5.22.1",
-    "babylonjs-materials": "5.22.1",
+    "babylonjs": "6.19.1",
+    "babylonjs-gui": "6.19.1",
+    "babylonjs-loaders": "6.19.1",
+    "babylonjs-materials": "6.19.1",
     "core-js": "^3.15.1",
     "nuxt": "^2.15.8",
     "vuex-persistedstate": "^4.0.0"

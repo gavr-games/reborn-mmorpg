@@ -5,9 +5,17 @@ package engine
 )*/
 
 func EquipItem(e IEngine, characterId string, itemId string, slot string) {
-	//TODO: return error
+	//TODO: implement
 }
 
-func UseItem(e IEngine, itemId string, targetItemId string, actionType string) {
+func UseItem(e IEngine, characterId string, itemId string, targetItemId string, actionType string) {
+	//TODO: implement
+}
 
+func DropItem(e IEngine, characterId string, itemId string) {
+	//TODO: implement
+}
+
+func PickupItem(e IEngine, characterId string, itemId string) {
+	//TODO: implement
 }
