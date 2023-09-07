@@ -12,9 +12,10 @@ func LoadGameObjects(e IEngine, floorSize float64) {
 		e.GameObjects()[gameObj.Id] = gameObj
 		e.Floors()[gameObj.Floor].Insert(gameObj)
 		if gameObj.Type == "player" {
-			playerId := gameObj.Properties["player_id"].(float64)
-			e.Players()[int(playerId)] = &entity.Player{
-				Id: int(playerId),
+			playerId := int(gameObj.Properties["player_id"].(float64))
+			gameObj.Properties["player_id"] = playerId
+			e.Players()[playerId] = &entity.Player{
+				Id: playerId,
 				CharacterGameObjectId: gameObj.Id,
 				VisionAreaGameObjectId: "",
 				Client: nil,

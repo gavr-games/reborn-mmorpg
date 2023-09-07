@@ -2,6 +2,7 @@ package engine
 
 import (
 	"math"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 // Process commands from players
@@ -48,6 +49,8 @@ func ProcessCommand(e IEngine, characterId int, command map[string]interface{}) 
 			charGameObj.Properties["speed_x"] = -axisSpeed
 			charGameObj.Properties["speed_y"] = -axisSpeed
 			SendGameObjectUpdate(e, charGameObj, "update_object")
+		case "get_character_info":
+			SendResponse(e, "character_info", game_objects.GetInfo(e.GameObjects(), charGameObj), player)
 		}
 	}
 }

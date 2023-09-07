@@ -8,6 +8,7 @@ import (
 // Process when player disconnects from the game
 func UnregisterClient(e IEngine, client entity.IClient) {
 	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
+		//TODO: handle issue this gives panic when closing closed channel
 		close(client.GetSendChannel())
 		player.Client = nil
 		e.Floors()[0].FilteredRemove(e.GameObjects()[player.VisionAreaGameObjectId], func(b utils.IBounds) bool {

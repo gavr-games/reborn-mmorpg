@@ -1,6 +1,5 @@
 import CharacterObserver from "./character_observer";
 import CharacterState from "./character_state";
-import { EventBus } from "~/plugins/game/event_bus";
 
 class CharacterController {
   constructor(gameObject, myCharacterId) {

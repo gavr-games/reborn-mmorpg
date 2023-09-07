@@ -3,6 +3,7 @@ package engine
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 // move players
@@ -17,7 +18,7 @@ func MovePlayers(e IEngine, tickDelta int64) {
 				dx := speedX / 1000.0 * float64(tickDelta)
 				dy := speedY / 1000.0 * float64(tickDelta)
 
-				dx, dy = CheckObjectMove(e, charGameObj, dx, dy)
+				dx, dy = game_objects.CanMove(e.Floors()[charGameObj.Floor], charGameObj, dx, dy)
 
 				// Stop the object
 				if dx == 0.0 && dy == 0.0 {

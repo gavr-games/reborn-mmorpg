@@ -27,12 +27,14 @@ func SendResponseToVisionAreas(e IEngine, gameObj *entity.GameObject, responseTy
 	}
 	for _, obj := range intersectingObjects {
 		if obj.(*entity.GameObject).Type == "player" && obj.(*entity.GameObject).Properties["kind"].(string) != "player_vision_area" {
-			playerId := obj.(*entity.GameObject).Properties["player_id"]
-			if player, ok := e.Players()[playerId.(int)]; ok {
-				select {
-				case player.Client.GetSendChannel() <- message:
-				default:
-					UnregisterClient(e, player.Client)
+			playerId := obj.(*entity.GameObject).Properties["player_id"].(int)
+			if player, ok := e.Players()[playerId]; ok {
+				if player.Client != nil {
+					select {
+					case player.Client.GetSendChannel() <- message:
+					default:
+						UnregisterClient(e, player.Client)
+					}
 				}
 			}
 		}

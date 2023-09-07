@@ -79,3 +79,29 @@ $sides: (top, bottom, left, right);
   top: 0;
   left: 0;
 }
+
+#character-menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  .rpgui-icon {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+#character-info-panel {
+  position: absolute;
+  top: 50px;
+  left: 50px;
+}
+
+.game-item-icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  background-image: url("~assets/img/icons/game-items-icons.png");
+  &.backpack {
+    background-position: 224px 608px;
+  }
+}

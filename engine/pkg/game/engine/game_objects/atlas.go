@@ -1,7 +1,7 @@
 package game_objects
 
 const (
-	PlayerVisionArea = 50.0
+	PlayerVisionArea = 70.0
 	PlayerSpeed = 2.0
 )
 
@@ -82,6 +82,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape": "rectangle",
 				"max_capacity": 16,
 				"free_capacity": 16,
+				"size": 4,
 				"parent_container_id": nil,
 				"equipable": true,
 				"visible": false,
