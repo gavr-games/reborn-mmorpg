@@ -7,7 +7,7 @@ import (
 )
 
 // move players
-func MovePlayers(e IEngine, tickDelta int64) {
+func MovePlayers(e entity.IEngine, tickDelta int64) {
 	for _, player := range e.Players() {
     if player.Client != nil && player.CharacterGameObjectId != "" && player.VisionAreaGameObjectId != "" {
 			charGameObj := e.GameObjects()[player.CharacterGameObjectId]
@@ -24,7 +24,7 @@ func MovePlayers(e IEngine, tickDelta int64) {
 				if dx == 0.0 && dy == 0.0 {
 					charGameObj.Properties["speed_x"] = 0.0
 					charGameObj.Properties["speed_y"] = 0.0
-					SendGameObjectUpdate(e, charGameObj, "update_object")
+					e.SendGameObjectUpdate(charGameObj, "update_object")
 					continue
 				}
 
@@ -56,7 +56,7 @@ func MovePlayers(e IEngine, tickDelta int64) {
 				// TODO: add serializers to minimize traffic
 				for _, val := range visibleObjects {
 					if _, ok := player.VisibleObjects[val.(*entity.GameObject).Id]; !ok {
-						SendResponse(e, "add_object", map[string]interface{}{
+						e.SendResponse("add_object", map[string]interface{}{
 							"object": val.(*entity.GameObject),
 						}, player)
 					}
@@ -65,7 +65,7 @@ func MovePlayers(e IEngine, tickDelta int64) {
 				// send remove old visible objects
 				for id, visible := range player.VisibleObjects {
 					if !visible {
-						SendResponse(e, "remove_object", map[string]interface{}{
+						e.SendResponse("remove_object", map[string]interface{}{
 							"object": map[string]interface{}{
 								"Id": id,
 							},

@@ -6,7 +6,7 @@ import (
 )
 
 // get visible objects for player
-func GetPlayerVisibleObjects(e IEngine, player *entity.Player) []utils.IBounds {
+func GetPlayerVisibleObjects(e entity.IEngine, player *entity.Player) []utils.IBounds {
 	visionArea := e.GameObjects()[player.VisionAreaGameObjectId]
 	visibleObjects := e.Floors()[visionArea.Floor].RetrieveIntersections(utils.Bounds{
 		X:      visionArea.X,

@@ -1,4 +1,4 @@
-package engine
+package entity
 
 type EngineResponse struct {
 	ResponseType string

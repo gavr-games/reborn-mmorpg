@@ -6,7 +6,7 @@ import (
 )
 
 // Process when player disconnects from the game
-func UnregisterClient(e IEngine, client entity.IClient) {
+func UnregisterClient(e entity.IEngine, client entity.IClient) {
 	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
 		if e.GameObjects()[player.VisionAreaGameObjectId] != nil && player.Client != nil {
 			//TODO: handle issue this gives panic when closing closed channel
@@ -20,7 +20,7 @@ func UnregisterClient(e IEngine, client entity.IClient) {
 			e.GameObjects()[player.CharacterGameObjectId].Properties["speed_x"] = 0.0
 			e.GameObjects()[player.CharacterGameObjectId].Properties["speed_y"] = 0.0
 			player.VisibleObjects = nil
-			SendGameObjectUpdate(e, e.GameObjects()[player.CharacterGameObjectId], "remove_object")
+			e.SendGameObjectUpdate(e.GameObjects()[player.CharacterGameObjectId], "remove_object")
 		}
 	}
 }

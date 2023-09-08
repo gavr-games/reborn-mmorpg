@@ -7,7 +7,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-func LoadGameObjects(e IEngine, floorSize float64) {
+func LoadGameObjects(e entity.IEngine, floorSize float64) {
 	loadedObjectsCount := storage.GetClient().ReadAllGameObjects(func(gameObj *entity.GameObject) {
 		e.GameObjects()[gameObj.Id] = gameObj
 		e.Floors()[gameObj.Floor].Insert(gameObj)

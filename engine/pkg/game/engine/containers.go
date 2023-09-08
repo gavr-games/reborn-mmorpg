@@ -8,12 +8,12 @@ import (
 )
 
 // position: -1 for any empty slot
-func PutToContainer(e IEngine, player *entity.Player, containerId string, itemId string, position int) bool {
+func PutToContainer(e entity.IEngine, player *entity.Player, containerId string, itemId string, position int) bool {
 	container := e.GameObjects()[containerId]
 	item := e.GameObjects()[itemId]
 
 	if container.Properties["free_capacity"] == 0 {
-		SendResponse(e, "add_message", map[string]interface{}{
+		e.SendResponse("add_message", map[string]interface{}{
 			"type": "system",
 			"message": "This container is full.",
 		}, player)
@@ -21,7 +21,7 @@ func PutToContainer(e IEngine, player *entity.Player, containerId string, itemId
 	}
 
 	if !CheckAccessToContainer(e, player, container) {
-		SendResponse(e, "add_message", map[string]interface{}{
+		e.SendResponse("add_message", map[string]interface{}{
 			"type": "system",
 			"message": "You don't have access to this container",
 		}, player)
@@ -35,7 +35,7 @@ func PutToContainer(e IEngine, player *entity.Player, containerId string, itemId
 		if (container.Properties["items_ids"].([]string)[position] == "") {
 			freePosition = position
 		} else {
-			SendResponse(e, "add_message", map[string]interface{}{
+			e.SendResponse("add_message", map[string]interface{}{
 				"type": "system",
 				"message": "This slot inside the container is already occupied .",
 			}, player)
@@ -54,7 +54,7 @@ func PutToContainer(e IEngine, player *entity.Player, containerId string, itemId
 	storage.GetClient().Updates <- item
 
 	// Send updates to players
-	SendResponseToVisionAreas(e, e.GameObjects()[player.CharacterGameObjectId], "put_item_to_container", map[string]interface{}{
+	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "put_item_to_container", map[string]interface{}{
 		"item_id": itemId,
 		"container_id": containerId,
 		"position": freePosition,
@@ -63,10 +63,10 @@ func PutToContainer(e IEngine, player *entity.Player, containerId string, itemId
 	return true
 }
 
-func RemoveFromContainer(e IEngine, player *entity.Player, containerId string, itemId string) {
+func RemoveFromContainer(e entity.IEngine, player *entity.Player, containerId string, itemId string) {
 
 }
 
-func CheckAccessToContainer(e IEngine, player *entity.Player, container *entity.GameObject) bool {
+func CheckAccessToContainer(e entity.IEngine, player *entity.Player, container *entity.GameObject) bool {
 	return player.CharacterGameObjectId  == container.Properties["owner_id"]
 }

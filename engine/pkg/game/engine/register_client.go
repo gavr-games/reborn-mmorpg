@@ -7,7 +7,7 @@ import (
 const InitialPlayerX = 4.0
 const InitialPlayerY = 4.0
 
-func CreatePlayer(e IEngine, client entity.IClient) *entity.Player {
+func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 	player := &entity.Player{
 		Id: client.GetCharacter().Id,
 		CharacterGameObjectId: "",
@@ -27,7 +27,7 @@ func CreatePlayer(e IEngine, client entity.IClient) *entity.Player {
 	return player
 }
 
-func CreatePlayerVisionArea(e IEngine, player *entity.Player) *entity.GameObject {
+func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) *entity.GameObject {
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
@@ -39,7 +39,7 @@ func CreatePlayerVisionArea(e IEngine, player *entity.Player) *entity.GameObject
 	return gameObj
 }
 
-func CreatePlayerItems(e IEngine, player *entity.Player) {
+func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	// Backpack
 	additionalProps := make(map[string]interface{})
@@ -54,7 +54,7 @@ func CreatePlayerItems(e IEngine, player *entity.Player) {
 }
 
 // Process when new player logs into the game
-func RegisterClient(e IEngine, client entity.IClient) {
+func RegisterClient(e entity.IEngine, client entity.IClient) {
 	// lookup if engine has already created player object
 	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
 		if player.Client != nil {
@@ -76,9 +76,9 @@ func RegisterClient(e IEngine, client entity.IClient) {
 			player.VisibleObjects[val.(*entity.GameObject).Id] = true
 		}
 		//Send json with VisibleObjects from vision area
-		SendResponse(e, "init_game", map[string]interface{}{
+		e.SendResponse("init_game", map[string]interface{}{
 			"visible_objects": visibleObjects,
 		}, player)
-		SendGameObjectUpdate(e, e.GameObjects()[player.CharacterGameObjectId], "add_object")
+		e.SendGameObjectUpdate(e.GameObjects()[player.CharacterGameObjectId], "add_object")
 	}
 }
