@@ -8,13 +8,13 @@ import (
 func GetItems(e entity.IEngine, containerId string) map[string]interface{} {
 	container := e.GameObjects()[containerId]
 	itemIds := container.Properties["items_ids"].([]interface{})
-	items := make(map[string]interface{})
-	items["items"] = make([]map[string]interface{}, len(itemIds))
+	cont := game_objects.GetInfo(e.GameObjects(), container)
+	cont["items"] = make([]map[string]interface{}, len(itemIds))
 
   for i, itemId := range itemIds {
 		if itemId != "" {
-    	items["items"].([]map[string]interface{})[i] = game_objects.GetInfo(e.GameObjects(), e.GameObjects()[itemId.(string)])
+    	cont["items"].([]map[string]interface{})[i] = game_objects.GetInfo(e.GameObjects(), e.GameObjects()[itemId.(string)])
 		}
   }
-	return items
+	return cont
 }

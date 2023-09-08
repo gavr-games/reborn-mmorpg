@@ -4,6 +4,11 @@
     <div id="fps" class="rpgui-container framed-golden">0</div>
     <GameCharacterMenu />
     <GamePanelCharacter />
+    <div v-for="(container, key) in gameContainers" :key="key">
+      {{key}}
+      <GamePanelContainer v-bind:container="container" />
+    </div>
+
     <GameChat />
   </div>
 </template>
@@ -14,6 +19,7 @@ import { EventBus } from "~/plugins/game/event_bus";
 export default {
   data() {
     return {
+      gameContainers: [],
     }
   },
 
@@ -25,8 +31,13 @@ export default {
     }
   },
 
+  created() {
+    EventBus.$on("container_items", this.addContainer)
+  },
+
   beforeDestroy() {
     this.$game.destroy()
+    EventBus.$off("container_items", this.addContainer)
   },
 
   computed: {
@@ -36,6 +47,14 @@ export default {
   },
 
   methods: {
+    addContainer(data) {
+      const contIndex = this.gameContainers.findIndex((cont) => cont.id === data.id)
+      if (contIndex == -1) {
+        this.gameContainers.push(data)
+      } else {
+        this.gameContainers[contIndex] = data
+      }
+    }
   }
 }
 </script>

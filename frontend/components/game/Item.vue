@@ -16,7 +16,7 @@
 import { EventBus } from "~/plugins/game/event_bus";
 
 export default {
-  props: ['item'],
+  props: ["item"],
 
   data() {
     return {
@@ -43,6 +43,8 @@ export default {
 
 <style>
 .game-item {
+  width: 32px;
+  height: 32px;
   .game-item-icon {
     display: inline-block;
     width: 32px;
@@ -50,6 +52,9 @@ export default {
     background-image: url("~assets/img/icons/game-items-icons.png");
     &.backpack {
       background-position: 224px 608px;
+    }
+    &.axe {
+      background-position: 192px 704px;
     }
   }
   .actions-menu {
