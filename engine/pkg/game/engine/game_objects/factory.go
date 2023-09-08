@@ -62,6 +62,7 @@ func CreateFromTemplate(objPath string, x float64, y float64) (*entity.GameObjec
 	gameObj.Properties = utils.CopyMap(objTemplate)
 	gameObj.Properties["x"] = objX
 	gameObj.Properties["y"] = objY
+	gameObj.Properties["id"] = id
 
 	if (gameObj.Properties["type"].(string) == "container") {
 		gameObj.Properties["items_ids"] = make([]string, gameObj.Properties["max_capacity"].(int))

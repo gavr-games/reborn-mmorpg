@@ -70,7 +70,12 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"left_arm": true, 
 						"right_arm": true,
 					},
-					"actions": map[string]interface{}{},
+					"actions": map[string]interface{}{
+						"equip": map[string]interface{}{
+							"cmd": "equip_item",
+							"params": "self", // self - id of current object
+						},
+					},
 				},
 		},
 		"container": {
@@ -89,6 +94,12 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"target_slots": map[string]interface{}{
 					"back": true,
 				},
+				"actions": map[string]interface{}{
+					"open": map[string]interface{}{
+						"cmd": "open_container",
+						"params": "self", // self - id of current object
+					},
+				},
 			},
 		},
 		"player": {
@@ -104,6 +115,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"slots": map[string]interface{}{
 					"back": nil,
 					"left_arm": nil,
+					"right_arm": nil,
 				},
 			},
 			"player_vision_area": map[string]interface{}{

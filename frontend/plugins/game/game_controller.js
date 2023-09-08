@@ -41,12 +41,16 @@ class GameController {
         this.gameObjects[gameObj["Id"]] = null
       }
     };
+    this.performGameAction = action => {
+      GameConnnection.sendCmd(action.cmd, action.params)
+    };
     EventBus.$on("init_game", this.initGameObjectsHandler)
     EventBus.$on("keyup", this.keyUpHandler)
     EventBus.$on("keydown", this.keyDownHandler)
     EventBus.$on("add_object", this.addObjectHandler)
     EventBus.$on("update_object", this.updateObjectHandler)
     EventBus.$on("remove_object", this.removeObjectHandler)
+    EventBus.$on("perform-game-action", this.performGameAction)
   }
 
   init(token, character_id) {
@@ -146,6 +150,7 @@ class GameController {
     EventBus.$off("add_object", this.addObjectHandler)
     EventBus.$off("update_object", this.updateObjectHandler)
     EventBus.$off("remove_object", this.removeObjectHandler)
+    EventBus.$off("perform-game-action", this.performGameAction)
   }
 }
 

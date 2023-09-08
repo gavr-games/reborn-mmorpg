@@ -47,61 +47,8 @@ $sides: (top, bottom, left, right);
   }
 }
 
-#chat {
-  width: 500px;
-  height: 300px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  opacity: 0.8;
-
-  #chat-messages {
-    width: 100%;
-    height: 210px;
-    overflow-y: scroll;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 0;
-    .message {
-      color: white;
-      font-size: 10px;
-    }
-  }
-
-  #input-chat-message {
-    margin-left: 2px;
-    width: 442px;
-  }
-}
-
 #fps {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-#character-menu {
-  position: absolute;
-  top: 0;
-  right: 0;
-  .rpgui-icon {
-    width: 32px;
-    height: 32px;
-  }
-}
-
-#character-info-panel {
-  position: absolute;
-  top: 50px;
-  left: 50px;
-}
-
-.game-item-icon {
-  display: inline-block;
-  width: 32px;
-  height: 32px;
-  background-image: url("~assets/img/icons/game-items-icons.png");
-  &.backpack {
-    background-position: 224px 608px;
-  }
 }
