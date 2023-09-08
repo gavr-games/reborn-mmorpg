@@ -1,4 +1,4 @@
-package engine
+package containers
 
 import (
 	"slices"
@@ -8,7 +8,7 @@ import (
 )
 
 // position: -1 for any empty slot
-func PutToContainer(e entity.IEngine, player *entity.Player, containerId string, itemId string, position int) bool {
+func Put(e entity.IEngine, player *entity.Player, containerId string, itemId string, position int) bool {
 	container := e.GameObjects()[containerId]
 	item := e.GameObjects()[itemId]
 
@@ -20,7 +20,7 @@ func PutToContainer(e entity.IEngine, player *entity.Player, containerId string,
 		return false
 	}
 
-	if !CheckAccessToContainer(e, player, container) {
+	if !CheckAccess(e, player, container) {
 		e.SendResponse("add_message", map[string]interface{}{
 			"type": "system",
 			"message": "You don't have access to this container",
@@ -61,12 +61,4 @@ func PutToContainer(e entity.IEngine, player *entity.Player, containerId string,
 	})
 
 	return true
-}
-
-func RemoveFromContainer(e entity.IEngine, player *entity.Player, containerId string, itemId string) {
-
-}
-
-func CheckAccessToContainer(e entity.IEngine, player *entity.Player, container *entity.GameObject) bool {
-	return player.CharacterGameObjectId  == container.Properties["owner_id"]
 }

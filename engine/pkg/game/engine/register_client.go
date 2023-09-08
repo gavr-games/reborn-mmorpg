@@ -2,6 +2,7 @@ package engine
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 )
 
 const InitialPlayerX = 4.0
@@ -50,7 +51,7 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 	// Axe
 	initialAxe := CreateGameObject("tool/axe", charGameObj.X, charGameObj.Y, nil)
 	e.GameObjects()[initialAxe.Id] = initialAxe
-	PutToContainer(e, player, initialBackpack.Id, initialAxe.Id, -1)
+	containers.Put(e, player, initialBackpack.Id, initialAxe.Id, -1)
 }
 
 // Process when new player logs into the game
