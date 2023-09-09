@@ -22,10 +22,12 @@ export default {
 
   created() {
     EventBus.$on("new-chat-message", this.addNewChatMessage)
+    EventBus.$on("add_message", this.addMessage)
   },
 
   beforeDestroy() {
-    EventBus.$off("new-chat-message")
+    EventBus.$off("new-chat-message", this.addNewChatMessage)
+    EventBus.$off("add_message", this.addMessage)
   },
 
   methods: {
@@ -40,6 +42,13 @@ export default {
         container.scrollTo(0, container.scrollHeight);
       }, 100);
     },
+    addMessage(data) {
+      this.chatMessages.push(data.message)
+      const container = this.$el.querySelector("#chat-messages");
+      setTimeout(() => {
+        container.scrollTo(0, container.scrollHeight);
+      }, 100);
+    }
   }
 }
 </script>

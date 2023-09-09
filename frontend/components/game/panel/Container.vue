@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import { EventBus } from "~/plugins/game/event_bus";
 
 export default {
   props: ["container"],
@@ -17,6 +18,31 @@ export default {
       showContainerPanel: true,
     }
   },
+
+  created() {
+    EventBus.$on("put_item_to_container", this.addItem)
+    EventBus.$on("remove_item_from_container", this.removeItem)
+  },
+
+  beforeDestroy() {
+    EventBus.$off("put_item_to_container", this.addItem)
+    EventBus.$off("remove_item_from_container", this.removeItem)
+  },
+
+  methods: {
+    addItem(data) {
+      if (data.container_id === this.container.id) {
+        this.container.items[data.position] = data.item
+        this.$forceUpdate()
+      }
+    },
+    removeItem(data) {
+      if (data.container_id === this.container.id) {
+        this.container.items[data.position] = null
+        this.$forceUpdate()
+      }
+    },
+  }
 }
 </script>
 

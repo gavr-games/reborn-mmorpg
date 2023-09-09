@@ -12,7 +12,7 @@ func GetItems(e entity.IEngine, containerId string) map[string]interface{} {
 	cont["items"] = make([]map[string]interface{}, len(itemIds))
 
   for i, itemId := range itemIds {
-		if itemId != "" {
+		if itemId != nil {
     	cont["items"].([]map[string]interface{})[i] = game_objects.GetInfo(e.GameObjects(), e.GameObjects()[itemId.(string)])
 		}
   }

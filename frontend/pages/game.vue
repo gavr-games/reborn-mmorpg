@@ -49,11 +49,10 @@ export default {
   methods: {
     addContainer(data) {
       const contIndex = this.gameContainers.findIndex((cont) => cont.id === data.id)
-      if (contIndex == -1) {
-        this.gameContainers.push(data)
-      } else {
-        this.gameContainers[contIndex] = data
+      if (contIndex !== -1) {
+        this.gameContainers.pop[contIndex]
       }
+      this.gameContainers.push(data)
     }
   }
 }

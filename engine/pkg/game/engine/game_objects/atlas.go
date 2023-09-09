@@ -61,7 +61,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"width": 0.5,
 					"height": 1.0,
 					"shape": "rectangle",
-					"containerId": "",
+					"container_id": nil,
 					"pickable": true,
 					"droppable": true,
 					"equipable": true,
@@ -75,6 +75,10 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 							"cmd": "equip_item",
 							"params": "self", // self - id of current object
 						},
+						"unequip": map[string]interface{}{
+							"cmd": "unequip_item",
+							"params": "self",
+						},
 					},
 				},
 		},
@@ -86,9 +90,10 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"height": 0.5,
 				"shape": "rectangle",
 				"max_capacity": 16,
-				"free_capacity": 16,
+				"free_capacity": 16.0,
 				"size": 4,
 				"parent_container_id": nil,
+				"owner_id": nil,
 				"equipable": true,
 				"visible": false,
 				"target_slots": map[string]interface{}{

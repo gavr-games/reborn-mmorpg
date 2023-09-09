@@ -65,7 +65,7 @@ func CreateFromTemplate(objPath string, x float64, y float64) (*entity.GameObjec
 	gameObj.Properties["id"] = id
 
 	if (gameObj.Properties["type"].(string) == "container") {
-		gameObj.Properties["items_ids"] = make([]string, gameObj.Properties["max_capacity"].(int))
+		gameObj.Properties["items_ids"] = make([]interface{}, gameObj.Properties["max_capacity"].(int))
 	}
 
 	return gameObj, nil

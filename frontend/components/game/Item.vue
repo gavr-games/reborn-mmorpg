@@ -63,6 +63,7 @@ export default {
     padding: 10px;
     border: 2px solid black;
     background-color: #884c34;
+    z-index: 999;
     .action-item {
       margin-bottom: 5px;
       &:hover {

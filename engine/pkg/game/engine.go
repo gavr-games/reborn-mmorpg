@@ -97,6 +97,14 @@ func (e Engine) SendGameObjectUpdate(gameObj *entity.GameObject, updateType stri
 	storage.GetClient().Updates <- gameObj
 }
 
+// used to send errors and other system response info
+func (e Engine) SendSystemMessage(message string, player *entity.Player) {
+	e.SendResponse("add_message", map[string]interface{}{
+		"type": "system",
+		"message": message,
+	}, player)
+}
+
 func NewEngine() *Engine {
 	return &Engine{
 		tickTime:    0,

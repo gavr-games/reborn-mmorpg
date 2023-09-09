@@ -26,10 +26,14 @@ export default {
 
   created() {
     EventBus.$on("character_info", this.showCharacterInfo)
+    EventBus.$on("equip_item", this.equipItem)
+    EventBus.$on("unequip_item", this.unequipItem)
   },
 
   beforeDestroy() {
     EventBus.$off("character_info")
+    EventBus.$off("equip_item", this.equipItem)
+    EventBus.$off("unequip_item", this.unequipItem)
   },
 
   methods: {
@@ -37,6 +41,16 @@ export default {
       this.showCharacterInfoPanel = true
       this.characterInfo = data
     },
+    equipItem(data) {
+      if (this.characterInfo.id === data.character_id) {
+        this.characterInfo.slots[data.slot] = data.item
+      }
+    },
+    unequipItem(data) {
+      if (this.characterInfo.id === data.character_id) {
+        this.characterInfo.slots[data.slot] = null
+      }
+    }
   }
 }
 </script>

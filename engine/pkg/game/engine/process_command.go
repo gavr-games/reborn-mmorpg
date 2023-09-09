@@ -6,6 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/items"
 )
 
 // Process commands from players
@@ -57,6 +58,10 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			e.SendResponse("character_info", game_objects.GetInfo(e.GameObjects(), charGameObj), player)
 		case "open_container":
 			e.SendResponse("container_items", containers.GetItems(e, params.(string)), player)
+		case "equip_item":
+			items.Equip(e, params.(string), player)
+		case "unequip_item":
+			items.Unequip(e, params.(string), player)
 		}
 	}
 }
