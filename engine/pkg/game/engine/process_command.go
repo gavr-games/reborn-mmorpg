@@ -62,6 +62,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			items.Equip(e, params.(string), player)
 		case "unequip_item":
 			items.Unequip(e, params.(string), player)
+		case "drop_item":
+			items.Drop(e, params.(string), player)
 		}
 	}
 }

@@ -4,6 +4,7 @@ import { EventBus } from "~/plugins/game/event_bus";
 import SurfaceController from "./objects/surface/surface_controller";
 import RockController from "./objects/rock/rock_controller";
 import TreeController from "./objects/tree/tree_controller";
+import ItemController from "./objects/item/item_controller";
 import CharacterController from "./objects/character/character_controller";
 import CharacterMenuController from "./menus/character_menu_controller";
 import GameConnnection from "./game_connection";
@@ -85,6 +86,9 @@ class GameController {
         break;
       case "tree":
         this.gameObjects[gameObj["Id"]] = new TreeController(gameObj)
+        break;
+      case "tool":
+        this.gameObjects[gameObj["Id"]] = new ItemController(gameObj)
         break;
     }
   }

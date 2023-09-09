@@ -58,8 +58,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"axe": map[string]interface{}{
 					"type": "tool",
 					"kind": "axe",
-					"width": 0.5,
-					"height": 1.0,
+					"width": 0.624,
+					"height": 1.575,
 					"shape": "rectangle",
 					"container_id": nil,
 					"pickable": true,
@@ -77,6 +77,10 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						},
 						"unequip": map[string]interface{}{
 							"cmd": "unequip_item",
+							"params": "self",
+						},
+						"drop": map[string]interface{}{
+							"cmd": "drop_item",
 							"params": "self",
 						},
 					},
