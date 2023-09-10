@@ -12,6 +12,11 @@ func Equip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties["slots"].(map[string]interface{})
 	targetSlots := item.Properties["target_slots"].(map[string]interface{})
+
+	if item == nil {
+		e.SendSystemMessage("Wrong item.", player)
+		return false
+	}
 	
 	// check already equipped
 	for _, slotItemId := range slots {
@@ -31,6 +36,12 @@ func Equip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	}
 	if freeTargetSlot == "" {
 		e.SendSystemMessage("No free slots to equip item.", player)
+		return false
+	}
+
+	//check in container
+	if (item.Properties["container_id"] == nil) {
+		e.SendSystemMessage("First pickup item to equip it.", player)
 		return false
 	}
 

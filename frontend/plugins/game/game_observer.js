@@ -6,6 +6,7 @@ import Light from "~/plugins/game/light/light";
 import { EventBus } from "~/plugins/game/event_bus";
 import showWorldAxis from "~/plugins/game/utils/world_axis";
 import Grid from "~/plugins/game/utils/grid";
+import getMeshRoot from "~/plugins/game/utils/get_mesh_root";
 
 class GameObserver {
   constructor() {
@@ -72,6 +73,22 @@ class GameObserver {
         }
       )
     );
+
+    scene.onPointerDown = function castRay(e) {
+      var ray = scene.createPickingRay(scene.pointerX, scene.pointerY, BABYLON.Matrix.Identity(), scene.activeCamera);
+
+      var hit = scene.pickWithRay(ray);
+      if (hit.pickedMesh) {
+        const gameObject = getMeshRoot(hit.pickedMesh)
+        if (gameObject) {
+          EventBus.$emit("game-object-clicked", {
+            game_object: gameObject.metadata.state.payload,
+            x: e.pageX,
+            y: e.pageY,
+          });
+        }
+      }
+    };
 
     window.addEventListener("resize", () => {
       this.resizeCanvas()

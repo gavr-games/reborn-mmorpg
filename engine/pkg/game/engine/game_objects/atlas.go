@@ -83,6 +83,10 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 							"cmd": "drop_item",
 							"params": "self",
 						},
+						"pickup": map[string]interface{}{
+							"cmd": "pickup_item",
+							"params": "self",
+						},
 					},
 				},
 		},

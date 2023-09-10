@@ -11,6 +11,11 @@ func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties["slots"].(map[string]interface{})
 
+	if item == nil {
+		e.SendSystemMessage("Wrong item.", player)
+		return false
+	}
+
 	// check equiped
 	for _, slotItemId := range slots {
 		if slotItemId == itemId {
@@ -48,9 +53,9 @@ func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
 
 	storage.GetClient().Updates <- item
 
-	e.SendResponse("add_object", map[string]interface{}{
+	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 		"object": item,
-	}, player)
+	})
 
 	return true
 }

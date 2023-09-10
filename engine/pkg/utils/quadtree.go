@@ -70,7 +70,6 @@ func (b Bounds) Intersects(a Bounds) bool {
 
 	// The two overlap
 	return true
-
 }
 
 // TotalNodes - Retrieve the total number of sub-Quadtrees in a Quadtree

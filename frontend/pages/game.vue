@@ -8,7 +8,7 @@
       {{key}}
       <GamePanelContainer v-bind:container="container" />
     </div>
-
+    <GameObjectContextMenu />
     <GameChat />
   </div>
 </template>
