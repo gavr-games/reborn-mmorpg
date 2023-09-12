@@ -44,6 +44,9 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 	// Axe
 	initialAxe := CreateGameObject(e, "tool/axe", charGameObj.X, charGameObj.Y, -1, nil)
 	containers.Put(e, player, initialBackpack.Id, initialAxe.Id, -1)
+	// Pickaxe
+	initialPickaxe := CreateGameObject(e, "tool/pickaxe", charGameObj.X, charGameObj.Y, -1, nil)
+	containers.Put(e, player, initialBackpack.Id, initialPickaxe.Id, -1)
 }
 
 // Process when new player logs into the game

@@ -171,7 +171,9 @@ class Loader {
   loadItems() {
     let items = [
       "axe",
+      "pickaxe",
       "log",
+      "stone",
     ];
     items.forEach(item => {
       let task = this.assetsManager.addContainerTask(

@@ -68,6 +68,12 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"resources": map[string]interface{}{
 						"stone": 3.0,
 					},
+					"actions": map[string]interface{}{
+						"chip": map[string]interface{}{
+							"cmd": "chip_rock",
+							"params": "self", // self - id of current object
+						},
+					},
 				},
 		},
 		"tool": {
@@ -76,6 +82,40 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"kind": "axe",
 					"width": 0.624,
 					"height": 1.575,
+					"shape": "rectangle",
+					"container_id": nil,
+					"pickable": true,
+					"droppable": true,
+					"equipable": true,
+					"visible": false,
+					"target_slots": map[string]interface{}{
+						"left_arm": true, 
+						"right_arm": true,
+					},
+					"actions": map[string]interface{}{
+						"equip": map[string]interface{}{
+							"cmd": "equip_item",
+							"params": "self", // self - id of current object
+						},
+						"unequip": map[string]interface{}{
+							"cmd": "unequip_item",
+							"params": "self",
+						},
+						"drop": map[string]interface{}{
+							"cmd": "drop_item",
+							"params": "self",
+						},
+						"pickup": map[string]interface{}{
+							"cmd": "pickup_item",
+							"params": "self",
+						},
+					},
+				},
+				"pickaxe": map[string]interface{}{
+					"type": "tool",
+					"kind": "pickaxe",
+					"width": 0.632,
+					"height": 2.255,
 					"shape": "rectangle",
 					"container_id": nil,
 					"pickable": true,
@@ -159,7 +199,25 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 		},
 		"resource": {
 			"stone": map[string]interface{}{
-	
+				"type": "resource",
+				"kind": "stone",
+				"width": 0.629,
+				"height": 0.525,
+				"shape": "rectangle",
+				"container_id": nil,
+				"pickable": true,
+				"droppable": true,
+				"visible": false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+				},
 			},
 			"log": map[string]interface{}{
 				"type": "resource",

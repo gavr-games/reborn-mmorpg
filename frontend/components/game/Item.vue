@@ -54,10 +54,16 @@ export default {
       background-position: 224px 608px;
     }
     &.axe {
-      background-position: 192px 704px;
+      background-position: 480px 546px;
+    }
+    &.pickaxe {
+      background-position: 448px 546px;
     }
     &.log {
       background-position: 512px 320px;
+    }
+    &.stone {
+      background-position: 480px 320px;
     }
   }
   .actions-menu {
