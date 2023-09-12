@@ -29,6 +29,12 @@ export default {
       this.$router.push('login')
     } else {
       this.$game.init(this.$auth.strategy.token.get(), this.$store.state.characters.selectedCharacterId)
+      // Give babylon scene back the keyboard control
+      window.addEventListener("keydown",function (event) {
+        if (document.activeElement && document.activeElement.tagName != "INPUT") {
+          document.getElementById("game-canvas").focus()
+        }
+      })
     }
   },
 
