@@ -47,6 +47,7 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 	e.Floors()[item.Floor].FilteredRemove(item, func(b utils.IBounds) bool {
 		return item.Id == b.(*entity.GameObject).Id
 	})
+	item.Floor = -1
 	item.Properties["visible"] = false
 
 	storage.GetClient().Updates <- item

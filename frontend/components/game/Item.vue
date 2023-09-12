@@ -56,6 +56,9 @@ export default {
     &.axe {
       background-position: 192px 704px;
     }
+    &.log {
+      background-position: 512px 320px;
+    }
   }
   .actions-menu {
     position: absolute;

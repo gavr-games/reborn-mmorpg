@@ -16,10 +16,10 @@ func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
 		return false
 	}
 
-	// check equiped
+	// check equipped
 	for _, slotItemId := range slots {
 		if slotItemId == itemId {
-			e.SendSystemMessage("Cannot drop equiped item.", player)
+			e.SendSystemMessage("Cannot drop equipped item.", player)
 			return false
 		}
 	}

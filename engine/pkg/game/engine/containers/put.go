@@ -23,6 +23,7 @@ func Put(e entity.IEngine, player *entity.Player, containerId string, itemId str
 		return false
 	}
 
+	//TODO: also search free space inside sub-containers
 	freePosition := position
 	if position == -1 {
 		freePosition = slices.IndexFunc(container.Properties["items_ids"].([]interface{}), func(id interface{}) bool { return id == nil })

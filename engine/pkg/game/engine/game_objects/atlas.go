@@ -15,6 +15,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"width": 1.0,
 				"height": 1.0,
 				"shape": "rectangle",
+				"visible": true,
 			},
 		},
 		"tree": {
@@ -25,8 +26,15 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"height": 1.0,
 					"shape": "circle",
 					"collidable": true,
+					"visible": true,
 					"resources": map[string]interface{}{
-						"logs": 3,
+						"logs": 3.0,
+					},
+					"actions": map[string]interface{}{
+						"chop": map[string]interface{}{
+							"cmd": "chop_tree",
+							"params": "self", // self - id of current object
+						},
 					},
 				},
 				"pine_5": map[string]interface{}{
@@ -36,8 +44,15 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"height": 1.0,
 					"shape": "circle",
 					"collidable": true,
+					"visible": true,
 					"resources": map[string]interface{}{
-						"logs": 3,
+						"logs": 3.0,
+					},
+					"actions": map[string]interface{}{
+						"chop": map[string]interface{}{
+							"cmd": "chop_tree",
+							"params": "self", // self - id of current object
+						},
 					},
 				},
 		},
@@ -49,8 +64,9 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"height": 1.098,
 					"shape": "rectangle",
 					"collidable": true,
+					"visible": true,
 					"resources": map[string]interface{}{
-						"stone": 3,
+						"stone": 3.0,
 					},
 				},
 		},
@@ -125,6 +141,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"speed": PlayerSpeed,
 				"speed_x": 0.0,
 				"speed_y": 0.0,
+				"visible": true,
 				"slots": map[string]interface{}{
 					"back": nil,
 					"left_arm": nil,
@@ -140,12 +157,30 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"visible": false,
 			},
 		},
-		"resources": {
+		"resource": {
 			"stone": map[string]interface{}{
 	
 			},
-			"logs": map[string]interface{}{
-	
+			"log": map[string]interface{}{
+				"type": "resource",
+				"kind": "log",
+				"width": 0.316,
+				"height": 1.335,
+				"shape": "rectangle",
+				"container_id": nil,
+				"pickable": true,
+				"droppable": true,
+				"visible": false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+				},
 			},
 		},
 	}

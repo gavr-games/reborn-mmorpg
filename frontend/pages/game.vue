@@ -9,6 +9,7 @@
       <GamePanelContainer v-bind:container="container" />
     </div>
     <GameObjectContextMenu />
+    <GameCurrentActionBar />
     <GameChat />
   </div>
 </template>

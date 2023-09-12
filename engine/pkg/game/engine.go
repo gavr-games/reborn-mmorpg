@@ -7,6 +7,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
@@ -49,10 +50,12 @@ func (e Engine) SendResponse(responseType string, responseData map[string]interf
 		fmt.Println(err)
 		return
 	}
-	select {
-	case player.Client.GetSendChannel() <- message:
-	default:
-		engine.UnregisterClient(e, player.Client)
+	if player.Client != nil {
+		select {
+		case player.Client.GetSendChannel() <- message:
+		default:
+			engine.UnregisterClient(e, player.Client)
+		}
 	}
 }
 
@@ -73,8 +76,9 @@ func (e Engine) SendResponseToVisionAreas(gameObj *entity.GameObject, responseTy
 			fmt.Println(err)
 			return
 	}
+
 	for _, obj := range intersectingObjects {
-		if obj.(*entity.GameObject).Type == "player" && obj.(*entity.GameObject).Properties["kind"].(string) != "player_vision_area" {
+		if obj.(*entity.GameObject).Type == "player" && obj.(*entity.GameObject).Properties["kind"].(string) == "player_vision_area" {
 			playerId := obj.(*entity.GameObject).Properties["player_id"].(int)
 			if player, ok := e.Players()[playerId]; ok {
 				if player.Client != nil {
@@ -154,6 +158,7 @@ func (e *Engine) Run() {
 			newTickTime := utils.MakeTimestamp()
 			if newTickTime - e.tickTime >= TickSize {
 				engine.MovePlayers(e, newTickTime - e.tickTime)
+				delayed_actions.UpdateAll(e, newTickTime - e.tickTime)
 				e.tickTime = newTickTime
 			}
 		}

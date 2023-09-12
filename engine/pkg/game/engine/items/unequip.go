@@ -25,7 +25,7 @@ func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
 		}
 	}
 	if itemSlotKey == "" {
-		e.SendSystemMessage("Item is not equiped.", player)
+		e.SendSystemMessage("Item is not equipped.", player)
 		return false
 	}
 

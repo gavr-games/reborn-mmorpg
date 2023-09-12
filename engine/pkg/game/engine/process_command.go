@@ -2,10 +2,13 @@ package engine
 
 import (
 	"math"
+	"slices"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/trees"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/items"
 )
 
@@ -17,6 +20,16 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 		speed := charGameObj.Properties["speed"].(float64)
 		axisSpeed := math.Sqrt(speed * speed / 2)
+
+		// List of commands, which don't interrupt current character action.
+		// Like get_character_info does not interrupt choping a tree, but any movement does
+		nonCancellingCmds := []string{"get_character_info", "open_container"}
+		// Cancel character delayed actions
+		if !slices.Contains(nonCancellingCmds, cmd.(string)) {
+			delayed_actions.Cancel(e, charGameObj)
+		}
+ 
+		// Process Cmd
 		switch cmd {
 		case "stop":
 			charGameObj.Properties["speed_x"] = 0.0
@@ -66,6 +79,14 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			items.Drop(e, params.(string), player)
 		case "pickup_item":
 			items.Pickup(e, params.(string), player)
+		case "chop_tree":
+			treeId := params.(string)
+			if trees.CheckChop(e, player, treeId) {
+				delayed_actions.Start(e, charGameObj, "Chop", map[string]interface{}{
+					"playerId": float64(player.Id), // this conversion is required, because json unmarshal decodes all numbers to float64
+					"treeId": treeId,
+				})
+			}
 		}
 	}
 }

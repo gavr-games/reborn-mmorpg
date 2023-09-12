@@ -11,8 +11,7 @@ const (
 	PlayerSpeed = 2.0
 )
 
-//TODO: add floor parameter here and boolean addToFloor
-func CreateGameObject(objPath string, x float64, y float64, additionalProps map[string]interface{}) *entity.GameObject {
+func CreateGameObject(e entity.IEngine, objPath string, x float64, y float64, floor int, additionalProps map[string]interface{}) *entity.GameObject {
 	gameObj, err := game_objects.CreateFromTemplate(objPath, x, y)
 	if err != nil {
 		//TODO: handle error
@@ -22,6 +21,14 @@ func CreateGameObject(objPath string, x float64, y float64, additionalProps map[
 			gameObj.Properties[k] = v
 		}
 	}
+
+	gameObj.Floor = floor
+	if floor != -1 {
+		e.Floors()[gameObj.Floor].Insert(gameObj)
+	}
+
+	e.GameObjects()[gameObj.Id] = gameObj
+
 	if gameObj.Properties["kind"].(string) != "player_vision_area" {
 		storage.GetClient().Updates <- gameObj
 	}

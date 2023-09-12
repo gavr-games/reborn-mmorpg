@@ -19,10 +19,7 @@ func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 	e.Players()[player.Id] = player
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := CreateGameObject("player/player", InitialPlayerX, InitialPlayerY, additionalProps)
-	gameObj.Floor = 0
-	e.GameObjects()[gameObj.Id] = gameObj
-	e.Floors()[gameObj.Floor].Insert(gameObj)
+	gameObj := CreateGameObject(e, "player/player", InitialPlayerX, InitialPlayerY, 0, additionalProps)
 	player.CharacterGameObjectId = gameObj.Id
 	CreatePlayerItems(e, player)
 	return player
@@ -32,10 +29,7 @@ func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) *entity.Gam
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := CreateGameObject("player/player_vision_area", charGameObj.X, charGameObj.Y, additionalProps)
-	gameObj.Floor = 0
-	e.GameObjects()[gameObj.Id] = gameObj
-	e.Floors()[gameObj.Floor].Insert(gameObj)
+	gameObj := CreateGameObject(e, "player/player_vision_area", charGameObj.X, charGameObj.Y, 0, additionalProps)
 	player.VisionAreaGameObjectId = gameObj.Id
 	return gameObj
 }
@@ -45,12 +39,10 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 	// Backpack
 	additionalProps := make(map[string]interface{})
 	additionalProps["owner_id"] = charGameObj.Id
-	initialBackpack := CreateGameObject("container/backpack", charGameObj.X, charGameObj.Y, additionalProps)
+	initialBackpack := CreateGameObject(e, "container/backpack", charGameObj.X, charGameObj.Y, -1, additionalProps)
 	charGameObj.Properties["slots"].(map[string]interface{})["back"] = initialBackpack.Id
-	e.GameObjects()[initialBackpack.Id] = initialBackpack
 	// Axe
-	initialAxe := CreateGameObject("tool/axe", charGameObj.X, charGameObj.Y, nil)
-	e.GameObjects()[initialAxe.Id] = initialAxe
+	initialAxe := CreateGameObject(e, "tool/axe", charGameObj.X, charGameObj.Y, -1, nil)
 	containers.Put(e, player, initialBackpack.Id, initialAxe.Id, -1)
 }
 

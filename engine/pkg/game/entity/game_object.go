@@ -14,7 +14,8 @@ type GameObject struct {
 	// game params
 	Id string
 	Type string
-	Floor int
+	Floor int // -1 for does not belong to any floor
+	CurrentAction *DelayedAction
 	Properties map[string]interface{}
 }
 

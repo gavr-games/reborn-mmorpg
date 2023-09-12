@@ -14,6 +14,7 @@ import (
 type StorageClient struct {
 	redisClient *redis.Client
 	Updates chan *entity.GameObject
+	Deletes chan *entity.GameObject
 }
 
 var instance *StorageClient = nil
@@ -30,6 +31,7 @@ func GetClient() *StorageClient {
 		instance = &StorageClient{
 			redisClient: rdb,
 			Updates: make(chan *entity.GameObject),
+			Deletes: make(chan *entity.GameObject),
 		}
 	})
 	return instance
@@ -44,6 +46,13 @@ func (sc *StorageClient) SaveGameObject(obj *entity.GameObject) {
 	setErr := sc.redisClient.Set(ctx, obj.Id, message, 0).Err()
   if setErr != nil {
     panic(setErr)
+  }
+}
+
+func (sc *StorageClient) RemoveGameObject(obj *entity.GameObject) {
+	_, err := sc.redisClient.Del(ctx, obj.Id).Result() 
+  if err != nil {
+    panic(err)
   }
 }
 
@@ -79,6 +88,8 @@ func (sc *StorageClient) Run() {
 		select {
 		case obj := <-sc.Updates:
 			sc.SaveGameObject(obj)
+		case obj := <-sc.Deletes:
+			sc.RemoveGameObject(obj)
 		}
 	}
 }

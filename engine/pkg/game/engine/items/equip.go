@@ -21,7 +21,7 @@ func Equip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	// check already equipped
 	for _, slotItemId := range slots {
 		if slotItemId == itemId {
-			e.SendSystemMessage("This item is already equiped.", player)
+			e.SendSystemMessage("This item is already equipped.", player)
 			return false
 		}
 	}
