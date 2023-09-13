@@ -1,6 +1,8 @@
 <template>
   <div class="game-item">
-    <i :class="`game-item-icon ${item['kind']}`" :title="item['kind']" @contextmenu="showActions($event)"></i>
+    <div @contextmenu="showActions($event)">
+    <GameItemsIcon v-bind:item="item['kind']" />
+    </div>
     <div class="actions-menu" v-if="showActionsMenu">
       <div v-for="(action, actionKey) in item.actions" :key="actionKey" class="action-item" @click="handleAction(actionKey)">
         {{ actionKey }}
@@ -45,27 +47,6 @@ export default {
 .game-item {
   width: 32px;
   height: 32px;
-  .game-item-icon {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    background-image: url("~assets/img/icons/game-items-icons.png");
-    &.backpack {
-      background-position: 224px 608px;
-    }
-    &.axe {
-      background-position: 480px 546px;
-    }
-    &.pickaxe {
-      background-position: 448px 546px;
-    }
-    &.log {
-      background-position: 512px 320px;
-    }
-    &.stone {
-      background-position: 480px 320px;
-    }
-  }
   .actions-menu {
     position: absolute;
     margin-left: 10px;

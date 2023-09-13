@@ -42,9 +42,9 @@ export default {
         this.progress = 0
         this.interval = setInterval(() => {
           if (this.progress < 100) {
-            this.progress += 1
+            this.progress += 2
           }
-        }, data.duration / 100);
+        }, data.duration / 50);
       }
     },
     cancelAction(data) {

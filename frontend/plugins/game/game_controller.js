@@ -6,7 +6,6 @@ import RockController from "./objects/rock/rock_controller";
 import TreeController from "./objects/tree/tree_controller";
 import ItemController from "./objects/item/item_controller";
 import CharacterController from "./objects/character/character_controller";
-import CharacterMenuController from "./menus/character_menu_controller";
 import GameConnnection from "./game_connection";
 
 class GameController {
@@ -61,7 +60,6 @@ class GameController {
     GameConnnection.init(token, character_id)
     GameObserver.init()
     ChatController.init(token, character_id)
-    CharacterMenuController.init(GameConnnection)
   }
 
   initGameObjects(gameObjects) {

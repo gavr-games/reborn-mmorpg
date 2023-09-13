@@ -3,6 +3,7 @@
     <canvas id="game-canvas"></canvas>
     <div id="fps" class="rpgui-container framed-golden">0</div>
     <GameCharacterMenu />
+    <GamePanelCraft />
     <GamePanelCharacter />
     <div v-for="(container, key) in gameContainers" :key="key">
       {{key}}

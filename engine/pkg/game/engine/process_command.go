@@ -6,6 +6,7 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/trees"
@@ -70,6 +71,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		case "get_character_info":
 			e.SendResponse("character_info", game_objects.GetInfo(e.GameObjects(), charGameObj), player)
+		case "get_craft_atlas":
+			e.SendResponse("craft_atlas", craft.GetSerializableAtlas(), player)
 		case "open_container":
 			e.SendResponse("container_items", containers.GetItems(e, params.(string)), player)
 		case "equip_item":
@@ -80,6 +83,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			items.Drop(e, params.(string), player)
 		case "pickup_item":
 			items.Pickup(e, params.(string), player)
+		case "destroy_item":
+			items.Destroy(e, params.(string), player)
 		case "chop_tree":
 			treeId := params.(string)
 			if trees.CheckChop(e, player, treeId) {

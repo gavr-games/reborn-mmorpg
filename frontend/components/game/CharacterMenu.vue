@@ -1,6 +1,7 @@
 <template>
   <div id="character-menu" class="rpgui-container framed-golden">
-    <div class="rpgui-icon helmet-slot" @click="getCharacterInfo"></div>
+    <div class="rpgui-icon menu-item helmet-slot" @click="getCharacterInfo"></div>
+    <div class="rpgui-icon menu-item potion-slot" @click="getCraftAtlas"></div>
   </div>
 </template>
 
@@ -15,7 +16,16 @@ export default {
 
   methods: {
     getCharacterInfo() {
-      EventBus.$emit("get-character-info", {});
+      EventBus.$emit("perform-game-action", {
+        cmd: "get_character_info",
+        params: {}
+      });
+    },
+    getCraftAtlas() {
+      EventBus.$emit("perform-game-action", {
+        cmd: "get_craft_atlas",
+        params: {}
+      });
     },
   }
 }
@@ -30,6 +40,10 @@ export default {
   .rpgui-icon {
     width: 32px;
     height: 32px;
+  }
+  .menu-item {
+    display: block;
+    margin-bottom: 5px;
   }
 }
 </style>

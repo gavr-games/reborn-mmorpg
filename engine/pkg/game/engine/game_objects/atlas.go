@@ -217,6 +217,10 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"cmd": "pickup_item",
 						"params": "self",
 					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
 				},
 			},
 			"log": map[string]interface{}{
@@ -237,6 +241,27 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd": "pickup_item",
 						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
+		"wall": {
+			"stone_wall": map[string]interface{}{
+				"type": "wall",
+				"kind": "stone_wall",
+				"width": 0.683,
+				"height": 2.045,
+				"shape": "rectangle",
+				"collidable": true,
+				"visible": true,
+				"actions": map[string]interface{}{
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
 					},
 				},
 			},
