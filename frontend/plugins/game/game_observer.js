@@ -7,6 +7,10 @@ import { EventBus } from "~/plugins/game/event_bus";
 import showWorldAxis from "~/plugins/game/utils/world_axis";
 import Grid from "~/plugins/game/utils/grid";
 import getMeshRoot from "~/plugins/game/utils/get_mesh_root";
+import addAlpha from "~/plugins/game/utils/add_alpha";
+import removeAlpha from "~/plugins/game/utils/remove_alpha";
+
+const NON_TRANSPARENT_OBJECT_TYPES = ["player", "surface"]
 
 class GameObserver {
   constructor() {
@@ -20,6 +24,8 @@ class GameObserver {
     this.lastTick = 0;
     this.loaded = false;
     this.renderObservers = [];
+    this.previousAlphaMeshes = [];
+    this.previousAlphaMeshesIds = [];
   }
 
   init() {
@@ -48,6 +54,9 @@ class GameObserver {
       () => {
         this.createObjects();
         this.runRenderLoop();
+        this.scene.registerBeforeRender(() => {
+          this.castAlphaRay()
+        })
         this.loaded = true;
         EventBus.$emit("scene-created", this.scene, this.canvas);
       },
@@ -94,6 +103,43 @@ class GameObserver {
       this.resizeCanvas()
     });
     this.resizeCanvas()
+  }
+
+  // Makes objects transparent if character is behind something
+  castAlphaRay() {
+    const direction = this.scene.activeCamera.getDirection(new BABYLON.Vector3.Forward())
+    const ray = new BABYLON.Ray(this.scene.activeCamera.position, direction, 300)
+    const hits = this.scene.multiPickWithRay(ray)
+    let alphaObjects = []
+    let alphaObjectsIds = []
+
+    if (hits) {
+      for (var i = 0; i < hits.length; i++){
+        const meshRoot = getMeshRoot(hits[i].pickedMesh)
+
+        if (meshRoot && !NON_TRANSPARENT_OBJECT_TYPES.includes(meshRoot.metadata.state.payload.Type )) {
+          if (!alphaObjectsIds.includes(meshRoot.metadata.id)) {
+            alphaObjects.push(meshRoot)
+            alphaObjectsIds.push(meshRoot.metadata.id)
+          }
+        }
+      }
+    }
+
+    this.previousAlphaMeshes.forEach((mesh) => {
+      if (!alphaObjectsIds.includes(mesh.metadata.id)) {
+        removeAlpha(mesh, this.scene)
+      }
+    })
+
+    alphaObjects.forEach((mesh) => {
+      if (!this.previousAlphaMeshesIds.includes(mesh.metadata.id)) {
+        addAlpha(mesh, this.scene)
+      }
+    })
+
+    this.previousAlphaMeshes = alphaObjects
+    this.previousAlphaMeshesIds = alphaObjectsIds
   }
 
   resizeCanvas() {

@@ -1,5 +1,5 @@
 export default function getMeshRoot(mesh) {
-  if (mesh.metadata.id) {
+  if (mesh.metadata && mesh.metadata.id) {
     return mesh
   }
 
