@@ -76,9 +76,9 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 		},
-		"tool": {
+		"axe": { // there might be tools from different materials later
 				"axe": map[string]interface{}{
-					"type": "tool",
+					"type": "axe",
 					"kind": "axe",
 					"width": 0.624,
 					"height": 1.575,
@@ -111,8 +111,10 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						},
 					},
 				},
+		},
+		"pickaxe": {
 				"pickaxe": map[string]interface{}{
-					"type": "tool",
+					"type": "pickaxe",
 					"kind": "pickaxe",
 					"width": 0.632,
 					"height": 2.255,
@@ -145,6 +147,46 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						},
 					},
 				},
+		},
+		"hammer": {
+			"stone_hammer": map[string]interface{}{
+				"type": "hammer",
+				"kind": "stone_hammer",
+				"width": 1.181,
+				"height": 2.5,
+				"shape": "rectangle",
+				"container_id": nil,
+				"pickable": true,
+				"droppable": true,
+				"equipable": true,
+				"visible": false,
+				"target_slots": map[string]interface{}{
+					"left_arm": true, 
+					"right_arm": true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd": "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd": "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 		},
 		"container": {
 			"backpack": map[string]interface{}{

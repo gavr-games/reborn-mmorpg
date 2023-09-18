@@ -85,8 +85,7 @@ class GameController {
       case "tree":
         this.gameObjects[gameObj["Id"]] = new TreeController(gameObj)
         break;
-      case "resource":
-      case "tool":
+      default:
         this.gameObjects[gameObj["Id"]] = new ItemController(gameObj)
         break;
     }

@@ -11,7 +11,7 @@
             <p v-for="(resourceCount, resourceName) in item.resources" :key="resourceName">
               <GameItemsIcon v-bind:item="resourceName" />: {{ resourceCount }}
             </p>
-            <button type="button" class="rpgui-button" @click="craftItem(item)"><p>Craft</p></button>
+            <button type="button" class="rpgui-button" @click="craftItem(itemKey, item)"><p>Craft</p></button>
           </div>
         </div>
       </div>
@@ -43,7 +43,15 @@ export default {
   methods: {
     showCraftInfo(data) {
       this.showCraftPanel = true
-      this.craftInfo = data
+      const skillBasedData = {}
+      Object.entries(data).forEach(entry => {
+        const [itemName, item] = entry;
+        if (!skillBasedData[item.skill]) {
+          skillBasedData[item.skill] = {}
+        }
+        skillBasedData[item.skill][itemName] = item
+      });
+      this.craftInfo = skillBasedData
     },
     toggleExpandSkill(skillName) {
       if (this.expandSkills[skillName]) {
@@ -53,8 +61,16 @@ export default {
       }
       this.$forceUpdate()
     },
-    craftItem(item) {
-      console.log(item)
+    craftItem(itemKey, item) {
+      if (item.inputs.length === 0) {
+        EventBus.$emit("perform-game-action", {
+          cmd: "craft",
+          params: {
+            "item_name": itemKey,
+            "inputs": []
+          }
+        });
+      }
     }
   }
 }

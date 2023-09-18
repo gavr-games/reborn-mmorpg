@@ -1,39 +1,38 @@
 package craft
 
-func GetAtlas() map[string]map[string]interface{} {
-	craftAtlas:= map[string]map[string]interface{}{
-		//"lumberjacking":map[string]interface{}{
-		//	"wooden_wall": map[string]interface{}{
-		//		"resources": map[string]interface{}{
-		//			"log": 5.0,
-		//		},
-		//		"duration": 5000.0, // ms
-		//	},
-		//},
-		"stoneworking":map[string]interface{}{
-			"stone_wall": map[string]interface{}{
-				"resources": map[string]interface{}{
-					"stone": 5.0,
-				},
-				"title": "Stone Wall",
-				"description": "Protects from strangers and keeps your animals safe.",
-				"inputs": []string{
-					"coordinates",
-					"rotation",
-				},
-				"place_in_real_world": true, //place item in real world or put into container
-				"duration": 5000.0, // ms
+func GetAtlas() map[string]interface{} {
+	craftAtlas:= map[string]interface{}{
+		"stone_wall": map[string]interface{}{
+			"skill": "stoneworking",
+			"resources": map[string]interface{}{
+				"stone": 5.0,
 			},
+			"title": "Stone Wall",
+			"description": "Protects from strangers and keeps your animals safe.",
+			"inputs": []string{
+				"coordinates",
+				"rotation",
+			},
+			"tools": []string{
+				"hammer",
+			}, //tools equipped required to craft something
+			"place_in_real_world": true, //place item in real world or put into container
+			"duration": 5000.0, // ms
+		},
+		"stone_hammer": map[string]interface{}{
+			"skill": "stoneworking",
+			"resources": map[string]interface{}{
+				"stone": 1.0,
+				"log": 1.0,
+			},
+			"title": "Stone Hammer",
+			"description": "Basic hammer used to craft things.",
+			"inputs": []string{},
+			"tools": []string{},
+			"place_in_real_world": false,
+			"duration": 5000.0,
 		},
 	}
 
 	return craftAtlas
-}
-
-func GetSerializableAtlas() map[string]interface{} {
-	serializableAtlas := make(map[string]interface{})
-	for key, obj := range GetAtlas() {
-		serializableAtlas[key] = obj
-	}
-	return serializableAtlas
 }

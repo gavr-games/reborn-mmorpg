@@ -11,7 +11,7 @@ func CheckChop(e entity.IEngine, player *entity.Player, treeId string) bool {
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 
 	// Check has Axe equipped
-	if !characters.HasKindEquipped(e, charGameObj, "axe") {
+	if !characters.HasTypeEquipped(e, charGameObj, "axe") {
 		e.SendSystemMessage("You need to equip axe.", player)
 		return false
 	}

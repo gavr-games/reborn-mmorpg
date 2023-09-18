@@ -10,6 +10,17 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
+func searchAtlas(gameObjectsAtlas map[string]map[string]interface{}, objKind string) (map[string]interface{}, error) {
+	for _, objects := range gameObjectsAtlas {
+		for _, obj := range objects {
+			if obj.(map[string]interface{})["kind"].(string) == objKind {
+				return obj.(map[string]interface{}), nil
+			}
+		}
+	}
+	return nil, errors.New(fmt.Sprintf("Object kind %s not found", objKind))
+}
+
 func findTemplate(objPath string) (map[string]interface{}, error) {
 	gameObjectsAtlas := GetObjectsAtlas()
 	if strings.Contains(objPath, "/") {
@@ -27,7 +38,9 @@ func findTemplate(objPath string) (map[string]interface{}, error) {
 		objType := objPath // like "tree", "rock"
 		objKinds, ok := gameObjectsAtlas[objType]
 		if !ok {
-			return nil, errors.New(fmt.Sprintf("Object type %s not found", objType))
+			// try to find gameObject by kind, not type. Like "stone_hammer"
+			objTemplate, err := searchAtlas(gameObjectsAtlas, objPath)
+			return objTemplate, err
 		}
 		return utils.PickRandomInMap(objKinds).(map[string]interface{}), nil
 	}

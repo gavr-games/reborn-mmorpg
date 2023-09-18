@@ -25,6 +25,9 @@ export default {
   &.pickaxe {
     background-position: 448px 546px;
   }
+  &.stone_hammer {
+    background-position: 384px 546px;
+  }
   &.log {
     background-position: 512px 320px;
   }

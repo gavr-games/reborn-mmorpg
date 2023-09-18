@@ -25,7 +25,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 
 		// List of commands, which don't interrupt current character action.
 		// Like get_character_info does not interrupt choping a tree, but any movement does
-		nonCancellingCmds := []string{"get_character_info", "open_container"}
+		nonCancellingCmds := []string{"get_character_info", "open_container", "get_craft_atlas"}
 		// Cancel character delayed actions
 		if !slices.Contains(nonCancellingCmds, cmd.(string)) {
 			delayed_actions.Cancel(e, charGameObj)
@@ -72,7 +72,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "get_character_info":
 			e.SendResponse("character_info", game_objects.GetInfo(e.GameObjects(), charGameObj), player)
 		case "get_craft_atlas":
-			e.SendResponse("craft_atlas", craft.GetSerializableAtlas(), player)
+			e.SendResponse("craft_atlas", craft.GetAtlas(), player)
 		case "open_container":
 			e.SendResponse("container_items", containers.GetItems(e, params.(string)), player)
 		case "equip_item":
@@ -100,6 +100,11 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 					"playerId": float64(player.Id), // this conversion is required, because json unmarshal decodes all numbers to float64
 					"rockId": stoneId,
 				})
+			}
+		case "craft":
+			if craft.Check(e, player, params.(map[string]interface{})) {
+				params.(map[string]interface{})["playerId"] = float64(player.Id)
+				delayed_actions.StartCraft(e, charGameObj, "Craft", params.(map[string]interface{}))
 			}
 		}
 	}

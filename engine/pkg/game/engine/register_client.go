@@ -42,10 +42,10 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 	initialBackpack := CreateGameObject(e, "container/backpack", charGameObj.X, charGameObj.Y, -1, additionalProps)
 	charGameObj.Properties["slots"].(map[string]interface{})["back"] = initialBackpack.Id
 	// Axe
-	initialAxe := CreateGameObject(e, "tool/axe", charGameObj.X, charGameObj.Y, -1, nil)
+	initialAxe := CreateGameObject(e, "axe/axe", charGameObj.X, charGameObj.Y, -1, nil)
 	containers.Put(e, player, initialBackpack.Id, initialAxe.Id, -1)
 	// Pickaxe
-	initialPickaxe := CreateGameObject(e, "tool/pickaxe", charGameObj.X, charGameObj.Y, -1, nil)
+	initialPickaxe := CreateGameObject(e, "pickaxe/pickaxe", charGameObj.X, charGameObj.Y, -1, nil)
 	containers.Put(e, player, initialBackpack.Id, initialPickaxe.Id, -1)
 }
 
