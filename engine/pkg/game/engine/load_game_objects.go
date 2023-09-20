@@ -31,8 +31,7 @@ func LoadGameObjects(e entity.IEngine, floorSize float64) {
 		// grass
 		for x := 0; x < 100; x++ {
 			for y := 0; y < 100; y++ {
-				// + 0.5 because we want to place the center point
-				CreateGameObject(e, "surface/grass", float64(x) + 0.5, float64(y) + 0.5, 0, nil)
+				CreateGameObject(e, "surface/grass", float64(x), float64(y), 0, nil)
 			}
 		}
 		// rocks
@@ -46,6 +45,14 @@ func LoadGameObjects(e entity.IEngine, floorSize float64) {
 			x := 1.0 + rand.Float64() * (99.0 - 1.0)
 			y := 1.0 + rand.Float64() * (99.0 - 1.0)
 			CreateGameObject(e, "tree", x, y, 0, nil)
+		}
+		// eggs
+		for i := 0; i < 20; i++ {
+			x := 1.0 + rand.Float64() * (99.0 - 1.0)
+			y := 1.0 + rand.Float64() * (99.0 - 1.0)
+			CreateGameObject(e, "resource/fire_dragon_egg", x, y, 0, map[string]interface{}{
+				"visible": true,
+			})
 		}
 	}
 }

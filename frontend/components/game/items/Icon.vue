@@ -34,5 +34,8 @@ export default {
   &.stone {
     background-position: 480px 320px;
   }
+  &.fire_dragon_egg {
+    background-position: 320px 386px;
+  }
 }
 </style>
