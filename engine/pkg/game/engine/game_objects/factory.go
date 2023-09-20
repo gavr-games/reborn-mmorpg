@@ -58,24 +58,21 @@ func CreateFromTemplate(objPath string, x float64, y float64) (*entity.GameObjec
 	}
 
 	id := uuid.NewV4().String()
-	width := objTemplate["width"].(float64)
-	height := objTemplate["height"].(float64)
-	objX := x - width / 2
-	objY := y - height / 2
 
 	gameObj := &entity.GameObject{
-		X: objX,
-		Y: objY,
-		Width: width,
-		Height: height,
+		X: x,
+		Y: y,
+		Width: objTemplate["width"].(float64),
+		Height: objTemplate["height"].(float64),
 		Id: id,
 		Type: objTemplate["type"].(string),
 		Floor: -1, // -1 for does not belong to any floor
+		Rotation: 0,
 		Properties: make(map[string]interface{}),
 	}
 	gameObj.Properties = utils.CopyMap(objTemplate)
-	gameObj.Properties["x"] = objX
-	gameObj.Properties["y"] = objY
+	gameObj.Properties["x"] = x
+	gameObj.Properties["y"] = y
 	gameObj.Properties["id"] = id
 
 	if (gameObj.Properties["type"].(string) == "container") {

@@ -1,7 +1,7 @@
 const ALPHA = 0.5
 
-export default function addAlpha(mesh, scene) {
-  if (mesh.material && mesh.material.alpha != ALPHA) {
+export default function addAlpha(mesh, scene, alpha=ALPHA) {
+  if (mesh.material && mesh.material.alpha != alpha) {
     const alphaMaterial = new BABYLON.StandardMaterial(`alphaMaterial-${mesh.metadata.id}`, scene);
 
     alphaMaterial.diffuseColor = new BABYLON.Color3(1, 0, 1);

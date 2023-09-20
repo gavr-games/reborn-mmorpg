@@ -1,0 +1,84 @@
+import CraftObserver from "~/plugins/game/craft/craft_observer";
+import { EventBus } from "~/plugins/game/event_bus";
+
+const IDLE_STATE = 0
+const SELECT_COORDS_AND_ROTATION_STATE = 1
+const STICK_TO_GRID = 1
+
+class CraftController {
+  constructor() {
+    this.observer = new CraftObserver(this.state);
+    this.x = 0
+    this.y = 0
+    this.rotation = 0
+    this.itemKey = null
+    this.item = null
+    this.state = IDLE_STATE
+    this.selectionHandler = params => {
+      this.state = SELECT_COORDS_AND_ROTATION_STATE
+      this.itemKey = params.item_key
+      this.item = params.item
+      this.observer.create(params.item_key, this.x, this.y)
+    };
+    this.pointerMovedHandler = params => {
+      if (this.state === SELECT_COORDS_AND_ROTATION_STATE && params) {
+        this.x = params.x - params.x % STICK_TO_GRID
+        this.y = params.y - params.y % STICK_TO_GRID
+        this.observer.update(this.x, this.y)
+      }
+    };
+    this.pointerDownHandler = () => {
+      if (this.state === SELECT_COORDS_AND_ROTATION_STATE) {
+        this.state = IDLE_STATE
+        this.observer.remove()
+        // x and y transformation is required because in engine upper left corner is stored as x/y,
+        // but on frontend all assets have pivot points in the center of the object.
+        const transformX = this.rotation == 0 ? this.item.width / 2 : this.item.height / 2
+        const transformY = this.rotation == 0 ? this.item.height / 2 : this.item.width / 2
+        EventBus.$emit("perform-game-action", {
+          cmd: "craft",
+          params: {
+            "item_name": this.itemKey,
+            "inputs": {
+              "coordinates": {
+                "x": this.x - transformX,
+                "y": this.y - transformY,
+              },
+              "rotation": this.rotation,
+            }
+          }
+        });
+      }
+    };
+    this.keyDownHandler = (key) => {
+      if (this.state === SELECT_COORDS_AND_ROTATION_STATE) {
+        switch (key) {
+          case "Escape":
+            this.state = IDLE_STATE
+            this.observer.remove()
+            break;
+          case "ArrowRight":
+          case "ArrowLeft":
+            this.rotation = this.rotation == 0 ? 1 : 0
+            this.observer.rotate()
+            break;
+        }
+      }
+    }
+    EventBus.$on("select-coords-and-rotation", this.selectionHandler)
+    EventBus.$on("scene-pointer-moved", this.pointerMovedHandler)
+    EventBus.$on("scene-pointer-down", this.pointerDownHandler)
+    EventBus.$on("keydown", this.keyDownHandler)
+    // rotation pressed
+  }
+
+  remove() {
+    this.observer.remove()
+    EventBus.$off("select-coords-and-rotation", this.selectionHandler)
+    EventBus.$off("scene-pointer-moved", this.pointerMovedHandler)
+    EventBus.$off("scene-pointer-moved", this.pointerDownHandler)
+    EventBus.$off("keydown", this.keyDownHandler)
+  }
+}
+
+export default CraftController;

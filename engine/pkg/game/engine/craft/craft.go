@@ -33,7 +33,24 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 
 		// Create object
 		if craftItemConfig["place_in_real_world"].(bool) { //create in the real world
-			//TODO: take into account the rotation
+			coords := params["inputs"].(map[string]interface{})["coordinates"].(map[string]interface{})
+			x := coords["x"].(float64)
+			y := coords["y"].(float64)
+			rotation := params["inputs"].(map[string]interface{})["rotation"].(float64)
+			itemObj, err := game_objects.CreateFromTemplate(craftItemName, x, y)
+			game_objects.Rotate(itemObj, rotation)
+			if err != nil {
+				e.SendSystemMessage(err.Error(), player)
+				return false
+			}
+			e.GameObjects()[itemObj.Id] = itemObj
+			itemObj.Floor = charGameObj.Floor
+			e.Floors()[itemObj.Floor].Insert(itemObj)
+			storage.GetClient().Updates <- itemObj
+
+			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
+				"object": itemObj,
+			})
 		} else {
 			itemObj, err := game_objects.CreateFromTemplate(craftItemName, charGameObj.X, charGameObj.Y)
 			if err != nil {

@@ -175,6 +175,7 @@ class Loader {
       "log",
       "stone",
       "stone_hammer",
+      "stone_wall",
     ];
     items.forEach(item => {
       let task = this.assetsManager.addContainerTask(

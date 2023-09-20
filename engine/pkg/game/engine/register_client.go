@@ -3,6 +3,7 @@ package engine
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 const InitialPlayerX = 4.0
@@ -29,7 +30,7 @@ func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) *entity.Gam
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := CreateGameObject(e, "player/player_vision_area", charGameObj.X, charGameObj.Y, 0, additionalProps)
+	gameObj := CreateGameObject(e, "player/player_vision_area", charGameObj.X - game_objects.PlayerVisionArea / 2, charGameObj.Y - game_objects.PlayerVisionArea / 2, 0, additionalProps)
 	player.VisionAreaGameObjectId = gameObj.Id
 	return gameObj
 }

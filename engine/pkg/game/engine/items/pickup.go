@@ -52,6 +52,10 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 
 	storage.GetClient().Updates <- item
 
+	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "pickup_object", map[string]interface{}{
+		"character_id": charGameObj.Id,
+		"id": itemId,
+	})
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "remove_object", map[string]interface{}{
 		"object": map[string]interface{}{
 			"Id": itemId,

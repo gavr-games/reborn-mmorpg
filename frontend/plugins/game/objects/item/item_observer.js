@@ -29,6 +29,9 @@ class ItemObserver {
     mesh.position.x = this.state.x
     mesh.position.y = 0
     mesh.position.z = this.state.y
+    if (this.state.rotation) {
+      mesh.rotate(BABYLON.Axis.Y, Math.PI / 2);
+    }
     mesh.metadata = {
       x: this.state.x,
       y: this.state.y,

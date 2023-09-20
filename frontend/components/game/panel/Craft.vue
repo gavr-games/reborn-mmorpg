@@ -62,7 +62,12 @@ export default {
       this.$forceUpdate()
     },
     craftItem(itemKey, item) {
-      if (item.inputs.length === 0) {
+      if (item.place_in_real_world) {
+        EventBus.$emit("select-coords-and-rotation", {
+          "item_key": itemKey,
+          "item": item
+        });
+      } else {
         EventBus.$emit("perform-game-action", {
           cmd: "craft",
           params: {

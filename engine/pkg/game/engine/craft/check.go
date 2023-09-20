@@ -10,6 +10,10 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
+const (
+	CraftDistance = 0.5
+)
+
 func Check(e entity.IEngine, player *entity.Player, params map[string]interface{}) bool {
 	craftItemName := params["item_name"].(string)
 	craftItemConfig := GetAtlas()[craftItemName].(map[string]interface{})
@@ -45,13 +49,14 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		coords := params["inputs"].(map[string]interface{})["coordinates"].(map[string]interface{})
 		x := coords["x"].(float64)
 		y := coords["y"].(float64)
+		rotation := params["inputs"].(map[string]interface{})["rotation"].(float64)
 		tempGameObj, err := game_objects.CreateFromTemplate(craftItemName, x, y)
 		if err != nil {
 			e.SendSystemMessage(err.Error(), player)
 			return false
 		}
-		//TODO: take into account the rotation
-		if !game_objects.AreClose(tempGameObj, charGameObj) {
+		game_objects.Rotate(tempGameObj, rotation)
+		if game_objects.GetDistance(tempGameObj, charGameObj) <= CraftDistance {
 			e.SendSystemMessage("You need to be closer.", player)
 			return false
 		}
@@ -65,8 +70,14 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		})
 
 		if len(possibleCollidableObjects) > 0 {
-			e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
-			return false
+			for _, val := range possibleCollidableObjects {
+				if collidable, ok := val.(*entity.GameObject).Properties["collidable"]; ok {
+					if collidable.(bool) {
+						e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
+						return false
+					}
+				}
+			}
 		}
 	}
 

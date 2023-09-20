@@ -295,8 +295,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 			"stone_wall": map[string]interface{}{
 				"type": "wall",
 				"kind": "stone_wall",
-				"width": 0.683,
-				"height": 2.045,
+				"width": 1.0,
+				"height": 2.0,
 				"shape": "rectangle",
 				"collidable": true,
 				"visible": true,

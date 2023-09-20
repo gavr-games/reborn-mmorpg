@@ -83,6 +83,16 @@ class GameObserver {
       )
     );
 
+    scene.onPointerMove = function (evt, result) {
+        const pickResult = scene.pick(evt.offsetX, evt.offsetY);
+        if (pickResult.hit) {
+          EventBus.$emit("scene-pointer-moved", {
+            x: pickResult.pickedPoint.x,
+            y: pickResult.pickedPoint.z,
+          })
+        }
+    }
+
     scene.onPointerDown = function castRay(e) {
       var ray = scene.createPickingRay(scene.pointerX, scene.pointerY, BABYLON.Matrix.Identity(), scene.activeCamera);
 
@@ -97,6 +107,8 @@ class GameObserver {
           });
         }
       }
+
+      EventBus.$emit("scene-pointer-down")
     };
 
     window.addEventListener("resize", () => {
@@ -127,7 +139,7 @@ class GameObserver {
     }
 
     this.previousAlphaMeshes.forEach((mesh) => {
-      if (!alphaObjectsIds.includes(mesh.metadata.id)) {
+      if (mesh && mesh.metadata && !alphaObjectsIds.includes(mesh.metadata.id)) {
         removeAlpha(mesh, this.scene)
       }
     })

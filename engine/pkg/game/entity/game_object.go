@@ -16,6 +16,7 @@ type GameObject struct {
 	Type string
 	Floor int // -1 for does not belong to any floor
 	CurrentAction *DelayedAction
+	Rotation float64 // 0 - no rotation, 1 - 90 degrees rotation
 	Properties map[string]interface{}
 }
 
