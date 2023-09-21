@@ -11,6 +11,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/trees"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/rocks"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/items"
 )
 
@@ -105,6 +106,13 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			if craft.Check(e, player, params.(map[string]interface{})) {
 				params.(map[string]interface{})["playerId"] = float64(player.Id)
 				delayed_actions.StartCraft(e, charGameObj, "Craft", params.(map[string]interface{}))
+			}
+		case "hatch_fire_dragon":
+			hatcheryId := params.(string)
+			if hatcheries.CheckHatch(e, player, hatcheryId) {
+				delayed_actions.Start(e, e.GameObjects()[hatcheryId], "HatchFireDragon", map[string]interface{}{
+					"hatcheryId": hatcheryId,
+				})
 			}
 		}
 	}

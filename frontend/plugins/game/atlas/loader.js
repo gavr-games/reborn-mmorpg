@@ -113,6 +113,7 @@ class Loader {
     this.loadRocks()
     this.loadTrees()
     this.loadItems()
+    this.loadMobs()
     this.assetsManager.load()
   }
 
@@ -177,6 +178,7 @@ class Loader {
       "stone_hammer",
       "stone_wall",
       "fire_dragon_egg",
+      "fire_dragon_hatchery",
     ];
     items.forEach(item => {
       let task = this.assetsManager.addContainerTask(
@@ -187,6 +189,23 @@ class Loader {
       );
       task.onSuccess = task => {
         this.atlas.set(item + "Item", task.loadedContainer);
+      };
+    });
+  }
+
+  loadMobs() {
+    let mobs = [
+      "fire_dragon",
+    ];
+    mobs.forEach(item => {
+      let task = this.assetsManager.addContainerTask(
+        item,
+        item,
+        "/game_assets/mobs/",
+        item + ".glb"
+      );
+      task.onSuccess = task => {
+        this.atlas.set(item + "Mob", task.loadedContainer);
       };
     });
   }

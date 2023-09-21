@@ -71,6 +71,9 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 				itemObj.Floor = charGameObj.Floor
 				e.Floors()[itemObj.Floor].Insert(itemObj)
 				storage.GetClient().Updates <- itemObj
+				e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
+					"object": itemObj,
+				})
 			}
 		}
 

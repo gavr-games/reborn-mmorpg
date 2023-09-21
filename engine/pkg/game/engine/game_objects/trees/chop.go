@@ -43,6 +43,9 @@ func Chop(e entity.IEngine, params map[string]interface{}) bool {
 			logObj.Floor = charGameObj.Floor
 			e.Floors()[logObj.Floor].Insert(logObj)
 			storage.GetClient().Updates <- logObj
+			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
+				"object": logObj,
+			})
 		}
 
 		// Decrease logs stored in the tree

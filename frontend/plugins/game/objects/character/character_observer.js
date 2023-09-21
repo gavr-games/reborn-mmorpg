@@ -46,6 +46,7 @@ class Character {
   }
 
   create() {
+    console.log(this.state.payload)
     this.container = Atlas.get("baseCharacter").instantiateModelsToScene();
     this.playAnimation("Idle");
     this.mesh = this.container.rootNodes[0];

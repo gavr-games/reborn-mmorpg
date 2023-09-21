@@ -10,6 +10,11 @@ func CheckChip(e entity.IEngine, player *entity.Player, rockId string) bool {
 	rock := e.GameObjects()[rockId]
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 
+	if rock == nil {
+		e.SendSystemMessage("Rock does not exist.", player)
+		return false
+	}
+
 	// Check has Pickaxe equipped
 	if !characters.HasTypeEquipped(e, charGameObj, "pickaxe") {
 		e.SendSystemMessage("You need to equip pickaxe.", player)

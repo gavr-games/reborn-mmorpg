@@ -10,6 +10,11 @@ func CheckChop(e entity.IEngine, player *entity.Player, treeId string) bool {
 	tree := e.GameObjects()[treeId]
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 
+	if tree == nil {
+		e.SendSystemMessage("Tree does not exist.", player)
+		return false
+	}
+
 	// Check has Axe equipped
 	if !characters.HasTypeEquipped(e, charGameObj, "axe") {
 		e.SendSystemMessage("You need to equip axe.", player)

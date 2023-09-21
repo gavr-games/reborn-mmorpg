@@ -6,6 +6,7 @@ import RockController from "./objects/rock/rock_controller";
 import TreeController from "./objects/tree/tree_controller";
 import ItemController from "./objects/item/item_controller";
 import CharacterController from "./objects/character/character_controller";
+import MobController from "./objects/mob/mob_controller";
 import CraftController from "./craft/craft_controller";
 import GameConnnection from "./game_connection";
 
@@ -86,6 +87,9 @@ class GameController {
         break;
       case "tree":
         this.gameObjects[gameObj["Id"]] = new TreeController(gameObj)
+        break;
+      case "mob":
+        this.gameObjects[gameObj["Id"]] = new MobController(gameObj)
         break;
       default:
         this.gameObjects[gameObj["Id"]] = new ItemController(gameObj)

@@ -333,6 +333,45 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 			},
 		},
+		"hatchery": {
+			"fire_dragon_hatchery": map[string]interface{}{
+				"type": "hatchery",
+				"kind": "fire_dragon_hatchery",
+				"width": 2.0,
+				"height": 2.0,
+				"shape": "circle",
+				"collidable": true,
+				"visible": true,
+				"hatching_resources": map[string]interface{}{
+					"log": 2.0,
+				},
+				"actions": map[string]interface{}{
+					"hatch": map[string]interface{}{
+						"cmd": "hatch_fire_dragon",
+						"params": "self", // self - id of current object
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
+		"mob": {
+			"fire_dragon": map[string]interface{}{
+				"type": "mob",
+				"kind": "fire_dragon",
+				"width": 2.0,
+				"height": 2.0,
+				"shape": "circle",
+				"speed": 2.0,
+				"speed_x": 0.0,
+				"speed_y": 0.0,
+				"collidable": false,
+				"visible": true,
+				"actions": map[string]interface{}{},
+			},
+		},
 	}
 
 	return gameObjectsAtlas

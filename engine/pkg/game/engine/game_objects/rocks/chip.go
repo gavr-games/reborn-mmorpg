@@ -43,6 +43,9 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 			stoneObj.Floor = charGameObj.Floor
 			e.Floors()[stoneObj.Floor].Insert(stoneObj)
 			storage.GetClient().Updates <- stoneObj
+			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
+				"object": stoneObj,
+			})
 		}
 
 		// Decrease stones stored in the rock
