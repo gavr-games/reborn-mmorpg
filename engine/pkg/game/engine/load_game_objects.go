@@ -24,6 +24,10 @@ func LoadGameObjects(e entity.IEngine, floorSize float64) {
 				VisibleObjects: make(map[string]bool),
 			}
 		}
+		if gameObj.Type == "mob" {
+			// starts go routine, which controls mob
+			e.Mobs()[gameObj.Id] = entity.NewMob(e, gameObj.Id)
+		}
 	})
 
 	// init dump world if no game objects in storage

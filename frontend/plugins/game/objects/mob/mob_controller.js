@@ -8,6 +8,10 @@ class MobController {
     this.observer = new MobObserver(this.state);
   }
 
+  update(gameObject) {
+    this.state.update(gameObject)
+  }
+
   remove() {
     this.state = null
     this.observer.remove()

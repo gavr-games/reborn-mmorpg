@@ -35,7 +35,9 @@ class GameController {
       this.createObject(gameObj)
     };
     this.updateObjectHandler = gameObj => {
-      this.gameObjects[gameObj["Id"]].update(gameObj)
+      if (this.gameObjects[gameObj["Id"]]) {
+        this.gameObjects[gameObj["Id"]].update(gameObj)
+      }
     };
     this.removeObjectHandler = gameObj => {
       if (this.gameObjects[gameObj["Id"]]) {
