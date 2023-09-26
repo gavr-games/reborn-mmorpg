@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	FloorSize = 1000.0
+	FloorSize = 200.0
 	FloorCount = 4
 	TickSize = 10 // Game tick size in ms
 )

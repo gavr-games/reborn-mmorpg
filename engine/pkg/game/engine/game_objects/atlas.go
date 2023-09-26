@@ -17,6 +17,15 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape": "rectangle",
 				"visible": true,
 			},
+			"water": map[string]interface{}{
+				"type": "surface",
+				"kind": "water",
+				"width": 1.0,
+				"height": 1.0,
+				"collidable": true,
+				"shape": "rectangle",
+				"visible": true,
+			},
 		},
 		"tree": {
 				"tree_5": map[string]interface{}{
