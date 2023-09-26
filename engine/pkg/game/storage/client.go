@@ -10,6 +10,10 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
+const (
+	ChanelCapacity = 1000
+)
+
 // declaration defined type 
 type StorageClient struct {
 	redisClient *redis.Client
@@ -30,8 +34,8 @@ func GetClient() *StorageClient {
 		rdb := redis.NewClient(opt)
 		instance = &StorageClient{
 			redisClient: rdb,
-			Updates: make(chan *entity.GameObject),
-			Deletes: make(chan *entity.GameObject),
+			Updates: make(chan *entity.GameObject, ChanelCapacity),
+			Deletes: make(chan *entity.GameObject, ChanelCapacity),
 		}
 	})
 	return instance
@@ -83,13 +87,19 @@ func (sc *StorageClient) ReadAllGameObjects(process func(*entity.GameObject)) in
 	return i
 }
 
-func (sc *StorageClient) Run() {
-	for {
-		select {
-		case obj := <-sc.Updates:
-			sc.SaveGameObject(obj)
-		case obj := <-sc.Deletes:
-			sc.RemoveGameObject(obj)
-		}
+func (sc *StorageClient) updatesWorker(updatesChan <-chan *entity.GameObject) {
+	for obj := range updatesChan {
+		sc.SaveGameObject(obj)
 	}
+}
+
+func (sc *StorageClient) deletesWorker(deletesChan <-chan *entity.GameObject) {
+	for obj := range deletesChan {
+		sc.RemoveGameObject(obj)
+	}
+}
+
+func (sc *StorageClient) Run() {
+	go sc.updatesWorker(sc.Updates)
+	go sc.deletesWorker(sc.Deletes)
 }
