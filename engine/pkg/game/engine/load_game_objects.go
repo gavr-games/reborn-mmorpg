@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"log"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
@@ -31,8 +30,6 @@ func LoadGameObjects(e entity.IEngine, floorSize float64) {
 
 	// init dump world if no game objects in storage
 	if (loadedObjectsCount == 0) {
-		log.Println("Before GenerateWorld")
 		GenerateWorld(e, floorSize)
-		log.Println("After GenerateWorld")
 	}
 }

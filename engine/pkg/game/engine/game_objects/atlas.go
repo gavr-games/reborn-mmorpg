@@ -17,6 +17,14 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape": "rectangle",
 				"visible": true,
 			},
+			"sand": map[string]interface{}{
+				"type": "surface",
+				"kind": "sand",
+				"width": 1.0,
+				"height": 1.0,
+				"shape": "rectangle",
+				"visible": true,
+			},
 			"water": map[string]interface{}{
 				"type": "surface",
 				"kind": "water",

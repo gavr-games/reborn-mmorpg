@@ -121,6 +121,7 @@ class Loader {
     let surfaces = [
       "grass",
       "water",
+      "sand",
     ];
     surfaces.forEach(surface => {
       let task = this.assetsManager.addContainerTask(
