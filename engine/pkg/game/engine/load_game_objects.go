@@ -3,6 +3,7 @@ package engine
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 )
 
 func LoadGameObjects(e entity.IEngine, floorSize float64) {
@@ -24,7 +25,7 @@ func LoadGameObjects(e entity.IEngine, floorSize float64) {
 		}
 		if gameObj.Type == "mob" {
 			// starts go routine, which controls mob
-			e.Mobs()[gameObj.Id] = entity.NewMob(e, gameObj.Id)
+			e.Mobs()[gameObj.Id] = mobs.NewMob(e, gameObj.Id)
 		}
 	})
 

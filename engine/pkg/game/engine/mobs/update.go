@@ -9,11 +9,11 @@ import (
 // move mobs and trigger mob logic
 func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 	for _, mob := range e.Mobs() {
-		mobObj := e.GameObjects()[mob.Id]
+		mobObj := e.GameObjects()[mob.GetId()]
 
     if mobObj != nil {
 			// Trigger Mob logic
-			mob.GetTicksChannel() <- newTickTime
+			mob.Run(newTickTime)
 
 			// Move mobs
 			speedX := mobObj.Properties["speed_x"].(float64)

@@ -37,19 +37,19 @@ func GenerateWorld(e entity.IEngine, floorSize float64) {
 		}
 	}
 	// rocks
-	for i := 0; i < floorSize / 4; i++ {
+	for i := 0; float64(i) < floorSize / 4; i++ {
 		x := 1.0 + rand.Float64() * (floorSize - 1.0)
 		y := 1.0 + rand.Float64() * (floorSize - 1.0)
 		CreateGameObject(e, "rock/rock_moss", x, y, 0, nil)
 	}
 	// trees
-	for i := 0; i < floorSize / 4; i++ {
+	for i := 0; float64(i) < floorSize / 4; i++ {
 		x := 1.0 + rand.Float64() * (floorSize - 1.0)
 		y := 1.0 + rand.Float64() * (floorSize - 1.0)
 		CreateGameObject(e, "tree", x, y, 0, nil)
 	}
 	// eggs
-	for i := 0; i < floorSize / 4; i++ {
+	for i := 0; float64(i) < floorSize / 4; i++ {
 		x := 1.0 + rand.Float64() * (floorSize - 1.0)
 		y := 1.0 + rand.Float64() * (floorSize - 1.0)
 		CreateGameObject(e, "resource/fire_dragon_egg", x, y, 0, map[string]interface{}{

@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"math"
 	"slices"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -21,8 +20,6 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		cmd := command["cmd"]
 		params := command["params"]
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-		speed := charGameObj.Properties["speed"].(float64)
-		axisSpeed := math.Sqrt(speed * speed / 2)
 
 		// List of commands, which don't interrupt current character action.
 		// Like get_character_info does not interrupt choping a tree, but any movement does
@@ -38,37 +35,9 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			charGameObj.Properties["speed_x"] = 0.0
 			charGameObj.Properties["speed_y"] = 0.0
 			e.SendGameObjectUpdate(charGameObj, "update_object")
-		case "move_north":
-			charGameObj.Properties["speed_x"] = 0.0
-			charGameObj.Properties["speed_y"] = speed
-			e.SendGameObjectUpdate(charGameObj, "update_object")
-		case "move_south":
-			charGameObj.Properties["speed_x"] = 0.0
-			charGameObj.Properties["speed_y"] = -speed
-			e.SendGameObjectUpdate(charGameObj, "update_object")
-		case "move_east":
-			charGameObj.Properties["speed_x"] = speed
-			charGameObj.Properties["speed_y"] = 0.0
-			e.SendGameObjectUpdate(charGameObj, "update_object")
-		case "move_west":
-			charGameObj.Properties["speed_x"] = -speed
-			charGameObj.Properties["speed_y"] = 0.0
-			e.SendGameObjectUpdate(charGameObj, "update_object")
-		case "move_north_east":
-			charGameObj.Properties["speed_x"] = axisSpeed
-			charGameObj.Properties["speed_y"] = axisSpeed
-			e.SendGameObjectUpdate(charGameObj, "update_object")
-		case "move_north_west":
-			charGameObj.Properties["speed_x"] = -axisSpeed
-			charGameObj.Properties["speed_y"] = axisSpeed
-			e.SendGameObjectUpdate(charGameObj, "update_object")
-		case "move_south_east":
-			charGameObj.Properties["speed_x"] = axisSpeed
-			charGameObj.Properties["speed_y"] = -axisSpeed
-			e.SendGameObjectUpdate(charGameObj, "update_object")
-		case "move_south_west":
-			charGameObj.Properties["speed_x"] = -axisSpeed
-			charGameObj.Properties["speed_y"] = -axisSpeed
+		case "move_north", "move_south", "move_east", "move_west",
+				"move_north_east", "move_north_west", "move_south_east", "move_south_west":
+			game_objects.SetXYSpeeds(charGameObj, cmd.(string))
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		case "get_character_info":
 			e.SendResponse("character_info", game_objects.GetInfo(e.GameObjects(), charGameObj), player)
@@ -113,6 +82,20 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				delayed_actions.Start(e, e.GameObjects()[hatcheryId], "HatchFireDragon", map[string]interface{}{
 					"hatcheryId": hatcheryId,
 				})
+			}
+		case "follow":
+			mobId := params.(string)
+			mob, ok := e.Mobs()[mobId]
+			if ok {
+				//TODO: Check commands  can be executed only close enough to the mob
+				mob.Follow(charGameObj.Id)
+			}
+		case "unfollow":
+			mobId := params.(string)
+			mob, ok := e.Mobs()[mobId]
+			if ok {
+				//TODO: Check commands  can be executed only close enough to the mob
+				mob.Unfollow()
 			}
 		}
 	}

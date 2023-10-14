@@ -5,6 +5,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 )
 
 // This func is called via delayed action mechanism
@@ -22,6 +23,7 @@ func HatchFireDragon(e entity.IEngine, params map[string]interface{}) bool {
 		e.GameObjects()[dragon.Id] = dragon
 		dragon.Floor = hatchery.Floor
 		e.Floors()[dragon.Floor].Insert(dragon)
+		e.Mobs()[dragon.Id] = mobs.NewMob(e, dragon.Id)
 
 		storage.GetClient().Updates <- dragon
 		e.SendResponseToVisionAreas(dragon, "add_object", map[string]interface{}{

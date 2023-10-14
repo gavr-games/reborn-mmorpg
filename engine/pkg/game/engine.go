@@ -24,7 +24,7 @@ type Engine struct {
 	floors []*utils.Quadtree // slice of global game areas, underground, etc
 	players map[int]*entity.Player // map of all players
 	gameObjects map[string]*entity.GameObject // map of ALL objects in the game
-	mobs map[string]*entity.Mob // map of ALL mobs in the game
+	mobs map[string] entity.IMob // map of ALL mobs in the game
 	commands chan *ClientCommand // Inbound messages from the clients.
 	register chan *Client // Register requests from the clients.
 	unregister chan *Client // Unregister requests from clients.
@@ -38,7 +38,7 @@ func (e Engine) GameObjects() map[string]*entity.GameObject {
 	return e.gameObjects
 }
 
-func (e Engine) Mobs() map[string]*entity.Mob {
+func (e Engine) Mobs() map[string] entity.IMob {
 	return e.mobs
 }
 
@@ -124,7 +124,7 @@ func NewEngine() *Engine {
 		tickTime:    0,
 		players:     make(map[int]*entity.Player),
 		gameObjects: make(map[string]*entity.GameObject),
-		mobs:        make(map[string]*entity.Mob),
+		mobs:        make(map[string] entity.IMob),
 		floors:      make([]*utils.Quadtree, FloorCount),
 		commands:    make(chan *ClientCommand),
 		register:    make(chan *Client),
