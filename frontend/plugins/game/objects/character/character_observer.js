@@ -70,8 +70,8 @@ class Character {
       this.state.x =  this.state.x + this.state.speed_x / 1000 * renderInterval
       this.state.y =  this.state.y + this.state.speed_y / 1000 * renderInterval
       const rotationAngle = Math.atan2(
-        this.state.y - this.mesh.position.z,
-        this.state.x - this.mesh.position.x
+        this.state.speed_y,
+        this.state.speed_x
       );
       let rotationDelta = this.meshRotation - rotationAngle;
       if (rotationDelta != 0) {

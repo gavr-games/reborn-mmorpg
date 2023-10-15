@@ -20,11 +20,8 @@ const (
 	IdleTime = 40000.0 // stays idle during this time
 	MovingTime = 5000.0 // randomly moves during this time
 	FollowingTime = 40000.0 // stops following after this time
-)
-
-const (
-	FollowingDistance = 1.0
-	FollowingDirectionMargin = 0.5
+	FollowingDistance = 1.0 // stops when in range of the target
+	FollowingDirectionChangeTime = 2000 // change direction only
 )
 
 type Mob struct {
@@ -33,6 +30,7 @@ type Mob struct {
 	TickTime int64
 	State int
 	TargetObjectId string
+	directionTickTime int64 // when direction was last time changed
 }
 
 func NewMob(e entity.IEngine, id string) *Mob {
@@ -42,6 +40,7 @@ func NewMob(e entity.IEngine, id string) *Mob {
 		TickTime: e.CurrentTickTime(),
 		State:    IdleState,
 		TargetObjectId: "", // for following and attack
+		directionTickTime: e.CurrentTickTime(),
 	}
 
 	return mob
@@ -73,13 +72,14 @@ func (mob *Mob) Run(newTickTime int64) {
 	if mob.State == StartFollowState {
 		mob.State = FollowingState
 		mob.TickTime = newTickTime
+		mob.directionTickTime = newTickTime
 	} else
 	// Perform following
 	if mob.State == FollowingState {
 		if (newTickTime - mob.TickTime) >= FollowingTime {
-			mob.State = StopFollowingState // stop following after some period of time
+			mob.Unfollow()
 		} else { // Perform actual following
-			mob.performFollowing()
+			mob.performFollowing(newTickTime)
 		}
 	}
 }
@@ -96,10 +96,11 @@ func (mob *Mob) moveInRandomDirection() {
 	mobObj := mob.Engine.GameObjects()[mob.Id]
 	mobDirection := game_objects.PossibleDirections[rand.Intn(len(game_objects.PossibleDirections))]
 	game_objects.SetXYSpeeds(mobObj, mobDirection)
+	mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
 	mob.State = MovingState
 }
 
-func (mob *Mob) performFollowing() {
+func (mob *Mob) performFollowing(newTickTime int64) {
 	targetObj, ok := mob.Engine.GameObjects()[mob.TargetObjectId]
 	if ok {
 		mobObj := mob.Engine.GameObjects()[mob.Id]
@@ -108,28 +109,32 @@ func (mob *Mob) performFollowing() {
 			mobObj.Properties["speed_y"] = 0.0
 			mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
 		} else {
-			// Calclate angle between mob and target
-			// Choose the closest direction by angle by calculatin index in PossibleDirections slice
-			dx := targetObj.X - mobObj.X
-			dy := targetObj.Y - mobObj.Y
-			angle := math.Atan2(dy, dx) // range (-PI, PI)
-			if angle < 0.0 {
-				angle = angle + math.Pi * 2
+			if (newTickTime - mob.directionTickTime >= FollowingDirectionChangeTime) {
+				mob.directionTickTime = newTickTime
+				// Calclate angle between mob and target
+				// Choose the closest direction by angle by calculatin index in PossibleDirections slice
+				dx := targetObj.X - mobObj.X
+				dy := targetObj.Y - mobObj.Y
+				angle := math.Atan2(dy, dx) // range (-PI, PI)
+				if angle < 0.0 {
+					angle = angle + math.Pi * 2
+				}
+				quotient := math.Floor(angle / (math.Pi / 4)) // math.Pi / 4 - is the angle between movement directions
+				remainder := angle - (math.Pi / 4) * quotient
+				if (remainder > math.Pi / 8) {
+					quotient = quotient + 1.0
+				}
+				directionIndex := int(quotient)
+				if (directionIndex == len(game_objects.PossibleDirections)) {
+					directionIndex = 0
+				}
+				mobDirection := game_objects.PossibleDirections[directionIndex]
+				game_objects.SetXYSpeeds(mobObj, mobDirection)
+				mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
 			}
-			quotient := math.Floor(angle / (math.Pi / 4)) // math.Pi / 4 - is the angle between movement directions
-			remainder := angle - (math.Pi / 4) * quotient
-			if (remainder > math.Pi / 8) {
-				quotient = quotient + 1.0
-			}
-			directionIndex := int(quotient)
-			if (directionIndex == len(game_objects.PossibleDirections)) {
-				directionIndex = 0
-			}
-			mobDirection := game_objects.PossibleDirections[directionIndex]
-			game_objects.SetXYSpeeds(mobObj, mobDirection)
 		}
 	} else {
-		mob.State = StopFollowingState
+		mob.Unfollow()
 	}
 }
 

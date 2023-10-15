@@ -5,7 +5,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## TODO
 - FIX: Deletes from the storage are not working when tree and stone removed after they are chopped or chipped
-- FIX: send speed updates only if dragon changes direction. Resolve why dragon changes angle on frontend during animation.
 - add database of game objects, craft OR editor to manage atlases
 - switch from json to protobuf
 - add mob follow/unfollow command
@@ -17,3 +16,4 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - refactor game object to have characteristics like pickable to influence the behaviour, rather then decribing everything manually
 - think about sending only what is changed in game object
 - fix bug that you can build where you stand and then cannot move
+- FIX: login after disconect works only from second try

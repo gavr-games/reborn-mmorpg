@@ -41,7 +41,6 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 				mobObj.Properties["x"] = mobObj.Properties["x"].(float64) + dx
 				mobObj.Properties["y"] = mobObj.Properties["y"].(float64) + dy
 				e.Floors()[mobObj.Floor].Insert(mobObj)
-				e.SendGameObjectUpdate(mobObj, "update_object")
 			}
 		}
 	}
