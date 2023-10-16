@@ -4,10 +4,10 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- FIX: Deletes from the storage are not working when tree and stone removed after they are chopped or chipped
+- add health and hits
+- add healing potions
 - add database of game objects, craft OR editor to manage atlases
 - switch from json to protobuf
-- add mob follow/unfollow command
 - add minimap feature
 - add sub-containers
 - for prod - global error logging

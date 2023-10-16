@@ -54,10 +54,9 @@ func (sc *StorageClient) SaveGameObject(obj *entity.GameObject) {
 }
 
 func (sc *StorageClient) RemoveGameObject(obj *entity.GameObject) {
-	_, err := sc.redisClient.Del(ctx, obj.Id).Result() 
-  if err != nil {
-    panic(err)
-  }
+	if err := sc.redisClient.Del(ctx, obj.Id).Err(); err != nil {
+		panic(err)
+	}
 }
 
 func (sc *StorageClient) GetGameObject(id string) *entity.GameObject {
