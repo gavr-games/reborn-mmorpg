@@ -33,6 +33,17 @@ services:
     stdin_open: true
     tty: true
 
+  engine_api:
+    build: ./engine
+    command: ./bin/start_api.sh
+    env_file: .env
+    volumes:
+      - ./engine:/src/github.com/gavr-games/reborn-mmorpg:cached
+    ports:
+      - 8082:8082
+    stdin_open: true
+    tty: true
+
   engine:
     build: ./engine
     command: ./bin/start.sh

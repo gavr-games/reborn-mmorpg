@@ -8,6 +8,9 @@ localhost:80, localhost:443 {
   proxy /chat chat:8081 {
     websocket
   }
+	proxy /engine_api engine_api:8082 {
+    transparent
+  }
   proxy / frontend:3000 {
     transparent
   }

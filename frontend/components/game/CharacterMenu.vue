@@ -2,6 +2,7 @@
   <div id="character-menu" class="rpgui-container framed-golden">
     <div class="rpgui-icon menu-item helmet-slot" @click="getCharacterInfo"></div>
     <div class="rpgui-icon menu-item potion-slot" @click="getCraftAtlas"></div>
+    <div class="rpgui-icon menu-item magic-slot"  @click="showMap"></div>
   </div>
 </template>
 
@@ -26,6 +27,9 @@ export default {
         cmd: "get_craft_atlas",
         params: {}
       });
+    },
+    showMap() {
+      EventBus.$emit("show-map", {});
     },
   }
 }
