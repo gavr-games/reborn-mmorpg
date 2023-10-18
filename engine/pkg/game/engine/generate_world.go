@@ -8,6 +8,7 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/world_maps"
 )
 
 const (
@@ -22,20 +23,24 @@ func GenerateWorld(e entity.IEngine, floorSize float64) {
 	if (err != nil) {
 		log.Fatal("GenerateWorld: ", err)
 	}
+	floorMap := world_maps.NewFloorMap(0, int(floorSize)) // hardcoded 0 floor
 	// Terrain
 	for x := 0.; x < floorSize; x++ {
 		for y := 0.; y < floorSize; y++ {
 			noise:= n.Eval64(x / smoothness, y / smoothness)
 			//log.Println(fmt.Sprintf("%f:%f:%f", x, y, noise))
+			surfaceKind := "surface/grass"
 			if noise < WaterLevel {
-				CreateGameObject(e, "surface/water", x, y, 0, nil)
+				surfaceKind = "surface/water"
 			} else if noise < SandLevel {
-				CreateGameObject(e, "surface/sand", x, y, 0, nil)
-			} else {
-				CreateGameObject(e, "surface/grass", x, y, 0, nil)
+				surfaceKind = "surface/sand"
 			}
+			CreateGameObject(e, surfaceKind, x, y, 0, nil)
+			floorMap.Cells <- &world_maps.WorldCell{x, y, surfaceKind}
 		}
 	}
+	floorMap.Finish <- true // save map to img
+
 	// rocks
 	for i := 0; float64(i) < floorSize / 4; i++ {
 		x := 1.0 + rand.Float64() * (floorSize - 1.0)
