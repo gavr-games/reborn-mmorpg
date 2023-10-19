@@ -4,7 +4,7 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- send visible objects updates once per 500ms and check frontend performance
+- send visible objects updates once per 500ms and check performance
 - add health and hits
 - add healing potions
 - add database of game objects, craft OR editor to manage atlases

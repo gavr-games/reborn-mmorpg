@@ -131,7 +131,10 @@ class Loader {
         surface + ".glb"
       );
       task.onSuccess = task => {
-        this.atlas.set(surface + "Surface", task.loadedContainer);
+        // This should be changed if surface models of aother structure are imported
+        let mesh = task.loadedContainer.instantiateModelsToScene().rootNodes[0].getChildren()[0]
+        mesh.setEnabled(false)
+        this.atlas.set(surface + "Surface", mesh);
       };
     });
   }

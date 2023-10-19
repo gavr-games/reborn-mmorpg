@@ -57,6 +57,7 @@ class GameObserver {
         this.scene.registerBeforeRender(() => {
           this.castAlphaRay()
         })
+        // this.scene.debugLayer.show()
         this.loaded = true;
         EventBus.$emit("scene-created", this.scene, this.canvas);
       },

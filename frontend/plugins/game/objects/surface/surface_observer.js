@@ -21,8 +21,7 @@ class SurfaceObserver {
   }
 
   create() {
-    this.container = Atlas.get(this.state.kind + "Surface").instantiateModelsToScene();
-    let mesh = this.container.rootNodes[0];
+    let mesh = Atlas.get(this.state.kind + "Surface").clone()
     mesh.setParent(null)
     mesh.isPickable = false
     mesh.name = "surface-" + this.state.id
