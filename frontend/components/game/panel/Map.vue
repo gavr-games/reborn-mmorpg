@@ -34,8 +34,10 @@ export default {
     },
     updateObject(obj) {
       if (obj.Properties["player_id"] === this.$store.state.characters.selectedCharacterId) {
-        this.left = obj.X -3
-        this.top = document.getElementById("floor-map").height - obj.Y -24
+        if (document.getElementById("floor-map")) {
+          this.left = obj.X -3
+          this.top = document.getElementById("floor-map").height - obj.Y -24
+        }
       }
     },
   }
