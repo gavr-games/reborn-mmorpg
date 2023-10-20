@@ -23,7 +23,7 @@ class SurfaceObserver {
   create() {
     let mesh = Atlas.get(this.state.kind + "Surface").clone()
     mesh.setParent(null)
-    mesh.isPickable = false
+    mesh.isPickable = true
     mesh.name = "surface-" + this.state.id
     mesh.position.x = this.state.x
     mesh.position.y = 0

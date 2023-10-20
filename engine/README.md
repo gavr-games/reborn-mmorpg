@@ -16,5 +16,4 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - refactor some commands use camelcase playerId and some underscore player_id
 - refactor game object to have characteristics like pickable to influence the behaviour, rather then decribing everything manually
 - think about sending only what is changed in game object
-- fix bug that you can build where you stand and then cannot move
 - FIX: login after disconect works only from second try

@@ -71,6 +71,10 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 
 		if len(possibleCollidableObjects) > 0 {
 			for _, val := range possibleCollidableObjects {
+				if val.(*entity.GameObject).Id == charGameObj.Id {
+					e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
+						return false
+				} else
 				if collidable, ok := val.(*entity.GameObject).Properties["collidable"]; ok {
 					if collidable.(bool) {
 						e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
