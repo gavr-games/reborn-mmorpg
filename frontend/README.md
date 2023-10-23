@@ -72,3 +72,4 @@ More information about the usage of this directory in [the documentation](https:
 - FPS is around 40 because of many surface meshes. Without them fps is 50-60
 - make draggable panels
 - Find a way to make craft objects placement more user friendly. Also calculate x/y in some other way so it is possible to turn off surface objects isPickable property and boost performance.
+- reuse code between character and mob objects

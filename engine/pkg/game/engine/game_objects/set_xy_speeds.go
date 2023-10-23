@@ -31,26 +31,36 @@ func SetXYSpeeds(obj *entity.GameObject, direction string) {
 		case "move_north":
 			obj.Properties["speed_x"] = 0.0
 			obj.Properties["speed_y"] = speed
+			// this is required to determine where character/mob looks, when stopped
+			// it is important to later hit the target with weapon
+			obj.Rotation = math.Pi / 2
 		case "move_south":
 			obj.Properties["speed_x"] = 0.0
 			obj.Properties["speed_y"] = -speed
+			obj.Rotation = math.Pi * 3 / 2
 		case "move_east":
 			obj.Properties["speed_x"] = speed
 			obj.Properties["speed_y"] = 0.0
+			obj.Rotation = 0
 		case "move_west":
 			obj.Properties["speed_x"] = -speed
 			obj.Properties["speed_y"] = 0.0
+			obj.Rotation = math.Pi
 		case "move_north_east":
 			obj.Properties["speed_x"] = axisSpeed
 			obj.Properties["speed_y"] = axisSpeed
+			obj.Rotation = math.Pi / 4
 		case "move_north_west":
 			obj.Properties["speed_x"] = -axisSpeed
 			obj.Properties["speed_y"] = axisSpeed
+			obj.Rotation = math.Pi * 3 / 4
 		case "move_south_east":
 			obj.Properties["speed_x"] = axisSpeed
 			obj.Properties["speed_y"] = -axisSpeed
+			obj.Rotation = math.Pi * 7 / 4
 		case "move_south_west":
 			obj.Properties["speed_x"] = -axisSpeed
 			obj.Properties["speed_y"] = -axisSpeed
+			obj.Rotation = math.Pi * 5 / 4
 	}
 }

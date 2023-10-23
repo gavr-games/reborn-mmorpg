@@ -29,7 +29,7 @@ class ItemObserver {
     mesh.position.x = this.state.x
     mesh.position.y = 0
     mesh.position.z = this.state.y
-    if (this.state.rotation) {
+    if (this.state.rotation > 0) {
       mesh.rotate(BABYLON.Axis.Y, Math.PI / 2);
     }
     mesh.metadata = {

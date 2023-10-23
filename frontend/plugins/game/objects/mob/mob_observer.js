@@ -34,6 +34,13 @@ class MobObserver {
     mesh.position.x = this.state.x
     mesh.position.y = 0
     mesh.position.z = this.state.y
+    if (this.state.rotation) {
+      let rotationDelta = this.meshRotation - this.state.rotation;
+      if (rotationDelta != 0) {
+        this.meshRotation = this.state.rotation;
+        mesh.rotate(BABYLON.Axis.Y, rotationDelta);
+      }
+    }
     mesh.metadata = {
       x: this.state.x,
       y: this.state.y,
@@ -43,7 +50,7 @@ class MobObserver {
     mesh.setEnabled(true);
     mesh.doNotSyncBoundingInfo = true;
     this.mesh = mesh;
-    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene.cameras[0], this.scene)
+    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
     GameObserver.addRenderObserver(`mob-${this.state.id}`, this);
   }
 

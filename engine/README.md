@@ -6,7 +6,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 ## TODO
 - send visible objects updates once per 500ms and check performance
 - add health and hits
-  - direction where character/mob look at
   - add select/deselect target
   - add hit (check for figures collision, substract health)
   - add mob death

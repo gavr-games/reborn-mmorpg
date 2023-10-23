@@ -56,14 +56,18 @@ class Character {
     this.mesh.position.x = this.state.x;
     this.mesh.position.z = this.state.y;
     if (this.state.rotation) {
-      mesh.rotate(BABYLON.Axis.Y, Math.PI / 2);
+      let rotationDelta = this.meshRotation - this.state.rotation;
+      if (rotationDelta != 0) {
+        this.meshRotation = this.state.rotation;
+        this.mesh.rotate(BABYLON.Axis.Y, rotationDelta);
+      }
     }
     // character of the logged in player
     if (this.state.player_id == this.myCharacterId) {
       this.camera = new Camera(this.scene, this.canvas, this);
       this.camera.create();
     }
-    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene.cameras[0], this.scene)
+    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
     GameObserver.addRenderObserver(`character-${this.state.id}`, this);
   }
 
