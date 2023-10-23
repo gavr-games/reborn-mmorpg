@@ -184,6 +184,7 @@ class Loader {
       "stone_wall",
       "fire_dragon_egg",
       "fire_dragon_hatchery",
+      "stone_spear",
     ];
     items.forEach(item => {
       let task = this.assetsManager.addContainerTask(

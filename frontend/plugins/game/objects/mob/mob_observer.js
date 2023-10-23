@@ -1,6 +1,7 @@
 import { EventBus } from "~/plugins/game/event_bus";
 import Atlas from "~/plugins/game/atlas/atlas";
 import GameObserver from "~/plugins/game/game_observer";
+import HealthBar from "~/plugins/game/components/health_bar";
 
 class MobObserver {
   constructor(state) {
@@ -10,6 +11,7 @@ class MobObserver {
     this.mesh = null;
     this.meshRotation = Math.PI / 2
     this.currentAnimation = null
+    this.healthbar = null
     if (GameObserver.loaded) {
       this.scene = GameObserver.scene;
       this.create();
@@ -41,6 +43,7 @@ class MobObserver {
     mesh.setEnabled(true);
     mesh.doNotSyncBoundingInfo = true;
     this.mesh = mesh;
+    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene.cameras[0], this.scene)
     GameObserver.addRenderObserver(`mob-${this.state.id}`, this);
   }
 
@@ -63,11 +66,14 @@ class MobObserver {
     }
     this.mesh.position.x = this.state.x
     this.mesh.position.z = this.state.y
+    this.healthbar.update(this.state.health, this.state.max_health, this.mesh.position)
   }
 
   remove() {
     GameObserver.removeRenderObserver(`mob-${this.state.id}`);
     EventBus.$off("scene-created", this.sceneCreatedCallback);
+    this.healthbar.remove()
+    this.healthbar = null
     this.mesh.dispose();
     this.mesh = null;
     this.state = null;

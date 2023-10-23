@@ -34,6 +34,21 @@ func GetAtlas() map[string]interface{} {
 			"place_in_real_world": false,
 			"duration": 5000.0,
 		},
+		"stone_spear": map[string]interface{}{
+			"skill": "stoneworking",
+			"resources": map[string]interface{}{
+				"stone": 1.0,
+				"log": 1.0,
+			},
+			"title": "Stone Spear",
+			"description": "Basic weapon to defend yourself.",
+			"inputs": []string{},
+			"tools": []string{
+				"axe",
+			},
+			"place_in_real_world": false,
+			"duration": 5000.0,
+		},
 		"fire_dragon_hatchery": map[string]interface{}{
 			"skill": "taming",
 			"resources": map[string]interface{}{

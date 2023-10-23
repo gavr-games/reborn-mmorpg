@@ -80,5 +80,6 @@ export default {
   top: 0;
   bottom: 0;
   margin: auto;
+  margin-top: 10px;
 }
 </style>

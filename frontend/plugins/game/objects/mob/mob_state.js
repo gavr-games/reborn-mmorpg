@@ -13,6 +13,8 @@ class MobState {
     this.speed = gameObject["Properties"]["speed"]
     this.speed_x = gameObject["Properties"]["speed_x"]
     this.speed_y = gameObject["Properties"]["speed_y"]
+    this.health = gameObject["Properties"]["health"]
+    this.max_health = gameObject["Properties"]["max_health"]
     this.rotation = gameObject["Rotation"]
     this.id = gameObject["Id"]
     this.kind = gameObject["Properties"]["kind"]

@@ -240,6 +240,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"speed": PlayerSpeed,
 				"speed_x": 0.0,
 				"speed_y": 0.0,
+				"health": 100.0,
+				"max_health": 100.0,
 				"visible": true,
 				"slots": map[string]interface{}{
 					"back": nil,
@@ -254,6 +256,37 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"height": PlayerVisionArea,
 				"shape": "rectangle",
 				"visible": false,
+			},
+		},
+		"weapon": {
+			"stone_spear": map[string]interface{}{
+				"type": "weapon",
+				"kind": "stone_spear",
+				"width": 2.0,
+				"height": 2.0,
+				"shape": "rectangle",
+				"container_id": nil,
+				"pickable": true,
+				"droppable": true,
+				"visible": false,
+				"damage": 10.0,
+				"cooldown": 1000.0, //ms
+				"hit_radius": 1.5, // maximum distance to target
+				"hit_angle": 90, // degrees
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
 			},
 		},
 		"resource": {
@@ -384,6 +417,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"speed": 2.0,
 				"speed_x": 0.0,
 				"speed_y": 0.0,
+				"health": 100.0,
+				"max_health": 100.0,
 				"collidable": false,
 				"visible": true,
 				"actions": map[string]interface{}{

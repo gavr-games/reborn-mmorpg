@@ -1,6 +1,7 @@
 import Atlas from "~/plugins/game/atlas/atlas";
 import Camera from "~/plugins/game/camera/camera";
 import GameObserver from "~/plugins/game/game_observer";
+import HealthBar from "~/plugins/game/components/health_bar";
 import { EventBus } from "~/plugins/game/event_bus";
 
 class Character {
@@ -14,6 +15,7 @@ class Character {
     this.meshRotation = Math.PI / 2
     this.camera = null
     this.currentAnimation = null
+    this.healthbar = null
     this.pickupCallback = (params) => {
       if (params.character_id === this.state.id) {
         this.playAnimation("PickUp", false)
@@ -61,6 +63,7 @@ class Character {
       this.camera = new Camera(this.scene, this.canvas, this);
       this.camera.create();
     }
+    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene.cameras[0], this.scene)
     GameObserver.addRenderObserver(`character-${this.state.id}`, this);
   }
 
@@ -83,6 +86,7 @@ class Character {
     }
     this.mesh.position.x = this.state.x
     this.mesh.position.z = this.state.y
+    this.healthbar.update(this.state.health, this.state.max_health, this.mesh.position)
     // character of the logged in player
     if (this.state.player_id == this.myCharacterId) {
       this.camera.update(this.mesh.position)
@@ -96,9 +100,11 @@ class Character {
     EventBus.$off("start_delayed_action", this.startActionCallback)
     EventBus.$off("cancel_delayed_action", this.cancelActionCallback)
     EventBus.$off("finish_delayed_action", this.cancelActionCallback)
-    this.mesh.dispose();
-    this.mesh = null;
-    this.state = null;
+    this.healthbar.remove()
+    this.healthbar = null
+    this.mesh.dispose()
+    this.mesh = null
+    this.state = null
   }
 
   playAnimation(name, loop = true) {

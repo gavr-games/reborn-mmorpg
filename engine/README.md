@@ -6,6 +6,14 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 ## TODO
 - send visible objects updates once per 500ms and check performance
 - add health and hits
+  - direction where character/mob look at
+  - add select/deselect target
+  - add hit (check for figures collision, substract health)
+  - add mob death
+- allow mobs to hit back
+  - add mob following the target
+  - add mob trying to hit
+  - add character reborn (teleport and full hp)
 - add healing potions
 - add database of game objects, craft OR editor to manage atlases
 - switch from json to protobuf

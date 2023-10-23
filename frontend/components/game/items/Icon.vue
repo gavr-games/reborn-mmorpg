@@ -28,6 +28,9 @@ export default {
   &.stone_hammer {
     background-position: 384px 546px;
   }
+  &.stone_spear {
+    background-position: 768px 675px;
+  }
   &.log {
     background-position: 512px 320px;
   }
