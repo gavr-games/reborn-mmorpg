@@ -6,6 +6,7 @@
     <GamePanelCraft />
     <GamePanelCharacter />
     <GamePanelMap />
+    <GamePanelTarget />
     <div v-for="(container, key) in gameContainers" :key="key">
       {{key}}
       <GamePanelContainer v-bind:container="container" />

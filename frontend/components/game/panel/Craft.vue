@@ -86,7 +86,7 @@ export default {
 #craft-panel {
   position: absolute;
   top: 50px;
-  left: 50px;
+  left: 450px;
   .skill {
     .skill-title {
       &:hover {

@@ -69,13 +69,20 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 	}
 	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
 		visibleObjects := GetPlayerVisibleObjects(e, player)
-		for _, val := range visibleObjects {
+		for key, val := range visibleObjects {
 			player.VisibleObjects[val.(*entity.GameObject).Id] = true
+			// This is required to send target info on first character object rendering
+			if val.(*entity.GameObject).Id == player.CharacterGameObjectId {
+				clone := game_objects.Clone(val.(*entity.GameObject))
+				clone.Properties = game_objects.GetInfo(e.GameObjects(), val.(*entity.GameObject))
+				visibleObjects[key] = clone
+			}
 		}
-		//Send json with VisibleObjects from vision area
+		// Send json with VisibleObjects from vision area
 		e.SendResponse("init_game", map[string]interface{}{
 			"visible_objects": visibleObjects,
 		}, player)
+		// Send character obj to another players
 		e.SendGameObjectUpdate(e.GameObjects()[player.CharacterGameObjectId], "add_object")
 	}
 }

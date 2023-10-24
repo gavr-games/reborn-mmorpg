@@ -243,10 +243,21 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"health": 100.0,
 				"max_health": 100.0,
 				"visible": true,
+				"targetable": true,
 				"slots": map[string]interface{}{
 					"back": nil,
 					"left_arm": nil,
 					"right_arm": nil,
+				},
+				"actions": map[string]interface{}{
+					"select as target": map[string]interface{}{
+						"cmd": "select_target",
+						"params": "self",
+					},
+					"deselect target": map[string]interface{}{
+						"cmd": "deselect_target",
+						"params": "self",
+					},
 				},
 			},
 			"player_vision_area": map[string]interface{}{
@@ -421,7 +432,16 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"max_health": 100.0,
 				"collidable": false,
 				"visible": true,
+				"targetable": true,
 				"actions": map[string]interface{}{
+					"select as target": map[string]interface{}{
+						"cmd": "select_target",
+						"params": "self",
+					},
+					"deselect target": map[string]interface{}{
+						"cmd": "deselect_target",
+						"params": "self",
+					},
 					"follow": map[string]interface{}{
 						"cmd": "follow",
 						"params": "self",

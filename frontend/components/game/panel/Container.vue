@@ -50,8 +50,8 @@ export default {
 <style>
 .game-container {
   position: absolute;
-  top: 100px;
-  left: 100px;
+  top: 50px;
+  left: 250px;
   &.size-4 {
     width: 200px;
   }
