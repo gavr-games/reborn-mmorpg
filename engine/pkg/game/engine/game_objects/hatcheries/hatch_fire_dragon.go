@@ -16,6 +16,7 @@ func HatchFireDragon(e entity.IEngine, params map[string]interface{}) bool {
 
 	if hatchery != nil {
 		// Create dragon
+		// TODO: can we use here CreateGameObject?
 		dragon, err := game_objects.CreateFromTemplate("mob/fire_dragon", hatchery.X, hatchery.Y)
 		if err != nil {
 			return false
@@ -32,12 +33,11 @@ func HatchFireDragon(e entity.IEngine, params map[string]interface{}) bool {
 
 		// Remove hatchery
 		e.SendGameObjectUpdate(hatchery, "remove_object")
-		e.Floors()[0].FilteredRemove(e.GameObjects()[hatcheryId], func(b utils.IBounds) bool {
+		e.Floors()[hatchery.Floor].FilteredRemove(e.GameObjects()[hatcheryId], func(b utils.IBounds) bool {
 			return hatcheryId == b.(*entity.GameObject).Id
 		})
 		e.GameObjects()[hatcheryId] = nil
-
-		storage.GetClient().Deletes <- hatchery
+		delete(e.GameObjects(), hatcheryId)
 	} else {
 		return false
 	}

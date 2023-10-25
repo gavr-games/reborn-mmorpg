@@ -111,6 +111,9 @@ class GameController {
       this.controls[key] = true
       this.moveCharacter()
     }
+    if (key === "1") { // Hit the target
+      GameConnnection.sendCmd("melee_hit")
+    }
   }
 
   moveCharacter() {

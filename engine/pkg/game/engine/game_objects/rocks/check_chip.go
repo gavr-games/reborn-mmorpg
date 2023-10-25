@@ -16,7 +16,7 @@ func CheckChip(e entity.IEngine, player *entity.Player, rockId string) bool {
 	}
 
 	// Check has Pickaxe equipped
-	if !characters.HasTypeEquipped(e, charGameObj, "pickaxe") {
+	if _, equipped := characters.HasTypeEquipped(e, charGameObj, "pickaxe"); !equipped {
 		e.SendSystemMessage("You need to equip pickaxe.", player)
 		return false
 	}

@@ -3,7 +3,7 @@ package targets
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 func Select(e entity.IEngine, obj *entity.GameObject, targetId string) bool {
@@ -54,7 +54,7 @@ func selectTarget(e entity.IEngine, obj *entity.GameObject, target *entity.GameO
 	storage.GetClient().Updates <- obj
 
 	if player != nil {
-		e.SendResponse("select_target", game_objects.GetInfo(e.GameObjects(), target), player)
+		e.SendResponse("select_target", serializers.GetInfo(e.GameObjects(), target), player)
 	}
 
 	return true

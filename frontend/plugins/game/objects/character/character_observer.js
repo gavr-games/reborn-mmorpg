@@ -2,6 +2,7 @@ import Atlas from "~/plugins/game/atlas/atlas";
 import Camera from "~/plugins/game/camera/camera";
 import GameObserver from "~/plugins/game/game_observer";
 import HealthBar from "~/plugins/game/components/health_bar";
+import MeleeHitArea from "~/plugins/game/components/melee_hit_area";
 import { EventBus } from "~/plugins/game/event_bus";
 
 class Character {
@@ -109,6 +110,17 @@ class Character {
     this.mesh.dispose()
     this.mesh = null
     this.state = null
+  }
+
+  meleeHit(weapon) {
+    new MeleeHitArea(
+      weapon.Properties["hit_radius"],
+      weapon.Properties["hit_angle"],
+      weapon.Properties["cooldown"],
+      this.meshRotation,
+      this.mesh.position,
+      this.scene
+    )
   }
 
   playAnimation(name, loop = true) {

@@ -3,7 +3,7 @@ package delayed_actions
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 func Finish(e entity.IEngine, gameObj *entity.GameObject) bool {
@@ -23,7 +23,7 @@ func Finish(e entity.IEngine, gameObj *entity.GameObject) bool {
 	storage.GetClient().Updates <- gameObj
 
 	e.SendResponseToVisionAreas(gameObj, "finish_delayed_action", map[string]interface{}{
-		"object": game_objects.GetInfo(e.GameObjects(), gameObj),
+		"object": serializers.GetInfo(e.GameObjects(), gameObj),
 		"action": delayedActionFuncName,
 	})
 

@@ -49,6 +49,7 @@ func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 
 	// Destroy item
 	e.GameObjects()[itemId] = nil
+	delete(e.GameObjects(), itemId)
 	storage.GetClient().Deletes <- item
 
 	return true

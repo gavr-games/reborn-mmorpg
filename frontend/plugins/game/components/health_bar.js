@@ -24,7 +24,6 @@ class HealthBar {
     this.value = value
     this.maxValue = maxValue
     this.updateWidth()
-    this.updateWidth
     this.plane.position.x = pos.x
     this.plane.position.z = pos.z
     if (this.scene.cameras[0]) {
@@ -33,7 +32,7 @@ class HealthBar {
   }
 
   updateWidth() {
-    this.plane.width = HealthBarWidth * this.value / this.maxValue
+    this.plane.scaling = new BABYLON.Vector3(this.value / this.maxValue, 1, 1)
   }
 
   remove() {

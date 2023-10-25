@@ -12,15 +12,18 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 			//TODO: handle issue this gives panic when closing closed channel
 			//close(client.GetSendChannel())
 			player.Client = nil
-			e.Floors()[0].FilteredRemove(e.GameObjects()[player.VisionAreaGameObjectId], func(b utils.IBounds) bool {
+			e.Floors()[e.GameObjects()[player.VisionAreaGameObjectId].Floor].FilteredRemove(e.GameObjects()[player.VisionAreaGameObjectId], func(b utils.IBounds) bool {
 				return player.VisionAreaGameObjectId == b.(*entity.GameObject).Id
 			})
 			e.GameObjects()[player.VisionAreaGameObjectId] = nil
-			e.GameObjects()[player.CharacterGameObjectId].Properties["visible"] = false
-			e.GameObjects()[player.CharacterGameObjectId].Properties["speed_x"] = 0.0
-			e.GameObjects()[player.CharacterGameObjectId].Properties["speed_y"] = 0.0
+			charObj := e.GameObjects()[player.CharacterGameObjectId]
+			charObj.Properties["visible"] = false
+			charObj.Properties["speed_x"] = 0.0
+			charObj.Properties["speed_y"] = 0.0
 			player.VisibleObjects = nil
-			e.SendGameObjectUpdate(e.GameObjects()[player.CharacterGameObjectId], "remove_object")
+			e.SendResponseToVisionAreas(charObj, "remove_object", map[string]interface{}{
+				"object": charObj,
+			})
 		}
 	}
 }

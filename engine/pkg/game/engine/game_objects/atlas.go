@@ -269,9 +269,9 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"visible": false,
 			},
 		},
-		"weapon": {
+		"melee_weapon": {
 			"stone_spear": map[string]interface{}{
-				"type": "weapon",
+				"type": "melee_weapon",
 				"kind": "stone_spear",
 				"width": 2.0,
 				"height": 2.0,
@@ -283,8 +283,20 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"damage": 10.0,
 				"cooldown": 1000.0, //ms
 				"hit_radius": 1.5, // maximum distance to target
-				"hit_angle": 90, // degrees
+				"hit_angle": 90.0, // degrees
+				"target_slots": map[string]interface{}{
+					"left_arm": true, 
+					"right_arm": true,
+				},
 				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd": "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd": "unequip_item",
+						"params": "self",
+					},
 					"drop": map[string]interface{}{
 						"cmd": "drop_item",
 						"params": "self",
@@ -448,6 +460,31 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 					"unfollow": map[string]interface{}{
 						"cmd": "unfollow",
+						"params": "self",
+					},
+				},
+			},
+			"bat": map[string]interface{}{
+				"type": "mob",
+				"kind": "bat",
+				"width": 1.0,
+				"height": 1.0,
+				"shape": "circle",
+				"speed": 2.0,
+				"speed_x": 0.0,
+				"speed_y": 0.0,
+				"health": 50.0,
+				"max_health": 50.0,
+				"collidable": false,
+				"visible": true,
+				"targetable": true,
+				"actions": map[string]interface{}{
+					"select as target": map[string]interface{}{
+						"cmd": "select_target",
+						"params": "self",
+					},
+					"deselect target": map[string]interface{}{
+						"cmd": "deselect_target",
 						"params": "self",
 					},
 				},

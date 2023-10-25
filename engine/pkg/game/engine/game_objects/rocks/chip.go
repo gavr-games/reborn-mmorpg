@@ -56,12 +56,11 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 		if resources["stone"].(float64) <= 0 {
 			e.SendGameObjectUpdate(rock, "remove_object")
 
-			e.Floors()[0].FilteredRemove(e.GameObjects()[rockId], func(b utils.IBounds) bool {
+			e.Floors()[rock.Floor].FilteredRemove(e.GameObjects()[rockId], func(b utils.IBounds) bool {
 				return rockId == b.(*entity.GameObject).Id
 			})
 			e.GameObjects()[rockId] = nil
-
-			storage.GetClient().Deletes <- rock
+			delete(e.GameObjects(), rockId)
 		} else {
 			storage.GetClient().Updates <- rock
 		}

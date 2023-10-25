@@ -2,6 +2,7 @@ package engine
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
@@ -32,5 +33,10 @@ func CreateGameObject(e entity.IEngine, objPath string, x float64, y float64, fl
 	if gameObj.Properties["kind"].(string) != "player_vision_area" {
 		storage.GetClient().Updates <- gameObj
 	}
+
+	if gameObj.Properties["type"].(string) == "mob" {
+		e.Mobs()[gameObj.Id] = mobs.NewMob(e, gameObj.Id)
+	}
+
 	return gameObj
 }

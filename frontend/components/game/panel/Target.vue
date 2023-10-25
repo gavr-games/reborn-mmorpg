@@ -5,6 +5,9 @@
       {{ targetInfo["kind"] }} <br />
       <a href="#" @click="triggerDeselect">Deselect</a>
     </div>
+    <div id="fighting-panel">
+      <span>1</span> to Hit
+    </div>
   </div>
 </template>
 

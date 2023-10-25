@@ -4,7 +4,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 // Difference from usual Start is that we take TimeLeft from craft atlas
@@ -21,7 +21,7 @@ func StartCraft(e entity.IEngine, gameObj *entity.GameObject, funcName string, p
 	storage.GetClient().Updates <- gameObj
 
 	e.SendResponseToVisionAreas(gameObj, "start_delayed_action", map[string]interface{}{
-		"object": game_objects.GetInfo(e.GameObjects(), gameObj),
+		"object": serializers.GetInfo(e.GameObjects(), gameObj),
 		"duration": delayedAction.TimeLeft,
 		"action": funcName,
 	})

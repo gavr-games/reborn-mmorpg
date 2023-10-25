@@ -4,7 +4,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
@@ -49,7 +49,7 @@ func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "unequip_item", map[string]interface{}{
 		"slot": itemSlotKey,
 		"character_id": player.CharacterGameObjectId,
-		"item": game_objects.GetInfo(e.GameObjects(), item),
+		"item": serializers.GetInfo(e.GameObjects(), item),
 	})
 
 	return true

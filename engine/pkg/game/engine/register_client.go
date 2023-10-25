@@ -4,6 +4,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 const InitialPlayerX = 4.0
@@ -74,7 +75,7 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 			// This is required to send target info on first character object rendering
 			if val.(*entity.GameObject).Id == player.CharacterGameObjectId {
 				clone := game_objects.Clone(val.(*entity.GameObject))
-				clone.Properties = game_objects.GetInfo(e.GameObjects(), val.(*entity.GameObject))
+				clone.Properties = serializers.GetInfo(e.GameObjects(), val.(*entity.GameObject))
 				visibleObjects[key] = clone
 			}
 		}

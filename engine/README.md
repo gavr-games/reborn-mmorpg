@@ -4,11 +4,7 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- FIX: Storages Deletes does not work for trees and rocks and hatcheries. WHY?
 - send visible objects updates once per 500ms and check performance
-- add health and hits
-  - add hit (check for figures collision, substract health)
-  - add mob death
 - allow mobs to hit back
   - add mob following the target
   - add mob trying to hit

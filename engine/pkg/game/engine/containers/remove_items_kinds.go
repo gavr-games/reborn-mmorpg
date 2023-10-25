@@ -4,6 +4,7 @@ import (
 	"slices"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
 // Removes specified items inside the container (with specified counts)
@@ -22,9 +23,13 @@ func RemoveItemsKinds(e entity.IEngine, player *entity.Player, containerId strin
 	//TODO: search inside sub containers
   for _, itemId := range itemIds {
 		if itemId != nil {
-			itemKind := e.GameObjects()[itemId.(string)].Properties["kind"].(string)
+			itemObj := e.GameObjects()[itemId.(string)]
+			itemKind := itemObj.Properties["kind"].(string)
     	if slices.Contains(itemsKinds, itemKind) {
 				if Remove(e, player, containerId, itemId.(string)) {
+					e.GameObjects()[itemObj.Id] = nil
+					delete(e.GameObjects(), itemObj.Id)
+					storage.GetClient().Deletes <- itemObj
 					itemsCounts[itemKind] = itemsCounts[itemKind] - 1.0
 					if itemsCounts[itemKind] == 0.0 {
 						itemsKinds = slices.DeleteFunc(itemsKinds, func(kind string) bool {

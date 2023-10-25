@@ -108,7 +108,11 @@ func (e Engine) SendGameObjectUpdate(gameObj *entity.GameObject, updateType stri
 	e.SendResponseToVisionAreas(gameObj, updateType, map[string]interface{}{
 		"object": gameObj,
 	})
-	storage.GetClient().Updates <- gameObj
+	if updateType == "remove_object" {
+		storage.GetClient().Deletes <- gameObj
+	} else {
+		storage.GetClient().Updates <- gameObj
+	}
 }
 
 // used to send errors and other system response info

@@ -7,7 +7,9 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/trees"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/rocks"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
@@ -41,7 +43,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			game_objects.SetXYSpeeds(charGameObj, cmd.(string))
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		case "get_character_info":
-			e.SendResponse("character_info", game_objects.GetInfo(e.GameObjects(), charGameObj), player)
+			e.SendResponse("character_info", serializers.GetInfo(e.GameObjects(), charGameObj), player)
 		case "get_craft_atlas":
 			e.SendResponse("craft_atlas", craft.GetAtlas(), player)
 		case "open_container":
@@ -103,6 +105,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			targets.Select(e, charGameObj, targetId)
 		case "deselect_target":
 			targets.Deselect(e, charGameObj)
+		case "melee_hit":
+			characters.MeleeHit(e, charGameObj, player)
 		}
 	}
 }

@@ -61,4 +61,10 @@ func GenerateWorld(e entity.IEngine, floorSize float64) {
 			"visible": true,
 		})
 	}
+	// bats
+	for i := 0; float64(i) < floorSize / 4; i++ {
+		x := 1.0 + rand.Float64() * (floorSize - 1.0)
+		y := 1.0 + rand.Float64() * (floorSize - 1.0)
+		CreateGameObject(e, "mob/bat", x, y, 0, nil)
+	}
 }

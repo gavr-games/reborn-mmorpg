@@ -56,12 +56,11 @@ func Chop(e entity.IEngine, params map[string]interface{}) bool {
 		if resources["logs"].(float64) <= 0 {
 			e.SendGameObjectUpdate(tree, "remove_object")
 
-			e.Floors()[0].FilteredRemove(e.GameObjects()[treeId], func(b utils.IBounds) bool {
+			e.Floors()[tree.Floor].FilteredRemove(e.GameObjects()[treeId], func(b utils.IBounds) bool {
 				return treeId == b.(*entity.GameObject).Id
 			})
 			e.GameObjects()[treeId] = nil
-
-			storage.GetClient().Deletes <- tree
+			delete(e.GameObjects(), treeId)
 		} else {
 			storage.GetClient().Updates <- tree
 		}

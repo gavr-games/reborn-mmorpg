@@ -7,6 +7,12 @@ class CharacterController {
     this.myCharacterId = myCharacterId
     this.state = new CharacterState(gameObject)
     this.observer = new CharacterObserver(this.state, this.myCharacterId)
+    this.performMeleeHit = data => {
+      if (data.object.Id == this.state.id) {
+        this.observer.meleeHit(data.weapon)
+      }
+    };
+    EventBus.$on("melee_hit_attempt", this.performMeleeHit)
     // Display character target
     if (this.state.player_id == this.myCharacterId && this.state.payload.Properties["target"]) {
       EventBus.$emit("select_target", this.state.payload.Properties["target"])
@@ -18,6 +24,7 @@ class CharacterController {
   }
 
   remove() {
+    EventBus.$off("melee_hit_attempt", this.performMeleeHit)
     this.state = null
     this.observer.remove()
   }

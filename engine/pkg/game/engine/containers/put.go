@@ -5,7 +5,7 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 // position: -1 for any empty slot
@@ -48,7 +48,7 @@ func Put(e entity.IEngine, player *entity.Player, containerId string, itemId str
 
 	// Send updates to players
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "put_item_to_container", map[string]interface{}{
-		"item": game_objects.GetInfo(e.GameObjects(), item),
+		"item": serializers.GetInfo(e.GameObjects(), item),
 		"container_id": containerId,
 		"position": freePosition,
 	})

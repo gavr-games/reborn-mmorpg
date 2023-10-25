@@ -23,7 +23,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 	// Has required tools equipped
 	requiredTools := craftItemConfig["tools"].([]string)
 	for _, requiredTool := range requiredTools {
-		if !characters.HasTypeEquipped(e, charGameObj, requiredTool) {
+		if _, equipped := characters.HasTypeEquipped(e, charGameObj, requiredTool); !equipped {
 			e.SendSystemMessage(fmt.Sprintf("You need to equip %s.", requiredTool), player)
 			return false
 		}
