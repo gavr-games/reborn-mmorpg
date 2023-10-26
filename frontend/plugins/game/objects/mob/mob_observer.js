@@ -2,6 +2,7 @@ import { EventBus } from "~/plugins/game/event_bus";
 import Atlas from "~/plugins/game/atlas/atlas";
 import GameObserver from "~/plugins/game/game_observer";
 import HealthBar from "~/plugins/game/components/health_bar";
+import HighlightShape from "~/plugins/game/components/highlight_shape";
 
 class MobObserver {
   constructor(state) {
@@ -12,6 +13,7 @@ class MobObserver {
     this.meshRotation = Math.PI / 2
     this.currentAnimation = null
     this.healthbar = null
+    this.targetHighlight = null
     if (GameObserver.loaded) {
       this.scene = GameObserver.scene;
       this.create();
@@ -74,6 +76,9 @@ class MobObserver {
     this.mesh.position.x = this.state.x
     this.mesh.position.z = this.state.y
     this.healthbar.update(this.state.health, this.state.max_health, this.mesh.position)
+    if (this.targetHighlight) {
+      this.targetHighlight.update(this.mesh.position)
+    }
   }
 
   remove() {
@@ -81,9 +86,30 @@ class MobObserver {
     EventBus.$off("scene-created", this.sceneCreatedCallback);
     this.healthbar.remove()
     this.healthbar = null
+    if (this.targetHighlight) {
+      this.targetHighlight.remove()
+      this.targetHighlight = null
+    }
     this.mesh.dispose();
     this.mesh = null;
     this.state = null;
+  }
+
+  selectAsTarget() {
+    if (this.mesh) {
+      this.targetHighlight = new HighlightShape(this.state.payload, this.mesh.position, this.scene)
+    } else {
+      setTimeout(() => {
+        this.selectAsTarget()
+      }, 100)
+    }
+  }
+
+  deselectAsTarget() {
+    if (this.targetHighlight) {
+      this.targetHighlight.remove()
+      this.targetHighlight = null
+    }
   }
 
   playAnimation(name, loop = true) {

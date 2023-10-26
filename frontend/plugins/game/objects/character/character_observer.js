@@ -3,6 +3,7 @@ import Camera from "~/plugins/game/camera/camera";
 import GameObserver from "~/plugins/game/game_observer";
 import HealthBar from "~/plugins/game/components/health_bar";
 import MeleeHitArea from "~/plugins/game/components/melee_hit_area";
+import HighlightShape from "~/plugins/game/components/highlight_shape";
 import { EventBus } from "~/plugins/game/event_bus";
 
 class Character {
@@ -17,6 +18,7 @@ class Character {
     this.camera = null
     this.currentAnimation = null
     this.healthbar = null
+    this.targetHighlight = null
     this.pickupCallback = (params) => {
       if (params.character_id === this.state.id) {
         this.playAnimation("PickUp", false)
@@ -92,6 +94,9 @@ class Character {
     this.mesh.position.x = this.state.x
     this.mesh.position.z = this.state.y
     this.healthbar.update(this.state.health, this.state.max_health, this.mesh.position)
+    if (this.targetHighlight) {
+      this.targetHighlight.update(this.mesh.position)
+    }
     // character of the logged in player
     if (this.state.player_id == this.myCharacterId) {
       this.camera.update(this.mesh.position)
@@ -107,9 +112,30 @@ class Character {
     EventBus.$off("finish_delayed_action", this.cancelActionCallback)
     this.healthbar.remove()
     this.healthbar = null
+    if (this.targetHighlight) {
+      this.targetHighlight.remove()
+      this.targetHighlight = null
+    }
     this.mesh.dispose()
     this.mesh = null
     this.state = null
+  }
+
+  selectAsTarget() {
+    if (this.mesh) {
+      this.targetHighlight = new HighlightShape(this.state.payload, this.mesh.position, this.scene)
+    } else {
+      setTimeout(() => {
+        this.selectAsTarget()
+      }, 100)
+    }
+  }
+
+  deselectAsTarget() {
+    if (this.targetHighlight) {
+      this.targetHighlight.remove()
+      this.targetHighlight = null
+    }
   }
 
   meleeHit(weapon) {

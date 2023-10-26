@@ -15,6 +15,7 @@ class GameController {
     this.gameObjects = []
     this.token = null
     this.characterId = null
+    this.targetObjId = null
     this.controls = {
       w: false,
       a: false,
@@ -45,6 +46,18 @@ class GameController {
         this.gameObjects[gameObj["Id"]] = null
       }
     };
+    this.selectTargetHandler = targetObj => {
+      this.targetObjId = targetObj["id"]
+      if (this.gameObjects[targetObj["id"]]) {
+        this.gameObjects[targetObj["id"]].selectAsTarget()
+      }
+    };
+    this.deselectTargetHandler = targetObj => {
+      this.targetObjId = null
+      if (this.gameObjects[targetObj["id"]]) {
+        this.gameObjects[targetObj["id"]].deselectAsTarget()
+      }
+    };
     this.performGameAction = action => {
       GameConnnection.sendCmd(action.cmd, action.params)
     };
@@ -55,6 +68,8 @@ class GameController {
     EventBus.$on("update_object", this.updateObjectHandler)
     EventBus.$on("remove_object", this.removeObjectHandler)
     EventBus.$on("perform-game-action", this.performGameAction)
+    EventBus.$on("select_target", this.selectTargetHandler)
+    EventBus.$on("deselect_target", this.deselectTargetHandler)
   }
 
   init(token, character_id) {
@@ -96,6 +111,10 @@ class GameController {
       default:
         this.gameObjects[gameObj["Id"]] = new ItemController(gameObj)
         break;
+    }
+
+    if (this.targetObjId == gameObj["Id"]) {
+      this.selectTargetHandler(gameObj.Properties)
     }
   }
 
@@ -164,6 +183,8 @@ class GameController {
     EventBus.$off("update_object", this.updateObjectHandler)
     EventBus.$off("remove_object", this.removeObjectHandler)
     EventBus.$off("perform-game-action", this.performGameAction)
+    EventBus.$off("select_target", this.selectTargetHandler)
+    EventBus.$off("deselect_target", this.deselectTargetHandler)
   }
 }
 

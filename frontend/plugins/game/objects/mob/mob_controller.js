@@ -16,6 +16,14 @@ class MobController {
     this.state = null
     this.observer.remove()
   }
+
+  selectAsTarget() {
+    this.observer.selectAsTarget()
+  }
+
+  deselectAsTarget() {
+    this.observer.deselectAsTarget()
+  }
 }
 
 export default MobController;

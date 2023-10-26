@@ -6,14 +6,26 @@ import (
 )
 
 func Deselect(e entity.IEngine, obj *entity.GameObject) bool {
-	obj.Properties["target_id"] = nil
-	storage.GetClient().Updates <- obj
+	targetId, ok := obj.Properties["target_id"]
+	if !ok {
+		return true
+	}
+
+	if targetId == nil {
+		return true
+	}
+
 	if playerId, found := obj.Properties["player_id"]; found {
 		playerIdInt := playerId.(int)
 		if player, ok := e.Players()[playerIdInt]; ok {
-			e.SendResponse("deselect_target", map[string]interface{}{}, player)
+			e.SendResponse("deselect_target", map[string]interface{}{
+				"id": targetId,
+			}, player)
 		}
 	}
+
+	obj.Properties["target_id"] = nil
+	storage.GetClient().Updates <- obj
 
 	return true
 }

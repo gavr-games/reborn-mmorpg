@@ -1,6 +1,6 @@
 import * as BABYLON from "babylonjs"
 
-const ALPHA = 0.8
+const ALPHA = 1.0
 const Y = 0.1
 
 class MeleeHitArea {
@@ -19,11 +19,15 @@ class MeleeHitArea {
     setTimeout(() => {
       this.remove()
     }, cooldown)
+    this.interval = setInterval(() => {
+      this.disc.material.alpha = this.disc.material.alpha - 0.1
+    }, cooldown / 10);
   }
 
   remove() {
     if (this.disc) {
       this.disc.dispose();
+      clearInterval(this.interval)
     }
     this.disc = null;
   }

@@ -50,6 +50,13 @@ func selectTarget(e entity.IEngine, obj *entity.GameObject, target *entity.GameO
 		return false
 	}
 
+	// deselect previous target
+	if oldTargetId, ok := obj.Properties["target_id"]; ok {
+		if oldTargetId != nil {
+			Deselect(e, obj)
+		}
+	}
+
 	obj.Properties["target_id"] = target.Id
 	storage.GetClient().Updates <- obj
 
