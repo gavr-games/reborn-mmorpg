@@ -37,8 +37,6 @@ func CanHit(attacker *entity.GameObject, weapon *entity.GameObject, target *enti
 	}
 	// check points are inside the target shape
 	// if at least one point is inside then the weapon can hit the target
-	targetXCenter := target.X + target.Width / 2
-	targetYCenter := target.Y + target.Height / 2
 	for p := 0; p < len(points); p++ {
 		point := points[p]
 		if target.Properties["shape"].(string) == "rectangle" {
@@ -49,7 +47,7 @@ func CanHit(attacker *entity.GameObject, weapon *entity.GameObject, target *enti
 		} else
 		if target.Properties["shape"].(string) == "circle" {
 			// distance between points <= target radius
-			if math.Pow(point.X - targetXCenter, 2.0) + math.Pow(point.Y - targetYCenter, 2.0) <= math.Pow(target.Width / 2, 2.0) {
+			if math.Pow(point.X - target.X, 2.0) + math.Pow(point.Y - target.Y, 2.0) <= math.Pow(target.Width / 2.0, 2.0) {
 				return true
 			}
 		}
