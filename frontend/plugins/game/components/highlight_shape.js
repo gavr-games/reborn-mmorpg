@@ -7,7 +7,7 @@ class HighlightShape {
   constructor(obj, pos, scene) {
     this.scene = scene
     if (obj.Properties["shape"]) {
-      this.shape = BABYLON.MeshBuilder.CreateDisc("shape-disc", {radius: obj.Properties["width"], arc: 1, tessellation: 24}, scene)
+      this.shape = BABYLON.MeshBuilder.CreateDisc("shape-disc", {radius: obj.Properties["width"] / 2, arc: 1, tessellation: 24}, scene)
     } else { //rectangle
       this.shape = BABYLON.MeshBuilder.CreatePlane("shape-plane", {height: obj.Properties["height"], width: obj.Properties["width"]}, scene)
     }
