@@ -2,6 +2,7 @@ import { EventBus } from "~/plugins/game/event_bus";
 import Atlas from "~/plugins/game/atlas/atlas";
 import GameObserver from "~/plugins/game/game_observer";
 import HealthBar from "~/plugins/game/components/health_bar";
+import MeleeHitArea from "~/plugins/game/components/melee_hit_area";
 import HighlightShape from "~/plugins/game/components/highlight_shape";
 
 class MobObserver {
@@ -110,6 +111,17 @@ class MobObserver {
       this.targetHighlight.remove()
       this.targetHighlight = null
     }
+  }
+
+  meleeHit(weapon) {
+    new MeleeHitArea(
+      weapon.Properties["hit_radius"],
+      weapon.Properties["hit_angle"],
+      weapon.Properties["cooldown"],
+      this.meshRotation,
+      this.mesh.position,
+      this.scene
+    )
   }
 
   playAnimation(name, loop = true) {

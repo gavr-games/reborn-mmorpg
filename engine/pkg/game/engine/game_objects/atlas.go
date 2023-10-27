@@ -445,6 +445,11 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"collidable": false,
 				"visible": true,
 				"targetable": true,
+				"attack_type": "melee",
+				"damage": 10.0,
+				"cooldown": 2000.0, //ms
+				"hit_radius": 2.0, // maximum distance to target
+				"hit_angle": 120.0, // degrees
 				"actions": map[string]interface{}{
 					"select as target": map[string]interface{}{
 						"cmd": "select_target",
@@ -478,6 +483,11 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"collidable": false,
 				"visible": true,
 				"targetable": true,
+				"attack_type": "melee",
+				"damage": 5.0,
+				"cooldown": 1000.0, //ms
+				"hit_radius": 1.5, // maximum distance to target
+				"hit_angle": 70.0, // degrees
 				"actions": map[string]interface{}{
 					"select as target": map[string]interface{}{
 						"cmd": "select_target",

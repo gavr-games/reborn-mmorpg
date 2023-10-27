@@ -6,6 +6,12 @@ class MobController {
   constructor(gameObject) {
     this.state = new MobState(gameObject);
     this.observer = new MobObserver(this.state);
+    this.performMeleeHit = data => {
+      if (data.object.Id == this.state.id) {
+        this.observer.meleeHit(data.weapon)
+      }
+    };
+    EventBus.$on("melee_hit_attempt", this.performMeleeHit)
   }
 
   update(gameObject) {
@@ -13,6 +19,7 @@ class MobController {
   }
 
   remove() {
+    EventBus.$off("melee_hit_attempt", this.performMeleeHit)
     this.state = null
     this.observer.remove()
   }
