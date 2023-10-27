@@ -5,17 +5,12 @@ import (
 	"fmt"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-)
-
-const (
-	FloorSize = 200.0
-	FloorCount = 4
-	TickSize = 10 // Game tick size in ms
 )
 
 // Engine runs the game
@@ -129,7 +124,7 @@ func NewEngine() *Engine {
 		players:     make(map[int]*entity.Player),
 		gameObjects: make(map[string]*entity.GameObject),
 		mobs:        make(map[string] entity.IMob),
-		floors:      make([]*utils.Quadtree, FloorCount),
+		floors:      make([]*utils.Quadtree, constants.FloorCount),
 		commands:    make(chan *ClientCommand),
 		register:    make(chan *Client),
 		unregister:  make(chan *Client),
@@ -144,8 +139,8 @@ func (e *Engine) Init() {
 		Bounds: utils.Bounds{
 			X:      0,
 			Y:      0,
-			Width:  FloorSize,
-			Height: FloorSize,
+			Width:  constants.FloorSize,
+			Height: constants.FloorSize,
 		},
 		MaxObjects: 30,
 		MaxLevels:  10,
@@ -153,7 +148,7 @@ func (e *Engine) Init() {
 		Objects:    make([]utils.IBounds, 0),
 		Nodes:      make([]utils.Quadtree, 0),
 	}
-	engine.LoadGameObjects(e, FloorSize)
+	engine.LoadGameObjects(e)
 	e.tickTime = utils.MakeTimestamp()
 }
 
@@ -171,7 +166,7 @@ func (e *Engine) Run() {
 		default:
 			// Run world once in TickSize
 			newTickTime := utils.MakeTimestamp()
-			if newTickTime - e.tickTime >= TickSize {
+			if newTickTime - e.tickTime >= constants.TickSize {
 				engine.MovePlayers(e, newTickTime - e.tickTime)
 				mobs.Update(e, newTickTime - e.tickTime, newTickTime)
 				delayed_actions.UpdateAll(e, newTickTime - e.tickTime)

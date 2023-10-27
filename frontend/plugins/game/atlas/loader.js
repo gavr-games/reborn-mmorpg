@@ -112,6 +112,7 @@ class Loader {
     this.loadSurfaces()
     this.loadRocks()
     this.loadTrees()
+    this.loadPlants()
     this.loadItems()
     this.loadMobs()
     this.assetsManager.load()
@@ -170,6 +171,23 @@ class Loader {
       );
       task.onSuccess = task => {
         this.atlas.set(tree + "Tree", task.loadedContainer);
+      };
+    });
+  }
+
+  loadPlants() {
+    let plants = [
+      "cactus",
+    ];
+    plants.forEach(plant => {
+      let task = this.assetsManager.addContainerTask(
+        plant,
+        plant,
+        "/game_assets/plants/",
+        plant + ".glb"
+      );
+      task.onSuccess = task => {
+        this.atlas.set(plant + "Plant", task.loadedContainer);
       };
     });
   }

@@ -6,7 +6,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 ## TODO
 - send visible objects updates once per 500ms and check performance
 - add healing potions
-- don't allow to move out of the map
 - add database of game objects, craft OR editor to manage atlases
 - switch from json to protobuf
 - add minimap feature

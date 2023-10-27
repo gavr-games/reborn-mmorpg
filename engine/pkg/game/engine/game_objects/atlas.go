@@ -93,6 +93,26 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 		},
+		"plant": {
+			"cactus": map[string]interface{}{
+				"type": "plant",
+				"kind": "cactus",
+				"width": 0.4,
+				"height": 0.4,
+				"shape": "circle",
+				"collidable": false,
+				"visible": true,
+				"resources": map[string]interface{}{
+					"cactus_slice": 3.0,
+				},
+				"actions": map[string]interface{}{
+					"cut": map[string]interface{}{
+						"cmd": "cut_cactus",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
 		"axe": { // there might be tools from different materials later
 				"axe": map[string]interface{}{
 					"type": "axe",

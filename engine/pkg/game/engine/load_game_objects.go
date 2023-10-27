@@ -6,7 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 )
 
-func LoadGameObjects(e entity.IEngine, floorSize float64) {
+func LoadGameObjects(e entity.IEngine) {
 	loadedObjectsCount := storage.GetClient().ReadAllGameObjects(func(gameObj *entity.GameObject) {
 		e.GameObjects()[gameObj.Id] = gameObj
 		if (gameObj.Floor != -1) {
@@ -31,6 +31,6 @@ func LoadGameObjects(e entity.IEngine, floorSize float64) {
 
 	// init dump world if no game objects in storage
 	if (loadedObjectsCount == 0) {
-		GenerateWorld(e, floorSize)
+		GenerateWorld(e)
 	}
 }
