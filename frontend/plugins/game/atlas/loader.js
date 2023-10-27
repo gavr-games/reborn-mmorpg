@@ -202,6 +202,7 @@ class Loader {
       "stone_spear",
       "stone_knife",
       "stone_wall",
+      "healing_balm",
       "fire_dragon_egg",
       "fire_dragon_hatchery",
     ];

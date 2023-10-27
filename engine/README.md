@@ -5,9 +5,12 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## TODO
 - send visible objects updates once per 500ms and check performance
-- add healing potions
-- add database of game objects, craft OR editor to manage atlases
-- switch from json to protobuf
+- add healing
+  - add effects to game_objects
+  - process different effects (constant, periodic)
+- add database of game objects, craft OR editor to manage atlases (move atlases to json files where possible)
+- drag and drop items in containers
+- switch from json to protobuf for server-client communication
 - add minimap feature
 - add sub-containers
 - for prod - global error logging

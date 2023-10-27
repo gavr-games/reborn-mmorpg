@@ -474,6 +474,33 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 			},
 		},
+		"potion":{
+			"healing_balm": map[string]interface{}{
+				"type": "potion",
+				"kind": "healing_balm",
+				"width": 0.25,
+				"height": 0.25,
+				"shape": "circle",
+				"container_id": nil,
+				"pickable": true,
+				"droppable": true,
+				"visible": false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
 		"wall": {
 			"stone_wall": map[string]interface{}{
 				"type": "wall",

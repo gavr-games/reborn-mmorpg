@@ -64,6 +64,20 @@ func GetAtlas() map[string]interface{} {
 			"place_in_real_world": false,
 			"duration": 5000.0,
 		},
+		"healing_balm": map[string]interface{}{
+			"skill": "herbalism",
+			"resources": map[string]interface{}{
+				"cactus_slice": 2.0,
+			},
+			"title": "Healing Balm",
+			"description": "Useful to heal small wounds.",
+			"inputs": []string{},
+			"tools": []string{
+				"knife",
+			},
+			"place_in_real_world": false,
+			"duration": 7000.0,
+		},
 		"fire_dragon_hatchery": map[string]interface{}{
 			"skill": "taming",
 			"resources": map[string]interface{}{

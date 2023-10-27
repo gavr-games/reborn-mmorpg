@@ -43,6 +43,9 @@ export default {
   &.cactus_slice {
     background-position: 448px 288px;
   }
+  &.healing_balm {
+    background-position: 448px 578px;
+  }
   &.fire_dragon_egg {
     background-position: 320px 386px;
   }
