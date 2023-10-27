@@ -31,6 +31,9 @@ export default {
   &.stone_spear {
     background-position: 768px 675px;
   }
+  &.stone_knife {
+    background-position: 800px 707px;
+  }
   &.log {
     background-position: 512px 320px;
   }

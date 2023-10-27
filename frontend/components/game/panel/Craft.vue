@@ -7,11 +7,13 @@
         <div class="craft-items" v-if="expandSkills[skillName]">
           <div class="craft-item" v-for="(item, itemKey) in craftItems" :key="itemKey">
             <span>{{ item["title"] }}</span>
-            <p>{{ item["description"] }}</p>
-            <p v-for="(resourceCount, resourceName) in item.resources" :key="resourceName">
-              <GameItemsIcon v-bind:item="resourceName" />: {{ resourceCount }}
-            </p>
-            <button type="button" class="rpgui-button" @click="craftItem(itemKey, item)"><p>Craft</p></button>
+            <p class="item-description">{{ item["description"] }}</p>
+            <div class="craft-resources">
+              <p v-for="(resourceCount, resourceName) in item.resources" :key="resourceName">
+                <GameItemsIcon v-bind:item="resourceName" />:{{ resourceCount }}
+              </p>
+              <button type="button" class="rpgui-button" @click="craftItem(itemKey, item)"><p>Craft</p></button>
+            </div>
           </div>
         </div>
       </div>
@@ -96,6 +98,14 @@ export default {
     .craft-item {
       border: 1px solid white;
       padding: 5px;
+      .item-description {
+        color: grey;
+        margin: 0px;
+        font-size: 10px;
+      }
+      .craft-resources {
+        display: flex;
+      }
     }
   }
 }

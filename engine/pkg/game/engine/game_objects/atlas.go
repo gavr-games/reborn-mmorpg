@@ -185,6 +185,42 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 		},
+		"knife": {
+			"stone_knife": map[string]interface{}{
+				"type": "knife",
+				"kind": "stone_knife",
+				"width": 0.06,
+				"height": 0.5,
+				"shape": "rectangle",
+				"container_id": nil,
+				"pickable": true,
+				"droppable": true,
+				"equipable": true,
+				"visible": false,
+				"target_slots": map[string]interface{}{
+					"left_arm": true, 
+					"right_arm": true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd": "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd": "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+				},
+			},
+	},
 		"hammer": {
 			"stone_hammer": map[string]interface{}{
 				"type": "hammer",
