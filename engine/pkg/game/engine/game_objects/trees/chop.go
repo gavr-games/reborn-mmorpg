@@ -50,10 +50,10 @@ func Chop(e entity.IEngine, params map[string]interface{}) bool {
 
 		// Decrease logs stored in the tree
 		resources := tree.Properties["resources"].(map[string]interface{})
-		resources["logs"] = resources["logs"].(float64) - 1.0
+		resources["log"] = resources["log"].(float64) - 1.0
 
 		// Remove tree if no logs inside
-		if resources["logs"].(float64) <= 0 {
+		if resources["log"].(float64) <= 0 {
 			e.SendGameObjectUpdate(tree, "remove_object")
 
 			e.Floors()[tree.Floor].FilteredRemove(e.GameObjects()[treeId], func(b utils.IBounds) bool {

@@ -2,6 +2,7 @@ package delayed_actions
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/trees"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/rocks"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/plants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 )
@@ -15,6 +16,10 @@ func GetDelayedActionsAtlas() map[string]map[string]interface{} {
 		},
 		"Chip": map[string]interface{}{
 			"func": rocks.Chip,
+			"duration": 3000.0, // ms
+		},
+		"CutCactus": map[string]interface{}{
+			"func": plants.CutCactus,
 			"duration": 3000.0, // ms
 		},
 		"Craft": map[string]interface{}{

@@ -45,7 +45,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"collidable": true,
 					"visible": true,
 					"resources": map[string]interface{}{
-						"logs": 3.0,
+						"log": 3.0,
 					},
 					"actions": map[string]interface{}{
 						"chop": map[string]interface{}{
@@ -63,7 +63,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"collidable": true,
 					"visible": true,
 					"resources": map[string]interface{}{
-						"logs": 3.0,
+						"log": 3.0,
 					},
 					"actions": map[string]interface{}{
 						"chop": map[string]interface{}{
@@ -217,6 +217,10 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd": "pickup_item",
 						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
 					},
 				},
 			},
@@ -400,6 +404,31 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"width": 0.316,
 				"height": 1.335,
 				"shape": "rectangle",
+				"container_id": nil,
+				"pickable": true,
+				"droppable": true,
+				"visible": false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"cactus_slice": map[string]interface{}{
+				"type": "resource",
+				"kind": "cactus_slice",
+				"width": 0.3,
+				"height": 0.3,
+				"shape": "circle",
 				"container_id": nil,
 				"pickable": true,
 				"droppable": true,
