@@ -18,6 +18,7 @@ type GameObject struct {
 	CurrentAction *DelayedAction
 	Rotation float64 // from 0 to math.Pi * 2
 	Properties map[string]interface{}
+	Effects map[string]interface{}
 }
 
 func (obj GameObject) HitBox() utils.Bounds {

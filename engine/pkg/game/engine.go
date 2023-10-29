@@ -9,6 +9,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
@@ -20,6 +21,7 @@ type Engine struct {
 	players map[int]*entity.Player // map of all players
 	gameObjects map[string]*entity.GameObject // map of ALL objects in the game
 	mobs map[string] entity.IMob // map of ALL mobs in the game
+	effects map[string]map[string]interface{} // all active effects in the game
 	commands chan *ClientCommand // Inbound messages from the clients.
 	register chan *Client // Register requests from the clients.
 	unregister chan *Client // Unregister requests from clients.
@@ -39,6 +41,10 @@ func (e Engine) Mobs() map[string] entity.IMob {
 
 func (e Engine) Players() map[int]*entity.Player {
 	return e.players
+}
+
+func (e Engine) Effects() map[string]map[string]interface{} {
+	return e.effects
 }
 
 func (e Engine) CurrentTickTime() int64 {
@@ -124,6 +130,7 @@ func NewEngine() *Engine {
 		players:     make(map[int]*entity.Player),
 		gameObjects: make(map[string]*entity.GameObject),
 		mobs:        make(map[string] entity.IMob),
+		effects:     make(map[string]map[string]interface{}),
 		floors:      make([]*utils.Quadtree, constants.FloorCount),
 		commands:    make(chan *ClientCommand),
 		register:    make(chan *Client),
@@ -169,6 +176,7 @@ func (e *Engine) Run() {
 			if newTickTime - e.tickTime >= constants.TickSize {
 				engine.MovePlayers(e, newTickTime - e.tickTime)
 				mobs.Update(e, newTickTime - e.tickTime, newTickTime)
+				effects.Update(e, newTickTime - e.tickTime)
 				delayed_actions.UpdateAll(e, newTickTime - e.tickTime)
 				e.tickTime = newTickTime
 			}

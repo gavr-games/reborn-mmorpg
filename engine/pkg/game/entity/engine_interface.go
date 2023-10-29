@@ -9,6 +9,7 @@ type IEngine interface {
 	Players() map[int]*Player
 	GameObjects() map[string]*GameObject
 	Mobs() map[string] IMob
+	Effects() map[string]map[string]interface{}
 	CurrentTickTime() int64
 	SendResponse(responseType string, responseData map[string]interface{}, player *Player)
 	SendResponseToVisionAreas(gameObj *GameObject, responseType string, responseData map[string]interface{})

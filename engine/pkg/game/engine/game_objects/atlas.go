@@ -485,7 +485,20 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"pickable": true,
 				"droppable": true,
 				"visible": false,
+				"effect": map[string]interface{}{
+					"type": "periodic", // periodic (once per cooldown) or constant (constant value for the defined total_time)
+					"attribute": "health",
+					"value": 5.0,
+					"cooldown": 2000.0,
+					"current_cooldown": 0.0,
+					"number": 10.0,
+					"group": "potion_healing", // this is used to prevent multiple effects from one group
+				},
 				"actions": map[string]interface{}{
+					"use": map[string]interface{}{
+						"cmd": "apply_effect",
+						"params": "self",
+					},
 					"drop": map[string]interface{}{
 						"cmd": "drop_item",
 						"params": "self",

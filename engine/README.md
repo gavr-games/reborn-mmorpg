@@ -4,12 +4,17 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- send visible objects updates once per 500ms and check performance
-- add healing
-  - add effects to game_objects
-  - process different effects (constant, periodic)
-- add database of game objects, craft OR editor to manage atlases (move atlases to json files where possible)
+- FIX: send only ID to remove game object in storage
 - drag and drop items in containers
+- mobs drop gold
+- add NPCs
+- add claims
+- add baby dragons and raising them
+- add dragon breeding to get new eggs
+- add fighting and leveling dragins
+- add leveling skills fot character and skills requirements for craft
+- send visible objects updates once per 500ms and check performance
+- add database of game objects, craft OR editor to manage atlases (move atlases to json files where possible)
 - switch from json to protobuf for server-client communication
 - add minimap feature
 - add sub-containers
@@ -19,6 +24,4 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - refactor game object to have characteristics like pickable to influence the behaviour, rather then decribing everything manually
 - think about sending only what is changed in game object
 - FIX: login after disconect works only from second try
-- add claims
-- add NPCs
 - add GameMasters

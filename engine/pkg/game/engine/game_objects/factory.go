@@ -69,6 +69,7 @@ func CreateFromTemplate(objPath string, x float64, y float64) (*entity.GameObjec
 		Floor: -1, // -1 for does not belong to any floor
 		Rotation: 0,
 		Properties: make(map[string]interface{}),
+		Effects: make(map[string]interface{}),
 	}
 	gameObj.Properties = utils.CopyMap(objTemplate)
 	gameObj.Properties["x"] = x
