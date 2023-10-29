@@ -1,10 +1,10 @@
 <template>
-  <div :class="`rpgui-container framed-golden game-container size-${container.size}`" v-if="showContainerPanel">
+  <div :class="`game-container size-${container.size}`" v-if="showContainerPanel">
+    <a href="#" class="close-btn" @click="showContainerPanel = false"></a>
     <div v-for="(item, key) in container.items" :key="key" class="slot">
       <GameItem v-if="item !== null" v-bind:item="item" />
       <div class="empty-slot" v-if="item === null" />
     </div>
-    <button type="button" class="rpgui-button" @click="showContainerPanel = false"><p>Close</p></button>
   </div>
 </template>
 
@@ -53,16 +53,35 @@ export default {
   top: 50px;
   left: 250px;
   &.size-4 {
-    width: 200px;
+    width: 165px;
+    height: 165px;
+    padding-top: 14px;
+    padding-left: 14px;
+    background-image: url("~assets/img/backpack-16.png");
   }
   .slot {
     display: inline-block;
-    border: 1px solid black;
-    margin-right: 2px;
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+    margin-top: 2px;
   }
   .empty-slot {
     width: 32px;
     height: 32px;
+  }
+  .close-btn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    transform: rotate(45deg);
+    width: 16px;
+    height: 16px;
+    background-image: url("~assets/img/close.png");
+    &:hover {
+      transform: rotate(0deg);
+      transition: rotate 1s;
+    }
   }
 }
 </style>
