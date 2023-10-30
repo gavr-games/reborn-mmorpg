@@ -29,7 +29,7 @@ func RemoveItemsKinds(e entity.IEngine, player *entity.Player, containerId strin
 				if Remove(e, player, containerId, itemId.(string)) {
 					e.GameObjects()[itemObj.Id] = nil
 					delete(e.GameObjects(), itemObj.Id)
-					storage.GetClient().Deletes <- itemObj
+					storage.GetClient().Deletes <- itemObj.Id
 					itemsCounts[itemKind] = itemsCounts[itemKind] - 1.0
 					if itemsCounts[itemKind] == 0.0 {
 						itemsKinds = slices.DeleteFunc(itemsKinds, func(kind string) bool {

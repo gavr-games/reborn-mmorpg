@@ -110,7 +110,7 @@ func (e Engine) SendGameObjectUpdate(gameObj *entity.GameObject, updateType stri
 		"object": gameObj,
 	})
 	if updateType == "remove_object" {
-		storage.GetClient().Deletes <- gameObj
+		storage.GetClient().Deletes <- gameObj.Id
 	} else {
 		storage.GetClient().Updates <- gameObj
 	}

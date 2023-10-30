@@ -18,7 +18,7 @@ const (
 type StorageClient struct {
 	redisClient *redis.Client
 	Updates chan *entity.GameObject
-	Deletes chan *entity.GameObject
+	Deletes chan string
 }
 
 var instance *StorageClient = nil
@@ -35,7 +35,7 @@ func GetClient() *StorageClient {
 		instance = &StorageClient{
 			redisClient: rdb,
 			Updates: make(chan *entity.GameObject, ChanelCapacity),
-			Deletes: make(chan *entity.GameObject, ChanelCapacity),
+			Deletes: make(chan string, ChanelCapacity),
 		}
 	})
 	return instance
@@ -53,8 +53,8 @@ func (sc *StorageClient) SaveGameObject(obj *entity.GameObject) {
   }
 }
 
-func (sc *StorageClient) RemoveGameObject(obj *entity.GameObject) {
-	if err := sc.redisClient.Del(ctx, obj.Id).Err(); err != nil {
+func (sc *StorageClient) RemoveGameObject(objId string) {
+	if err := sc.redisClient.Del(ctx, objId).Err(); err != nil {
 		panic(err)
 	}
 }
@@ -92,9 +92,9 @@ func (sc *StorageClient) updatesWorker(updatesChan <-chan *entity.GameObject) {
 	}
 }
 
-func (sc *StorageClient) deletesWorker(deletesChan <-chan *entity.GameObject) {
-	for obj := range deletesChan {
-		sc.RemoveGameObject(obj)
+func (sc *StorageClient) deletesWorker(deletesChan <-chan string) {
+	for objId := range deletesChan {
+		sc.RemoveGameObject(objId)
 	}
 }
 

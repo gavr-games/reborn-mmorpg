@@ -55,7 +55,7 @@ func ApplyPlayer(e entity.IEngine, itemId string, player *entity.Player) bool {
 	// Remove item
 	e.GameObjects()[itemId] = nil
 	delete(e.GameObjects(), itemId)
-	storage.GetClient().Deletes <- item
+	storage.GetClient().Deletes <- item.Id
 
 	return true
 }

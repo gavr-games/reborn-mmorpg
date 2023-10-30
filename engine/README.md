@@ -4,7 +4,6 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- FIX: send only ID to remove game object in storage
 - drag and drop items in containers
 - mobs drop gold
 - add NPCs
