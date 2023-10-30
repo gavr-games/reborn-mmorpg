@@ -216,9 +216,6 @@ inside your html file.
 .rpgui-content * {
   /* remove outline effect for input elements etc */
   outline: none;
-  /* prevent dragging */
-  user-drag: none;
-  -webkit-user-drag: none;
   /* prevent text selecting */
   -webkit-touch-callout: none;
   -webkit-user-select: none;

@@ -2,8 +2,13 @@
   <div :class="`game-container size-${container.size}`" v-if="showContainerPanel">
     <a href="#" class="close-btn" @click="showContainerPanel = false"></a>
     <div v-for="(item, key) in container.items" :key="key" class="slot">
-      <GameItem v-if="item !== null" v-bind:item="item" />
-      <div class="empty-slot" v-if="item === null" />
+      <div
+        draggable
+        @dragstart="startDrag($event, item)"
+      >
+        <GameItem v-if="item !== null" v-bind:item="item" />
+      </div>
+      <div class="empty-slot" @dragover="allowDrag" @drop="onDrop($event, key)" v-if="item === null" />
     </div>
   </div>
 </template>
@@ -42,6 +47,27 @@ export default {
         this.$forceUpdate()
       }
     },
+    startDrag(evt, item) {
+      if (item !== null) {
+        evt.dataTransfer.dropEffect = 'move'
+        evt.dataTransfer.effectAllowed = 'move'
+        evt.dataTransfer.setData('item_id', item.id)
+      }
+    },
+    onDrop(evt, pos) {
+      const itemID = evt.dataTransfer.getData('item_id')
+      EventBus.$emit("perform-game-action", {
+        cmd: "put_to_container",
+        params: {
+          "container_id": this.container.id,
+          "position": pos,
+          "item_id": itemID,
+        }
+      })
+    },
+    allowDrag(evt) {
+      evt.preventDefault()
+    }
   }
 }
 </script>
@@ -64,7 +90,7 @@ export default {
     width: 32px;
     height: 32px;
     margin-right: 8px;
-    margin-top: 2px;
+    margin-top: 3px;
   }
   .empty-slot {
     width: 32px;

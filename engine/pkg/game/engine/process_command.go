@@ -60,6 +60,13 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			items.Pickup(e, params.(string), player)
 		case "destroy_item":
 			items.Destroy(e, params.(string), player)
+		case "put_to_container":
+			items.PutToContainer(
+				e,
+				params.(map[string]interface{})["container_id"].(string),
+				int(params.(map[string]interface{})["position"].(float64)),
+				params.(map[string]interface{})["item_id"].(string),
+				player)
 		case "apply_effect":
 			effects.ApplyPlayer(e, params.(string), player)
 		case "chop_tree":

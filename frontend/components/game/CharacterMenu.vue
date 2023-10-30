@@ -47,7 +47,7 @@ export default {
     display: block;
     width: 32px;
     height: 32px;
-    margin-bottom: 5px;
+    padding-bottom: 5px;
     opacity: 0.8;
     &:hover {
       opacity: 1.0;
@@ -56,12 +56,15 @@ export default {
   }
   .map-icon {
     background-image: url("~assets/img/icons/map.png");
+    background-repeat: no-repeat;
   }
   .hero-icon {
     background-image: url("~assets/img/icons/hero.png");
+    background-repeat: no-repeat;
   }
   .craft-icon {
     background-image: url("~assets/img/icons/craft.png");
+    background-repeat: no-repeat;
   }
 }
 </style>
