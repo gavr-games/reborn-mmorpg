@@ -185,7 +185,7 @@ class GameObserver {
       if (this.fpsEl) {
         this.fpsEl.innerHTML = this.engine.getFps().toFixed() + " fps";
       } else {
-        this.fpsEl = document.getElementById("fps");
+        this.fpsEl = document.getElementById("fps").firstChild;
       }
     });
   }

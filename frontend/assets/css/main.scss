@@ -51,4 +51,15 @@ $sides: (top, bottom, left, right);
   position: absolute;
   top: 0;
   left: 0;
+  color: white;
+}
+
+.game-panel {
+  border: 24px solid;
+  border-image: url("~assets/img/panel-border.png") 24 round;
+  .game-panel-content {
+    background-color: rgba(43, 43, 71, 0.9);
+    height: 100%;
+    color: inherit;
+  }
 }

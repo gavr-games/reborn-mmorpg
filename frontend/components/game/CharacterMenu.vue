@@ -1,8 +1,10 @@
 <template>
-  <div id="character-menu" class="rpgui-container framed-golden">
-    <div class="rpgui-icon menu-item helmet-slot" @click="getCharacterInfo"></div>
-    <div class="rpgui-icon menu-item potion-slot" @click="getCraftAtlas"></div>
-    <div class="rpgui-icon menu-item magic-slot"  @click="showMap"></div>
+  <div id="character-menu" class="game-panel">
+    <div class="game-panel-content">
+      <div class="menu-item hero-icon" @click="getCharacterInfo"></div>
+      <div class="menu-item craft-icon" @click="getCraftAtlas"></div>
+      <div class="menu-item map-icon"  @click="showMap"></div>
+    </div>
   </div>
 </template>
 
@@ -41,13 +43,25 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
-  .rpgui-icon {
-    width: 32px;
-    height: 32px;
-  }
   .menu-item {
     display: block;
+    width: 32px;
+    height: 32px;
     margin-bottom: 5px;
+    opacity: 0.8;
+    &:hover {
+      opacity: 1.0;
+      cursor: url("~assets/img/cursor/point.png") 10 0, auto;
+    }
+  }
+  .map-icon {
+    background-image: url("~assets/img/icons/map.png");
+  }
+  .hero-icon {
+    background-image: url("~assets/img/icons/hero.png");
+  }
+  .craft-icon {
+    background-image: url("~assets/img/icons/craft.png");
   }
 }
 </style>

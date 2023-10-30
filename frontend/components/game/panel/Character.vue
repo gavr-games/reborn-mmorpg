@@ -1,13 +1,15 @@
 <template>
-  <div id="character-info-panel" class="rpgui-container framed-golden" v-if="showCharacterInfoPanel">
-    <h4>Character</h4>
-    <div v-for="(slotItem, slotKey) in characterInfo.slots" :key="slotKey">
-      <span>{{ slotKey }}:</span>
-      <span v-if="slotItem">
-        <GameItem v-bind:item="slotItem" />
-      </span>
+  <div id="character-info-panel" class="game-panel" v-if="showCharacterInfoPanel">
+    <div class="game-panel-content">
+      <h4>Character</h4>
+      <div v-for="(slotItem, slotKey) in characterInfo.slots" :key="slotKey">
+        <span>{{ slotKey }}:</span>
+        <span v-if="slotItem">
+          <GameItem v-bind:item="slotItem" />
+        </span>
+      </div>
+      <button type="button" class="rpgui-button" @click="showCharacterInfoPanel = false"><p>Close</p></button>
     </div>
-    <button type="button" class="rpgui-button" @click="showCharacterInfoPanel = false"><p>Close</p></button>
   </div>
 </template>
 

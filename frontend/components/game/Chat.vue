@@ -1,11 +1,13 @@
 <template>
-  <div id="chat" class="rpgui-container framed-golden">
-    <div id="chat-messages" class="rpgui-container framed-grey">
-      <div class="message" v-for="index in chatMessages.length" :key="'msg'+index">
-        {{ chatMessages[index - 1] }}
+  <div id="chat" class="game-panel">
+    <div class="game-panel-content">
+      <div id="chat-messages">
+        <div class="message" v-for="index in chatMessages.length" :key="'msg'+index">
+          {{ chatMessages[index - 1] }}
+        </div>
       </div>
+      <input id="input-chat-message" placeholder="type your message here" v-model="chatMessage" v-on:keyup.enter="sendChatMessage" autocomplete="off">
     </div>
-    <input id="input-chat-message" placeholder="type your message here" v-model="chatMessage" v-on:keyup.enter="sendChatMessage" autocomplete="off">
   </div>
 </template>
 
@@ -57,11 +59,10 @@ export default {
 <style>
 #chat {
   width: 500px;
-  height: 300px;
+  height: 250px;
   position: absolute;
   bottom: 0;
   left: 0;
-  opacity: 0.8;
 
   #chat-messages {
     width: 100%;
@@ -78,7 +79,7 @@ export default {
 
   #input-chat-message {
     margin-left: 2px;
-    width: 442px;
+    width: 490px;
   }
 }
 </style>

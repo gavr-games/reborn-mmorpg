@@ -1,24 +1,26 @@
 <template>
-  <div id="craft-panel" class="rpgui-container framed-golden" v-if="showCraftPanel">
-    <h4>Craft</h4>
-    <div v-for="(craftItems, skillName) in craftInfo" :key="skillName">
-      <div class="skill">
-        <div class="skill-title" @click="toggleExpandSkill(skillName)">{{ skillName }}</div>
-        <div class="craft-items" v-if="expandSkills[skillName]">
-          <div class="craft-item" v-for="(item, itemKey) in craftItems" :key="itemKey">
-            <span>{{ item["title"] }}</span>
-            <p class="item-description">{{ item["description"] }}</p>
-            <div class="craft-resources">
-              <p v-for="(resourceCount, resourceName) in item.resources" :key="resourceName">
-                <GameItemsIcon v-bind:item="resourceName" />:{{ resourceCount }}
-              </p>
-              <button type="button" class="rpgui-button" @click="craftItem(itemKey, item)"><p>Craft</p></button>
+  <div id="craft-panel" class="game-panel" v-if="showCraftPanel">
+    <div class="game-panel-content">
+      <h4 class="heading">Craft</h4>
+      <div v-for="(craftItems, skillName) in craftInfo" :key="skillName">
+        <div class="skill">
+          <div class="skill-title" @click="toggleExpandSkill(skillName)">{{ skillName }}</div>
+          <div class="craft-items" v-if="expandSkills[skillName]">
+            <div class="craft-item" v-for="(item, itemKey) in craftItems" :key="itemKey">
+              <span>{{ item["title"] }}</span>
+              <p class="item-description">{{ item["description"] }}</p>
+              <div class="craft-resources">
+                <p v-for="(resourceCount, resourceName) in item.resources" :key="resourceName">
+                  <GameItemsIcon v-bind:item="resourceName" />:{{ resourceCount }}
+                </p>
+                <button type="button" class="rpgui-button" @click="craftItem(itemKey, item)"><p>Craft</p></button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      <button type="button" class="rpgui-button" @click="showCraftPanel = false"><p>Close</p></button>
     </div>
-    <button type="button" class="rpgui-button" @click="showCraftPanel = false"><p>Close</p></button>
   </div>
 </template>
 
@@ -89,10 +91,15 @@ export default {
   position: absolute;
   top: 50px;
   left: 450px;
+  color: white;
+  .heading {
+    margin-top: 0px;
+  }
   .skill {
     .skill-title {
+      color: white;
       &:hover {
-        color: white;
+        text-decoration: underline;
       }
     }
     .craft-item {

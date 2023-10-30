@@ -1,7 +1,7 @@
 <template>
   <div class="rpgui-content" style="overflow-y:scroll;">
     <canvas id="game-canvas"></canvas>
-    <div id="fps" class="rpgui-container framed-golden">0</div>
+    <div id="fps" class="game-panel"><div class="game-panel-content">0</div></div>
     <GameCharacterMenu />
     <GamePanelCraft />
     <GamePanelCharacter />
