@@ -4,6 +4,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
@@ -62,7 +63,7 @@ func Equip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	
 	// Add to slot
 	slots[freeTargetSlot] = itemId
-	storage.GetClient().Updates <- charGameObj
+	storage.GetClient().Updates <- game_objects.Clone(charGameObj)
 	
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "equip_item", map[string]interface{}{
 		"slot": freeTargetSlot,

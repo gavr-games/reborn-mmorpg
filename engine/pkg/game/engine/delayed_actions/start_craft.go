@@ -4,6 +4,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
@@ -18,7 +19,7 @@ func StartCraft(e entity.IEngine, gameObj *entity.GameObject, funcName string, p
 
 	gameObj.CurrentAction = delayedAction
 
-	storage.GetClient().Updates <- gameObj
+	storage.GetClient().Updates <- game_objects.Clone(gameObj)
 
 	e.SendResponseToVisionAreas(gameObj, "start_delayed_action", map[string]interface{}{
 		"object": serializers.GetInfo(e.GameObjects(), gameObj),

@@ -31,7 +31,7 @@ func CreateGameObject(e entity.IEngine, objPath string, x float64, y float64, fl
 	e.GameObjects()[gameObj.Id] = gameObj
 
 	if gameObj.Properties["kind"].(string) != "player_vision_area" {
-		storage.GetClient().Updates <- gameObj
+		storage.GetClient().Updates <- game_objects.Clone(gameObj)
 	}
 
 	if gameObj.Properties["type"].(string) == "mob" {

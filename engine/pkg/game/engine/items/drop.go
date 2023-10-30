@@ -4,6 +4,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
@@ -51,7 +52,7 @@ func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
 	item.Properties["y"] = charGameObj.Properties["y"]
 	e.Floors()[item.Floor].Insert(item)
 
-	storage.GetClient().Updates <- item
+	storage.GetClient().Updates <- game_objects.Clone(item)
 
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 		"object": item,

@@ -33,7 +33,7 @@ func Update(e entity.IEngine, tickDelta int64) {
 				effect["current_cooldown"] = 0.0
 				obj.Properties[effect["attribute"].(string)] = obj.Properties[effect["attribute"].(string)].(float64) + effect["value"].(float64)
 				effect["number"] = effect["number"].(float64) - 1.0
-				if effect["number"].(float64) == 0.0 {
+				if effect["number"].(float64) <= 0.0 {
 					Remove(e, effectId, obj)
 				} else {
 					e.SendGameObjectUpdate(obj, "update_object")

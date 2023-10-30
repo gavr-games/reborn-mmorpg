@@ -17,7 +17,9 @@ func Clone(obj *entity.GameObject) *entity.GameObject {
 		Floor: obj.Floor,
 		Rotation: obj.Rotation,
 		Properties: make(map[string]interface{}),
+		Effects: make(map[string]interface{}),
 	}
 	clone.Properties = utils.CopyMap(obj.Properties)
+	clone.Effects = utils.CopyMap(obj.Effects)
 	return clone
 }

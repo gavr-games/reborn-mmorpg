@@ -3,6 +3,7 @@ package delayed_actions
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
@@ -15,7 +16,7 @@ func Cancel(e entity.IEngine, gameObj *entity.GameObject) bool {
 
 	gameObj.CurrentAction = nil
 
-	storage.GetClient().Updates <- gameObj
+	storage.GetClient().Updates <- game_objects.Clone(gameObj)
 
 	e.SendResponseToVisionAreas(gameObj, "cancel_delayed_action", map[string]interface{}{
 		"object": serializers.GetInfo(e.GameObjects(), gameObj),

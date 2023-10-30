@@ -50,7 +50,7 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 	item.Floor = -1
 	item.Properties["visible"] = false
 
-	storage.GetClient().Updates <- item
+	storage.GetClient().Updates <- game_objects.Clone(item)
 
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "pickup_object", map[string]interface{}{
 		"character_id": charGameObj.Id,

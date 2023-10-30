@@ -3,6 +3,7 @@ package targets
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
@@ -58,7 +59,7 @@ func selectTarget(e entity.IEngine, obj *entity.GameObject, target *entity.GameO
 	}
 
 	obj.Properties["target_id"] = target.Id
-	storage.GetClient().Updates <- obj
+	storage.GetClient().Updates <- game_objects.Clone(obj)
 
 	if player != nil {
 		e.SendResponse("select_target", serializers.GetInfo(e.GameObjects(), target), player)
