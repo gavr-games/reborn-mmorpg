@@ -21,10 +21,8 @@ class ItemObserver {
   }
 
   create() {
-    this.container = Atlas.get(this.state.kind + "Item").instantiateModelsToScene();
-    let mesh = this.container.rootNodes[0];
+    let mesh = Atlas.get(this.state.kind + "Item").clone("item-" + this.state.id);
     mesh.setParent(null)
-    mesh.setEnabled(true);
     mesh.name = "item-" + this.state.id;
     mesh.position.x = this.state.x
     mesh.position.y = 0

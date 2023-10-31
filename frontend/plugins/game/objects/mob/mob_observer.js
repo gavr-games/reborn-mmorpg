@@ -4,6 +4,7 @@ import GameObserver from "~/plugins/game/game_observer";
 import HealthBar from "~/plugins/game/components/health_bar";
 import MeleeHitArea from "~/plugins/game/components/melee_hit_area";
 import HighlightShape from "~/plugins/game/components/highlight_shape";
+import freezeMaterials from "~/plugins/game/utils/freeze_materials";
 
 class MobObserver {
   constructor(state) {
@@ -32,7 +33,7 @@ class MobObserver {
     this.playAnimation("Idle");
     let mesh = this.container.rootNodes[0];
     mesh.setParent(null)
-    mesh.setEnabled(true);
+    freezeMaterials(mesh, this.scene)
     mesh.name = "mob-" + this.state.id;
     mesh.position.x = this.state.x
     mesh.position.y = 0

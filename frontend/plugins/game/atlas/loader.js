@@ -1,4 +1,5 @@
 import * as BABYLON from "babylonjs";
+import freezeMaterials from "~/plugins/game/utils/freeze_materials";
 
 /**
  * Creates a new ContainerAssetTask
@@ -99,6 +100,13 @@ class Loader {
     this.assetsManager.onFinish = finishCallback;
   }
 
+  taskToMesh(task) {
+    const mesh = task.loadedContainer.instantiateModelsToScene().rootNodes[0].getChildren()[0]
+    mesh.setEnabled(false)
+    freezeMaterials(mesh, this.scene)
+    return mesh
+  }
+
   load() {
     let task = this.assetsManager.addContainerTask(
       "baseCharacter",
@@ -133,9 +141,7 @@ class Loader {
       );
       task.onSuccess = task => {
         // This should be changed if surface models of aother structure are imported
-        let mesh = task.loadedContainer.instantiateModelsToScene().rootNodes[0].getChildren()[0]
-        mesh.setEnabled(false)
-        this.atlas.set(surface + "Surface", mesh);
+        this.atlas.set(surface + "Surface", this.taskToMesh(task));
       };
     });
   }
@@ -152,7 +158,7 @@ class Loader {
         rock + ".glb"
       );
       task.onSuccess = task => {
-        this.atlas.set(rock + "Rock", task.loadedContainer);
+        this.atlas.set(rock + "Rock", this.taskToMesh(task));
       };
     });
   }
@@ -170,7 +176,7 @@ class Loader {
         tree + ".glb"
       );
       task.onSuccess = task => {
-        this.atlas.set(tree + "Tree", task.loadedContainer);
+        this.atlas.set(tree + "Tree", this.taskToMesh(task));
       };
     });
   }
@@ -187,7 +193,7 @@ class Loader {
         plant + ".glb"
       );
       task.onSuccess = task => {
-        this.atlas.set(plant + "Plant", task.loadedContainer);
+        this.atlas.set(plant + "Plant", this.taskToMesh(task));
       };
     });
   }
@@ -214,7 +220,7 @@ class Loader {
         item + ".glb"
       );
       task.onSuccess = task => {
-        this.atlas.set(item + "Item", task.loadedContainer);
+        this.atlas.set(item + "Item", this.taskToMesh(task));
       };
     });
   }

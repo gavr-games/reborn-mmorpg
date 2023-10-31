@@ -21,8 +21,7 @@ class RockObserver {
   }
 
   create() {
-    this.container = Atlas.get(this.state.kind + "Rock").instantiateModelsToScene();
-    let mesh = this.container.rootNodes[0];
+    let mesh = Atlas.get(this.state.kind + "Rock").clone("rock-" + this.state.id)
     mesh.setParent(null)
     mesh.setEnabled(true);
     mesh.name = "rock-" + this.state.id;

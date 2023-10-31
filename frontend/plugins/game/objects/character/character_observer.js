@@ -4,6 +4,7 @@ import GameObserver from "~/plugins/game/game_observer";
 import HealthBar from "~/plugins/game/components/health_bar";
 import MeleeHitArea from "~/plugins/game/components/melee_hit_area";
 import HighlightShape from "~/plugins/game/components/highlight_shape";
+import freezeMaterials from "~/plugins/game/utils/freeze_materials";
 import { EventBus } from "~/plugins/game/event_bus";
 
 class Character {
@@ -54,6 +55,7 @@ class Character {
     this.container = Atlas.get("baseCharacter").instantiateModelsToScene();
     this.playAnimation("Idle");
     this.mesh = this.container.rootNodes[0];
+    freezeMaterials(this.mesh, this.scene)
     this.mesh.setParent(null)
     this.mesh.setEnabled(true);
     this.mesh.position.x = this.state.x;
