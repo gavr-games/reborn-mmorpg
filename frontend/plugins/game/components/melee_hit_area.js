@@ -15,6 +15,9 @@ class MeleeHitArea {
     this.disc.material = new BABYLON.StandardMaterial("MeleeHitAreaMaterial", scene)
     this.disc.material.diffuseColor.set(1, 0, 0)
     this.disc.material.alpha = ALPHA;
+    this.disc.convertToUnIndexedMesh()
+    this.disc.doNotSyncBoundingInfo = true
+    this.disc.isPickable = false
 
     setTimeout(() => {
       this.remove()

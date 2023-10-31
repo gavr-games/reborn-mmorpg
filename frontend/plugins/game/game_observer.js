@@ -39,7 +39,11 @@ class GameObserver {
   }
 
   createScene() {
-    this.scene = new BABYLON.Scene(this.engine);
+    this.scene = new BABYLON.Scene(this.engine, {
+      useGeometryUniqueIdsMap: true,
+      useMaterialMeshMap: true,
+      useClonedMeshMap: true,
+    });
     this.scene.actionManager = new BABYLON.ActionManager(this.scene);
     this.registerActions(this.scene);
 

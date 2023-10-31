@@ -18,6 +18,9 @@ class HealthBar {
     this.plane.material = new BABYLON.StandardMaterial("HealthBarMaterial", scene)
     this.plane.material.diffuseColor.set(1, 0, 0)
     this.plane.material.alpha = HealthBarAlpha;
+    this.plane.convertToUnIndexedMesh()
+    this.plane.doNotSyncBoundingInfo = true
+    this.plane.isPickable = false
     this.updateWidth()
   }
 

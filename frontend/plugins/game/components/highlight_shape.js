@@ -18,6 +18,9 @@ class HighlightShape {
     this.shape.material = new BABYLON.StandardMaterial("ObjectShapeMaterial", scene)
     this.shape.material.diffuseColor.set(1, 0, 0)
     this.shape.material.alpha = ALPHA;
+    this.shape.convertToUnIndexedMesh()
+    this.shape.doNotSyncBoundingInfo = true
+    this.shape.isPickable = false
   }
 
   update(pos) {
