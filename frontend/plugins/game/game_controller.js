@@ -40,6 +40,12 @@ class GameController {
       if (this.gameObjects[gameObj["Id"]]) {
         this.gameObjects[gameObj["Id"]].update(gameObj)
       }
+      if (gameObj.Properties && gameObj.Properties["container_id"]) {
+        EventBus.$emit("update-item-in-container", {
+          container_id: gameObj.Properties["container_id"],
+          item: gameObj
+        });
+      }
     };
     this.removeObjectHandler = gameObj => {
       if (this.gameObjects[gameObj["Id"]]) {

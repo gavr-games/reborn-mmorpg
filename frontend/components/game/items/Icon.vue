@@ -49,5 +49,8 @@ export default {
   &.fire_dragon_egg {
     background-position: 320px 386px;
   }
+  &.gold {
+    background-position: 192px 482px;
+  }
 }
 </style>

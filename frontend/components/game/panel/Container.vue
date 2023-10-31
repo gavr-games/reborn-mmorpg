@@ -27,11 +27,13 @@ export default {
   created() {
     EventBus.$on("put_item_to_container", this.addItem)
     EventBus.$on("remove_item_from_container", this.removeItem)
+    EventBus.$on("update-item-in-container", this.updateItem)
   },
 
   beforeDestroy() {
     EventBus.$off("put_item_to_container", this.addItem)
     EventBus.$off("remove_item_from_container", this.removeItem)
+    EventBus.$off("update-item-in-container", this.updateItem)
   },
 
   methods: {
@@ -45,6 +47,17 @@ export default {
       if (data.container_id === this.container.id) {
         this.container.items[data.position] = null
         this.$forceUpdate()
+      }
+    },
+    updateItem(data) {
+      if (data.container_id === this.container.id) {
+        this.container.items.forEach((item, index) => {
+          if (item && item.id === data.item.Id) {
+            this.container.items[index] = data.item.Properties
+            this.$forceUpdate()
+            return
+          }
+        })
       }
     },
     startDrag(evt, item) {

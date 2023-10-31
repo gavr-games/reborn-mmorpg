@@ -473,6 +473,33 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"gold": map[string]interface{}{
+				"type": "resource",
+				"kind": "gold",
+				"width": 1.0,
+				"height": 1.0,
+				"shape": "circle",
+				"ammount": 0.0,
+				"container_id": nil,
+				"pickable": true,
+				"stackable": true,
+				"droppable": true,
+				"visible": false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 		},
 		"potion":{
 			"healing_balm": map[string]interface{}{
@@ -575,6 +602,13 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"cooldown": 2000.0, //ms
 				"hit_radius": 2.0, // maximum distance to target
 				"hit_angle": 120.0, // degrees
+				"drop": map[string]interface{}{
+					"resource/gold": map[string]interface{}{
+						"probability": 1.0,
+						"min": 10.0,
+						"max": 100.0,
+					},
+				},
 				"actions": map[string]interface{}{
 					"select as target": map[string]interface{}{
 						"cmd": "select_target",
@@ -613,6 +647,13 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"cooldown": 1000.0, //ms
 				"hit_radius": 1.5, // maximum distance to target
 				"hit_angle": 70.0, // degrees
+				"drop": map[string]interface{}{
+					"resource/gold": map[string]interface{}{
+						"probability": 1.0,
+						"min": 5.0,
+						"max": 50.0,
+					},
+				},
 				"actions": map[string]interface{}{
 					"select as target": map[string]interface{}{
 						"cmd": "select_target",

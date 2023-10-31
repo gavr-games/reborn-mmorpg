@@ -126,6 +126,35 @@ func (e Engine) SendSystemMessage(message string, player *entity.Player) {
 	}, player)
 }
 
+func (e Engine) CreateGameObject(objPath string, x float64, y float64, floor int, additionalProps map[string]interface{}) *entity.GameObject {
+	gameObj, err := game_objects.CreateFromTemplate(objPath, x, y)
+	if err != nil {
+		//TODO: handle error
+	}
+	if additionalProps != nil {
+		for k, v := range additionalProps {
+			gameObj.Properties[k] = v
+		}
+	}
+
+	gameObj.Floor = floor
+	if floor != -1 {
+		e.Floors()[gameObj.Floor].Insert(gameObj)
+	}
+
+	e.GameObjects()[gameObj.Id] = gameObj
+
+	if gameObj.Properties["kind"].(string) != "player_vision_area" {
+		storage.GetClient().Updates <- game_objects.Clone(gameObj)
+	}
+
+	if gameObj.Properties["type"].(string) == "mob" {
+		e.Mobs()[gameObj.Id] = mobs.NewMob(e, gameObj.Id)
+	}
+
+	return gameObj
+}
+
 func NewEngine() *Engine {
 	return &Engine{
 		tickTime:    0,

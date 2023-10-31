@@ -57,7 +57,7 @@ func GenerateWorld(e entity.IEngine) {
 				}
 				// 0.8 - 1.0 - nothing
 			}
-			CreateGameObject(e, surfaceKind, x, y, 0, nil)
+			e.CreateGameObject(surfaceKind, x, y, 0, nil)
 			floorMap.Cells <- &world_maps.WorldCell{x, y, surfaceKind}
 		}
 	}
@@ -67,7 +67,7 @@ func GenerateWorld(e entity.IEngine) {
 func createWithProbability(e entity.IEngine, objPath string, x float64, y float64, floor int, additionalProps map[string]interface{}, objProbability float64) *entity.GameObject {
 	probability := rand.Float64()
 	if probability <= objProbability {
-		return CreateGameObject(e, objPath, x, y, floor, additionalProps)
+		return e.CreateGameObject(objPath, x, y, floor, additionalProps)
 	}
 	return nil
 }

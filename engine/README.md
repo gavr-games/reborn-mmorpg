@@ -4,7 +4,6 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- mobs drop gold
 - add NPCs
   - add more fences and walls
   - add doors
@@ -29,3 +28,4 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - think about sending only what is changed in game object
 - FIX: login after disconect works only from second try
 - add GameMasters
+- Refactor: check where we can use CreateGameObject instead of CreateFromTemplate

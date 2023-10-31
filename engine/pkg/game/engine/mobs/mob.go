@@ -27,7 +27,7 @@ const (
 	IdleTime = 40000.0 // stays idle during this time
 	MovingTime = 5000.0 // randomly moves during this time
 	FollowingTime = 40000.0 // stops following after this time
-	FollowingDistance = 0.5 // stops when in range of the target
+	FollowingDistance = 0.1 // stops when in range of the target
 	FollowingDirectionChangeTime = 2000 // change direction only once per this time
 	AttackSpeedUp = 1.5 // increases the mob speed during attack
 	AttackingTime = 20000.0 // during this time the mob attacks until it calms down if not hitted back
@@ -158,33 +158,43 @@ func (mob *Mob) performFollowing(newTickTime int64, targetObj *entity.GameObject
 		if mobObj.Properties["speed_x"].(float64) != 0.0 || mobObj.Properties["speed_y"].(float64) != 0.0 {
 			mobObj.Properties["speed_x"] = 0.0
 			mobObj.Properties["speed_y"] = 0.0
-			mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
 		}
+		mob.turnToTarget(targetObj) // TODO: send only on change
 	} else {
 		if (newTickTime - mob.directionTickTime >= directionChangeTime) {
 			mob.directionTickTime = newTickTime
-			// Calclate angle between mob and target
-			// Choose the closest direction by angle by calculatin index in PossibleDirections slice
-			dx := targetObj.X - mobObj.X
-			dy := targetObj.Y - mobObj.Y
-			angle := math.Atan2(dy, dx) // range (-PI, PI)
-			if angle < 0.0 {
-				angle = angle + math.Pi * 2
-			}
-			quotient := math.Floor(angle / (math.Pi / 4)) // math.Pi / 4 - is the angle between movement directions
-			remainder := angle - (math.Pi / 4) * quotient
-			if (remainder > math.Pi / 8) {
-				quotient = quotient + 1.0
-			}
-			directionIndex := int(quotient)
-			if (directionIndex == len(game_objects.PossibleDirections)) {
-				directionIndex = 0
-			}
-			mobDirection := game_objects.PossibleDirections[directionIndex]
-			game_objects.SetXYSpeeds(mobObj, mobDirection)
+			game_objects.SetXYSpeeds(mobObj, mob.getDirectionToTarget(targetObj))
 			mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
 		}
 	}
+}
+
+func (mob *Mob) turnToTarget(targetObj *entity.GameObject) {
+	mobObj := mob.Engine.GameObjects()[mob.Id]
+	game_objects.SetRotation(mobObj, mob.getDirectionToTarget(targetObj))
+	mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
+}
+
+func (mob *Mob) getDirectionToTarget(targetObj *entity.GameObject) string {
+	mobObj := mob.Engine.GameObjects()[mob.Id]
+	// Calclate angle between mob and target
+	// Choose the closest direction by angle by calculatin index in PossibleDirections slice
+	dx := targetObj.X - mobObj.X
+	dy := targetObj.Y - mobObj.Y
+	angle := math.Atan2(dy, dx) // range (-PI, PI)
+	if angle < 0.0 {
+		angle = angle + math.Pi * 2
+	}
+	quotient := math.Floor(angle / (math.Pi / 4)) // math.Pi / 4 - is the angle between movement directions
+	remainder := angle - (math.Pi / 4) * quotient
+	if (remainder > math.Pi / 8) {
+		quotient = quotient + 1.0
+	}
+	directionIndex := int(quotient)
+	if (directionIndex == len(game_objects.PossibleDirections)) {
+		directionIndex = 0
+	}
+	return game_objects.PossibleDirections[directionIndex]
 }
 
 func (mob *Mob) Follow(targetObjId string) {
@@ -262,6 +272,8 @@ func (mob *Mob) MeleeHit(targetObj *entity.GameObject) bool {
 }
 
 func (mob *Mob) Die() {
+	mob.drop()
+
 	// remove from world
 	mobObj := mob.Engine.GameObjects()[mob.Id]
 	mob.Engine.Floors()[mobObj.Floor].FilteredRemove(mobObj, func(b utils.IBounds) bool {
@@ -271,4 +283,24 @@ func (mob *Mob) Die() {
 	delete(mob.Engine.GameObjects(), mob.Id)
 
 	mob.Engine.SendGameObjectUpdate(mobObj, "remove_object")
+}
+
+func (mob *Mob) drop() {
+	mobObj := mob.Engine.GameObjects()[mob.Id]
+	if drops, ok := mobObj.Properties["drop"]; ok {
+		for name, dropProperties := range drops.(map[string]interface{}) {
+			probability := rand.Float64()
+			if probability <= dropProperties.(map[string]interface{})["probability"].(float64) {
+				additionalProps := make(map[string]interface{})
+				additionalProps["visible"] = true
+				if _, stackable := dropProperties.(map[string]interface{})["min"]; stackable {
+					min := dropProperties.(map[string]interface{})["min"].(float64)
+					max := dropProperties.(map[string]interface{})["max"].(float64)
+					additionalProps["ammount"] = math.Ceil((rand.Float64() * (max - min)) + min)
+				}
+				dropItem := mob.Engine.CreateGameObject(name, mobObj.X, mobObj.Y, mobObj.Floor, additionalProps)
+				mob.Engine.SendGameObjectUpdate(dropItem, "add_object")
+			}
+		}
+	}
 }

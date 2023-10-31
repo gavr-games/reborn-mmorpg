@@ -37,9 +37,26 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 	}
 
 	// put to container
+	itemStackable := false
+	if value, ok := item.Properties["stackable"]; ok {
+		itemStackable = value.(bool)
+	}
 	if (item.Properties["container_id"] == nil) {
-		if !containers.Put(e, player, slots["back"].(string), itemId, -1) {
-			return false
+		performPut := true
+		if itemStackable { // add ammount to existing stackable item
+			existingItem := containers.GetItemKind(e, slots["back"].(string), item.Properties["kind"].(string))
+			if existingItem != nil {
+				existingItem.Properties["ammount"] = existingItem.Properties["ammount"].(float64) + item.Properties["ammount"].(float64)
+				performPut = false
+				e.SendResponse("update_object", map[string]interface{}{
+					"object": game_objects.Clone(existingItem),
+				}, player)
+			}
+		}
+		if performPut {
+			if !containers.Put(e, player, slots["back"].(string), itemId, -1) {
+				return false
+			}
 		}
 	}
 

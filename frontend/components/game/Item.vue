@@ -1,7 +1,8 @@
 <template>
   <div class="game-item">
     <div @contextmenu="showActions($event)">
-    <GameItemsIcon v-bind:item="item['kind']" />
+      <div class="item-ammount" v-if="item['ammount'] > 0">{{ item['ammount'] }}</div>
+      <GameItemsIcon v-bind:item="item['kind']" />
     </div>
     <div class="actions-menu" v-if="showActionsMenu">
       <div v-for="(action, actionKey) in item.actions" :key="actionKey" class="action-item" @click="handleAction(actionKey)">
@@ -60,6 +61,12 @@ export default {
         color: white;
       }
     }
+  }
+  .item-ammount {
+    color: white;
+    background-color: black;
+    position: absolute;
+    font-size: 5px;
   }
 }
 </style>
