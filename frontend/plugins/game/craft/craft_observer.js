@@ -19,8 +19,7 @@ class CraftObserver {
   }
 
   create(itemKey, x, y) {
-    this.container = Atlas.get(itemKey + "Item").instantiateModelsToScene();
-    let mesh = this.container.rootNodes[0];
+    let mesh = Atlas.get(itemKey + "Item").clone("craft-item");
     mesh.setParent(null)
     mesh.setEnabled(true);
     mesh.name = "craft-item"
