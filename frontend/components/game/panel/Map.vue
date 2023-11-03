@@ -39,8 +39,9 @@ export default {
     updateObject(obj) {
       if (obj.Properties["player_id"] === this.$store.state.characters.selectedCharacterId) {
         if (document.getElementById("floor-map")) {
-          this.left = obj.X -3
-          this.top = document.getElementById("floor-map").height - obj.Y -24
+          console.log(document.getElementById("floor-map").height, obj.X, obj.Y)
+          this.left = obj.X - 14
+          this.top = document.getElementById("floor-map").height - obj.Y - 37
         }
       }
     },

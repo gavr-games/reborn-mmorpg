@@ -19,7 +19,7 @@ func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 	e.Players()[player.Id] = player
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := e.CreateGameObject("player/player", constants.InitialPlayerX, constants.InitialPlayerY, 0, additionalProps)
+	gameObj := e.CreateGameObject("player/player", constants.InitialPlayerX, constants.InitialPlayerY, 0.0, 0, additionalProps)
 	player.CharacterGameObjectId = gameObj.Id
 	CreatePlayerItems(e, player)
 	return player
@@ -29,7 +29,7 @@ func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) *entity.Gam
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.X - game_objects.PlayerVisionArea / 2, charGameObj.Y - game_objects.PlayerVisionArea / 2, 0, additionalProps)
+	gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.X - game_objects.PlayerVisionArea / 2, charGameObj.Y - game_objects.PlayerVisionArea / 2, 0.0, 0, additionalProps)
 	player.VisionAreaGameObjectId = gameObj.Id
 	return gameObj
 }
@@ -39,13 +39,13 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 	// Backpack
 	additionalProps := make(map[string]interface{})
 	additionalProps["owner_id"] = charGameObj.Id
-	initialBackpack := e.CreateGameObject("container/backpack", charGameObj.X, charGameObj.Y, -1, additionalProps)
+	initialBackpack := e.CreateGameObject("container/backpack", charGameObj.X, charGameObj.Y, 0.0, -1, additionalProps)
 	charGameObj.Properties["slots"].(map[string]interface{})["back"] = initialBackpack.Id
 	// Axe
-	initialAxe := e.CreateGameObject("axe/axe", charGameObj.X, charGameObj.Y, -1, nil)
+	initialAxe := e.CreateGameObject("axe/axe", charGameObj.X, charGameObj.Y, 0.0, -1, nil)
 	containers.Put(e, player, initialBackpack.Id, initialAxe.Id, -1)
 	// Pickaxe
-	initialPickaxe := e.CreateGameObject("pickaxe/pickaxe", charGameObj.X, charGameObj.Y, -1, nil)
+	initialPickaxe := e.CreateGameObject("pickaxe/pickaxe", charGameObj.X, charGameObj.Y, 0.0, -1, nil)
 	containers.Put(e, player, initialBackpack.Id, initialPickaxe.Id, -1)
 }
 

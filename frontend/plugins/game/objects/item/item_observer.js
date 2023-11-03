@@ -1,6 +1,7 @@
 import { EventBus } from "~/plugins/game/event_bus";
 import Atlas from "~/plugins/game/atlas/atlas";
 import GameObserver from "~/plugins/game/game_observer";
+import freezeMaterials from "~/plugins/game/utils/freeze_materials";
 
 class ItemObserver {
   constructor(state) {
@@ -8,6 +9,7 @@ class ItemObserver {
     this.state = state;
     this.container = null;
     this.mesh = null;
+    this.meshRotation = 0
     if (GameObserver.loaded) {
       this.scene = GameObserver.scene;
       this.create();
@@ -23,12 +25,17 @@ class ItemObserver {
   create() {
     let mesh = Atlas.get(this.state.kind + "Item").clone("item-" + this.state.id);
     mesh.setParent(null)
+    freezeMaterials(mesh, this.scene)
     mesh.name = "item-" + this.state.id;
     mesh.position.x = this.state.x
     mesh.position.y = 0
     mesh.position.z = this.state.y
-    if (this.state.rotation > 0) {
-      mesh.rotate(BABYLON.Axis.Y, Math.PI / 2);
+    if (this.state.rotation) {
+      let rotationDelta = this.meshRotation - this.state.rotation;
+      if (rotationDelta != 0) {
+        this.meshRotation = this.state.rotation;
+        mesh.rotate(BABYLON.Axis.Y, rotationDelta);
+      }
     }
     mesh.metadata = {
       x: this.state.x,

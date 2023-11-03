@@ -24,7 +24,7 @@ func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
 		}
 
 		// Create cactus slice
-		sliceObj, err := game_objects.CreateFromTemplate("resource/cactus_slice", charGameObj.X, charGameObj.Y)
+		sliceObj, err := game_objects.CreateFromTemplate("resource/cactus_slice", charGameObj.X, charGameObj.Y, 0.0)
 		if err != nil {
 			e.SendSystemMessage(err.Error(), player)
 			return false

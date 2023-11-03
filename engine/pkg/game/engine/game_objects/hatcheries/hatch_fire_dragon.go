@@ -17,7 +17,7 @@ func HatchFireDragon(e entity.IEngine, params map[string]interface{}) bool {
 	if hatchery != nil {
 		// Create dragon
 		// TODO: can we use here CreateGameObject?
-		dragon, err := game_objects.CreateFromTemplate("mob/fire_dragon", hatchery.X, hatchery.Y)
+		dragon, err := game_objects.CreateFromTemplate("mob/fire_dragon", hatchery.X, hatchery.Y, 0.0)
 		if err != nil {
 			return false
 		}

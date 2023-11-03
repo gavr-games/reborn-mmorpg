@@ -34,6 +34,15 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape": "rectangle",
 				"visible": true,
 			},
+			"stone": map[string]interface{}{
+				"type": "surface",
+				"kind": "stone",
+				"width": 1.0,
+				"height": 1.0,
+				"collidable": false,
+				"shape": "rectangle",
+				"visible": true,
+			},
 		},
 		"tree": {
 				"tree_5": map[string]interface{}{
@@ -547,6 +556,21 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"kind": "stone_wall",
 				"width": 1.0,
 				"height": 2.0,
+				"shape": "rectangle",
+				"collidable": true,
+				"visible": true,
+				"actions": map[string]interface{}{
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"wooden_wall": map[string]interface{}{
+				"type": "wall",
+				"kind": "wooden_wall",
+				"width": 0.3,
+				"height": 3.0,
 				"shape": "rectangle",
 				"collidable": true,
 				"visible": true,

@@ -50,7 +50,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		x := coords["x"].(float64)
 		y := coords["y"].(float64)
 		rotation := params["inputs"].(map[string]interface{})["rotation"].(float64)
-		tempGameObj, err := game_objects.CreateFromTemplate(craftItemName, x, y)
+		tempGameObj, err := game_objects.CreateFromTemplate(craftItemName, x, y, 0.0)
 		if err != nil {
 			e.SendSystemMessage(err.Error(), player)
 			return false

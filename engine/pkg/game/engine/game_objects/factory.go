@@ -1,6 +1,7 @@
 package game_objects
 
 import (
+	"math"
 	"errors"
 	"fmt"
 	"strings"
@@ -48,7 +49,7 @@ func findTemplate(objPath string) (map[string]interface{}, error) {
 
 // objPath - "tree/pine_5", "rock/rock_moss". 
 // If just type provided "tree", "rock" it chooses random object kind
-func CreateFromTemplate(objPath string, x float64, y float64) (*entity.GameObject, error) {
+func CreateFromTemplate(objPath string, x float64, y float64, rotation float64) (*entity.GameObject, error) {
 	//TODO: return error if place is occupied for collidable objects like trees and rocks
 
 	//Get object template from GameObjectAtlas
@@ -59,15 +60,23 @@ func CreateFromTemplate(objPath string, x float64, y float64) (*entity.GameObjec
 
 	id := uuid.NewV4().String()
 
+	width := objTemplate["width"].(float64)
+	height := objTemplate["height"].(float64)
+	if int(math.Ceil(rotation / (math.Pi / 2.0))) % 2 == 1 {
+		tempWidth := width
+		width = height
+		height = tempWidth
+	}
+
 	gameObj := &entity.GameObject{
 		X: x,
 		Y: y,
-		Width: objTemplate["width"].(float64),
-		Height: objTemplate["height"].(float64),
+		Width: width,
+		Height: height,
 		Id: id,
 		Type: objTemplate["type"].(string),
 		Floor: -1, // -1 for does not belong to any floor
-		Rotation: 0,
+		Rotation: rotation,
 		Properties: make(map[string]interface{}),
 		Effects: make(map[string]interface{}),
 	}

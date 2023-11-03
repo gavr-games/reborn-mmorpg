@@ -298,7 +298,7 @@ func (mob *Mob) drop() {
 					max := dropProperties.(map[string]interface{})["max"].(float64)
 					additionalProps["ammount"] = math.Ceil((rand.Float64() * (max - min)) + min)
 				}
-				dropItem := mob.Engine.CreateGameObject(name, mobObj.X, mobObj.Y, mobObj.Floor, additionalProps)
+				dropItem := mob.Engine.CreateGameObject(name, mobObj.X, mobObj.Y, 0.0, mobObj.Floor, additionalProps)
 				mob.Engine.SendGameObjectUpdate(dropItem, "add_object")
 			}
 		}

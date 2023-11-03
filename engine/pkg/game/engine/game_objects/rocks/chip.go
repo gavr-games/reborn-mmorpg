@@ -24,7 +24,7 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 		}
 
 		// Create log
-		stoneObj, err := game_objects.CreateFromTemplate("resource/stone", charGameObj.X, charGameObj.Y)
+		stoneObj, err := game_objects.CreateFromTemplate("resource/stone", charGameObj.X, charGameObj.Y, 0.0)
 		if err != nil {
 			e.SendSystemMessage(err.Error(), player)
 			return false

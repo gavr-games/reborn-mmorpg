@@ -17,6 +17,7 @@ var surfaceColors = map[string]color.RGBA{
 	"surface/grass": color.RGBA{0, 255, 0, 255},
 	"surface/sand": color.RGBA{255, 255, 0, 255},
 	"surface/water": color.RGBA{0, 0, 255, 255},
+	"surface/stone": color.RGBA{128, 128, 128, 255},
 }
 
 type WorldCell struct {

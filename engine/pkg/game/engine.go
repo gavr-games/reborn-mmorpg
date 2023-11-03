@@ -126,8 +126,8 @@ func (e Engine) SendSystemMessage(message string, player *entity.Player) {
 	}, player)
 }
 
-func (e Engine) CreateGameObject(objPath string, x float64, y float64, floor int, additionalProps map[string]interface{}) *entity.GameObject {
-	gameObj, err := game_objects.CreateFromTemplate(objPath, x, y)
+func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) *entity.GameObject {
+	gameObj, err := game_objects.CreateFromTemplate(objPath, x, y, rotation)
 	if err != nil {
 		//TODO: handle error
 	}

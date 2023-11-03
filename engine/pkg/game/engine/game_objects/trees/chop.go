@@ -24,7 +24,7 @@ func Chop(e entity.IEngine, params map[string]interface{}) bool {
 		}
 
 		// Create log
-		logObj, err := game_objects.CreateFromTemplate("resource/log", charGameObj.X, charGameObj.Y)
+		logObj, err := game_objects.CreateFromTemplate("resource/log", charGameObj.X, charGameObj.Y, 0.0)
 		if err != nil {
 			e.SendSystemMessage(err.Error(), player)
 			return false

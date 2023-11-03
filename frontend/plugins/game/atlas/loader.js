@@ -131,6 +131,7 @@ class Loader {
       "grass",
       "water",
       "sand",
+      "stone",
     ];
     surfaces.forEach(surface => {
       let task = this.assetsManager.addContainerTask(
@@ -208,6 +209,7 @@ class Loader {
       "stone_spear",
       "stone_knife",
       "stone_wall",
+      "wooden_wall",
       "healing_balm",
       "fire_dragon_egg",
       "fire_dragon_hatchery",
