@@ -1,13 +1,15 @@
 <template>
-    <div class="actions-menu" v-if="showActionsMenu" :style="`top: ${y}px; left: ${x}px;`">
-      <div v-for="(action, actionKey) in item.Properties.actions"
-        :key="actionKey"
-        class="action-item"
-        @click="handleAction(actionKey)">
-        {{ actionKey }}
-      </div>
-      <div class="action-item" @click="showActionsMenu = false">
-        close
+    <div class="actions-menu game-panel" v-if="showActionsMenu" :style="`top: ${y}px; left: ${x}px;`">
+      <div class="game-panel-content">
+        <div v-for="(action, actionKey) in item.Properties.actions"
+          :key="actionKey"
+          class="action-item"
+          @click="handleAction(actionKey)">
+          {{ actionKey }}
+        </div>
+        <div class="action-item" @click="showActionsMenu = false">
+          close
+        </div>
       </div>
     </div>
 </template>
@@ -59,14 +61,12 @@ export default {
 <style>
 .actions-menu {
   position: absolute;
-  padding: 10px;
-  border: 2px solid black;
-  background-color: #884c34;
   z-index: 999;
   .action-item {
-    margin-bottom: 5px;
+    padding-bottom: 5px;
+    color: white;
     &:hover {
-      color: white;
+      text-decoration: underline;
     }
   }
 }

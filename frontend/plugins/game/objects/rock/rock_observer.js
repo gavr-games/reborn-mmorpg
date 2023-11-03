@@ -8,6 +8,7 @@ class RockObserver {
     this.state = state;
     this.container = null;
     this.mesh = null;
+    this.meshRotation = 0
     if (GameObserver.loaded) {
       this.scene = GameObserver.scene;
       this.create();
@@ -29,7 +30,11 @@ class RockObserver {
     mesh.position.y = 0
     mesh.position.z = this.state.y
     if (this.state.rotation) {
-      mesh.rotate(BABYLON.Axis.Y, Math.PI / 2);
+      let rotationDelta = this.meshRotation - this.state.rotation;
+      if (rotationDelta != 0) {
+        this.meshRotation = this.state.rotation;
+        mesh.rotate(BABYLON.Axis.Y, rotationDelta);
+      }
     }
     mesh.metadata = {
       x: this.state.x,

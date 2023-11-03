@@ -123,6 +123,7 @@ class Loader {
     this.loadPlants()
     this.loadItems()
     this.loadMobs()
+    this.loadNpcs()
     this.assetsManager.load()
   }
 
@@ -242,6 +243,23 @@ class Loader {
       );
       task.onSuccess = task => {
         this.atlas.set(item + "Mob", task.loadedContainer);
+      };
+    });
+  }
+
+  loadNpcs() {
+    let npcs = [
+      "town_keeper",
+    ];
+    npcs.forEach(item => {
+      let task = this.assetsManager.addContainerTask(
+        item,
+        item,
+        "/game_assets/npcs/",
+        item + ".glb"
+      );
+      task.onSuccess = task => {
+        this.atlas.set(item + "Npc", task.loadedContainer);
       };
     });
   }

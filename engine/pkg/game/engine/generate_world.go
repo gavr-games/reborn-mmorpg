@@ -95,4 +95,7 @@ func generateTown(e entity.IEngine) {
 	e.CreateGameObject("wall/wooden_wall", townCenter + townHalfSize - wallSize + 1.0, townCenter + townHalfSize, math.Pi * 3 / 2.0, 0, nil)
 	e.CreateGameObject("wall/wooden_wall", townCenter - townHalfSize + 1.0, townCenter - townHalfSize, math.Pi / 2.0, 0, nil)
 	e.CreateGameObject("wall/wooden_wall", townCenter - townHalfSize + 1.0, townCenter + townHalfSize, math.Pi * 3 / 2.0, 0, nil)
+	
+	// npc
+	e.CreateGameObject("npc/town_keeper", townCenter - townHalfSize + 2.0, townCenter + townHalfSize - 2.0, math.Pi * 2 - math.Pi / 4, 0, nil)
 }

@@ -8,6 +8,7 @@ import PlantController from "./objects/plant/plant_controller";
 import ItemController from "./objects/item/item_controller";
 import CharacterController from "./objects/character/character_controller";
 import MobController from "./objects/mob/mob_controller";
+import NpcController from "./objects/npc/npc_controller";
 import CraftController from "./craft/craft_controller";
 import GameConnnection from "./game_connection";
 
@@ -129,6 +130,9 @@ class GameController {
         break;
       case "mob":
         this.gameObjects[gameObj["Id"]] = new MobController(gameObj)
+        break;
+      case "npc":
+        this.gameObjects[gameObj["Id"]] = new NpcController(gameObj)
         break;
       default:
         this.gameObjects[gameObj["Id"]] = new ItemController(gameObj)

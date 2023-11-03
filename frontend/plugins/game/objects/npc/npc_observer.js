@@ -2,13 +2,13 @@ import { EventBus } from "~/plugins/game/event_bus";
 import Atlas from "~/plugins/game/atlas/atlas";
 import GameObserver from "~/plugins/game/game_observer";
 
-class TreeObserver {
+class NpcObserver {
   constructor(state) {
     this.scene = null;
     this.state = state;
     this.container = null;
     this.mesh = null;
-    this.meshRotation = 0
+    this.meshRotation = Math.PI / 2
     if (GameObserver.loaded) {
       this.scene = GameObserver.scene;
       this.create();
@@ -22,9 +22,11 @@ class TreeObserver {
   }
 
   create() {
-    let mesh = Atlas.get(this.state.kind + "Tree").clone("tree-" + this.state.id);
+    this.container = Atlas.get(this.state.kind + "Npc").instantiateModelsToScene();
+    this.playAnimation("Idle");
+    let mesh = this.container.rootNodes[0];
     mesh.setParent(null)
-    mesh.name = "tree-" + this.state.id;
+    mesh.name = "npc-" + this.state.id;
     mesh.position.x = this.state.x
     mesh.position.y = 0
     mesh.position.z = this.state.y
@@ -53,6 +55,25 @@ class TreeObserver {
     this.mesh = null;
     this.state = null;
   }
+
+  playAnimation(name, loop = true) {
+    if (this.container && this.currentAnimation != name) {
+      this.container.animationGroups.forEach(ag => {
+        if (ag.name.includes(name)) {
+          ag.start(loop);
+          this.currentAnimation = name;
+          if (!loop) {
+            ag.onAnimationEndObservable.addOnce(() => {
+              this.currentAnimation = "Idle"
+            });
+          }
+        } else {
+          ag.reset();
+          ag.stop();
+        }
+      });
+    }
+  }
 }
 
-export default TreeObserver;
+export default NpcObserver;

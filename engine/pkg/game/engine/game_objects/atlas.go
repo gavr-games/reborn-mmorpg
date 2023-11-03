@@ -690,6 +690,25 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 			},
 		},
+		"npc": {
+			"town_keeper": map[string]interface{}{
+				"type": "npc",
+				"kind": "town_keeper",
+				"width": 1.0,
+				"height": 1.0,
+				"shape": "circle",
+				"collidable": false,
+				"visible": true,
+				"sells": map[string]interface{}{ //what items NPC sells
+				},
+				"actions": map[string]interface{}{
+					"trade": map[string]interface{}{
+						"cmd": "npc_trade_info",
+						"params": "self",
+					},
+				},
+			},
+		},
 	}
 
 	return gameObjectsAtlas
