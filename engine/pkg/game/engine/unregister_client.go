@@ -20,7 +20,6 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 			charObj.Properties["visible"] = false
 			charObj.Properties["speed_x"] = 0.0
 			charObj.Properties["speed_y"] = 0.0
-			player.VisibleObjects = nil
 			e.SendResponseToVisionAreas(charObj, "remove_object", map[string]interface{}{
 				"object": charObj,
 			})

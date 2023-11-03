@@ -65,6 +65,16 @@ class GameController {
         this.gameObjects[targetObj["id"]].deselectAsTarget()
       }
     };
+    this.addObjectsHandler = data => {
+      data.objects.forEach((gameObj) => {
+        EventBus.$emit("add_object", gameObj)
+      })
+    };
+    this.removeObjectsHandler = data => {
+      data.objects.forEach((gameObj) => {
+        EventBus.$emit("remove_object", gameObj)
+      })
+    };
     this.performGameAction = action => {
       GameConnnection.sendCmd(action.cmd, action.params)
     };
@@ -77,6 +87,8 @@ class GameController {
     EventBus.$on("perform-game-action", this.performGameAction)
     EventBus.$on("select_target", this.selectTargetHandler)
     EventBus.$on("deselect_target", this.deselectTargetHandler)
+    EventBus.$on("add_objects", this.addObjectsHandler)
+    EventBus.$on("remove_objects", this.removeObjectsHandler)
   }
 
   init(token, character_id) {
@@ -195,6 +207,8 @@ class GameController {
     EventBus.$off("perform-game-action", this.performGameAction)
     EventBus.$off("select_target", this.selectTargetHandler)
     EventBus.$off("deselect_target", this.deselectTargetHandler)
+    EventBus.$off("add_objects", this.addObjectsHandler)
+    EventBus.$off("remove_objects", this.removeObjectsHandler)
   }
 }
 

@@ -67,6 +67,10 @@ func SetXYSpeeds(obj *entity.GameObject, direction string) {
 
 // Set rotation depending on the direction
 func SetRotation(obj *entity.GameObject, direction string) {
+	obj.Rotation = GetRotation(direction)
+}
+
+func GetRotation(direction string) float64 {
 	validDirection := false
 	for _, dir := range PossibleDirections {
 		if dir == direction {
@@ -77,25 +81,27 @@ func SetRotation(obj *entity.GameObject, direction string) {
 
 	if !validDirection {
 		//TODO: log error
-		return
+		return 0.0
 	}
 
 	switch direction {
 		case "move_north":
-			obj.Rotation = math.Pi / 2
+			return math.Pi / 2
 		case "move_south":
-			obj.Rotation = math.Pi * 3 / 2
+			return math.Pi * 3 / 2
 		case "move_east":
-			obj.Rotation = 0
+			return 0.0
 		case "move_west":
-			obj.Rotation = math.Pi
+			return math.Pi
 		case "move_north_east":
-			obj.Rotation = math.Pi / 4
+			return math.Pi / 4
 		case "move_north_west":
-			obj.Rotation = math.Pi * 3 / 4
+			return math.Pi * 3 / 4
 		case "move_south_east":
-			obj.Rotation = math.Pi * 7 / 4
+			return math.Pi * 7 / 4
 		case "move_south_west":
-			obj.Rotation = math.Pi * 5 / 4
+			return math.Pi * 5 / 4
 	}
+
+	return 0.0
 }

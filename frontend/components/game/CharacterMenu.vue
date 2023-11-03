@@ -4,6 +4,7 @@
       <div class="menu-item hero-icon" @click="getCharacterInfo"></div>
       <div class="menu-item craft-icon" @click="getCraftAtlas"></div>
       <div class="menu-item map-icon"  @click="showMap"></div>
+      <div class="menu-item town-icon"  @click="townTeleport"></div>
     </div>
   </div>
 </template>
@@ -32,6 +33,12 @@ export default {
     },
     showMap() {
       EventBus.$emit("show-map", {});
+    },
+    townTeleport() {
+      EventBus.$emit("perform-game-action", {
+        cmd: "town_teleport",
+        params: {}
+      });
     },
   }
 }
@@ -64,6 +71,10 @@ export default {
   }
   .craft-icon {
     background-image: url("~assets/img/icons/craft.png");
+    background-repeat: no-repeat;
+  }
+  .town-icon {
+    background-image: url("~assets/img/icons/town.png");
     background-repeat: no-repeat;
   }
 }

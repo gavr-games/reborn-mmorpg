@@ -75,7 +75,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				delayed_actions.Start(e, charGameObj, "Chop", map[string]interface{}{
 					"playerId": float64(player.Id), // this conversion is required, because json unmarshal decodes all numbers to float64
 					"treeId": treeId,
-				})
+				}, -1.0)
 			}
 		case "chip_rock":
 			stoneId := params.(string)
@@ -83,7 +83,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				delayed_actions.Start(e, charGameObj, "Chip", map[string]interface{}{
 					"playerId": float64(player.Id), // this conversion is required, because json unmarshal decodes all numbers to float64
 					"rockId": stoneId,
-				})
+				}, -1.0)
 			}
 		case "cut_cactus":
 			cactusId := params.(string)
@@ -91,20 +91,28 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				delayed_actions.Start(e, charGameObj, "CutCactus", map[string]interface{}{
 					"playerId": float64(player.Id), // this conversion is required, because json unmarshal decodes all numbers to float64
 					"cactusId": cactusId,
-				})
+				}, -1.0)
 			}
 		case "craft":
 			if craft.Check(e, player, params.(map[string]interface{})) {
 				params.(map[string]interface{})["playerId"] = float64(player.Id)
-				delayed_actions.StartCraft(e, charGameObj, "Craft", params.(map[string]interface{}))
+				craftItem := params.(map[string]interface{})["item_name"].(string)
+				delayed_actions.Start(
+					e, charGameObj, "Craft",
+					params.(map[string]interface{}),
+					craft.GetAtlas()[craftItem].(map[string]interface{})["duration"].(float64))
 			}
 		case "hatch_fire_dragon":
 			hatcheryId := params.(string)
 			if hatcheries.CheckHatch(e, player, hatcheryId) {
 				delayed_actions.Start(e, e.GameObjects()[hatcheryId], "HatchFireDragon", map[string]interface{}{
 					"hatcheryId": hatcheryId,
-				})
+				}, -1.0)
 			}
+		case "town_teleport":
+			delayed_actions.Start(e, charGameObj, "TownTeleport", map[string]interface{}{
+				"playerId": float64(player.Id),
+			}, -1.0)
 		case "follow":
 			mobId := params.(string)
 			mob, ok := e.Mobs()[mobId]

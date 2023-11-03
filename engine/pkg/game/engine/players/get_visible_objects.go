@@ -1,4 +1,4 @@
-package engine
+package players
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
@@ -6,7 +6,7 @@ import (
 )
 
 // get visible objects for player
-func GetPlayerVisibleObjects(e entity.IEngine, player *entity.Player) []utils.IBounds {
+func GetVisibleObjects(e entity.IEngine, player *entity.Player) []utils.IBounds {
 	visionArea := e.GameObjects()[player.VisionAreaGameObjectId]
 	visibleObjects := e.Floors()[visionArea.Floor].RetrieveIntersections(utils.Bounds{
 		X:      visionArea.X,

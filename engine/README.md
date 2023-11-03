@@ -5,7 +5,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## TODO
 - add NPCs
-  - add teleport to town
   - add NPC
   - sell items to players
 - add claims

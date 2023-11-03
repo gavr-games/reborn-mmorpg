@@ -158,6 +158,7 @@ func (mob *Mob) performFollowing(newTickTime int64, targetObj *entity.GameObject
 		if mobObj.Properties["speed_x"].(float64) != 0.0 || mobObj.Properties["speed_y"].(float64) != 0.0 {
 			mobObj.Properties["speed_x"] = 0.0
 			mobObj.Properties["speed_y"] = 0.0
+			mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
 		}
 		mob.turnToTarget(targetObj) // TODO: send only on change
 	} else {
@@ -171,8 +172,11 @@ func (mob *Mob) performFollowing(newTickTime int64, targetObj *entity.GameObject
 
 func (mob *Mob) turnToTarget(targetObj *entity.GameObject) {
 	mobObj := mob.Engine.GameObjects()[mob.Id]
-	game_objects.SetRotation(mobObj, mob.getDirectionToTarget(targetObj))
-	mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
+	direction := mob.getDirectionToTarget(targetObj)
+	if mobObj.Rotation != game_objects.GetRotation(direction) {
+		game_objects.SetRotation(mobObj, direction)
+		mob.Engine.SendGameObjectUpdate(mobObj, "update_object")
+	}
 }
 
 func (mob *Mob) getDirectionToTarget(targetObj *entity.GameObject) string {

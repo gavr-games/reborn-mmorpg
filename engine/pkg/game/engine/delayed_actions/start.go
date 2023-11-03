@@ -7,11 +7,14 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
-func Start(e entity.IEngine, gameObj *entity.GameObject, funcName string, params map[string]interface{}) bool {
+func Start(e entity.IEngine, gameObj *entity.GameObject, funcName string, params map[string]interface{}, timeLeft float64) bool {
+	if timeLeft == -1.0 {
+		timeLeft = GetDelayedActionsAtlas()[funcName]["duration"].(float64)
+	}
 	delayedAction := &entity.DelayedAction{
 		FuncName: funcName,
 		Params: params,
-		TimeLeft: GetDelayedActionsAtlas()[funcName]["duration"].(float64),
+		TimeLeft: timeLeft,
 	}
 
 	gameObj.CurrentAction = delayedAction
