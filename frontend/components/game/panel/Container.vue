@@ -86,7 +86,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 .game-container {
   position: absolute;
   top: 50px;

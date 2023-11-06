@@ -58,7 +58,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 .actions-menu {
   position: absolute;
   z-index: 999;

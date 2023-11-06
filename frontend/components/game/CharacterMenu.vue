@@ -45,7 +45,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 #character-menu {
   position: absolute;
   top: 0;
