@@ -56,7 +56,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 #chat {
   width: 500px;
   height: 250px;

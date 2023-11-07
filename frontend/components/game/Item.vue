@@ -46,7 +46,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 .game-item {
   width: 32px;
   height: 32px;
