@@ -233,7 +233,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
-	},
+		},
 		"hammer": {
 			"stone_hammer": map[string]interface{}{
 				"type": "hammer",
@@ -488,10 +488,35 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"width": 1.0,
 				"height": 1.0,
 				"shape": "circle",
-				"ammount": 0.0,
+				"amount": 0.0,
 				"container_id": nil,
 				"pickable": true,
 				"stackable": true,
+				"droppable": true,
+				"visible": false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"claim_stone": map[string]interface{}{
+				"type": "resource",
+				"kind": "claim_stone",
+				"width": 0.5,
+				"height": 0.5,
+				"shape": "circle",
+				"container_id": nil,
+				"pickable": true,
 				"droppable": true,
 				"visible": false,
 				"actions": map[string]interface{}{
@@ -700,6 +725,11 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"collidable": false,
 				"visible": true,
 				"sells": map[string]interface{}{ //what items NPC sells
+					"resource/claim_stone": map[string]interface{}{
+						"amount": 1.0, // how many items will be give
+						"resource": "gold", // for price. allows to request price to be payed in different resources
+						"price": 10.0, 
+					},
 				},
 				"actions": map[string]interface{}{
 					"trade": map[string]interface{}{

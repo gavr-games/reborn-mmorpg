@@ -4,10 +4,15 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- add NPCs
-  - add NPC
-  - sell items to players
 - add claims
+  - craft obelisk
+  - make sure only 1 obelisk per player
+  - teleport to obelisk
+  - show obelisk area
+  - don't allow other player to interract wih items on someones obelisk area
+  - no collision with other obelisks or too close positions
+  - obelisk rent
+  - destroy obelisk if the rent is gone
 - add baby dragons and raising them
 - add dragon breeding to get new eggs
 - add fighting and leveling dragins

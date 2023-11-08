@@ -1,7 +1,7 @@
 <template>
   <div class="game-item">
     <div @contextmenu="showActions($event)">
-      <div class="item-ammount" v-if="item['ammount'] > 0">{{ item['ammount'] }}</div>
+      <div class="item-amount" v-if="item['amount'] > 0">{{ item['amount'] }}</div>
       <GameItemsIcon v-bind:item="item['kind']" />
     </div>
     <div class="actions-menu game-panel" v-if="showActionsMenu">
@@ -62,7 +62,7 @@ export default {
       }
     }
   }
-  .item-ammount {
+  .item-amount {
     color: white;
     background-color: black;
     position: absolute;

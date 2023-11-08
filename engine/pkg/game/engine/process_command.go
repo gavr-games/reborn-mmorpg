@@ -17,6 +17,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/targets"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/items"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs"
 )
 
 // Process commands from players
@@ -28,7 +29,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 
 		// List of commands, which don't interrupt current character action.
 		// Like get_character_info does not interrupt choping a tree, but any movement does
-		nonCancellingCmds := []string{"get_character_info", "open_container", "get_craft_atlas"}
+		nonCancellingCmds := []string{"get_character_info", "open_container", "get_craft_atlas", "npc_trade_info"}
 		// Cancel character delayed actions
 		if !slices.Contains(nonCancellingCmds, cmd.(string)) {
 			delayed_actions.Cancel(e, charGameObj)
@@ -46,6 +47,15 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		case "get_character_info":
 			e.SendResponse("character_info", serializers.GetInfo(e.GameObjects(), charGameObj), player)
+		case "npc_trade_info":
+			if npcObj, npcOk := e.GameObjects()[params.(string)]; npcOk {
+				e.SendResponse("npc_trade_info", serializers.GetInfo(e.GameObjects(), npcObj), player)
+			}
+		case "npc_buy_item":
+			npcs.BuyItem(e, charGameObj,
+				params.(map[string]interface{})["npc_id"].(string),
+				params.(map[string]interface{})["item_name"].(string),
+				params.(map[string]interface{})["amount"].(float64))
 		case "get_craft_atlas":
 			e.SendResponse("craft_atlas", craft.GetAtlas(), player)
 		case "open_container":

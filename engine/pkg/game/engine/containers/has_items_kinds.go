@@ -6,16 +6,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
-func allCountsZero(itemsCounts map[string]float64) bool {
-	allZero := true
-	for _, itemCount := range itemsCounts {
-		if itemCount > 0.0 {
-			allZero = false
-		}
-	}
-	return allZero
-}
-
 // Checks if container has specified items inside of it (with specified counts)
 // items example - {"log": 1.0, "stone": 2.0}
 func HasItemsKinds(e entity.IEngine, containerId string, items map[string]interface{}) bool {
@@ -32,10 +22,27 @@ func HasItemsKinds(e entity.IEngine, containerId string, items map[string]interf
 	//TODO: search inside sub containers
   for _, itemId := range itemIds {
 		if itemId != nil {
-			itemKind := e.GameObjects()[itemId.(string)].Properties["kind"].(string)
+			item := e.GameObjects()[itemId.(string)]
+			itemKind := item.Properties["kind"].(string)
+			itemStackable := false
+			if value, ok := item.Properties["stackable"]; ok {
+				itemStackable = value.(bool)
+			}
+			// If item stackable check item has enough "amount", otherwise count items as 1 per each game_object
     	if slices.Contains(itemsKinds, itemKind) {
-				itemsCounts[itemKind] = itemsCounts[itemKind] - 1.0
-				if allCountsZero(itemsCounts) {
+				if itemStackable {
+					if item.Properties["amount"].(float64) >= itemsCounts[itemKind] {
+						itemsCounts[itemKind] = 0.0
+					}
+				} else {
+					itemsCounts[itemKind] = itemsCounts[itemKind] - 1.0
+				}
+				if itemsCounts[itemKind] == 0.0 {
+					itemsKinds = slices.DeleteFunc(itemsKinds, func(kind string) bool {
+						return kind == itemKind
+					})
+				}
+				if len(itemsKinds) == 0 {
 					return true
 				}
 			}

@@ -300,7 +300,7 @@ func (mob *Mob) drop() {
 				if _, stackable := dropProperties.(map[string]interface{})["min"]; stackable {
 					min := dropProperties.(map[string]interface{})["min"].(float64)
 					max := dropProperties.(map[string]interface{})["max"].(float64)
-					additionalProps["ammount"] = math.Ceil((rand.Float64() * (max - min)) + min)
+					additionalProps["amount"] = math.Ceil((rand.Float64() * (max - min)) + min)
 				}
 				dropItem := mob.Engine.CreateGameObject(name, mobObj.X, mobObj.Y, 0.0, mobObj.Floor, additionalProps)
 				mob.Engine.SendGameObjectUpdate(dropItem, "add_object")

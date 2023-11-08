@@ -119,6 +119,26 @@ func GetAtlas() map[string]interface{} {
 			"width": 2.0,
 			"height": 2.0,
 		},
+		"claim_obelisk": map[string]interface{}{
+			"skill": "householding",
+			"resources": map[string]interface{}{
+				"stone": 2.0,
+				"claim_stone": 1.0,
+			},
+			"title": "Claim Obelisk",
+			"description": "A first step to build your own home",
+			"inputs": []string{
+				"coordinates",
+				"rotation",
+			},
+			"tools": []string{
+				"hammer",
+			}, //tools equipped required to craft something
+			"place_in_real_world": true, //place item in real world or put into container
+			"duration": 20000.0, // ms
+			"width": 1.0,
+			"height": 1.0,
+		},
 	}
 
 	return craftAtlas

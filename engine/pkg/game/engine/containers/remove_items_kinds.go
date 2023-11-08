@@ -23,24 +23,40 @@ func RemoveItemsKinds(e entity.IEngine, player *entity.Player, containerId strin
 	//TODO: search inside sub containers
   for _, itemId := range itemIds {
 		if itemId != nil {
-			itemObj := e.GameObjects()[itemId.(string)]
-			itemKind := itemObj.Properties["kind"].(string)
+			item := e.GameObjects()[itemId.(string)]
+			itemKind := item.Properties["kind"].(string)
+			itemStackable := false
+			if value, ok := item.Properties["stackable"]; ok {
+				itemStackable = value.(bool)
+			}
+			// If item stackable substract "amount", otherwise remove items as 1 per each game_object
     	if slices.Contains(itemsKinds, itemKind) {
-				if Remove(e, player, containerId, itemId.(string)) {
-					e.GameObjects()[itemObj.Id] = nil
-					delete(e.GameObjects(), itemObj.Id)
-					storage.GetClient().Deletes <- itemObj.Id
-					itemsCounts[itemKind] = itemsCounts[itemKind] - 1.0
-					if itemsCounts[itemKind] == 0.0 {
-						itemsKinds = slices.DeleteFunc(itemsKinds, func(kind string) bool {
-							return kind == itemKind
-						})
+				performRemove := true
+				if itemStackable {
+					item.Properties["amount"] = item.Properties["amount"].(float64) - itemsCounts[itemKind]
+					e.SendGameObjectUpdate(item, "update_object")
+					itemsCounts[itemKind] = 0.0
+					if item.Properties["amount"].(float64) != 0.0 {
+						performRemove = false
 					}
-					if allCountsZero(itemsCounts) {
-						return true
+				}
+				if performRemove {
+					if Remove(e, player, containerId, itemId.(string)) {
+						e.GameObjects()[item.Id] = nil
+						delete(e.GameObjects(), item.Id)
+						storage.GetClient().Deletes <- item.Id
+						itemsCounts[itemKind] = itemsCounts[itemKind] - 1.0
+					} else {
+						return false
 					}
-				} else {
-					return false
+				}
+				if itemsCounts[itemKind] == 0.0 {
+					itemsKinds = slices.DeleteFunc(itemsKinds, func(kind string) bool {
+						return kind == itemKind
+					})
+				}
+				if len(itemsKinds) == 0 {
+					return true
 				}
 			}
 		}

@@ -43,10 +43,10 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 	}
 	if (item.Properties["container_id"] == nil) {
 		performPut := true
-		if itemStackable { // add ammount to existing stackable item
+		if itemStackable { // add amount to existing stackable item
 			existingItem := containers.GetItemKind(e, slots["back"].(string), item.Properties["kind"].(string))
 			if existingItem != nil {
-				existingItem.Properties["ammount"] = existingItem.Properties["ammount"].(float64) + item.Properties["ammount"].(float64)
+				existingItem.Properties["amount"] = existingItem.Properties["amount"].(float64) + item.Properties["amount"].(float64)
 				performPut = false
 				e.SendResponse("update_object", map[string]interface{}{
 					"object": game_objects.Clone(existingItem),
@@ -64,7 +64,6 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 	e.Floors()[item.Floor].FilteredRemove(item, func(b utils.IBounds) bool {
 		return item.Id == b.(*entity.GameObject).Id
 	})
-	item.Floor = -1
 	item.Properties["visible"] = false
 
 	storage.GetClient().Updates <- game_objects.Clone(item)

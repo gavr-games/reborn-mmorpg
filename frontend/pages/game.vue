@@ -4,6 +4,7 @@
     <div id="fps" class="game-panel"><div class="game-panel-content">0</div></div>
     <GameCharacterMenu />
     <GamePanelCraft />
+    <GamePanelNpcTrade />
     <GamePanelCharacter />
     <GamePanelMap />
     <GamePanelTarget />

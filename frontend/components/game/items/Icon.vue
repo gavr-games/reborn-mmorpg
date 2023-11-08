@@ -22,6 +22,9 @@ export default {
   &.axe {
     background-position: 480px 546px;
   }
+  &.claim_stone {
+    background-position: 512px 514px;
+  }
   &.pickaxe {
     background-position: 448px 546px;
   }
