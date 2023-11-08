@@ -38,7 +38,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 #effects-panel {
   position: absolute;
   top: 170px;

@@ -10,7 +10,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 .game-item-icon {
   display: inline-block;
   width: 32px;
