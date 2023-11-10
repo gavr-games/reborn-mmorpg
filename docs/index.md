@@ -44,6 +44,7 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 ## Game Object Architecture Design
 *TODO*
 - what is game object?
+- atlases
 - properties
 - mobs
 - effects
