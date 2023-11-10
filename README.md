@@ -1,5 +1,8 @@
 # Reborn MMORPG
 
+## Docs
+[docs/index.md](docs/index.md)
+
 ## Setup
 - `cp .env.example .env`
 
