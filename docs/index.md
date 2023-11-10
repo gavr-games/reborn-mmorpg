@@ -41,7 +41,7 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 - `finish_delayed_action` - used to inform frontend that some time based action has finished (like craft).
 - `cancel_delayed_action` - used to inform frontend that some time based action was cancelled (like craft).
 
-## Game Object Architecture Design
+## Game Object (GO) Architecture Design
 *TODO*
 - what is game object?
 - atlases
@@ -50,10 +50,16 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 - effects
 - lifecycle add/update/remove
 
-## Floors Architecture design
-*TODO*
-- quadtree https://jimkang.com/quadtreevis/
-- intersects
+## Floor Architecture design
+You can think of Floor as some square or rectangle area, where characters can move. It could be an island, a dungeoun, a cave, etc.
+
+Here are the key points:
+- Engine stores an array of Floors (maybe later a map will be used).
+- Each Game Object (GO) is placed inside one of the Floors.
+- Floors are usually covered with surface GO of 1x1 size (grass, sand, water, etc).
+- Floors are used to optimize collision detection calculations. For example: a character cannot move trhough the wall or tree. *PS: collisions are calculated only for GO, which have `collidable` attribute*
+- Floors use special structure to store GOs called [QuadTree](https://jimkang.com/quadtreevis/). This allows to minimize the ammount of objects to detec collision with.
+- Quadtree is also extensively used to detect, what a character can see by finding collisions between player vision area GO and other GOs.
 
 ## Player
 *TODO*
@@ -61,6 +67,15 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 - vision area
 
 ## Main Engine Functions
+Engine instance is passed via interface to almost every function in the game so you could easily create GOs and send different updates to `frontend` from anywhere.
+
+To choose, which send fucntion to use, you should decide:
+- who should see the update?
+Only one player -> use `SendResponse`. For example: player requested to trade with NPC.
+All players -> use `SendResponseToVisionAreas`. For example: player killed a mob.
+- what happened? If GO changed -> use `SendGameObjectUpdate`. Everything else -> `SendResponse` or `SendResponseToVisionAreas`
+
+See [engine.go](../engine/pkg/game/engine.go) file comments for more details.
+
+## Melee Hit collision detection
 *TODO*
-- different sends
-- create game objects

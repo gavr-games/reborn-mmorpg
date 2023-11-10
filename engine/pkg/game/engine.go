@@ -52,6 +52,7 @@ func (e Engine) CurrentTickTime() int64 {
 	return e.tickTime
 }
 
+// Sends an update named responseType with parameters responseData to specific player (ONLY ONE).
 func (e Engine) SendResponse(responseType string, responseData map[string]interface{}, player *entity.Player) {
 	resp := entity.EngineResponse{
 		ResponseType: responseType,
@@ -71,7 +72,8 @@ func (e Engine) SendResponse(responseType string, responseData map[string]interf
 	}
 }
 
-// send updates to all players who can see it
+// Sends an update named responseType with parameters responseData to all players,
+// who can see the gameObj. In other words their vision areas collide with gameObj X,Y.
 func (e Engine) SendResponseToVisionAreas(gameObj *entity.GameObject, responseType string, responseData map[string]interface{}) {
 	intersectingObjects := e.Floors()[gameObj.Floor].RetrieveIntersections(utils.Bounds{
 		X:      gameObj.X,
@@ -105,7 +107,8 @@ func (e Engine) SendResponseToVisionAreas(gameObj *entity.GameObject, responseTy
 	}
 }
 
-// send new state of the game object to all players who can see it
+// Send new update of the gameObj to all players who can see it
+// IMPORTANT: this function also updates/delets gameObj in storage
 func (e Engine) SendGameObjectUpdate(gameObj *entity.GameObject, updateType string) {
 	clone := game_objects.Clone(gameObj) // clone is required to prevent access to objects map from different routines
 	e.SendResponseToVisionAreas(gameObj, updateType, map[string]interface{}{
@@ -118,7 +121,7 @@ func (e Engine) SendGameObjectUpdate(gameObj *entity.GameObject, updateType stri
 	}
 }
 
-// used to send errors and other system response info
+// Sends errors and other system response messages to specific player
 func (e Engine) SendSystemMessage(message string, player *entity.Player) {
 	e.SendResponse("add_message", map[string]interface{}{
 		"type": "system",
@@ -126,6 +129,7 @@ func (e Engine) SendSystemMessage(message string, player *entity.Player) {
 	}, player)
 }
 
+// Creates new GameObject and returns it
 func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) *entity.GameObject {
 	gameObj, err := game_objects.CreateFromTemplate(objPath, x, y, rotation)
 	if err != nil {
@@ -186,7 +190,7 @@ func (e *Engine) Init() {
 		Objects:    make([]utils.IBounds, 0),
 		Nodes:      make([]utils.Quadtree, 0),
 	}
-	engine.LoadGameObjects(e)
+	engine.LoadGameObjects(e) // Generate new worlds or read it from storage
 	e.tickTime = utils.MakeTimestamp()
 }
 
