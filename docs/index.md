@@ -42,13 +42,81 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 - `cancel_delayed_action` - used to inform frontend that some time based action was cancelled (like craft).
 
 ## Game Object (GO) Architecture Design
-*TODO*
-- what is game object?
-- atlases
-- properties
-- mobs
-- effects
-- lifecycle add/update/remove
+
+### What is a GO?
+Any physical thing in the game is a Game Object (GO). A character, a piece of grass/sand/water, a potion, a knife, a tree, a backpack, a mob, a NPC. Everything physical.
+
+Non physical things like effects (healing, for example) are stored inside GO structures.
+
+Every object has common attributes like: Id, X, Y, Width, Height, Type (see [engine/pkg/game/entity/game_object.go](../engine/pkg/game/entity/game_object.go)).
+
+Also GOs are designed as Highly customizable objects, so you can implement any variety of properties, required for all possible GOs. These unique attributes are stored in a hash called `Properties`.
+
+Let's consider the following example:
+```json
+{
+  "axe": {
+					"type": "axe",
+					"kind": "axe",
+					"width": 0.624,
+					"height": 1.575,
+					"shape": "rectangle",
+					"container_id": nil,
+					"pickable": true,
+					"droppable": true,
+					"equipable": true,
+					"visible": false,
+					"target_slots": {
+						"left_arm": true, 
+						"right_arm": true,
+					},
+					"actions": {
+						"equip": {
+							"cmd": "equip_item",
+							"params": "self", // self - id of current object
+						},
+						"unequip": {
+							"cmd": "unequip_item",
+							"params": "self",
+						},
+						"drop": {
+							"cmd": "drop_item",
+							"params": "self",
+						},
+						"pickup": {
+							"cmd": "pickup_item",
+							"params": "self",
+						},
+					},
+				},
+}
+```
+- we duplicate common attributes like `type`, `width`, `height`
+- also in runtime `id` is injected into each object
+- `shape` is defined here and can be circle or rectangle. Required for collision clculations
+- some unique to object attributes are defined here like `container_id`, `target_slots`
+- you can see a bunch of properties, which describe the object characteristics like `pickable`, `visible`, `droppable`. They are required for some checks in the code to determine what we can do with the object. FOr example: the player can see only `visible` objects or pickup only `pickable` or bump into `collidable`.
+- almost every objects has `actions` - these are commands, which frontend can execute related to this object. `self` in params mean, that the frontend will send the id off the object as parameter.
+
+Design of GO is quite chaotic, honestly. It requires some rethinking in the future.
+
+### GO Atlases
+Game Objects description is stored inside so called `atlases`.
+They (atlases) are used as a templates to create instances of new game objects.
+For example, the player crafted a `stone_knife``. We go to the atlas, find `stone_knife`` template with default properties and create new instance of stone_knife, which we add to player's backpack.
+
+### Special GO attributes
+Each GO instance has special attributes for engine based calculations.
+
+For example:
+- `CurrentAction` - a timeout based action like craft, which could be canceled. For non player object this could be a hatching action for a dragon hatchery.
+- `Effects` - a map of effects applied to the objects.
+
+### GO Lifecycle
+There are at least 2 important things you need to keep in mind when creating/removing/ updating GOs.
+
+1. Make sure you update GO in the Redis storage via `storage.GetClient().Updates <- game_objects.Clone(item)` or `storage.GetClient().Deletes <- gameObj.Id`
+2. Add or remove the GO from a Floor via `Insert` or `FilteredRemove`.
 
 ## Floor Architecture design
 You can think of Floor as some square or rectangle area, where characters can move. It could be an island, a dungeoun, a cave, etc.
