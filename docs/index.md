@@ -56,39 +56,39 @@ Let's consider the following example:
 ```json
 {
   "axe": {
-					"type": "axe",
-					"kind": "axe",
-					"width": 0.624,
-					"height": 1.575,
-					"shape": "rectangle",
-					"container_id": nil,
-					"pickable": true,
-					"droppable": true,
-					"equipable": true,
-					"visible": false,
-					"target_slots": {
-						"left_arm": true, 
-						"right_arm": true,
-					},
-					"actions": {
-						"equip": {
-							"cmd": "equip_item",
-							"params": "self", // self - id of current object
-						},
-						"unequip": {
-							"cmd": "unequip_item",
-							"params": "self",
-						},
-						"drop": {
-							"cmd": "drop_item",
-							"params": "self",
-						},
-						"pickup": {
-							"cmd": "pickup_item",
-							"params": "self",
-						},
-					},
-				},
+    "type": "axe",
+    "kind": "axe",
+    "width": 0.624,
+    "height": 1.575,
+    "shape": "rectangle",
+    "container_id": null,
+    "pickable": true,
+    "droppable": true,
+    "equipable": true,
+    "visible": false,
+    "target_slots": {
+      "left_arm": true, 
+      "right_arm": true,
+    },
+    "actions": {
+      "equip": {
+      	"cmd": "equip_item",
+      	"params": "self",
+      },
+      "unequip": {
+      	"cmd": "unequip_item",
+      	"params": "self",
+      },
+      "drop": {
+      	"cmd": "drop_item",
+      	"params": "self",
+      },
+      "pickup": {
+      	"cmd": "pickup_item",
+      	"params": "self",
+      },
+    },
+  },
 }
 ```
 - we duplicate common attributes like `type`, `width`, `height`
