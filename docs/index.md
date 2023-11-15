@@ -130,9 +130,19 @@ Here are the key points:
 - Quadtree is also extensively used to detect, what a character can see by finding collisions between player vision area GO and other GOs.
 
 ## Player
-*TODO*
-- player_id
-- vision area
+Player is represented by 2 Game Objects (GO).
+- Character
+- Vision Area
+
+*Character* is a real visible GO with health, speed, etc. It has a special property `player_id` to link it to the Player struct in Engine, which has websocket connection.
+Also `player_id` is equal to id in the `api` service database, so we know to which user account this character belongs.
+
+*Vision Area* is an invisible object tight to player's character GO. It is a huge rectangle area used to calculate "what the character can see". In other words, all GOs, which collide with this area would be visible.
+Vision area moves together with the character.
+
+![Player Vision Area](imgs/vision_area.png "Player Vision Area")
+
+It has a special property `player_id` to link it to the Player struct in Engine, which has websocket connection.
 
 ## Main Engine Functions
 Engine instance is passed via interface to almost every function in the game so you could easily create GOs and send different updates to `frontend` from anywhere.
@@ -146,4 +156,13 @@ All players -> use `SendResponseToVisionAreas`. For example: player killed a mob
 See [engine.go](../engine/pkg/game/engine.go) file comments for more details.
 
 ## Melee Hit collision detection
-*TODO*
+![Melee Hit](imgs/melee_hit.png "Melee Hit")
+
+Hit Area of a Game Object is a sector with radius and angle.
+Collision detection between sector and other geometry figures is a complex mathematical task.
+
+That is why a trick is used. Instead we take 5 vectors from sector (Hit Area) center to edges. On each vector we take 4 dots. In total we have 21 dots (+1 dot in the center).
+
+Next step is to check if the dot is inside the Target figure (circle or rectangle) - this is a very fast and easy task =)
+
+If any dot is inside the Target figure we consider Hit Area and Target have collision.
