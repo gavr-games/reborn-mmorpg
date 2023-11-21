@@ -2,7 +2,9 @@ package engine
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 // Process when player disconnects from the game
@@ -16,10 +18,12 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 				return player.VisionAreaGameObjectId == b.(*entity.GameObject).Id
 			})
 			e.GameObjects()[player.VisionAreaGameObjectId] = nil
+			delete(e.GameObjects(), player.VisionAreaGameObjectId)
 			charObj := e.GameObjects()[player.CharacterGameObjectId]
 			charObj.Properties["visible"] = false
 			charObj.Properties["speed_x"] = 0.0
 			charObj.Properties["speed_y"] = 0.0
+			storage.GetClient().Updates <- game_objects.Clone(charObj)
 			e.SendResponseToVisionAreas(charObj, "remove_object", map[string]interface{}{
 				"object": charObj,
 			})

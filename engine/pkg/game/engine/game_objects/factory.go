@@ -89,5 +89,19 @@ func CreateFromTemplate(objPath string, x float64, y float64, rotation float64) 
 		gameObj.Properties["items_ids"] = make([]interface{}, gameObj.Properties["max_capacity"].(int))
 	}
 
+	// Some templates might have actions to be created with the object
+	if currentAction, hasAction := gameObj.Properties["current_action"]; hasAction {
+		actionParams := currentAction.(map[string]interface{})["params"].(map[string]interface{})
+		actionParams["game_object_id"] = gameObj.Id
+		timeLeft := currentAction.(map[string]interface{})["time_left"].(float64)
+		funcName := currentAction.(map[string]interface{})["func_name"].(string)
+		delayedAction := &entity.DelayedAction{
+			FuncName: funcName,
+			Params: actionParams,
+			TimeLeft: timeLeft,
+		}
+		gameObj.CurrentAction = delayedAction
+	}
+
 	return gameObj, nil
 }

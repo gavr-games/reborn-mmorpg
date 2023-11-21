@@ -58,7 +58,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 #character-info-panel {
   position: absolute;
   top: 50px;

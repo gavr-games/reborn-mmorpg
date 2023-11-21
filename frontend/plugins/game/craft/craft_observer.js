@@ -31,6 +31,7 @@ class CraftObserver {
     mesh.isPickable = false
     this.mesh = mesh;
     addAlpha(this.mesh, this.scene, 0.7)
+    GameObserver.grid.create()
   }
 
   update(x, y) {
@@ -53,6 +54,7 @@ class CraftObserver {
       this.mesh.dispose();
       this.mesh = null;
     }
+    GameObserver.grid.remove()
   }
 }
 

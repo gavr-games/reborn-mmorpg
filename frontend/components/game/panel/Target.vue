@@ -52,7 +52,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 #target-info-panel {
   position: absolute;
   top: 0px;

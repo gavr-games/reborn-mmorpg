@@ -8,6 +8,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
 const (
@@ -61,6 +62,12 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			return false
 		}
 
+		// Check claim access
+		if !claims.CheckAccess(e, charGameObj, tempGameObj) {
+			e.SendSystemMessage("You don't have an access to this claim.", player)
+			return false
+		}
+
 		// Check not intersecting with another objects
 		possibleCollidableObjects := e.Floors()[charGameObj.Floor].RetrieveIntersections(utils.Bounds{
 			X:      tempGameObj.X,
@@ -83,7 +90,27 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 				}
 			}
 		}
+
+		if tempGameObj.Properties["kind"].(string) == "claim_obelisk" {
+			// check cannot create 2 claims
+			if claimId, hasClaimId := charGameObj.Properties["claim_obelisk_id"]; hasClaimId {
+				if claimId != nil {
+					e.SendSystemMessage("Cannot build second claim.", player)
+					return false
+				}
+			}
+			// check cannot create if there is another claim area
+			if len(possibleCollidableObjects) > 0 {
+				for _, val := range possibleCollidableObjects {
+					if val.(*entity.GameObject).Properties["kind"] == "claim_area" {
+						e.SendSystemMessage("Cannot build it here. There is another claim area in the way.", player)
+						return false
+					}
+				}
+			}
+		}
 	}
+
 
 	return true
 }

@@ -48,6 +48,7 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 			if existingItem != nil {
 				existingItem.Properties["amount"] = existingItem.Properties["amount"].(float64) + item.Properties["amount"].(float64)
 				performPut = false
+				storage.GetClient().Updates <- game_objects.Clone(existingItem)
 				e.SendResponse("update_object", map[string]interface{}{
 					"object": game_objects.Clone(existingItem),
 				}, player)
