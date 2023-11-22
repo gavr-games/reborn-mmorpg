@@ -5,7 +5,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
@@ -19,7 +18,13 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 	}
 
 	// intersects with character
-	if !game_objects.Intersect(item, charGameObj) {
+	itemBounds := utils.Bounds{
+		X:      item.X,
+		Y:      item.Y,
+		Width:  item.Width,
+		Height: item.Height,
+	}
+	if !charGameObj.Intersects(itemBounds) {
 		e.SendSystemMessage("You are too far away.", player)
 		return false
 	}

@@ -121,3 +121,17 @@ func (a GameObject) IsCloseTo(b *GameObject) bool {
 	}
 	return a.GetDistance(b) < MaxDistance
 }
+
+// Rotates Game object. Possible rotations 0 and 1 (0 and 90 dergrees)
+func (obj GameObject) Rotate(rotation float64) {
+	if obj.Rotation != rotation {
+		if rotation == 0 {
+			obj.Rotation = rotation
+		} else {
+			obj.Rotation = math.Pi / 2
+		}
+		width := obj.Width
+		obj.Width = obj.Height
+		obj.Height = width
+	}
+}

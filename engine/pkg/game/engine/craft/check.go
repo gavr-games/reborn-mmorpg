@@ -56,7 +56,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			e.SendSystemMessage(err.Error(), player)
 			return false
 		}
-		game_objects.Rotate(tempGameObj, rotation)
+		tempGameObj.Rotate(rotation)
 		if charGameObj.GetDistance(tempGameObj) > CraftDistance {
 			e.SendSystemMessage("You need to be closer.", player)
 			return false
