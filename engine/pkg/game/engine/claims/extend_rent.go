@@ -8,7 +8,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 func ExtendRent(e entity.IEngine, claimObeliskId string) bool {
@@ -65,7 +64,7 @@ func ExtendRent(e entity.IEngine, claimObeliskId string) bool {
 		}
 		obelisk.CurrentAction = delayedAction
 
-		storage.GetClient().Updates <- game_objects.Clone(obelisk)
+		storage.GetClient().Updates <- obelisk.Clone()
 		e.SendSystemMessage("You have payed the rent.", player)
 	} else {
 		return false

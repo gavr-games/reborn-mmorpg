@@ -5,7 +5,6 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 func Remove(e entity.IEngine, player *entity.Player, containerId string, itemId string) bool {
@@ -27,8 +26,8 @@ func Remove(e entity.IEngine, player *entity.Player, containerId string, itemId 
 	item.Properties["container_id"] = nil
 
 	// Save game objects updates to storage
-	storage.GetClient().Updates <- game_objects.Clone(container)
-	storage.GetClient().Updates <- game_objects.Clone(item)
+	storage.GetClient().Updates <- container.Clone()
+	storage.GetClient().Updates <- item.Clone()
 
 	// Send updates to players
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "remove_item_from_container", map[string]interface{}{

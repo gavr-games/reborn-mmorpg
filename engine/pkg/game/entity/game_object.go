@@ -68,3 +68,21 @@ func (a GameObject) Intersects(b utils.Bounds) bool {
 	// The two overlap
 	return true
 }
+
+func (obj GameObject) Clone() *GameObject {
+	clone := &GameObject{
+		X: obj.X,
+		Y: obj.Y,
+		Width: obj.Width,
+		Height: obj.Height,
+		Id: obj.Id,
+		Type: obj.Type,
+		Floor: obj.Floor,
+		Rotation: obj.Rotation,
+		Properties: make(map[string]interface{}),
+		Effects: make(map[string]interface{}),
+	}
+	clone.Properties = utils.CopyMap(obj.Properties)
+	clone.Effects = utils.CopyMap(obj.Effects)
+	return clone
+}

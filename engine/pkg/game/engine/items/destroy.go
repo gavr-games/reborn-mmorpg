@@ -58,7 +58,7 @@ func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 		// remove obelisk from character
 		charGameObj := e.GameObjects()[item.Properties["crafted_by_character_id"].(string)]
 		charGameObj.Properties["claim_obelisk_id"] = nil
-		storage.GetClient().Updates <- game_objects.Clone(charGameObj)
+		storage.GetClient().Updates <- charGameObj.Clone()
 
 		// Destroy Claim Area for Claim Obelisk
 		if !Destroy(e, item.Properties["claim_area_id"].(string), player) {

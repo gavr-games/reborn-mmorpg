@@ -47,7 +47,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			e.GameObjects()[itemObj.Id] = itemObj
 			itemObj.Floor = charGameObj.Floor
 			e.Floors()[itemObj.Floor].Insert(itemObj)
-			storage.GetClient().Updates <- game_objects.Clone(itemObj)
+			storage.GetClient().Updates <- itemObj.Clone()
 
 			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 				"object": itemObj,
@@ -71,7 +71,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			if !putInContainer {
 				itemObj.Floor = charGameObj.Floor
 				e.Floors()[itemObj.Floor].Insert(itemObj)
-				storage.GetClient().Updates <- game_objects.Clone(itemObj)
+				storage.GetClient().Updates <- itemObj.Clone()
 				e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 					"object": itemObj,
 				})

@@ -42,7 +42,7 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 		if !putInContainer {
 			stoneObj.Floor = charGameObj.Floor
 			e.Floors()[stoneObj.Floor].Insert(stoneObj)
-			storage.GetClient().Updates <- game_objects.Clone(stoneObj)
+			storage.GetClient().Updates <- stoneObj.Clone()
 			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 				"object": stoneObj,
 			})
@@ -62,7 +62,7 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 			e.GameObjects()[rockId] = nil
 			delete(e.GameObjects(), rockId)
 		} else {
-			storage.GetClient().Updates <- game_objects.Clone(rock)
+			storage.GetClient().Updates <- rock.Clone()
 		}
 
 		e.SendSystemMessage("You received a stone.", player)

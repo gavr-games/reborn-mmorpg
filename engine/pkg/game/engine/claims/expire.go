@@ -4,7 +4,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 // This func is called via delayed action mechanism
@@ -44,7 +43,7 @@ func Expire(e entity.IEngine, params map[string]interface{}) bool {
 
 		// remove obelisk from character
 		charGameObj.Properties["claim_obelisk_id"] = nil
-		storage.GetClient().Updates <- game_objects.Clone(charGameObj)
+		storage.GetClient().Updates <- charGameObj.Clone()
 	} else {
 		return false
 	}

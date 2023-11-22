@@ -118,7 +118,7 @@ For example:
 ### GO Lifecycle
 There are at least 2 important things you need to keep in mind when creating/removing/ updating GOs.
 
-1. Make sure you update GO in the Redis storage via `storage.GetClient().Updates <- game_objects.Clone(item)` or `storage.GetClient().Deletes <- gameObj.Id`
+1. Make sure you update GO in the Redis storage via `storage.GetClient().Updates <- item.Clone()` or `storage.GetClient().Deletes <- gameObj.Id`
 2. Add or remove the GO from a Floor via `Insert` or `FilteredRemove`.
 
 ## Floor Architecture design

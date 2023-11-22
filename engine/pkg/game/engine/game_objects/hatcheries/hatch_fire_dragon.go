@@ -26,7 +26,7 @@ func HatchFireDragon(e entity.IEngine, params map[string]interface{}) bool {
 		e.Floors()[dragon.Floor].Insert(dragon)
 		e.Mobs()[dragon.Id] = mobs.NewMob(e, dragon.Id)
 
-		storage.GetClient().Updates <- game_objects.Clone(dragon)
+		storage.GetClient().Updates <- dragon.Clone()
 		e.SendResponseToVisionAreas(dragon, "add_object", map[string]interface{}{
 			"object": dragon,
 		})

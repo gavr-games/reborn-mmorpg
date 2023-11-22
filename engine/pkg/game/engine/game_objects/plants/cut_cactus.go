@@ -42,7 +42,7 @@ func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
 		if !putInContainer {
 			sliceObj.Floor = charGameObj.Floor
 			e.Floors()[sliceObj.Floor].Insert(sliceObj)
-			storage.GetClient().Updates <- game_objects.Clone(sliceObj)
+			storage.GetClient().Updates <- sliceObj.Clone()
 			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 				"object": sliceObj,
 			})
@@ -62,7 +62,7 @@ func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
 			e.GameObjects()[cactusId] = nil
 			delete(e.GameObjects(), cactusId)
 		} else {
-			storage.GetClient().Updates <- game_objects.Clone(cactus)
+			storage.GetClient().Updates <- cactus.Clone()
 		}
 
 		e.SendSystemMessage("You received a cactus slice.", player)

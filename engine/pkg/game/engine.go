@@ -110,7 +110,7 @@ func (e Engine) SendResponseToVisionAreas(gameObj *entity.GameObject, responseTy
 // Send new update of the gameObj to all players who can see it
 // IMPORTANT: this function also updates/delets gameObj in storage
 func (e Engine) SendGameObjectUpdate(gameObj *entity.GameObject, updateType string) {
-	clone := game_objects.Clone(gameObj) // clone is required to prevent access to objects map from different routines
+	clone := gameObj.Clone() // clone is required to prevent access to objects map from different routines
 	e.SendResponseToVisionAreas(gameObj, updateType, map[string]interface{}{
 		"object": gameObj,
 	})
@@ -149,7 +149,7 @@ func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation 
 	e.GameObjects()[gameObj.Id] = gameObj
 
 	if gameObj.Properties["kind"].(string) != "player_vision_area" {
-		storage.GetClient().Updates <- game_objects.Clone(gameObj)
+		storage.GetClient().Updates <- gameObj.Clone()
 	}
 
 	if gameObj.Properties["type"].(string) == "mob" {

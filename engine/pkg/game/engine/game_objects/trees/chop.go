@@ -42,7 +42,7 @@ func Chop(e entity.IEngine, params map[string]interface{}) bool {
 		if !putInContainer {
 			logObj.Floor = charGameObj.Floor
 			e.Floors()[logObj.Floor].Insert(logObj)
-			storage.GetClient().Updates <- game_objects.Clone(logObj)
+			storage.GetClient().Updates <- logObj.Clone()
 			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 				"object": logObj,
 			})
@@ -62,7 +62,7 @@ func Chop(e entity.IEngine, params map[string]interface{}) bool {
 			e.GameObjects()[treeId] = nil
 			delete(e.GameObjects(), treeId)
 		} else {
-			storage.GetClient().Updates <- game_objects.Clone(tree)
+			storage.GetClient().Updates <- tree.Clone()
 		}
 
 		e.SendSystemMessage("You received a log.", player)

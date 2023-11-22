@@ -48,9 +48,9 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 			if existingItem != nil {
 				existingItem.Properties["amount"] = existingItem.Properties["amount"].(float64) + item.Properties["amount"].(float64)
 				performPut = false
-				storage.GetClient().Updates <- game_objects.Clone(existingItem)
+				storage.GetClient().Updates <- existingItem.Clone()
 				e.SendResponse("update_object", map[string]interface{}{
-					"object": game_objects.Clone(existingItem),
+					"object": existingItem.Clone(),
 				}, player)
 			}
 		}
@@ -67,7 +67,7 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 	})
 	item.Properties["visible"] = false
 
-	storage.GetClient().Updates <- game_objects.Clone(item)
+	storage.GetClient().Updates <- item.Clone()
 
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "pickup_object", map[string]interface{}{
 		"character_id": charGameObj.Id,

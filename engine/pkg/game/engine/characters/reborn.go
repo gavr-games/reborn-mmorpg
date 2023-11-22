@@ -4,7 +4,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/targets"
 )
@@ -20,7 +19,7 @@ func Reborn(e entity.IEngine, charGameObj *entity.GameObject) {
 
 		charGameObj.CurrentAction = nil
 
-		storage.GetClient().Updates <- game_objects.Clone(charGameObj)
+		storage.GetClient().Updates <- charGameObj.Clone()
 
 		e.SendResponseToVisionAreas(charGameObj, "cancel_delayed_action", map[string]interface{}{
 			"object": serializers.GetInfo(e.GameObjects(), charGameObj),

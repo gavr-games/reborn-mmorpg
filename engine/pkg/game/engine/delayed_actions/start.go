@@ -3,7 +3,6 @@ package delayed_actions
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
@@ -19,7 +18,7 @@ func Start(e entity.IEngine, gameObj *entity.GameObject, funcName string, params
 
 	gameObj.CurrentAction = delayedAction
 
-	storage.GetClient().Updates <- game_objects.Clone(gameObj)
+	storage.GetClient().Updates <- gameObj.Clone()
 
 	e.SendResponseToVisionAreas(gameObj, "start_delayed_action", map[string]interface{}{
 		"object": serializers.GetInfo(e.GameObjects(), gameObj),

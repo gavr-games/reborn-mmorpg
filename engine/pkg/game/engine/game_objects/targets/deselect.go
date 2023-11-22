@@ -3,7 +3,6 @@ package targets
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 func Deselect(e entity.IEngine, obj *entity.GameObject) bool {
@@ -26,7 +25,7 @@ func Deselect(e entity.IEngine, obj *entity.GameObject) bool {
 	}
 
 	obj.Properties["target_id"] = nil
-	storage.GetClient().Updates <- game_objects.Clone(obj)
+	storage.GetClient().Updates <- obj.Clone()
 
 	return true
 }

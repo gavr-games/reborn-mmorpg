@@ -64,7 +64,7 @@ func BuyItem(e entity.IEngine, charGameObj *entity.GameObject, npcId string, ite
 			if !putInContainer {
 				itemObj.Properties["visible"] = true
 				e.Floors()[itemObj.Floor].Insert(itemObj)
-				storage.GetClient().Updates <- game_objects.Clone(itemObj)
+				storage.GetClient().Updates <- itemObj.Clone()
 				e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 					"object": itemObj,
 				})

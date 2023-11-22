@@ -5,7 +5,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 // This func is called via delayed action mechanism
@@ -40,8 +39,8 @@ func Init(e entity.IEngine, params map[string]interface{}) bool {
 		// Set claim obelisk id for character
 		charGameObj.Properties["claim_obelisk_id"] = obelisk.Id
 
-		storage.GetClient().Updates <- game_objects.Clone(obelisk)
-		storage.GetClient().Updates <- game_objects.Clone(charGameObj)
+		storage.GetClient().Updates <- obelisk.Clone()
+		storage.GetClient().Updates <- charGameObj.Clone()
 
 		e.SendGameObjectUpdate(claimArea, "add_object")
 	} else {
