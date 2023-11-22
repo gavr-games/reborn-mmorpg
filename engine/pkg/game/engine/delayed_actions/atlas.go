@@ -5,7 +5,9 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/plants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 )
 
 
@@ -34,6 +36,18 @@ func GetDelayedActionsAtlas() map[string]map[string]interface{} {
 		"TownTeleport": map[string]interface{}{
 			"func": characters.TownTeleport,
 			"duration": 10000.0,
+		},
+		"ClaimTeleport": map[string]interface{}{
+			"func": characters.ClaimTeleport,
+			"duration": 10000.0,
+		},
+		"InitClaim": map[string]interface{}{
+			"func": claims.Init,
+			"duration": 1.0,
+		},
+		"ExpireClaim": map[string]interface{}{
+			"func": claims.Expire,
+			"duration": constants.ClaimRentDuration,
 		},
 	}
 

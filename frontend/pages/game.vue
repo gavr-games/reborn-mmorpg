@@ -5,6 +5,7 @@
     <GameCharacterMenu />
     <GamePanelCraft />
     <GamePanelNpcTrade />
+    <GamePanelItemInfo />
     <GamePanelCharacter />
     <GamePanelMap />
     <GamePanelTarget />

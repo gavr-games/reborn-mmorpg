@@ -1,8 +1,7 @@
 package game_objects
 
-const (
-	PlayerVisionArea = 70.0
-	PlayerSpeed = 2.0
+import(
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 )
 
 //TODO: optimize the memory by using integers instead of string constants
@@ -306,7 +305,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"width": 1.0,
 				"height": 1.0,
 				"shape": "circle",
-				"speed": PlayerSpeed,
+				"speed": constants.PlayerSpeed,
 				"speed_x": 0.0,
 				"speed_y": 0.0,
 				"health": 100.0,
@@ -332,8 +331,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 			"player_vision_area": map[string]interface{}{
 				"type": "player",
 				"kind": "player_vision_area",
-				"width": PlayerVisionArea,
-				"height": PlayerVisionArea,
+				"width": constants.PlayerVisionArea,
+				"height": constants.PlayerVisionArea,
 				"shape": "rectangle",
 				"visible": false,
 			},
@@ -629,6 +628,48 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"params": "self", // self - id of current object
 					},
 				},
+			},
+		},
+		"claim": {
+			"claim_obelisk": map[string]interface{}{
+				"type": "claim",
+				"kind": "claim_obelisk",
+				"width": 1.0,
+				"height": 1.0,
+				"shape": "rectangle",
+				"collidable": true,
+				"visible": true,
+				"payed_until": nil,
+				"current_action": map[string]interface{}{
+					"func_name": "InitClaim",
+					"params": map[string]interface{}{
+						"game_object_id": nil,
+					},
+					"time_left": 1.0,
+				},
+				"actions": map[string]interface{}{
+					"pay rent": map[string]interface{}{
+						"cmd": "pay_rent",
+						"params": "self", // self - id of current object
+					},
+					"info": map[string]interface{}{
+						"cmd": "get_item_info",
+						"params": "self", // self - id of current object
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_claim",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"claim_area": map[string]interface{}{
+				"type": "claim",
+				"kind": "claim_area",
+				"width": constants.ClaimArea,
+				"height": constants.ClaimArea,
+				"shape": "rectangle",
+				"collidable": false,
+				"visible": true,
 			},
 		},
 		"mob": {

@@ -18,6 +18,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/items"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
 // Process commands from players
@@ -29,12 +30,12 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 
 		// List of commands, which don't interrupt current character action.
 		// Like get_character_info does not interrupt choping a tree, but any movement does
-		nonCancellingCmds := []string{"get_character_info", "open_container", "get_craft_atlas", "npc_trade_info"}
+		nonCancellingCmds := []string{"get_character_info", "open_container", "get_craft_atlas", "npc_trade_info", "get_item_info"}
 		// Cancel character delayed actions
 		if !slices.Contains(nonCancellingCmds, cmd.(string)) {
 			delayed_actions.Cancel(e, charGameObj)
 		}
- 
+
 		// Process Cmd
 		switch cmd {
 		case "stop":
@@ -47,6 +48,9 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		case "get_character_info":
 			e.SendResponse("character_info", serializers.GetInfo(e.GameObjects(), charGameObj), player)
+		case "get_item_info":
+			itemId := params.(string)
+			e.SendResponse("item_info", serializers.GetInfo(e.GameObjects(), e.GameObjects()[itemId]), player)
 		case "npc_trade_info":
 			if npcObj, npcOk := e.GameObjects()[params.(string)]; npcOk {
 				e.SendResponse("npc_trade_info", serializers.GetInfo(e.GameObjects(), npcObj), player)
@@ -123,6 +127,10 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			delayed_actions.Start(e, charGameObj, "TownTeleport", map[string]interface{}{
 				"playerId": float64(player.Id),
 			}, -1.0)
+		case "claim_teleport":
+			delayed_actions.Start(e, charGameObj, "ClaimTeleport", map[string]interface{}{
+				"playerId": float64(player.Id),
+			}, -1.0)
 		case "follow":
 			mobId := params.(string)
 			mob, ok := e.Mobs()[mobId]
@@ -144,6 +152,9 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			targets.Deselect(e, charGameObj)
 		case "melee_hit":
 			characters.MeleeHit(e, charGameObj, player)
+		case "pay_rent":
+			obeliskId := params.(string)
+			claims.ExtendRent(e, obeliskId)
 		}
 	}
 }

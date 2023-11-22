@@ -4,6 +4,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
 func CheckChop(e entity.IEngine, player *entity.Player, treeId string) bool {
@@ -12,6 +13,18 @@ func CheckChop(e entity.IEngine, player *entity.Player, treeId string) bool {
 
 	if tree == nil {
 		e.SendSystemMessage("Tree does not exist.", player)
+		return false
+	}
+
+	// check object type
+	if tree.Properties["type"].(string) != "tree" {
+		e.SendSystemMessage("Please choose tree.", player)
+		return false
+	}
+
+	// Check claim access
+	if !claims.CheckAccess(e, charGameObj, tree) {
+		e.SendSystemMessage("You don't have an access to this claim.", player)
 		return false
 	}
 

@@ -10,8 +10,9 @@ import (
 )
 
 func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
+	character := client.GetCharacter()
 	player := &entity.Player{
-		Id: client.GetCharacter().Id,
+		Id: character.Id,
 		CharacterGameObjectId: "",
 		VisionAreaGameObjectId: "",
 		Client: client,
@@ -20,6 +21,7 @@ func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 	e.Players()[player.Id] = player
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
+	additionalProps["name"] = character.Name
 	gameObj := e.CreateGameObject("player/player", constants.InitialPlayerX, constants.InitialPlayerY, 0.0, 0, additionalProps)
 	player.CharacterGameObjectId = gameObj.Id
 	CreatePlayerItems(e, player)
@@ -30,7 +32,7 @@ func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) *entity.Gam
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.X - game_objects.PlayerVisionArea / 2, charGameObj.Y - game_objects.PlayerVisionArea / 2, 0.0, 0, additionalProps)
+	gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.X - constants.PlayerVisionArea / 2, charGameObj.Y - constants.PlayerVisionArea / 2, 0.0, charGameObj.Floor, additionalProps)
 	player.VisionAreaGameObjectId = gameObj.Id
 	return gameObj
 }

@@ -5,6 +5,7 @@
       <div class="menu-item craft-icon" @click="getCraftAtlas"></div>
       <div class="menu-item map-icon"  @click="showMap"></div>
       <div class="menu-item town-icon"  @click="townTeleport"></div>
+      <div class="menu-item obelisk-icon"  @click="claimTeleport"></div>
     </div>
   </div>
 </template>
@@ -37,6 +38,12 @@ export default {
     townTeleport() {
       EventBus.$emit("perform-game-action", {
         cmd: "town_teleport",
+        params: {}
+      });
+    },
+    claimTeleport() {
+      EventBus.$emit("perform-game-action", {
+        cmd: "claim_teleport",
         params: {}
       });
     },
@@ -75,6 +82,10 @@ export default {
   }
   .town-icon {
     background-image: url("~assets/img/icons/town.png");
+    background-repeat: no-repeat;
+  }
+  .obelisk-icon {
+    background-image: url("~assets/img/icons/obelisk.png");
     background-repeat: no-repeat;
   }
 }

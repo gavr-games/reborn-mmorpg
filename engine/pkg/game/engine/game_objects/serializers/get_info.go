@@ -24,5 +24,14 @@ func GetInfo(gameObjects map[string]*entity.GameObject, obj *entity.GameObject) 
 			}
 		}
 	}
+
+	// Inject crafted by info
+	if craftedById, isCrafted := obj.Properties["crafted_by_character_id"]; isCrafted {
+		if craftedById != nil {
+			if owner, foundOwner := gameObjects[craftedById.(string)]; foundOwner {
+				info["crafted_by"] = GetInfo(gameObjects, owner)
+			}
+		}
+	}
 	return info
 }

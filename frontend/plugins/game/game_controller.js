@@ -9,6 +9,7 @@ import ItemController from "./objects/item/item_controller";
 import CharacterController from "./objects/character/character_controller";
 import MobController from "./objects/mob/mob_controller";
 import NpcController from "./objects/npc/npc_controller";
+import ClaimAreaController from "./objects/claim_area/claim_area_controller";
 import CraftController from "./craft/craft_controller";
 import GameConnnection from "./game_connection";
 
@@ -133,6 +134,13 @@ class GameController {
         break;
       case "npc":
         this.gameObjects[gameObj["Id"]] = new NpcController(gameObj)
+        break;
+      case "claim":
+        if (gameObj.Properties["kind"] == "claim_area") {
+          this.gameObjects[gameObj["Id"]] = new ClaimAreaController(gameObj)
+        } else {
+          this.gameObjects[gameObj["Id"]] = new ItemController(gameObj)
+        }
         break;
       default:
         this.gameObjects[gameObj["Id"]] = new ItemController(gameObj)

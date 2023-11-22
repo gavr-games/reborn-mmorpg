@@ -49,7 +49,7 @@ export default {
 </script>
 
 
-<style>
+<style lang="scss">
 .hide-map {
   display:none;
 }

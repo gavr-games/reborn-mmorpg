@@ -11,6 +11,9 @@ The project consist of the following main services (you can see them in [docker-
 - `engine_api` - used to provide HTTP API for `engine` in RARE cases it is needed (display image with floor map).
 - `caddy` - web gateway.
 
+## Game mechanics
+[Mechanics Doc](mechanics.md)
+
 ## Frontend <-> Engine Architecture
 ![Frontend Engine Architecture](imgs/architecture.png "Frontend Engine Architecture")
 
