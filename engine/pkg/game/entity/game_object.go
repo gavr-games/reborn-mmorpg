@@ -1,7 +1,13 @@
 package entity
 
 import (
+	"math"
+
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
+)
+
+const (
+	MaxDistance = 0.1
 )
 
 type GameObject struct {
@@ -85,4 +91,33 @@ func (obj GameObject) Clone() *GameObject {
 	clone.Properties = utils.CopyMap(obj.Properties)
 	clone.Effects = utils.CopyMap(obj.Effects)
 	return clone
+}
+
+// Get approximate distance between objects. Assuming all of them are rectangles
+func (a GameObject) GetDistance(b *GameObject) float64 {
+	aXCenter := a.X + a.Width / 2
+	aYCenter := a.Y + a.Height / 2
+	
+	bXCenter := b.X + b.Width / 2
+	bYCenter := b.Y + b.Height / 2
+
+	xDistance := math.Abs(aXCenter - bXCenter) - (a.Width / 2 + b.Width / 2)
+	if xDistance < 0 {
+		xDistance = 0.0
+	}
+
+	yDistance := math.Abs(aYCenter - bYCenter) - (a.Height / 2 + b.Height / 2)
+	if yDistance < 0 {
+		yDistance = 0.0
+	}
+
+	return math.Sqrt(math.Pow(xDistance, 2.0) + math.Pow(yDistance, 2.0))
+}
+
+// Determines if 2 objects are close enough to each other
+func (a GameObject) IsCloseTo(b *GameObject) bool {
+	if (a.Floor != b.Floor) {
+		return false
+	}
+	return a.GetDistance(b) < MaxDistance
 }

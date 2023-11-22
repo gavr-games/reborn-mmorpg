@@ -3,7 +3,6 @@ package hatcheries
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -36,7 +35,7 @@ func CheckHatch(e entity.IEngine, player *entity.Player, hatcheryId string) bool
 	}
 
 	// Check near the hatchery
-	if !game_objects.AreClose(hatchery, charGameObj) {
+	if !hatchery.IsCloseTo(charGameObj) {
 		e.SendSystemMessage("You need to be closer to the hatchery.", player)
 		return false
 	}

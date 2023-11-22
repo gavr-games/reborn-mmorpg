@@ -3,7 +3,6 @@ package trees
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -35,7 +34,7 @@ func CheckChop(e entity.IEngine, player *entity.Player, treeId string) bool {
 	}
 
 	// Check near the tree
-	if !game_objects.AreClose(tree, charGameObj) {
+	if !tree.IsCloseTo(charGameObj) {
 		e.SendSystemMessage("You need to be closer to the tree.", player)
 		return false
 	}

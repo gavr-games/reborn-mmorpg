@@ -3,7 +3,6 @@ package plants
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -35,7 +34,7 @@ func CheckCutCactus(e entity.IEngine, player *entity.Player, cactusId string) bo
 	}
 
 	// Check near the cactus
-	if !game_objects.AreClose(cactus, charGameObj) {
+	if !cactus.IsCloseTo(charGameObj) {
 		e.SendSystemMessage("You need to be closer to the cactus.", player)
 		return false
 	}

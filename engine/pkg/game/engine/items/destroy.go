@@ -5,7 +5,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -44,7 +43,7 @@ func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 		}
 
 		// Check near item
-		if !game_objects.AreClose(item, charGameObj) {
+		if !item.IsCloseTo(charGameObj) {
 			e.SendSystemMessage("You need to be closer to the item.", player)
 			return false
 		}

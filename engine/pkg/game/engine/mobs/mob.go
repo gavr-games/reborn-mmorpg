@@ -153,7 +153,7 @@ func (mob *Mob) moveInRandomDirection() {
 
 func (mob *Mob) performFollowing(newTickTime int64, targetObj *entity.GameObject, directionChangeTime int64) {
 	mobObj := mob.Engine.GameObjects()[mob.Id]
-	if game_objects.GetDistance(mobObj, targetObj) <= FollowingDistance {
+	if mobObj.GetDistance(targetObj) <= FollowingDistance {
 		// Stop the mob
 		if mobObj.Properties["speed_x"].(float64) != 0.0 || mobObj.Properties["speed_y"].(float64) != 0.0 {
 			mobObj.Properties["speed_x"] = 0.0

@@ -3,7 +3,6 @@ package rocks
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -35,7 +34,7 @@ func CheckChip(e entity.IEngine, player *entity.Player, rockId string) bool {
 	}
 
 	// Check near the rock
-	if !game_objects.AreClose(rock, charGameObj) {
+	if !rock.IsCloseTo(charGameObj) {
 		e.SendSystemMessage("You need to be closer to the rock.", player)
 		return false
 	}

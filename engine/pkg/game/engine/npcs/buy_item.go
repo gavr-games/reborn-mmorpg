@@ -3,7 +3,6 @@ package npcs
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 )
 
@@ -22,7 +21,7 @@ func BuyItem(e entity.IEngine, charGameObj *entity.GameObject, npcId string, ite
 			return false
 		}
 
-		if game_objects.GetDistance(npcObj, charGameObj) > TradeDistance {
+		if npcObj.GetDistance(charGameObj) > TradeDistance {
 			e.SendSystemMessage("You need to be closer.", player)
 			return false
 		}
