@@ -1,35 +1,19 @@
-package trees
+package tree_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
-// This func is called via delayed action mechanism
-// params: playerId, treeId
-func Chop(e entity.IEngine, params map[string]interface{}) bool {
-	playerId := int(params["playerId"].(float64))
+func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) bool {
+	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
-		treeId := params["treeId"].(string)
-		tree := e.GameObjects()[treeId]
-		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
-		if tree == nil {
-			e.SendSystemMessage("Tree does not exist.", player)
-			return false
-		}
-
 		// Create log
-		logObj, err := game_objects.CreateFromTemplate("resource/log", charGameObj.X(), charGameObj.Y(), 0.0)
-		if err != nil {
-			e.SendSystemMessage(err.Error(), player)
-			return false
-		}
-		e.GameObjects()[logObj.Id()] = logObj
+		logObj := e.CreateGameObject("resource/log", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
 		// check character has container
 		putInContainer := false
@@ -56,11 +40,11 @@ func Chop(e entity.IEngine, params map[string]interface{}) bool {
 		if resources["log"].(float64) <= 0 {
 			e.SendGameObjectUpdate(tree, "remove_object")
 
-			e.Floors()[tree.Floor()].FilteredRemove(e.GameObjects()[treeId], func(b utils.IBounds) bool {
-				return treeId == b.(entity.IGameObject).Id()
+			e.Floors()[tree.Floor()].FilteredRemove(e.GameObjects()[tree.Id()], func(b utils.IBounds) bool {
+				return tree.Id() == b.(entity.IGameObject).Id()
 			})
-			e.GameObjects()[treeId] = nil
-			delete(e.GameObjects(), treeId)
+			e.GameObjects()[tree.Id()] = nil
+			delete(e.GameObjects(), tree.Id())
 		} else {
 			storage.GetClient().Updates <- tree.Clone()
 		}

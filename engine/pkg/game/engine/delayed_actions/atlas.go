@@ -1,6 +1,6 @@
 package delayed_actions
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/trees"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/rocks"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/plants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"

@@ -10,7 +10,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/trees"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/rocks"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/plants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
@@ -84,11 +83,11 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "apply_effect":
 			effects.ApplyPlayer(e, params.(string), player)
 		case "chop_tree":
-			treeId := params.(string)
-			if trees.CheckChop(e, player, treeId) {
+			tree := e.GameObjects()[params.(string)]
+			if tree.(entity.ITreeObject).CheckChop(e, charGameObj) {
 				delayed_actions.Start(e, charGameObj, "Chop", map[string]interface{}{
-					"playerId": float64(player.Id), // this conversion is required, because json unmarshal decodes all numbers to float64
-					"treeId": treeId,
+					"characterId": charGameObj.Id(),
+					"treeId": tree.Id(),
 				}, -1.0)
 			}
 		case "chip_rock":
