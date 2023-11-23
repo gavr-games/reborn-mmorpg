@@ -15,7 +15,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 		craftItemName := params["item_name"].(string)
 		craftItemConfig := GetAtlas()[craftItemName].(map[string]interface{})
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-		slots := charGameObj.Properties["slots"].(map[string]interface{})
+		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 	
 		// Call check again to make sure nothing changed.
 		// For example some player or mob could move to the place of future building
@@ -38,39 +38,39 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			y := coords["y"].(float64)
 			rotation := params["inputs"].(map[string]interface{})["rotation"].(float64)
 			itemObj, err := game_objects.CreateFromTemplate(craftItemName, x, y, 0.0)
-			itemObj.Properties["crafted_by_character_id"] = charGameObj.Id
+			itemObj.Properties()["crafted_by_character_id"] = charGameObj.Id()
 			itemObj.Rotate(rotation)
 			if err != nil {
 				e.SendSystemMessage(err.Error(), player)
 				return false
 			}
-			e.GameObjects()[itemObj.Id] = itemObj
-			itemObj.Floor = charGameObj.Floor
-			e.Floors()[itemObj.Floor].Insert(itemObj)
+			e.GameObjects()[itemObj.Id()] = itemObj
+			itemObj.SetFloor(charGameObj.Floor())
+			e.Floors()[itemObj.Floor()].Insert(itemObj)
 			storage.GetClient().Updates <- itemObj.Clone()
 
 			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 				"object": itemObj,
 			})
 		} else {
-			itemObj, err := game_objects.CreateFromTemplate(craftItemName, charGameObj.X, charGameObj.Y, 0.0)
+			itemObj, err := game_objects.CreateFromTemplate(craftItemName, charGameObj.X(), charGameObj.Y(), 0.0)
 			if err != nil {
 				e.SendSystemMessage(err.Error(), player)
 				return false
 			}
-			e.GameObjects()[itemObj.Id] = itemObj
+			e.GameObjects()[itemObj.Id()] = itemObj
 
 			// check character has container
 			putInContainer := false
 			if (slots["back"] != nil) {
 				// put item to container
-				putInContainer = containers.Put(e, player, slots["back"].(string), itemObj.Id, -1)
+				putInContainer = containers.Put(e, player, slots["back"].(string), itemObj.Id(), -1)
 			}
 
 			// OR drop items on the ground
 			if !putInContainer {
-				itemObj.Floor = charGameObj.Floor
-				e.Floors()[itemObj.Floor].Insert(itemObj)
+				itemObj.SetFloor(charGameObj.Floor())
+				e.Floors()[itemObj.Floor()].Insert(itemObj)
 				storage.GetClient().Updates <- itemObj.Clone()
 				e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 					"object": itemObj,

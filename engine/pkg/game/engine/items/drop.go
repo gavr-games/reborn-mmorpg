@@ -9,7 +9,7 @@ import (
 func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
 	item := e.GameObjects()[itemId]
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties["slots"].(map[string]interface{})
+	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 	if item == nil {
 		e.SendSystemMessage("Wrong item.", player)
@@ -25,8 +25,8 @@ func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
 	}
 	
 	// check container belongs to character
-	if (item.Properties["container_id"] != nil) {
-		if !containers.CheckAccess(e, player, e.GameObjects()[item.Properties["container_id"].(string)]) {
+	if (item.Properties()["container_id"] != nil) {
+		if !containers.CheckAccess(e, player, e.GameObjects()[item.Properties()["container_id"].(string)]) {
 			e.SendSystemMessage("You don't have access to this container", player)
 			return false
 		}
@@ -36,20 +36,18 @@ func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
 	}
 
 	//Remove from container
-	if (item.Properties["container_id"] != nil) {
-		if !containers.Remove(e, player, item.Properties["container_id"].(string), itemId) {
+	if (item.Properties()["container_id"] != nil) {
+		if !containers.Remove(e, player, item.Properties()["container_id"].(string), itemId) {
 			return false
 		}
 	}
 
 	// Drop into the world
-	item.Floor = charGameObj.Floor
-	item.Properties["visible"] = true
-	item.X = charGameObj.X
-	item.Y = charGameObj.Y
-	item.Properties["x"] = charGameObj.Properties["x"]
-	item.Properties["y"] = charGameObj.Properties["y"]
-	e.Floors()[item.Floor].Insert(item)
+	item.SetFloor(charGameObj.Floor())
+	item.Properties()["visible"] = true
+	item.SetX(charGameObj.X())
+	item.SetY(charGameObj.Y())
+	e.Floors()[item.Floor()].Insert(item)
 
 	storage.GetClient().Updates <- item.Clone()
 

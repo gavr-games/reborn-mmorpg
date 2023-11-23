@@ -22,17 +22,17 @@ func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 	additionalProps["player_id"] = player.Id
 	additionalProps["name"] = character.Name
 	gameObj := e.CreateGameObject("player/player", constants.InitialPlayerX, constants.InitialPlayerY, 0.0, 0, additionalProps)
-	player.CharacterGameObjectId = gameObj.Id
+	player.CharacterGameObjectId = gameObj.Id()
 	CreatePlayerItems(e, player)
 	return player
 }
 
-func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) *entity.GameObject {
+func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) entity.IGameObject {
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.X - constants.PlayerVisionArea / 2, charGameObj.Y - constants.PlayerVisionArea / 2, 0.0, charGameObj.Floor, additionalProps)
-	player.VisionAreaGameObjectId = gameObj.Id
+	gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.X() - constants.PlayerVisionArea / 2, charGameObj.Y() - constants.PlayerVisionArea / 2, 0.0, charGameObj.Floor(), additionalProps)
+	player.VisionAreaGameObjectId = gameObj.Id()
 	return gameObj
 }
 
@@ -40,15 +40,15 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	// Backpack
 	additionalProps := make(map[string]interface{})
-	additionalProps["owner_id"] = charGameObj.Id
-	initialBackpack := e.CreateGameObject("container/backpack", charGameObj.X, charGameObj.Y, 0.0, -1, additionalProps)
-	charGameObj.Properties["slots"].(map[string]interface{})["back"] = initialBackpack.Id
+	additionalProps["owner_id"] = charGameObj.Id()
+	initialBackpack := e.CreateGameObject("container/backpack", charGameObj.X(), charGameObj.Y(), 0.0, -1, additionalProps)
+	charGameObj.Properties()["slots"].(map[string]interface{})["back"] = initialBackpack.Id()
 	// Axe
-	initialAxe := e.CreateGameObject("axe/axe", charGameObj.X, charGameObj.Y, 0.0, -1, nil)
-	containers.Put(e, player, initialBackpack.Id, initialAxe.Id, -1)
+	initialAxe := e.CreateGameObject("axe/axe", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+	containers.Put(e, player, initialBackpack.Id(), initialAxe.Id(), -1)
 	// Pickaxe
-	initialPickaxe := e.CreateGameObject("pickaxe/pickaxe", charGameObj.X, charGameObj.Y, 0.0, -1, nil)
-	containers.Put(e, player, initialBackpack.Id, initialPickaxe.Id, -1)
+	initialPickaxe := e.CreateGameObject("pickaxe/pickaxe", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+	containers.Put(e, player, initialBackpack.Id(), initialPickaxe.Id(), -1)
 }
 
 // Process when new player logs into the game
@@ -60,7 +60,7 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 			close(player.Client.GetSendChannel())
 		} else {
 			CreatePlayerVisionArea(e, player)
-			e.GameObjects()[player.CharacterGameObjectId].Properties["visible"] = true
+			e.GameObjects()[player.CharacterGameObjectId].Properties()["visible"] = true
 		}
 		player.Client = client
 	} else {
@@ -70,11 +70,11 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
 		visibleObjects := players.GetVisibleObjects(e, player)
 		for key, val := range visibleObjects {
-			player.VisibleObjects[val.(*entity.GameObject).Id] = true
+			player.VisibleObjects[val.(entity.IGameObject).Id()] = true
 			// This is required to send target info on first character object rendering
-			if val.(*entity.GameObject).Id == player.CharacterGameObjectId {
-				clone := val.(*entity.GameObject).Clone()
-				clone.Properties = serializers.GetInfo(e.GameObjects(), val.(*entity.GameObject))
+			if val.(entity.IGameObject).Id() == player.CharacterGameObjectId {
+				clone := val.(entity.IGameObject).Clone()
+				clone.SetProperties(serializers.GetInfo(e.GameObjects(), val.(entity.IGameObject)))
 				visibleObjects[key] = clone
 			}
 		}

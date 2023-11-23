@@ -39,8 +39,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		// Process Cmd
 		switch cmd {
 		case "stop":
-			charGameObj.Properties["speed_x"] = 0.0
-			charGameObj.Properties["speed_y"] = 0.0
+			charGameObj.Properties()["speed_x"] = 0.0
+			charGameObj.Properties()["speed_y"] = 0.0
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		case "move_north", "move_south", "move_east", "move_west",
 				"move_north_east", "move_north_west", "move_south_east", "move_south_west":
@@ -136,7 +136,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			mob, ok := e.Mobs()[mobId]
 			if ok {
 				//TODO: Check commands  can be executed only close enough to the mob
-				mob.Follow(charGameObj.Id)
+				mob.Follow(charGameObj.Id())
 			}
 		case "unfollow":
 			mobId := params.(string)

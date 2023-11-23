@@ -5,10 +5,10 @@ import (
 )
 
 // Removes effect from obj and engine map
-func Remove(e entity.IEngine, effectId string, obj *entity.GameObject) {
+func Remove(e entity.IEngine, effectId string, obj entity.IGameObject) {
 	if obj != nil {
-		obj.Effects[effectId] = nil
-		delete(obj.Effects, effectId)
+		obj.Effects()[effectId] = nil
+		delete(obj.Effects(), effectId)
 		e.SendGameObjectUpdate(obj, "update_object")
 	}
 	e.Effects()[effectId] = nil

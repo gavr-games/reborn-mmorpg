@@ -17,14 +17,14 @@ func HatchFireDragon(e entity.IEngine, params map[string]interface{}) bool {
 	if hatchery != nil {
 		// Create dragon
 		// TODO: can we use here CreateGameObject?
-		dragon, err := game_objects.CreateFromTemplate("mob/fire_dragon", hatchery.X, hatchery.Y, 0.0)
+		dragon, err := game_objects.CreateFromTemplate("mob/fire_dragon", hatchery.X(), hatchery.Y(), 0.0)
 		if err != nil {
 			return false
 		}
-		e.GameObjects()[dragon.Id] = dragon
-		dragon.Floor = hatchery.Floor
-		e.Floors()[dragon.Floor].Insert(dragon)
-		e.Mobs()[dragon.Id] = mobs.NewMob(e, dragon.Id)
+		e.GameObjects()[dragon.Id()] = dragon
+		dragon.SetFloor(hatchery.Floor())
+		e.Floors()[dragon.Floor()].Insert(dragon)
+		e.Mobs()[dragon.Id()] = mobs.NewMob(e, dragon.Id())
 
 		storage.GetClient().Updates <- dragon.Clone()
 		e.SendResponseToVisionAreas(dragon, "add_object", map[string]interface{}{
@@ -33,8 +33,8 @@ func HatchFireDragon(e entity.IEngine, params map[string]interface{}) bool {
 
 		// Remove hatchery
 		e.SendGameObjectUpdate(hatchery, "remove_object")
-		e.Floors()[hatchery.Floor].FilteredRemove(e.GameObjects()[hatcheryId], func(b utils.IBounds) bool {
-			return hatcheryId == b.(*entity.GameObject).Id
+		e.Floors()[hatchery.Floor()].FilteredRemove(e.GameObjects()[hatcheryId], func(b utils.IBounds) bool {
+			return hatcheryId == b.(entity.IGameObject).Id()
 		})
 		e.GameObjects()[hatcheryId] = nil
 		delete(e.GameObjects(), hatcheryId)

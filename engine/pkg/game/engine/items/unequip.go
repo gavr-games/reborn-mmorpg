@@ -10,7 +10,7 @@ import (
 func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	item := e.GameObjects()[itemId]
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties["slots"].(map[string]interface{})
+	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 	if item == nil {
 		e.SendSystemMessage("Wrong item.", player)
@@ -36,7 +36,7 @@ func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	}
 
 	// put to container
-	if (item.Properties["container_id"] == nil) {
+	if (item.Properties()["container_id"] == nil) {
 		if !containers.Put(e, player, slots["back"].(string), itemId, -1) {
 			return false
 		}

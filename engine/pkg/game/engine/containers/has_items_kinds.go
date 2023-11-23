@@ -10,7 +10,7 @@ import (
 // items example - {"log": 1.0, "stone": 2.0}
 func HasItemsKinds(e entity.IEngine, containerId string, items map[string]interface{}) bool {
 	container := e.GameObjects()[containerId]
-	itemIds := container.Properties["items_ids"].([]interface{})
+	itemIds := container.Properties()["items_ids"].([]interface{})
 
 	itemsCounts := make(map[string]float64)
 	var itemsKinds []string
@@ -23,15 +23,15 @@ func HasItemsKinds(e entity.IEngine, containerId string, items map[string]interf
   for _, itemId := range itemIds {
 		if itemId != nil {
 			item := e.GameObjects()[itemId.(string)]
-			itemKind := item.Properties["kind"].(string)
+			itemKind := item.Properties()["kind"].(string)
 			itemStackable := false
-			if value, ok := item.Properties["stackable"]; ok {
+			if value, ok := item.Properties()["stackable"]; ok {
 				itemStackable = value.(bool)
 			}
 			// If item stackable check item has enough "amount", otherwise count items as 1 per each game_object
     	if slices.Contains(itemsKinds, itemKind) {
 				if itemStackable {
-					if item.Properties["amount"].(float64) >= itemsCounts[itemKind] {
+					if item.Properties()["amount"].(float64) >= itemsCounts[itemKind] {
 						itemsCounts[itemKind] = 0.0
 					}
 				} else {

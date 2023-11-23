@@ -16,4 +16,5 @@
 - [http://localhost](http://localhost)
 
 ## Reset game data
-`docker exec -it reborn-mmorpg-redis-1 redis-cli FLUSHALL`
+- Stop engine
+- run `docker exec -it reborn-mmorpg-redis-1 redis-cli FLUSHALL`

@@ -16,7 +16,7 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 		rockId := params["rockId"].(string)
 		rock := e.GameObjects()[rockId]
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-		slots := charGameObj.Properties["slots"].(map[string]interface{})
+		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 		if rock == nil {
 			e.SendSystemMessage("Rock does not exist.", player)
@@ -24,24 +24,24 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 		}
 
 		// Create log
-		stoneObj, err := game_objects.CreateFromTemplate("resource/stone", charGameObj.X, charGameObj.Y, 0.0)
+		stoneObj, err := game_objects.CreateFromTemplate("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0)
 		if err != nil {
 			e.SendSystemMessage(err.Error(), player)
 			return false
 		}
-		e.GameObjects()[stoneObj.Id] = stoneObj
+		e.GameObjects()[stoneObj.Id()] = stoneObj
 
 		// check character has container
 		putInContainer := false
 		if (slots["back"] != nil) {
 			// put log to container
-			putInContainer = containers.Put(e, player, slots["back"].(string), stoneObj.Id, -1)
+			putInContainer = containers.Put(e, player, slots["back"].(string), stoneObj.Id(), -1)
 		}
 
 		// OR drop stone on the ground
 		if !putInContainer {
-			stoneObj.Floor = charGameObj.Floor
-			e.Floors()[stoneObj.Floor].Insert(stoneObj)
+			stoneObj.SetFloor(charGameObj.Floor())
+			e.Floors()[stoneObj.Floor()].Insert(stoneObj)
 			storage.GetClient().Updates <- stoneObj.Clone()
 			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 				"object": stoneObj,
@@ -49,15 +49,15 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 		}
 
 		// Decrease stones stored in the rock
-		resources := rock.Properties["resources"].(map[string]interface{})
+		resources := rock.Properties()["resources"].(map[string]interface{})
 		resources["stone"] = resources["stone"].(float64) - 1.0
 
 		// Remove rock if no stones inside
 		if resources["stone"].(float64) <= 0 {
 			e.SendGameObjectUpdate(rock, "remove_object")
 
-			e.Floors()[rock.Floor].FilteredRemove(e.GameObjects()[rockId], func(b utils.IBounds) bool {
-				return rockId == b.(*entity.GameObject).Id
+			e.Floors()[rock.Floor()].FilteredRemove(e.GameObjects()[rockId], func(b utils.IBounds) bool {
+				return rockId == b.(entity.IGameObject).Id()
 			})
 			e.GameObjects()[rockId] = nil
 			delete(e.GameObjects(), rockId)

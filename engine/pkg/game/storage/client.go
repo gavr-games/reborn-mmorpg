@@ -17,7 +17,7 @@ const (
 // declaration defined type 
 type StorageClient struct {
 	redisClient *redis.Client
-	Updates chan *entity.GameObject
+	Updates chan entity.IGameObject
 	Deletes chan string
 }
 
@@ -34,20 +34,20 @@ func GetClient() *StorageClient {
 		rdb := redis.NewClient(opt)
 		instance = &StorageClient{
 			redisClient: rdb,
-			Updates: make(chan *entity.GameObject, ChanelCapacity),
+			Updates: make(chan entity.IGameObject, ChanelCapacity),
 			Deletes: make(chan string, ChanelCapacity),
 		}
 	})
 	return instance
 }
 
-func (sc *StorageClient) SaveGameObject(obj *entity.GameObject) {
-	message, err := json.Marshal(obj)
+func (sc *StorageClient) SaveGameObject(obj entity.IGameObject) {
+	message, err := json.Marshal(obj.(*entity.GameObject))
 	if err != nil {
 		panic(err)
 	}
 
-	setErr := sc.redisClient.Set(ctx, obj.Id, message, 0).Err()
+	setErr := sc.redisClient.Set(ctx, obj.Id(), message, 0).Err()
   if setErr != nil {
     panic(setErr)
   }
@@ -59,9 +59,9 @@ func (sc *StorageClient) RemoveGameObject(objId string) {
 	}
 }
 
-func (sc *StorageClient) GetGameObject(id string) *entity.GameObject {
+func (sc *StorageClient) GetGameObject(id string) entity.IGameObject {
 	val, redisErr := sc.redisClient.Get(ctx, id).Result()
-	var obj entity.GameObject
+	var obj *entity.GameObject
 	if redisErr != nil {
 		panic(redisErr)
 	}
@@ -69,10 +69,10 @@ func (sc *StorageClient) GetGameObject(id string) *entity.GameObject {
 	if err != nil {
 		panic(err)
 	}
-	return &obj
+	return obj
 }
 
-func (sc *StorageClient) ReadAllGameObjects(process func(*entity.GameObject)) int {
+func (sc *StorageClient) ReadAllGameObjects(process func(entity.IGameObject)) int {
 	i := 0
 	iter := sc.redisClient.Scan(ctx, 0, "*", 0).Iterator()
 	for iter.Next(ctx) {
@@ -86,7 +86,7 @@ func (sc *StorageClient) ReadAllGameObjects(process func(*entity.GameObject)) in
 	return i
 }
 
-func (sc *StorageClient) updatesWorker(updatesChan <-chan *entity.GameObject) {
+func (sc *StorageClient) updatesWorker(updatesChan <-chan entity.IGameObject) {
 	for obj := range updatesChan {
 		sc.SaveGameObject(obj)
 	}

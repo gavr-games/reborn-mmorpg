@@ -6,14 +6,14 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
-func Cancel(e entity.IEngine, gameObj *entity.GameObject) bool {
-	if gameObj.CurrentAction == nil {
+func Cancel(e entity.IEngine, gameObj entity.IGameObject) bool {
+	if gameObj.CurrentAction() == nil {
 		return true
 	}
 
-	delayedActionFuncName := gameObj.CurrentAction.FuncName
+	delayedActionFuncName := gameObj.CurrentAction().FuncName
 
-	gameObj.CurrentAction = nil
+	gameObj.SetCurrentAction(nil)
 
 	storage.GetClient().Updates <- gameObj.Clone()
 

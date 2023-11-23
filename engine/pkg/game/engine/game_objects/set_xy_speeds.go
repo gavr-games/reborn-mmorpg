@@ -10,8 +10,8 @@ import (
 var PossibleDirections = [...]string {"move_east", "move_north_east", "move_north", "move_north_west", "move_west", "move_south_west", "move_south", "move_south_east"}
 
 // Set x and y speeds depending on the direction
-func SetXYSpeeds(obj *entity.GameObject, direction string) {
-	speed := obj.Properties["speed"].(float64)
+func SetXYSpeeds(obj entity.IGameObject, direction string) {
+	speed := obj.Properties()["speed"].(float64)
 	axisSpeed := math.Sqrt(speed * speed / 2)
 
 	validDirection := false
@@ -29,45 +29,45 @@ func SetXYSpeeds(obj *entity.GameObject, direction string) {
 
 	switch direction {
 		case "move_north":
-			obj.Properties["speed_x"] = 0.0
-			obj.Properties["speed_y"] = speed
+			obj.Properties()["speed_x"] = 0.0
+			obj.Properties()["speed_y"] = speed
 			// this is required to determine where character/mob looks, when stopped
 			// it is important to later hit the target with weapon
-			obj.Rotation = math.Pi / 2
+			obj.SetRotation(math.Pi / 2)
 		case "move_south":
-			obj.Properties["speed_x"] = 0.0
-			obj.Properties["speed_y"] = -speed
-			obj.Rotation = math.Pi * 3 / 2
+			obj.Properties()["speed_x"] = 0.0
+			obj.Properties()["speed_y"] = -speed
+			obj.SetRotation(math.Pi * 3 / 2)
 		case "move_east":
-			obj.Properties["speed_x"] = speed
-			obj.Properties["speed_y"] = 0.0
-			obj.Rotation = 0
+			obj.Properties()["speed_x"] = speed
+			obj.Properties()["speed_y"] = 0.0
+			obj.SetRotation(0)
 		case "move_west":
-			obj.Properties["speed_x"] = -speed
-			obj.Properties["speed_y"] = 0.0
-			obj.Rotation = math.Pi
+			obj.Properties()["speed_x"] = -speed
+			obj.Properties()["speed_y"] = 0.0
+			obj.SetRotation(math.Pi)
 		case "move_north_east":
-			obj.Properties["speed_x"] = axisSpeed
-			obj.Properties["speed_y"] = axisSpeed
-			obj.Rotation = math.Pi / 4
+			obj.Properties()["speed_x"] = axisSpeed
+			obj.Properties()["speed_y"] = axisSpeed
+			obj.SetRotation(math.Pi / 4)
 		case "move_north_west":
-			obj.Properties["speed_x"] = -axisSpeed
-			obj.Properties["speed_y"] = axisSpeed
-			obj.Rotation = math.Pi * 3 / 4
+			obj.Properties()["speed_x"] = -axisSpeed
+			obj.Properties()["speed_y"] = axisSpeed
+			obj.SetRotation(math.Pi * 3 / 4)
 		case "move_south_east":
-			obj.Properties["speed_x"] = axisSpeed
-			obj.Properties["speed_y"] = -axisSpeed
-			obj.Rotation = math.Pi * 7 / 4
+			obj.Properties()["speed_x"] = axisSpeed
+			obj.Properties()["speed_y"] = -axisSpeed
+			obj.SetRotation(math.Pi * 7 / 4)
 		case "move_south_west":
-			obj.Properties["speed_x"] = -axisSpeed
-			obj.Properties["speed_y"] = -axisSpeed
-			obj.Rotation = math.Pi * 5 / 4
+			obj.Properties()["speed_x"] = -axisSpeed
+			obj.Properties()["speed_y"] = -axisSpeed
+			obj.SetRotation(math.Pi * 5 / 4)
 	}
 }
 
 // Set rotation depending on the direction
-func SetRotation(obj *entity.GameObject, direction string) {
-	obj.Rotation = GetRotation(direction)
+func SetRotation(obj entity.IGameObject, direction string) {
+	obj.SetRotation(GetRotation(direction))
 }
 
 func GetRotation(direction string) float64 {

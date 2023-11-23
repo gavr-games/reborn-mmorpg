@@ -8,9 +8,9 @@ import (
 
 func CheckHatch(e entity.IEngine, player *entity.Player, hatcheryId string) bool {
 	hatchery := e.GameObjects()[hatcheryId]
-	resources := hatchery.Properties["hatching_resources"].(map[string]interface{})
+	resources := hatchery.Properties()["hatching_resources"].(map[string]interface{})
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties["slots"].(map[string]interface{})
+	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 	if hatchery == nil {
 		e.SendSystemMessage("Hatchery does not exist.", player)
@@ -18,7 +18,7 @@ func CheckHatch(e entity.IEngine, player *entity.Player, hatcheryId string) bool
 	}
 
 	// check object type
-	if hatchery.Properties["type"].(string) != "hatchery" {
+	if hatchery.Properties()["type"].(string) != "hatchery" {
 		e.SendSystemMessage("Please choose hatchery.", player)
 		return false
 	}

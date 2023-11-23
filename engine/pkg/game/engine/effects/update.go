@@ -31,7 +31,7 @@ func Update(e entity.IEngine, tickDelta int64) {
 			effect["current_cooldown"] = effect["current_cooldown"].(float64) + float64(tickDelta)
 			if effect["current_cooldown"].(float64) >= effect["cooldown"].(float64) {
 				effect["current_cooldown"] = 0.0
-				obj.Properties[effect["attribute"].(string)] = obj.Properties[effect["attribute"].(string)].(float64) + effect["value"].(float64)
+				obj.Properties()[effect["attribute"].(string)] = obj.Properties()[effect["attribute"].(string)].(float64) + effect["value"].(float64)
 				effect["number"] = effect["number"].(float64) - 1.0
 				if effect["number"].(float64) <= 0.0 {
 					Remove(e, effectId, obj)
@@ -40,13 +40,13 @@ func Update(e entity.IEngine, tickDelta int64) {
 				}
 				// Health
 				if effect["attribute"].(string) == "health" {
-					if obj.Properties["health"].(float64) > obj.Properties["max_health"].(float64) {
-						obj.Properties["health"] = obj.Properties["max_health"].(float64)
+					if obj.Properties()["health"].(float64) > obj.Properties()["max_health"].(float64) {
+						obj.Properties()["health"] = obj.Properties()["max_health"].(float64)
 					} else 
 					// die if health < 0
-					if obj.Properties["health"].(float64) <= 0.0 {
-						if obj.Properties["type"].(string) == "mob" {
-							e.Mobs()[obj.Id].Die()
+					if obj.Properties()["health"].(float64) <= 0.0 {
+						if obj.Properties()["type"].(string) == "mob" {
+							e.Mobs()[obj.Id()].Die()
 						} else {
 							// for characters
 							characters.Reborn(e, obj)

@@ -16,31 +16,29 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 			mob.Run(newTickTime)
 
 			// Move mobs
-			speedX := mobObj.Properties["speed_x"].(float64)
-			speedY := mobObj.Properties["speed_y"].(float64)
+			speedX := mobObj.Properties()["speed_x"].(float64)
+			speedY := mobObj.Properties()["speed_y"].(float64)
 			if speedX != 0 || speedY != 0 {
 				dx := speedX / 1000.0 * float64(tickDelta)
 				dy := speedY / 1000.0 * float64(tickDelta)
 
-				dx, dy = game_objects.CanMove(e.Floors()[mobObj.Floor], mobObj, dx, dy)
+				dx, dy = game_objects.CanMove(e.Floors()[mobObj.Floor()], mobObj, dx, dy)
 
 				// Stop the object
 				if dx == 0.0 && dy == 0.0 {
-					mobObj.Properties["speed_x"] = 0.0
-					mobObj.Properties["speed_y"] = 0.0
+					mobObj.Properties()["speed_x"] = 0.0
+					mobObj.Properties()["speed_y"] = 0.0
 					e.SendGameObjectUpdate(mobObj, "update_object")
 					continue
 				}
 
 				// Update mob game object
-				e.Floors()[mobObj.Floor].FilteredRemove(mobObj, func(b utils.IBounds) bool {
-					return mobObj.Id == b.(*entity.GameObject).Id
+				e.Floors()[mobObj.Floor()].FilteredRemove(mobObj, func(b utils.IBounds) bool {
+					return mobObj.Id() == b.(entity.IGameObject).Id()
 				})
-				mobObj.X += dx
-				mobObj.Y += dy
-				mobObj.Properties["x"] = mobObj.Properties["x"].(float64) + dx
-				mobObj.Properties["y"] = mobObj.Properties["y"].(float64) + dy
-				e.Floors()[mobObj.Floor].Insert(mobObj)
+				mobObj.SetX(mobObj.X() + dx)
+				mobObj.SetY(mobObj.Y() + dy)
+				e.Floors()[mobObj.Floor()].Insert(mobObj)
 			}
 		}
 	}

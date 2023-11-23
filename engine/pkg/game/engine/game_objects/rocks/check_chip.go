@@ -16,7 +16,7 @@ func CheckChip(e entity.IEngine, player *entity.Player, rockId string) bool {
 	}
 
 	// check object type
-	if rock.Properties["type"].(string) != "rock" {
+	if rock.Properties()["type"].(string) != "rock" {
 		e.SendSystemMessage("Please choose rock.", player)
 		return false
 	}

@@ -16,7 +16,7 @@ func CheckChop(e entity.IEngine, player *entity.Player, treeId string) bool {
 	}
 
 	// check object type
-	if tree.Properties["type"].(string) != "tree" {
+	if tree.Properties()["type"].(string) != "tree" {
 		e.SendSystemMessage("Please choose tree.", player)
 		return false
 	}

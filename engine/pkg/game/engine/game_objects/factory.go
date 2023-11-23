@@ -49,7 +49,7 @@ func findTemplate(objPath string) (map[string]interface{}, error) {
 
 // objPath - "tree/pine_5", "rock/rock_moss". 
 // If just type provided "tree", "rock" it chooses random object kind
-func CreateFromTemplate(objPath string, x float64, y float64, rotation float64) (*entity.GameObject, error) {
+func CreateFromTemplate(objPath string, x float64, y float64, rotation float64) (entity.IGameObject, error) {
 	//TODO: return error if place is occupied for collidable objects like trees and rocks
 
 	//Get object template from GameObjectAtlas
@@ -68,29 +68,24 @@ func CreateFromTemplate(objPath string, x float64, y float64, rotation float64) 
 		height = tempWidth
 	}
 
-	gameObj := &entity.GameObject{
-		X: x,
-		Y: y,
-		Width: width,
-		Height: height,
-		Id: id,
-		Type: objTemplate["type"].(string),
-		Floor: -1, // -1 for does not belong to any floor
-		Rotation: rotation,
-		Properties: make(map[string]interface{}),
-		Effects: make(map[string]interface{}),
-	}
-	gameObj.Properties = utils.CopyMap(objTemplate)
-	gameObj.Properties["x"] = x
-	gameObj.Properties["y"] = y
-	gameObj.Properties["id"] = id
+	gameObj := &entity.GameObject{}
+	gameObj.SetProperties(utils.CopyMap(objTemplate))
+	gameObj.SetEffects(make(map[string]interface{}))
+	gameObj.SetId(id)
+	gameObj.SetX(x)
+	gameObj.SetY(y)
+	gameObj.SetWidth(width)
+	gameObj.SetHeight(height)
+	gameObj.SetType(objTemplate["type"].(string))
+	gameObj.SetFloor(-1)
+	gameObj.SetRotation(rotation)
 
-	if (gameObj.Properties["type"].(string) == "container") {
-		gameObj.Properties["items_ids"] = make([]interface{}, gameObj.Properties["max_capacity"].(int))
+	if (gameObj.Properties()["type"].(string) == "container") {
+		gameObj.Properties()["items_ids"] = make([]interface{}, gameObj.Properties()["max_capacity"].(int))
 	}
 
 	// Some templates might have actions to be created with the object
-	if currentAction, hasAction := gameObj.Properties["current_action"]; hasAction {
+	if currentAction, hasAction := gameObj.Properties()["current_action"]; hasAction {
 		actionParams := currentAction.(map[string]interface{})["params"].(map[string]interface{})
 		actionParams["game_object_id"] = gameObj.Id
 		timeLeft := currentAction.(map[string]interface{})["time_left"].(float64)
@@ -100,7 +95,7 @@ func CreateFromTemplate(objPath string, x float64, y float64, rotation float64) 
 			Params: actionParams,
 			TimeLeft: timeLeft,
 		}
-		gameObj.CurrentAction = delayedAction
+		gameObj.SetCurrentAction(delayedAction)
 	}
 
 	return gameObj, nil

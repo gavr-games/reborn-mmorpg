@@ -7,7 +7,7 @@ import (
 
 func GetItems(e entity.IEngine, containerId string) map[string]interface{} {
 	container := e.GameObjects()[containerId]
-	itemIds := container.Properties["items_ids"].([]interface{})
+	itemIds := container.Properties()["items_ids"].([]interface{})
 	cont := serializers.GetInfo(e.GameObjects(), container)
 	cont["items"] = make([]map[string]interface{}, len(itemIds))
 

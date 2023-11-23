@@ -20,7 +20,7 @@ type Engine struct {
 	tickTime int64 //last tick time in milliseconds
 	floors []*utils.Quadtree // slice of global game areas, underground, etc
 	players map[int]*entity.Player // map of all players
-	gameObjects map[string]*entity.GameObject // map of ALL objects in the game
+	gameObjects map[string]entity.IGameObject // map of ALL objects in the game
 	mobs map[string] entity.IMob // map of ALL mobs in the game
 	effects map[string]map[string]interface{} // all active effects in the game
 	commands chan *ClientCommand // Inbound messages from the clients.
@@ -32,7 +32,7 @@ func (e Engine) Floors() []*utils.Quadtree {
 	return e.floors
 }
 
-func (e Engine) GameObjects() map[string]*entity.GameObject {
+func (e Engine) GameObjects() map[string]entity.IGameObject {
 	return e.gameObjects
 }
 
@@ -74,12 +74,12 @@ func (e Engine) SendResponse(responseType string, responseData map[string]interf
 
 // Sends an update named responseType with parameters responseData to all players,
 // who can see the gameObj. In other words their vision areas collide with gameObj X,Y.
-func (e Engine) SendResponseToVisionAreas(gameObj *entity.GameObject, responseType string, responseData map[string]interface{}) {
-	intersectingObjects := e.Floors()[gameObj.Floor].RetrieveIntersections(utils.Bounds{
-		X:      gameObj.X,
-		Y:      gameObj.Y,
-		Width:  gameObj.Width,
-		Height: gameObj.Height,
+func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
+	intersectingObjects := e.Floors()[gameObj.Floor()].RetrieveIntersections(utils.Bounds{
+		X:      gameObj.X(),
+		Y:      gameObj.Y(),
+		Width:  gameObj.Width(),
+		Height: gameObj.Height(),
 	})
 	resp := entity.EngineResponse{
 		ResponseType: responseType,
@@ -92,8 +92,8 @@ func (e Engine) SendResponseToVisionAreas(gameObj *entity.GameObject, responseTy
 	}
 
 	for _, obj := range intersectingObjects {
-		if obj.(*entity.GameObject).Type == "player" && obj.(*entity.GameObject).Properties["kind"].(string) == "player_vision_area" {
-			playerId := obj.(*entity.GameObject).Properties["player_id"].(int)
+		if obj.(entity.IGameObject).Type() == "player" && obj.(entity.IGameObject).Properties()["kind"].(string) == "player_vision_area" {
+			playerId := obj.(entity.IGameObject).Properties()["player_id"].(int)
 			if player, ok := e.Players()[playerId]; ok {
 				if player.Client != nil {
 					select {
@@ -109,13 +109,13 @@ func (e Engine) SendResponseToVisionAreas(gameObj *entity.GameObject, responseTy
 
 // Send new update of the gameObj to all players who can see it
 // IMPORTANT: this function also updates/delets gameObj in storage
-func (e Engine) SendGameObjectUpdate(gameObj *entity.GameObject, updateType string) {
+func (e Engine) SendGameObjectUpdate(gameObj entity.IGameObject, updateType string) {
 	clone := gameObj.Clone() // clone is required to prevent access to objects map from different routines
 	e.SendResponseToVisionAreas(gameObj, updateType, map[string]interface{}{
 		"object": gameObj,
 	})
 	if updateType == "remove_object" {
-		storage.GetClient().Deletes <- clone.Id
+		storage.GetClient().Deletes <- clone.Id()
 	} else {
 		storage.GetClient().Updates <- clone
 	}
@@ -130,30 +130,30 @@ func (e Engine) SendSystemMessage(message string, player *entity.Player) {
 }
 
 // Creates new GameObject and returns it
-func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) *entity.GameObject {
+func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) entity.IGameObject {
 	gameObj, err := game_objects.CreateFromTemplate(objPath, x, y, rotation)
 	if err != nil {
 		//TODO: handle error
 	}
 	if additionalProps != nil {
 		for k, v := range additionalProps {
-			gameObj.Properties[k] = v
+			gameObj.Properties()[k] = v
 		}
 	}
 
-	gameObj.Floor = floor
+	gameObj.SetFloor(floor)
 	if floor != -1 {
-		e.Floors()[gameObj.Floor].Insert(gameObj)
+		e.Floors()[gameObj.Floor()].Insert(gameObj)
 	}
 
-	e.GameObjects()[gameObj.Id] = gameObj
+	e.GameObjects()[gameObj.Id()] = gameObj
 
-	if gameObj.Properties["kind"].(string) != "player_vision_area" {
+	if gameObj.Properties()["kind"].(string) != "player_vision_area" {
 		storage.GetClient().Updates <- gameObj.Clone()
 	}
 
-	if gameObj.Properties["type"].(string) == "mob" {
-		e.Mobs()[gameObj.Id] = mobs.NewMob(e, gameObj.Id)
+	if gameObj.Properties()["type"].(string) == "mob" {
+		e.Mobs()[gameObj.Id()] = mobs.NewMob(e, gameObj.Id())
 	}
 
 	return gameObj
@@ -163,7 +163,7 @@ func NewEngine() *Engine {
 	return &Engine{
 		tickTime:    0,
 		players:     make(map[int]*entity.Player),
-		gameObjects: make(map[string]*entity.GameObject),
+		gameObjects: make(map[string]entity.IGameObject),
 		mobs:        make(map[string] entity.IMob),
 		effects:     make(map[string]map[string]interface{}),
 		floors:      make([]*utils.Quadtree, constants.FloorCount),

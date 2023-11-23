@@ -11,7 +11,7 @@ import (
 func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 	item := e.GameObjects()[itemId]
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties["slots"].(map[string]interface{})
+	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 	if item == nil {
 		e.SendSystemMessage("Wrong item.", player)
@@ -27,12 +27,12 @@ func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 	}
 
 	// check container belongs to character
-	if (item.Properties["container_id"] != nil) {
-		if !containers.CheckAccess(e, player, e.GameObjects()[item.Properties["container_id"].(string)]) {
+	if (item.Properties()["container_id"] != nil) {
+		if !containers.CheckAccess(e, player, e.GameObjects()[item.Properties()["container_id"].(string)]) {
 			e.SendSystemMessage("You don't have access to this container", player)
 			return false
 		}
-		if !containers.Remove(e, player, item.Properties["container_id"].(string), itemId) {
+		if !containers.Remove(e, player, item.Properties()["container_id"].(string), itemId) {
 			return false
 		}
 	} else { //destroy item in the world
@@ -48,19 +48,19 @@ func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 			return false
 		}
 		e.SendGameObjectUpdate(item, "remove_object")
-		e.Floors()[item.Floor].FilteredRemove(e.GameObjects()[itemId], func(b utils.IBounds) bool {
-			return itemId == b.(*entity.GameObject).Id
+		e.Floors()[item.Floor()].FilteredRemove(e.GameObjects()[itemId], func(b utils.IBounds) bool {
+			return itemId == b.(entity.IGameObject).Id()
 		})
 	}
 
-	if item.Properties["kind"].(string) == "claim_obelisk" {
+	if item.Properties()["kind"].(string) == "claim_obelisk" {
 		// remove obelisk from character
-		charGameObj := e.GameObjects()[item.Properties["crafted_by_character_id"].(string)]
-		charGameObj.Properties["claim_obelisk_id"] = nil
+		charGameObj := e.GameObjects()[item.Properties()["crafted_by_character_id"].(string)]
+		charGameObj.Properties()["claim_obelisk_id"] = nil
 		storage.GetClient().Updates <- charGameObj.Clone()
 
 		// Destroy Claim Area for Claim Obelisk
-		if !Destroy(e, item.Properties["claim_area_id"].(string), player) {
+		if !Destroy(e, item.Properties()["claim_area_id"].(string), player) {
 			return false
 		}
 	}
@@ -68,7 +68,7 @@ func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 	// Destroy item
 	e.GameObjects()[itemId] = nil
 	delete(e.GameObjects(), itemId)
-	storage.GetClient().Deletes <- item.Id
+	storage.GetClient().Deletes <- itemId
 
 	return true
 }

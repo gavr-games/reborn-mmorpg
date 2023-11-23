@@ -13,15 +13,15 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 			//TODO: handle issue this gives panic when closing closed channel
 			//close(client.GetSendChannel())
 			player.Client = nil
-			e.Floors()[e.GameObjects()[player.VisionAreaGameObjectId].Floor].FilteredRemove(e.GameObjects()[player.VisionAreaGameObjectId], func(b utils.IBounds) bool {
-				return player.VisionAreaGameObjectId == b.(*entity.GameObject).Id
+			e.Floors()[e.GameObjects()[player.VisionAreaGameObjectId].Floor()].FilteredRemove(e.GameObjects()[player.VisionAreaGameObjectId], func(b utils.IBounds) bool {
+				return player.VisionAreaGameObjectId == b.(entity.IGameObject).Id()
 			})
 			e.GameObjects()[player.VisionAreaGameObjectId] = nil
 			delete(e.GameObjects(), player.VisionAreaGameObjectId)
 			charObj := e.GameObjects()[player.CharacterGameObjectId]
-			charObj.Properties["visible"] = false
-			charObj.Properties["speed_x"] = 0.0
-			charObj.Properties["speed_y"] = 0.0
+			charObj.Properties()["visible"] = false
+			charObj.Properties()["speed_x"] = 0.0
+			charObj.Properties()["speed_y"] = 0.0
 			storage.GetClient().Updates <- charObj.Clone()
 			e.SendResponseToVisionAreas(charObj, "remove_object", map[string]interface{}{
 				"object": charObj,

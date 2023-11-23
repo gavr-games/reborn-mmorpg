@@ -16,7 +16,7 @@ func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
 		cactusId := params["cactusId"].(string)
 		cactus := e.GameObjects()[cactusId]
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-		slots := charGameObj.Properties["slots"].(map[string]interface{})
+		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 		if cactus == nil {
 			e.SendSystemMessage("Cactus does not exist.", player)
@@ -24,24 +24,24 @@ func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
 		}
 
 		// Create cactus slice
-		sliceObj, err := game_objects.CreateFromTemplate("resource/cactus_slice", charGameObj.X, charGameObj.Y, 0.0)
+		sliceObj, err := game_objects.CreateFromTemplate("resource/cactus_slice", charGameObj.X(), charGameObj.Y(), 0.0)
 		if err != nil {
 			e.SendSystemMessage(err.Error(), player)
 			return false
 		}
-		e.GameObjects()[sliceObj.Id] = sliceObj
+		e.GameObjects()[sliceObj.Id()] = sliceObj
 
 		// check character has container
 		putInContainer := false
 		if (slots["back"] != nil) {
 			// put log to container
-			putInContainer = containers.Put(e, player, slots["back"].(string), sliceObj.Id, -1)
+			putInContainer = containers.Put(e, player, slots["back"].(string), sliceObj.Id(), -1)
 		}
 
 		// OR drop logs on the ground
 		if !putInContainer {
-			sliceObj.Floor = charGameObj.Floor
-			e.Floors()[sliceObj.Floor].Insert(sliceObj)
+			sliceObj.SetFloor(charGameObj.Floor())
+			e.Floors()[sliceObj.Floor()].Insert(sliceObj)
 			storage.GetClient().Updates <- sliceObj.Clone()
 			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 				"object": sliceObj,
@@ -49,15 +49,15 @@ func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
 		}
 
 		// Decrease slices stored in the cactus
-		resources := cactus.Properties["resources"].(map[string]interface{})
+		resources := cactus.Properties()["resources"].(map[string]interface{})
 		resources["cactus_slice"] = resources["cactus_slice"].(float64) - 1.0
 
 		// Remove cactus if no cactus_slice inside
 		if resources["cactus_slice"].(float64) <= 0 {
 			e.SendGameObjectUpdate(cactus, "remove_object")
 
-			e.Floors()[cactus.Floor].FilteredRemove(e.GameObjects()[cactusId], func(b utils.IBounds) bool {
-				return cactusId == b.(*entity.GameObject).Id
+			e.Floors()[cactus.Floor()].FilteredRemove(e.GameObjects()[cactusId], func(b utils.IBounds) bool {
+				return cactusId == b.(entity.IGameObject).Id()
 			})
 			e.GameObjects()[cactusId] = nil
 			delete(e.GameObjects(), cactusId)

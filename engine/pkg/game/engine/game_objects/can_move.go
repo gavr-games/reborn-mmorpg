@@ -8,10 +8,10 @@ import (
 
 // Check object can move and does not collide with other objects
 // TODO: implement accurate check for circles
-func CanMove(floor *utils.Quadtree, obj *entity.GameObject, dx float64, dy float64) (float64, float64) {
+func CanMove(floor *utils.Quadtree, obj entity.IGameObject, dx float64, dy float64) (float64, float64) {
 	// floor edges
-	newX := obj.X + dx
-	newY := obj.Y + dy
+	newX := obj.X() + dx
+	newY := obj.Y() + dy
 	if newX < 0.0 || newX > constants.FloorSize || newY < 0.0 || newY > constants.FloorSize {
 		return 0.0, 0.0
 	}
@@ -20,13 +20,13 @@ func CanMove(floor *utils.Quadtree, obj *entity.GameObject, dx float64, dy float
 	possibleCollidableObjects := floor.RetrieveIntersections(utils.Bounds{
 		X:      newX,
 		Y:      newY,
-		Width:  obj.Width,
-		Height: obj.Height,
+		Width:  obj.Width(),
+		Height: obj.Height(),
 	})
 	// Filter collidable objects
 	n := 0
 	for _, val := range possibleCollidableObjects {
-		if collidable, ok := val.(*entity.GameObject).Properties["collidable"]; ok {
+		if collidable, ok := val.(entity.IGameObject).Properties()["collidable"]; ok {
 			if collidable.(bool) {
 				possibleCollidableObjects[n] = val
 				n++

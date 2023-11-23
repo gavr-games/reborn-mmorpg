@@ -16,7 +16,7 @@ func CheckCutCactus(e entity.IEngine, player *entity.Player, cactusId string) bo
 	}
 
 	// check object type
-	if cactus.Properties["type"].(string) != "plant" {
+	if cactus.Properties()["type"].(string) != "plant" {
 		e.SendSystemMessage("Please choose plant.", player)
 		return false
 	}

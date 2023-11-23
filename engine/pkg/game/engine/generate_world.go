@@ -73,7 +73,7 @@ func GenerateWorld(e entity.IEngine) {
 	generateTown(e)
 }
 
-func createWithProbability(e entity.IEngine, objPath string, x float64, y float64, floor int, additionalProps map[string]interface{}, objProbability float64) *entity.GameObject {
+func createWithProbability(e entity.IEngine, objPath string, x float64, y float64, floor int, additionalProps map[string]interface{}, objProbability float64) entity.IGameObject {
 	probability := rand.Float64()
 	if probability <= objProbability {
 		return e.CreateGameObject(objPath, x, y, 0.0, floor, additionalProps)

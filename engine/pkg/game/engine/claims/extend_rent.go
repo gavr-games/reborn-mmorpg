@@ -12,21 +12,21 @@ import (
 
 func ExtendRent(e entity.IEngine, claimObeliskId string) bool {
 	if obelisk, ok := e.GameObjects()[claimObeliskId]; ok {
-		charGameObj := e.GameObjects()[obelisk.Properties["crafted_by_character_id"].(string)]
+		charGameObj := e.GameObjects()[obelisk.Properties()["crafted_by_character_id"].(string)]
 		if charGameObj == nil {
 			return false
 		}
 
-		slots := charGameObj.Properties["slots"].(map[string]interface{})
+		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
-		playerId := charGameObj.Properties["player_id"].(int)
+		playerId := charGameObj.Properties()["player_id"].(int)
 		player := e.Players()[playerId]
 		if player == nil {
 			return false
 		}
 
 		// check is obelisk
-		if obelisk.Properties["kind"].(string) != "claim_obelisk" {
+		if obelisk.Properties()["kind"].(string) != "claim_obelisk" {
 			e.SendSystemMessage("Please choose claim obelisk.", player)
 			return false
 		}
@@ -54,15 +54,15 @@ func ExtendRent(e entity.IEngine, claimObeliskId string) bool {
 		}
 
 		// replace delayed action
-		obelisk.Properties["payed_until"] = obelisk.Properties["payed_until"].(float64) + constants.ClaimRentDuration
+		obelisk.Properties()["payed_until"] = obelisk.Properties()["payed_until"].(float64) + constants.ClaimRentDuration
 		delayedAction := &entity.DelayedAction{
 			FuncName: "ExpireClaim",
 			Params: map[string]interface{}{
-				"claim_obelisk_id": obelisk.Id,
+				"claim_obelisk_id": obelisk.Id(),
 			},
-			TimeLeft: obelisk.Properties["payed_until"].(float64) - float64(utils.MakeTimestamp()),
+			TimeLeft: obelisk.Properties()["payed_until"].(float64) - float64(utils.MakeTimestamp()),
 		}
-		obelisk.CurrentAction = delayedAction
+		obelisk.SetCurrentAction(delayedAction)
 
 		storage.GetClient().Updates <- obelisk.Clone()
 		e.SendSystemMessage("You have payed the rent.", player)

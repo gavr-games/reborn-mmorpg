@@ -10,11 +10,11 @@ const (
 	TradeDistance = 1.0
 )
 
-func BuyItem(e entity.IEngine, charGameObj *entity.GameObject, npcId string, itemKey string, amount float64) bool {
-	playerId := charGameObj.Properties["player_id"].(int)
+func BuyItem(e entity.IEngine, charGameObj entity.IGameObject, npcId string, itemKey string, amount float64) bool {
+	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
 		npcObj := e.GameObjects()[npcId]
-		slots := charGameObj.Properties["slots"].(map[string]interface{})
+		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 		if npcObj == nil {
 			e.SendSystemMessage("NPC does not exist.", player)
@@ -27,8 +27,8 @@ func BuyItem(e entity.IEngine, charGameObj *entity.GameObject, npcId string, ite
 		}
 
 		// get required resources amounts
-		resourceKey := npcObj.Properties["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
-		resourceAmount := npcObj.Properties["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
+		resourceKey := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
+		resourceAmount := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
 
 		// check container has items
 		if !containers.HasItemsKinds(e, slots["back"].(string), map[string]interface{}{
@@ -47,7 +47,7 @@ func BuyItem(e entity.IEngine, charGameObj *entity.GameObject, npcId string, ite
 		}
 
 		// Create items
-		itemObj := e.CreateGameObject(itemKey, charGameObj.X, charGameObj.Y, 0.0, charGameObj.Floor, map[string]interface{}{
+		itemObj := e.CreateGameObject(itemKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
 			"visible": false,
 		})
 
@@ -56,13 +56,13 @@ func BuyItem(e entity.IEngine, charGameObj *entity.GameObject, npcId string, ite
 			putInContainer := false
 			if (slots["back"] != nil) {
 				// put log to container
-				putInContainer = containers.Put(e, player, slots["back"].(string), itemObj.Id, -1)
+				putInContainer = containers.Put(e, player, slots["back"].(string), itemObj.Id(), -1)
 			}
 
 			// OR drop item on the ground
 			if !putInContainer {
-				itemObj.Properties["visible"] = true
-				e.Floors()[itemObj.Floor].Insert(itemObj)
+				itemObj.Properties()["visible"] = true
+				e.Floors()[itemObj.Floor()].Insert(itemObj)
 				storage.GetClient().Updates <- itemObj.Clone()
 				e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
 					"object": itemObj,

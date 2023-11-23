@@ -16,14 +16,14 @@ func Remove(e entity.IEngine, player *entity.Player, containerId string, itemId 
 		return false
 	}
 
-	itemPosition := slices.IndexFunc(container.Properties["items_ids"].([]interface{}), func(id interface{}) bool { return id != nil && id.(string) == itemId })
+	itemPosition := slices.IndexFunc(container.Properties()["items_ids"].([]interface{}), func(id interface{}) bool { return id != nil && id.(string) == itemId })
 	if (itemPosition == -1) {
 		e.SendSystemMessage("Item is not found in container", player)
 	}
 
-	container.Properties["items_ids"].([]interface{})[itemPosition] = nil
-	container.Properties["free_capacity"] = container.Properties["free_capacity"].(float64) + 1
-	item.Properties["container_id"] = nil
+	container.Properties()["items_ids"].([]interface{})[itemPosition] = nil
+	container.Properties()["free_capacity"] = container.Properties()["free_capacity"].(float64) + 1
+	item.Properties()["container_id"] = nil
 
 	// Save game objects updates to storage
 	storage.GetClient().Updates <- container.Clone()
