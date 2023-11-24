@@ -5,7 +5,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/targets"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
 )
 
 func Reborn(e entity.IEngine, charGameObj entity.IGameObject) {

@@ -12,7 +12,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/plants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/targets"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/items"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs"
