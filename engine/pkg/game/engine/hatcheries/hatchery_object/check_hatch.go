@@ -1,4 +1,4 @@
-package hatcheries
+package hatchery_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -6,14 +6,13 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
-func CheckHatch(e entity.IEngine, player *entity.Player, hatcheryId string) bool {
-	hatchery := e.GameObjects()[hatcheryId]
+func (hatchery *HatcheryObject) CheckHatch(e entity.IEngine, charGameObj entity.IGameObject) bool {
 	resources := hatchery.Properties()["hatching_resources"].(map[string]interface{})
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
-	if hatchery == nil {
-		e.SendSystemMessage("Hatchery does not exist.", player)
+	playerId := charGameObj.Properties()["player_id"].(int)
+	player := e.Players()[playerId]
+	if player == nil {
 		return false
 	}
 

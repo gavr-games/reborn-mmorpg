@@ -3,7 +3,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/cactuses"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
@@ -29,8 +29,8 @@ func GetDelayedActionsAtlas() map[string]map[string]interface{} {
 			"func": craft.Craft,
 			"duration": 0.0, // will be taken from craft atlas
 		},
-		"HatchFireDragon": map[string]interface{}{
-			"func": hatcheries.HatchFireDragon,
+		"Hatch": map[string]interface{}{
+			"func": hatcheries.Hatch,
 			"duration": 60000.0,
 		},
 		"TownTeleport": map[string]interface{}{

@@ -10,7 +10,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/items"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
@@ -114,10 +113,11 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 					craft.GetAtlas()[craftItem].(map[string]interface{})["duration"].(float64))
 			}
 		case "hatch_fire_dragon":
-			hatcheryId := params.(string)
-			if hatcheries.CheckHatch(e, player, hatcheryId) {
-				delayed_actions.Start(e, e.GameObjects()[hatcheryId], "HatchFireDragon", map[string]interface{}{
-					"hatcheryId": hatcheryId,
+			hatchery := e.GameObjects()[params.(string)]
+			if hatchery.(entity.IHatcheryObject).CheckHatch(e, charGameObj) {
+				delayed_actions.Start(e, hatchery, "Hatch", map[string]interface{}{
+					"hatcheryId": hatchery.Id(),
+					"mobPath": "mob/fire_dragon",
 				}, -1.0)
 			}
 		case "town_teleport":
