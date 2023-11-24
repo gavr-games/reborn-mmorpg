@@ -12,7 +12,7 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
-		// Create log
+		// Create stone
 		stoneObj := e.CreateGameObject("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
 		// check character has container

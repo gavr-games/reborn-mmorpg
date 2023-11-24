@@ -1,4 +1,4 @@
-package plants
+package cactus_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -6,12 +6,10 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
-func CheckCutCactus(e entity.IEngine, player *entity.Player, cactusId string) bool {
-	cactus := e.GameObjects()[cactusId]
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-
-	if cactus == nil {
-		e.SendSystemMessage("Cactus does not exist.", player)
+func (cactus *CactusObject) CheckCut(e entity.IEngine, charGameObj entity.IGameObject) bool {
+	playerId := charGameObj.Properties()["player_id"].(int)
+	player := e.Players()[playerId]
+	if player == nil {
 		return false
 	}
 

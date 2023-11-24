@@ -1,21 +1,15 @@
-package plants
+package cactus_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
-// This func is called via delayed action mechanism
-// params: playerId, cactusId
-func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
-	playerId := int(params["playerId"].(float64))
+func (cactus *CactusObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) bool {
+	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
-		cactusId := params["cactusId"].(string)
-		cactus := e.GameObjects()[cactusId]
-		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 		if cactus == nil {
@@ -24,12 +18,7 @@ func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
 		}
 
 		// Create cactus slice
-		sliceObj, err := game_objects.CreateFromTemplate(e, "resource/cactus_slice", charGameObj.X(), charGameObj.Y(), 0.0)
-		if err != nil {
-			e.SendSystemMessage(err.Error(), player)
-			return false
-		}
-		e.GameObjects()[sliceObj.Id()] = sliceObj
+		sliceObj := e.CreateGameObject("resource/cactus_slice", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
 		// check character has container
 		putInContainer := false
@@ -56,11 +45,11 @@ func CutCactus(e entity.IEngine, params map[string]interface{}) bool {
 		if resources["cactus_slice"].(float64) <= 0 {
 			e.SendGameObjectUpdate(cactus, "remove_object")
 
-			e.Floors()[cactus.Floor()].FilteredRemove(e.GameObjects()[cactusId], func(b utils.IBounds) bool {
-				return cactusId == b.(entity.IGameObject).Id()
+			e.Floors()[cactus.Floor()].FilteredRemove(e.GameObjects()[cactus.Id()], func(b utils.IBounds) bool {
+				return cactus.Id() == b.(entity.IGameObject).Id()
 			})
-			e.GameObjects()[cactusId] = nil
-			delete(e.GameObjects(), cactusId)
+			e.GameObjects()[cactus.Id()] = nil
+			delete(e.GameObjects(), cactus.Id())
 		} else {
 			storage.GetClient().Updates <- cactus.Clone()
 		}
