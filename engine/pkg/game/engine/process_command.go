@@ -10,7 +10,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/rocks"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/plants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/hatcheries"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/targets"
@@ -91,11 +90,11 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				}, -1.0)
 			}
 		case "chip_rock":
-			stoneId := params.(string)
-			if rocks.CheckChip(e, player, stoneId) {
+			rock := e.GameObjects()[params.(string)]
+			if rock.(entity.IRockObject).CheckChip(e, charGameObj) {
 				delayed_actions.Start(e, charGameObj, "Chip", map[string]interface{}{
-					"playerId": float64(player.Id), // this conversion is required, because json unmarshal decodes all numbers to float64
-					"rockId": stoneId,
+					"characterId": charGameObj.Id(),
+					"rockId": rock.Id(),
 				}, -1.0)
 			}
 		case "cut_cactus":

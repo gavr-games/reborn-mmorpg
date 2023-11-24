@@ -10,7 +10,6 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
 )
 
 func searchAtlas(gameObjectsAtlas map[string]map[string]interface{}, objKind string) (map[string]interface{}, error) {
@@ -51,7 +50,7 @@ func findTemplate(objPath string) (map[string]interface{}, error) {
 
 // objPath - "tree/pine_5", "rock/rock_moss". 
 // If just type provided "tree", "rock" it chooses random object kind
-func CreateFromTemplate(objPath string, x float64, y float64, rotation float64) (entity.IGameObject, error) {
+func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, rotation float64) (entity.IGameObject, error) {
 	//TODO: return error if place is occupied for collidable objects like trees and rocks
 
 	//Get object template from GameObjectAtlas
@@ -100,9 +99,5 @@ func CreateFromTemplate(objPath string, x float64, y float64, rotation float64) 
 		gameObj.SetCurrentAction(delayedAction)
 	}
 
-	if gameObj.Type() == "tree" {
-		return &tree_object.TreeObject{*gameObj}, nil
-	}
-
-	return gameObj, nil
+	return e.CreateGameObjectStruct(gameObj), nil
 }

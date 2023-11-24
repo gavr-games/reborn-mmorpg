@@ -37,7 +37,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			x := coords["x"].(float64)
 			y := coords["y"].(float64)
 			rotation := params["inputs"].(map[string]interface{})["rotation"].(float64)
-			itemObj, err := game_objects.CreateFromTemplate(craftItemName, x, y, 0.0)
+			itemObj, err := game_objects.CreateFromTemplate(e, craftItemName, x, y, 0.0)
 			itemObj.Properties()["crafted_by_character_id"] = charGameObj.Id()
 			itemObj.Rotate(rotation)
 			if err != nil {
@@ -53,7 +53,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 				"object": itemObj,
 			})
 		} else {
-			itemObj, err := game_objects.CreateFromTemplate(craftItemName, charGameObj.X(), charGameObj.Y(), 0.0)
+			itemObj, err := game_objects.CreateFromTemplate(e, craftItemName, charGameObj.X(), charGameObj.Y(), 0.0)
 			if err != nil {
 				e.SendSystemMessage(err.Error(), player)
 				return false

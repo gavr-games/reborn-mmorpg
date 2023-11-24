@@ -15,5 +15,6 @@ type IEngine interface {
 	SendResponseToVisionAreas(gameObj IGameObject, responseType string, responseData map[string]interface{})
 	SendGameObjectUpdate(gameObj IGameObject, updateType string)
 	SendSystemMessage(message string, player *Player)
+	CreateGameObjectStruct(gameObj IGameObject) IGameObject
 	CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) IGameObject
 }

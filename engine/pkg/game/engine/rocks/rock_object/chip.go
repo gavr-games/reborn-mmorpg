@@ -1,35 +1,19 @@
-package rocks
+package rock_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
-// This func is called via delayed action mechanism
-// params: playerId, rockId
-func Chip(e entity.IEngine, params map[string]interface{}) bool {
-	playerId := int(params["playerId"].(float64))
+func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) bool {
+	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
-		rockId := params["rockId"].(string)
-		rock := e.GameObjects()[rockId]
-		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
-		if rock == nil {
-			e.SendSystemMessage("Rock does not exist.", player)
-			return false
-		}
-
 		// Create log
-		stoneObj, err := game_objects.CreateFromTemplate("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0)
-		if err != nil {
-			e.SendSystemMessage(err.Error(), player)
-			return false
-		}
-		e.GameObjects()[stoneObj.Id()] = stoneObj
+		stoneObj := e.CreateGameObject("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
 		// check character has container
 		putInContainer := false
@@ -56,11 +40,11 @@ func Chip(e entity.IEngine, params map[string]interface{}) bool {
 		if resources["stone"].(float64) <= 0 {
 			e.SendGameObjectUpdate(rock, "remove_object")
 
-			e.Floors()[rock.Floor()].FilteredRemove(e.GameObjects()[rockId], func(b utils.IBounds) bool {
-				return rockId == b.(entity.IGameObject).Id()
+			e.Floors()[rock.Floor()].FilteredRemove(e.GameObjects()[rock.Id()], func(b utils.IBounds) bool {
+				return rock.Id() == b.(entity.IGameObject).Id()
 			})
-			e.GameObjects()[rockId] = nil
-			delete(e.GameObjects(), rockId)
+			e.GameObjects()[rock.Id()] = nil
+			delete(e.GameObjects(), rock.Id())
 		} else {
 			storage.GetClient().Updates <- rock.Clone()
 		}

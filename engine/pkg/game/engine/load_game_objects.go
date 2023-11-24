@@ -5,7 +5,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
 )
 
 func LoadGameObjects(e entity.IEngine) {
@@ -35,11 +34,7 @@ func LoadGameObjects(e entity.IEngine) {
 		if gameObj.Type() == "mob" {
 			e.Mobs()[gameObj.Id()] = mobs.NewMob(e, gameObj.Id())
 		}
-		if gameObj.Type() == "tree" {
-			e.GameObjects()[gameObj.Id()] = &tree_object.TreeObject{*gameObj.(*entity.GameObject)}
-		} else {
-			e.GameObjects()[gameObj.Id()] = gameObj
-		}
+		e.GameObjects()[gameObj.Id()] = e.CreateGameObjectStruct(gameObj)
 	})
 
 	// init dump world if no game objects in storage

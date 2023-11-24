@@ -10,6 +10,8 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
@@ -129,9 +131,22 @@ func (e Engine) SendSystemMessage(message string, player *entity.Player) {
 	}, player)
 }
 
+// Creates specific struct depending on object type and kind
+// For example TreeObject for tree, RockObject for rock, etc.
+func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameObject {
+	switch gameObj.Type() {
+	case "tree":
+		return &tree_object.TreeObject{*gameObj.(*entity.GameObject)}
+	case "rock":
+		return &rock_object.RockObject{*gameObj.(*entity.GameObject)}
+	default:
+		return gameObj
+	}
+}
+
 // Creates new GameObject and returns it
 func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) entity.IGameObject {
-	gameObj, err := game_objects.CreateFromTemplate(objPath, x, y, rotation)
+	gameObj, err := game_objects.CreateFromTemplate(e, objPath, x, y, rotation)
 	if err != nil {
 		//TODO: handle error
 	}

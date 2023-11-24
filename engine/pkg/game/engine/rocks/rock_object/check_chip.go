@@ -1,4 +1,4 @@
-package rocks
+package rock_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -6,12 +6,10 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
-func CheckChip(e entity.IEngine, player *entity.Player, rockId string) bool {
-	rock := e.GameObjects()[rockId]
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-
-	if rock == nil {
-		e.SendSystemMessage("Rock does not exist.", player)
+func (rock *RockObject) CheckChip(e entity.IEngine, charGameObj entity.IGameObject) bool {
+	playerId := charGameObj.Properties()["player_id"].(int)
+	player := e.Players()[playerId]
+	if player == nil {
 		return false
 	}
 
