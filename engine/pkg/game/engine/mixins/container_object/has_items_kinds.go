@@ -1,4 +1,4 @@
-package containers
+package container_object
 
 import (
 	"slices"
@@ -8,8 +8,8 @@ import (
 
 // Checks if container has specified items inside of it (with specified counts)
 // items example - {"log": 1.0, "stone": 2.0}
-func HasItemsKinds(e entity.IEngine, containerId string, items map[string]interface{}) bool {
-	container := e.GameObjects()[containerId]
+func (cont *ContainerObject) HasItemsKinds(e entity.IEngine, items map[string]interface{}) bool {
+	container := cont.gameObj
 	itemIds := container.Properties()["items_ids"].([]interface{})
 
 	itemsCounts := make(map[string]float64)

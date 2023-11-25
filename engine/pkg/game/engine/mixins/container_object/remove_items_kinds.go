@@ -1,4 +1,4 @@
-package containers
+package container_object
 
 import (
 	"slices"
@@ -9,8 +9,8 @@ import (
 
 // Removes specified items inside the container (with specified counts)
 // items example - {"log": 1.0, "stone": 2.0}
-func RemoveItemsKinds(e entity.IEngine, player *entity.Player, containerId string, items map[string]interface{}) bool {
-	container := e.GameObjects()[containerId]
+func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.Player, items map[string]interface{}) bool {
+	container := cont.gameObj
 	itemIds := container.Properties()["items_ids"].([]interface{})
 
 	itemsCounts := make(map[string]float64)
@@ -41,7 +41,7 @@ func RemoveItemsKinds(e entity.IEngine, player *entity.Player, containerId strin
 					}
 				}
 				if performRemove {
-					if Remove(e, player, containerId, itemId.(string)) {
+					if cont.Remove(e, player, itemId.(string)) {
 						e.GameObjects()[item.Id()] = nil
 						delete(e.GameObjects(), item.Id())
 						storage.GetClient().Deletes <- item.Id()

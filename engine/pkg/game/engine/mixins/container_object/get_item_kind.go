@@ -1,12 +1,12 @@
-package containers
+package container_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
 // Checks if container has specified itemKind and return first
-func GetItemKind(e entity.IEngine, containerId string, itemKind string) entity.IGameObject {
-	container := e.GameObjects()[containerId]
+func (cont *ContainerObject) GetItemKind(e entity.IEngine, itemKind string) entity.IGameObject {
+	container := cont.gameObj
 	itemIds := container.Properties()["items_ids"].([]interface{})
 
 	//TODO: search inside sub containers

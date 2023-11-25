@@ -4,7 +4,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -28,11 +27,12 @@ func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 
 	// check container belongs to character
 	if (item.Properties()["container_id"] != nil) {
-		if !containers.CheckAccess(e, player, e.GameObjects()[item.Properties()["container_id"].(string)]) {
+		container := e.GameObjects()[item.Properties()["container_id"].(string)]
+		if !container.(entity.IContainerObject).CheckAccess(e, player) {
 			e.SendSystemMessage("You don't have access to this container", player)
 			return false
 		}
-		if !containers.Remove(e, player, item.Properties()["container_id"].(string), itemId) {
+		if !container.(entity.IContainerObject).Remove(e, player, itemId) {
 			return false
 		}
 	} else { //destroy item in the world

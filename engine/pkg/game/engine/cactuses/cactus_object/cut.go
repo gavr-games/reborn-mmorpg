@@ -4,7 +4,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 )
 
 func (cactus *CactusObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) bool {
@@ -24,7 +23,8 @@ func (cactus *CactusObject) Cut(e entity.IEngine, charGameObj entity.IGameObject
 		putInContainer := false
 		if (slots["back"] != nil) {
 			// put log to container
-			putInContainer = containers.Put(e, player, slots["back"].(string), sliceObj.Id(), -1)
+			container := e.GameObjects()[slots["back"].(string)]
+			putInContainer = container.(entity.IContainerObject).Put(e, player, sliceObj.Id(), -1)
 		}
 
 		// OR drop logs on the ground

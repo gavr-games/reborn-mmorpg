@@ -5,7 +5,6 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
@@ -25,7 +24,8 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 
 		// Remove resources
 		if (slots["back"] != nil) {
-			if !containers.RemoveItemsKinds(e, player, slots["back"].(string), craftItemConfig["resources"].(map[string]interface{})) {
+			container := e.GameObjects()[slots["back"].(string)]
+			if !container.(entity.IContainerObject).RemoveItemsKinds(e, player, craftItemConfig["resources"].(map[string]interface{})) {
 				e.SendSystemMessage("Cannot consume required resources.", player)
 				return false
 			}
@@ -64,7 +64,8 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			putInContainer := false
 			if (slots["back"] != nil) {
 				// put item to container
-				putInContainer = containers.Put(e, player, slots["back"].(string), itemObj.Id(), -1)
+				containerTo := e.GameObjects()[slots["back"].(string)]
+				putInContainer = containerTo.(entity.IContainerObject).Put(e, player, itemObj.Id(), -1)
 			}
 
 			// OR drop items on the ground

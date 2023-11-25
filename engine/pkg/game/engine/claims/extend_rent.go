@@ -7,7 +7,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 )
 
 func ExtendRent(e entity.IEngine, claimObeliskId string) bool {
@@ -38,7 +37,8 @@ func ExtendRent(e entity.IEngine, claimObeliskId string) bool {
 		}
 
 		// check container has money
-		if !containers.HasItemsKinds(e, slots["back"].(string), map[string]interface{}{
+		container := e.GameObjects()[slots["back"].(string)]
+		if !container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
 			"gold": constants.ClaimRentCost,
 		}) {
 			e.SendSystemMessage(fmt.Sprintf("You need %d gold to pay rent.", int(constants.ClaimRentCost)), player)
@@ -46,7 +46,7 @@ func ExtendRent(e entity.IEngine, claimObeliskId string) bool {
 		}
 
 		// substract money
-		if !containers.RemoveItemsKinds(e, player, slots["back"].(string), map[string]interface{}{
+		if !container.(entity.IContainerObject).RemoveItemsKinds(e, player, map[string]interface{}{
 			"gold": constants.ClaimRentCost,
 		}) {
 			e.SendSystemMessage("Can't remove required gold.", player)

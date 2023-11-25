@@ -12,11 +12,11 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs/mob_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters/character_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/backpack_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries/hatchery_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/cactuses/cactus_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/moving_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
@@ -153,15 +153,16 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return mob_object.NewMobObject(e, gameObj)
 	case "player":
 		if gameObj.Kind() == "player" {
-			character := &character_object.CharacterObject{moving_object.MovingObject{}, *gameObj.(*entity.GameObject)}
-			character.InitMovingObject(character)
-			return character
-		} else {
-			return gameObj
+			return character_object.NewCharacterObject(e, gameObj)
+		}
+	case "container":
+		if gameObj.Kind() == "backpack" {
+			return backpack_object.NewBackpackObject(e, gameObj)
 		}
 	default:
 		return gameObj
 	}
+	return gameObj
 }
 
 // Creates new GameObject and returns it

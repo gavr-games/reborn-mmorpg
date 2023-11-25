@@ -4,6 +4,19 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
+- refactor to interfaces
+  - IPickableObject - mixin
+  - IEquipableObject - mixin
+  - IDestroyableObject - mixin
+  - IToolObject
+  - IMeleeWeaponObject
+  - IResourceObject
+  - IBuildingObject - mixin (claim, hatchery, walls)
+  - IClaimObeliskObject
+  - IWallObject
+  - move targets to character object
+  - IEffecObject
+  - IPotionObject
 - add baby dragons and raising them
 - add dragon breeding to get new eggs
 - add fighting and leveling dragins

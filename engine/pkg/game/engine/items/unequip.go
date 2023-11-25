@@ -3,7 +3,6 @@ package items
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
@@ -37,7 +36,8 @@ func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
 
 	// put to container
 	if (item.Properties()["container_id"] == nil) {
-		if !containers.Put(e, player, slots["back"].(string), itemId, -1) {
+		container := e.GameObjects()[slots["back"].(string)]
+		if !container.(entity.IContainerObject).Put(e, player, itemId, -1) {
 			return false
 		}
 	}

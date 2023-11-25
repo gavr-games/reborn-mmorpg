@@ -4,7 +4,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 )
 
 func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) bool {
@@ -19,7 +18,8 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 		putInContainer := false
 		if (slots["back"] != nil) {
 			// put log to container
-			putInContainer = containers.Put(e, player, slots["back"].(string), logObj.Id(), -1)
+			container := e.GameObjects()[slots["back"].(string)]
+			putInContainer = container.(entity.IContainerObject).Put(e, player, logObj.Id(), -1)
 		}
 
 		// OR drop logs on the ground

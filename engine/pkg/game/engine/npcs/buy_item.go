@@ -3,7 +3,6 @@ package npcs
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 )
 
 const (
@@ -30,8 +29,9 @@ func BuyItem(e entity.IEngine, charGameObj entity.IGameObject, npcId string, ite
 		resourceKey := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
 		resourceAmount := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
 
+		container := e.GameObjects()[slots["back"].(string)]
 		// check container has items
-		if !containers.HasItemsKinds(e, slots["back"].(string), map[string]interface{}{
+		if !container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
 			(resourceKey): resourceAmount,
 		}) {
 			e.SendSystemMessage("You don't have required resources.", player)
@@ -39,7 +39,7 @@ func BuyItem(e entity.IEngine, charGameObj entity.IGameObject, npcId string, ite
 		}
 
 		// substract resources/money
-		if !containers.RemoveItemsKinds(e, player, slots["back"].(string), map[string]interface{}{
+		if !container.(entity.IContainerObject).RemoveItemsKinds(e, player, map[string]interface{}{
 			(resourceKey): resourceAmount,
 		}) {
 			e.SendSystemMessage("Can't remove required resources.", player)
@@ -56,7 +56,7 @@ func BuyItem(e entity.IEngine, charGameObj entity.IGameObject, npcId string, ite
 			putInContainer := false
 			if (slots["back"] != nil) {
 				// put log to container
-				putInContainer = containers.Put(e, player, slots["back"].(string), itemObj.Id(), -1)
+				putInContainer = container.(entity.IContainerObject).Put(e, player, itemObj.Id(), -1)
 			}
 
 			// OR drop item on the ground

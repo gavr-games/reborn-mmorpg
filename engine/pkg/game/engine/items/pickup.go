@@ -4,7 +4,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 )
 
 func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
@@ -47,9 +46,10 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 		itemStackable = value.(bool)
 	}
 	if (item.Properties()["container_id"] == nil) {
+		container := e.GameObjects()[slots["back"].(string)]
 		performPut := true
 		if itemStackable { // add amount to existing stackable item
-			existingItem := containers.GetItemKind(e, slots["back"].(string), item.Properties()["kind"].(string))
+			existingItem := container.(entity.IContainerObject).GetItemKind(e, item.Properties()["kind"].(string))
 			if existingItem != nil {
 				existingItem.Properties()["amount"] = existingItem.Properties()["amount"].(float64) + item.Properties()["amount"].(float64)
 				performPut = false
@@ -60,7 +60,7 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 			}
 		}
 		if performPut {
-			if !containers.Put(e, player, slots["back"].(string), itemId, -1) {
+			if !container.(entity.IContainerObject).Put(e, player, itemId, -1) {
 				return false
 			}
 		}

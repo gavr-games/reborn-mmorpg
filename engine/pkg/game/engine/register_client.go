@@ -3,7 +3,6 @@ package engine
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/players"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
@@ -45,10 +44,10 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 	charGameObj.Properties()["slots"].(map[string]interface{})["back"] = initialBackpack.Id()
 	// Axe
 	initialAxe := e.CreateGameObject("axe/axe", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
-	containers.Put(e, player, initialBackpack.Id(), initialAxe.Id(), -1)
+	initialBackpack.(entity.IContainerObject).Put(e, player, initialAxe.Id(), -1)
 	// Pickaxe
 	initialPickaxe := e.CreateGameObject("pickaxe/pickaxe", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
-	containers.Put(e, player, initialBackpack.Id(), initialPickaxe.Id(), -1)
+	initialBackpack.(entity.IContainerObject).Put(e, player, initialPickaxe.Id(), -1)
 }
 
 // Process when new player logs into the game

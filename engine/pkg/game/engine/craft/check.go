@@ -5,7 +5,6 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
@@ -37,7 +36,8 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			return false
 		}
 		// check container has items
-		if !containers.HasItemsKinds(e, slots["back"].(string), craftItemConfig["resources"].(map[string]interface{})) {
+		container := e.GameObjects()[slots["back"].(string)]
+		if !container.(entity.IContainerObject).HasItemsKinds(e, craftItemConfig["resources"].(map[string]interface{})) {
 			e.SendSystemMessage("You don't have required resources.", player)
 			return false
 		}

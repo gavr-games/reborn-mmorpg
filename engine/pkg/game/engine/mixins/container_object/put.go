@@ -1,4 +1,4 @@
-package containers
+package container_object
 
 import (
 	"slices"
@@ -9,8 +9,8 @@ import (
 )
 
 // position: -1 for any empty slot
-func Put(e entity.IEngine, player *entity.Player, containerId string, itemId string, position int) bool {
-	container := e.GameObjects()[containerId]
+func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId string, position int) bool {
+	container := cont.gameObj
 	item := e.GameObjects()[itemId]
 
 	if container.Properties()["free_capacity"] == 0.0 {
@@ -18,7 +18,7 @@ func Put(e entity.IEngine, player *entity.Player, containerId string, itemId str
 		return false
 	}
 
-	if !CheckAccess(e, player, container) {
+	if !cont.CheckAccess(e, player) {
 		e.SendSystemMessage("You don't have access to this container", player)
 		return false
 	}
@@ -39,7 +39,7 @@ func Put(e entity.IEngine, player *entity.Player, containerId string, itemId str
 	// Modify game objects
 	container.Properties()["items_ids"].([]interface{})[freePosition] = itemId
 	container.Properties()["free_capacity"] = container.Properties()["free_capacity"].(float64) - 1.0
-	item.Properties()["container_id"] = containerId
+	item.Properties()["container_id"] = container.Id()
 	item.Properties()["visible"] = false
 
 	// Save game objects updates to storage
@@ -49,7 +49,7 @@ func Put(e entity.IEngine, player *entity.Player, containerId string, itemId str
 	// Send updates to players
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "put_item_to_container", map[string]interface{}{
 		"item": serializers.GetInfo(e.GameObjects(), item),
-		"container_id": containerId,
+		"container_id": container.Id(),
 		"position": freePosition,
 	})
 

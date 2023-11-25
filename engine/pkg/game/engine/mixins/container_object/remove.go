@@ -1,4 +1,4 @@
-package containers
+package container_object
 
 import (
 	"slices"
@@ -7,11 +7,11 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-func Remove(e entity.IEngine, player *entity.Player, containerId string, itemId string) bool {
-	container := e.GameObjects()[containerId]
+func (cont *ContainerObject) Remove(e entity.IEngine, player *entity.Player, itemId string) bool {
+	container := cont.gameObj
 	item := e.GameObjects()[itemId]
 
-	if !CheckAccess(e, player, container) {
+	if !cont.CheckAccess(e, player) {
 		e.SendSystemMessage("You don't have access to this container", player)
 		return false
 	}
@@ -32,7 +32,7 @@ func Remove(e entity.IEngine, player *entity.Player, containerId string, itemId 
 	// Send updates to players
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "remove_item_from_container", map[string]interface{}{
 		"item_id": itemId,
-		"container_id": containerId,
+		"container_id": container.Id(),
 		"position": itemPosition,
 	})
 

@@ -4,7 +4,6 @@ import (
 	"slices"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
@@ -56,7 +55,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "get_craft_atlas":
 			e.SendResponse("craft_atlas", craft.GetAtlas(), player)
 		case "open_container":
-			e.SendResponse("container_items", containers.GetItems(e, params.(string)), player)
+			container := e.GameObjects()[params.(string)].(entity.IContainerObject)
+			e.SendResponse("container_items", container.GetItems(e), player)
 		case "equip_item":
 			items.Equip(e, params.(string), player)
 		case "unequip_item":
