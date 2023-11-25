@@ -8,7 +8,7 @@ type IEngine interface {
 	Floors() []*utils.Quadtree
 	Players() map[int]*Player
 	GameObjects() map[string]IGameObject
-	Mobs() map[string] IMob
+	Mobs() map[string] IMobObject
 	Effects() map[string]map[string]interface{}
 	CurrentTickTime() int64
 	SendResponse(responseType string, responseData map[string]interface{}, player *Player)

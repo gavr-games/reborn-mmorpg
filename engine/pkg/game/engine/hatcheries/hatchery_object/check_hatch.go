@@ -28,7 +28,7 @@ func (hatchery *HatcheryObject) CheckHatch(e entity.IEngine, charGameObj entity.
 		return false
 	}
 
-	if hatchery.CurrentAction != nil {
+	if hatchery.CurrentAction() != nil {
 		e.SendSystemMessage("Hatchery is already hatching.", player)
 		return false
 	}

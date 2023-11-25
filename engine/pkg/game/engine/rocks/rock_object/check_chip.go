@@ -2,7 +2,6 @@ package rock_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -26,7 +25,7 @@ func (rock *RockObject) CheckChip(e entity.IEngine, charGameObj entity.IGameObje
 	}
 
 	// Check has Pickaxe equipped
-	if _, equipped := characters.HasTypeEquipped(e, charGameObj, "pickaxe"); !equipped {
+	if _, equipped := charGameObj.(entity.ICharacterObject).HasTypeEquipped(e, "pickaxe"); !equipped {
 		e.SendSystemMessage("You need to equip pickaxe.", player)
 		return false
 	}

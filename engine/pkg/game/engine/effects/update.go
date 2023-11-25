@@ -2,7 +2,6 @@ package effects
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 )
 
 // Goes through all effects and tries to apply them
@@ -49,7 +48,7 @@ func Update(e entity.IEngine, tickDelta int64) {
 							e.Mobs()[obj.Id()].Die()
 						} else {
 							// for characters
-							characters.Reborn(e, obj)
+							obj.(entity.ICharacterObject).Reborn(e)
 						}
 					}
 				}

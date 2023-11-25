@@ -3,14 +3,12 @@ package mobs
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
 // move mobs and trigger mob logic
 func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 	for _, mob := range e.Mobs() {
-		mobObj := e.GameObjects()[mob.GetId()]
-
+		mobObj := mob.(entity.IGameObject)
     if mobObj != nil {
 			// Trigger Mob logic
 			mob.Run(newTickTime)
@@ -22,13 +20,11 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 				dx := speedX / 1000.0 * float64(tickDelta)
 				dy := speedY / 1000.0 * float64(tickDelta)
 
-				dx, dy = game_objects.CanMove(e.Floors()[mobObj.Floor()], mobObj, dx, dy)
+				dx, dy = mobObj.(entity.IMovingObject).CanMove(e, dx, dy)
 
 				// Stop the object
 				if dx == 0.0 && dy == 0.0 {
-					mobObj.Properties()["speed_x"] = 0.0
-					mobObj.Properties()["speed_y"] = 0.0
-					e.SendGameObjectUpdate(mobObj, "update_object")
+					mobObj.(entity.IMovingObject).Stop(e)
 					continue
 				}
 

@@ -10,11 +10,15 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs/mob_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters/character_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries/hatchery_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/cactuses/cactus_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/moving_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
@@ -25,7 +29,7 @@ type Engine struct {
 	floors []*utils.Quadtree // slice of global game areas, underground, etc
 	players map[int]*entity.Player // map of all players
 	gameObjects map[string]entity.IGameObject // map of ALL objects in the game
-	mobs map[string] entity.IMob // map of ALL mobs in the game
+	mobs map[string] entity.IMobObject // map of ALL mobs in the game
 	effects map[string]map[string]interface{} // all active effects in the game
 	commands chan *ClientCommand // Inbound messages from the clients.
 	register chan *Client // Register requests from the clients.
@@ -40,7 +44,7 @@ func (e Engine) GameObjects() map[string]entity.IGameObject {
 	return e.gameObjects
 }
 
-func (e Engine) Mobs() map[string] entity.IMob {
+func (e Engine) Mobs() map[string] entity.IMobObject {
 	return e.mobs
 }
 
@@ -145,6 +149,16 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return &cactus_object.CactusObject{*gameObj.(*entity.GameObject)}
 	case "hatchery":
 		return &hatchery_object.HatcheryObject{*gameObj.(*entity.GameObject)}
+	case "mob":
+		return mob_object.NewMobObject(e, gameObj)
+	case "player":
+		if gameObj.Kind() == "player" {
+			character := &character_object.CharacterObject{moving_object.MovingObject{}, *gameObj.(*entity.GameObject)}
+			character.InitMovingObject(character)
+			return character
+		} else {
+			return gameObj
+		}
 	default:
 		return gameObj
 	}
@@ -174,7 +188,7 @@ func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation 
 	}
 
 	if gameObj.Properties()["type"].(string) == "mob" {
-		e.Mobs()[gameObj.Id()] = mobs.NewMob(e, gameObj.Id())
+		e.Mobs()[gameObj.Id()] = gameObj.(entity.IMobObject)
 	}
 
 	return gameObj
@@ -185,7 +199,7 @@ func NewEngine() *Engine {
 		tickTime:    0,
 		players:     make(map[int]*entity.Player),
 		gameObjects: make(map[string]entity.IGameObject),
-		mobs:        make(map[string] entity.IMob),
+		mobs:        make(map[string] entity.IMobObject),
 		effects:     make(map[string]map[string]interface{}),
 		floors:      make([]*utils.Quadtree, constants.FloorCount),
 		commands:    make(chan *ClientCommand),
@@ -230,7 +244,7 @@ func (e *Engine) Run() {
 			// Run world once in TickSize
 			newTickTime := utils.MakeTimestamp()
 			if newTickTime - e.tickTime >= constants.TickSize {
-				engine.MovePlayers(e, newTickTime - e.tickTime)
+				characters.Update(e, newTickTime - e.tickTime)
 				mobs.Update(e, newTickTime - e.tickTime, newTickTime)
 				effects.Update(e, newTickTime - e.tickTime)
 				delayed_actions.UpdateAll(e, newTickTime - e.tickTime)

@@ -5,7 +5,6 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
@@ -24,7 +23,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 	// Has required tools equipped
 	requiredTools := craftItemConfig["tools"].([]string)
 	for _, requiredTool := range requiredTools {
-		if _, equipped := characters.HasTypeEquipped(e, charGameObj, requiredTool); !equipped {
+		if _, equipped := charGameObj.(entity.ICharacterObject).HasTypeEquipped(e, requiredTool); !equipped {
 			e.SendSystemMessage(fmt.Sprintf("You need to equip %s.", requiredTool), player)
 			return false
 		}
@@ -56,6 +55,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			e.SendSystemMessage(err.Error(), player)
 			return false
 		}
+		tempGameObj.SetFloor(charGameObj.Floor())
 		tempGameObj.Rotate(rotation)
 		if charGameObj.GetDistance(tempGameObj) > CraftDistance {
 			e.SendSystemMessage("You need to be closer.", player)

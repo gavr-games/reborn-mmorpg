@@ -2,7 +2,6 @@ package tree_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -26,7 +25,7 @@ func (tree *TreeObject) CheckChop(e entity.IEngine, charGameObj entity.IGameObje
 	}
 
 	// Check has Axe equipped
-	if _, equipped := characters.HasTypeEquipped(e, charGameObj, "axe"); !equipped {
+	if _, equipped := charGameObj.(entity.ICharacterObject).HasTypeEquipped(e, "axe"); !equipped {
 		e.SendSystemMessage("You need to equip axe.", player)
 		return false
 	}

@@ -17,7 +17,7 @@ func ClaimTeleport(e entity.IEngine, params map[string]interface{}) bool {
 			e.SendSystemMessage("You don't have a claim.", player)
 			return false
 		}
-		Move(e, charGameObj, obelisk.X() + 1.0, obelisk.Y() + 1.0)
+		charGameObj.(entity.ICharacterObject).Move(e, obelisk.X() + 1.0, obelisk.Y() + 1.0)
 		e.SendGameObjectUpdate(charGameObj, "update_object")
 	}
 

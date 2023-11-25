@@ -4,7 +4,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 )
 
 func LoadGameObjects(e entity.IEngine) {
@@ -30,11 +29,11 @@ func LoadGameObjects(e entity.IEngine) {
 			e.Effects()[effectId]["id"] = effectId
 			e.Effects()[effectId]["target_id"] = gameObj.Id()
 		}
+		e.GameObjects()[gameObj.Id()] = e.CreateGameObjectStruct(gameObj)
 		// init mob
 		if gameObj.Type() == "mob" {
-			e.Mobs()[gameObj.Id()] = mobs.NewMob(e, gameObj.Id())
+			e.Mobs()[gameObj.Id()] = e.GameObjects()[gameObj.Id()].(entity.IMobObject)
 		}
-		e.GameObjects()[gameObj.Id()] = e.CreateGameObjectStruct(gameObj)
 	})
 
 	// init dump world if no game objects in storage

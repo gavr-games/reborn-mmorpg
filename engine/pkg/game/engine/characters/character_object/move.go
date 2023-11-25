@@ -1,4 +1,4 @@
-package characters
+package character_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
@@ -6,7 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/players"
 )
 
-func Move(e entity.IEngine, charGameObj entity.IGameObject, newX float64, newY float64) {
+func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY float64) {
 	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
 		visionAreaGameObj := e.GameObjects()[player.VisionAreaGameObjectId]

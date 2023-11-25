@@ -13,7 +13,7 @@ func TownTeleport(e entity.IEngine, params map[string]interface{}) bool {
 	if player, ok := e.Players()[playerId]; ok {
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 		targets.Deselect(e, charGameObj)
-		Move(e, charGameObj, constants.InitialPlayerX, constants.InitialPlayerY)
+		charGameObj.(entity.ICharacterObject).Move(e, constants.InitialPlayerX, constants.InitialPlayerY)
 		e.SendGameObjectUpdate(charGameObj, "update_object")
 	}
 

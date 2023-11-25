@@ -57,7 +57,7 @@ func selectTarget(e entity.IEngine, obj entity.IGameObject, target entity.IGameO
 		}
 	}
 
-	obj.Properties()["target_id"] = target.Id
+	obj.Properties()["target_id"] = target.Id()
 	storage.GetClient().Updates <- obj.Clone()
 
 	if player != nil {

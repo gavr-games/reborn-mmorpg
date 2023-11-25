@@ -1,10 +1,10 @@
-package characters
+package character_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
-func HasTypeEquipped(e entity.IEngine, charGameObj entity.IGameObject, itemType string) (entity.IGameObject, bool) {
+func (charGameObj *CharacterObject) HasTypeEquipped(e entity.IEngine, itemType string) (entity.IGameObject, bool) {
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 	
 	for _, slotItemId := range slots {

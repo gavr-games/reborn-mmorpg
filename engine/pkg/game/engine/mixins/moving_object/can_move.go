@@ -1,4 +1,4 @@
-package game_objects
+package moving_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
@@ -8,7 +8,9 @@ import (
 
 // Check object can move and does not collide with other objects
 // TODO: implement accurate check for circles
-func CanMove(floor *utils.Quadtree, obj entity.IGameObject, dx float64, dy float64) (float64, float64) {
+func (mObj *MovingObject) CanMove(e entity.IEngine, dx float64, dy float64) (float64, float64) {
+	obj := mObj.gameObj
+	floor := e.Floors()[obj.Floor()]
 	// floor edges
 	newX := obj.X() + dx
 	newY := obj.Y() + dy
@@ -40,5 +42,4 @@ func CanMove(floor *utils.Quadtree, obj entity.IGameObject, dx float64, dy float
 	} else {
 		return 0.0, 0.0
 	}
-	
 }

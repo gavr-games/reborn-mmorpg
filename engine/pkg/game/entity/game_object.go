@@ -5,6 +5,7 @@ import (
 	"math"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 )
 
 const (
@@ -22,6 +23,7 @@ type IGameObject interface {
 	SetHeight(height float64)
 	Id() string
 	SetId(id string)
+	Kind() string
 	Type() string
 	SetType(t string)
 	Floor() int
@@ -41,6 +43,8 @@ type IGameObject interface {
 	GetDistance(b IGameObject) float64
 	IsCloseTo(b IGameObject) bool
 	Rotate(rotation float64)
+	SetRotationByDirection(direction string)
+	GetRotationByDirection(direction string) float64
 }
 
 type GameObject struct {
@@ -103,6 +107,10 @@ func (obj *GameObject) Id() string {
 func (obj *GameObject) SetId(id string) {
 	obj.id = id
 	obj.properties["id"] = id
+}
+
+func (obj *GameObject) Kind() string {
+	return obj.properties["kind"].(string)
 }
 
 func (obj *GameObject) Type() string {
@@ -321,4 +329,46 @@ func (obj *GameObject) Rotate(rotation float64) {
 		obj.SetWidth(obj.Height())
 		obj.SetHeight(width)
 	}
+}
+
+// Set rotation depending on the direction
+func (obj *GameObject) SetRotationByDirection(direction string) {
+	obj.SetRotation(obj.GetRotationByDirection(direction))
+}
+
+// Get rotation depending on the direction
+func (obj *GameObject) GetRotationByDirection(direction string) float64 {
+	validDirection := false
+	for _, dir := range constants.GetPossibleDirections() {
+		if dir == direction {
+			validDirection = true
+			break
+		}
+	}
+
+	if !validDirection {
+		//TODO: log error
+		return 0.0
+	}
+
+	switch direction {
+		case "move_north":
+			return math.Pi / 2
+		case "move_south":
+			return math.Pi * 3 / 2
+		case "move_east":
+			return 0.0
+		case "move_west":
+			return math.Pi
+		case "move_north_east":
+			return math.Pi / 4
+		case "move_north_west":
+			return math.Pi * 3 / 4
+		case "move_south_east":
+			return math.Pi * 7 / 4
+		case "move_south_west":
+			return math.Pi * 5 / 4
+	}
+
+	return 0.0
 }

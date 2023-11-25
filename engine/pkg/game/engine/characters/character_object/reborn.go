@@ -1,4 +1,4 @@
-package characters
+package character_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
@@ -8,7 +8,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
 )
 
-func Reborn(e entity.IEngine, charGameObj entity.IGameObject) {
+func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 	charGameObj.Properties()["health"] = charGameObj.Properties()["max_health"]
 	targets.Deselect(e, charGameObj)
 	
@@ -27,6 +27,6 @@ func Reborn(e entity.IEngine, charGameObj entity.IGameObject) {
 		})
 	}
 
-	Move(e, charGameObj, constants.InitialPlayerX, constants.InitialPlayerY)
+	charGameObj.Move(e, constants.InitialPlayerX, constants.InitialPlayerY)
 	e.SendGameObjectUpdate(charGameObj, "update_object")
 }
