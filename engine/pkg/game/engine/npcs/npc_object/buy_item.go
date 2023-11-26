@@ -1,4 +1,4 @@
-package npcs
+package npc_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -9,16 +9,10 @@ const (
 	TradeDistance = 1.0
 )
 
-func BuyItem(e entity.IEngine, charGameObj entity.IGameObject, npcId string, itemKey string, amount float64) bool {
+func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
-		npcObj := e.GameObjects()[npcId]
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
-
-		if npcObj == nil {
-			e.SendSystemMessage("NPC does not exist.", player)
-			return false
-		}
 
 		if npcObj.GetDistance(charGameObj) > TradeDistance {
 			e.SendSystemMessage("You need to be closer.", player)

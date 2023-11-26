@@ -17,6 +17,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries/hatchery_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/cactuses/cactus_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs/npc_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
@@ -149,6 +150,8 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return &cactus_object.CactusObject{*gameObj.(*entity.GameObject)}
 	case "hatchery":
 		return &hatchery_object.HatcheryObject{*gameObj.(*entity.GameObject)}
+	case "npc":
+		return &npc_object.NpcObject{*gameObj.(*entity.GameObject)}
 	case "mob":
 		return mob_object.NewMobObject(e, gameObj)
 	case "player":
