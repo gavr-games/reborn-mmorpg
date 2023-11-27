@@ -585,7 +585,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"visible": true,
 				"actions": map[string]interface{}{
 					"destroy": map[string]interface{}{
-						"cmd": "destroy_item",
+						"cmd": "destroy_building",
 						"params": "self", // self - id of current object
 					},
 				},
@@ -600,7 +600,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"visible": true,
 				"actions": map[string]interface{}{
 					"destroy": map[string]interface{}{
-						"cmd": "destroy_item",
+						"cmd": "destroy_building",
 						"params": "self", // self - id of current object
 					},
 				},
@@ -624,7 +624,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"params": "self", // self - id of current object
 					},
 					"destroy": map[string]interface{}{
-						"cmd": "destroy_item",
+						"cmd": "destroy_building",
 						"params": "self", // self - id of current object
 					},
 				},

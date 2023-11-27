@@ -3,6 +3,7 @@ package hatchery_object
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
 func (hatchery *HatcheryObject) Hatch(e entity.IEngine, mobPath string) bool {
@@ -20,6 +21,7 @@ func (hatchery *HatcheryObject) Hatch(e entity.IEngine, mobPath string) bool {
 	})
 	e.GameObjects()[hatchery.Id()] = nil
 	delete(e.GameObjects(), hatchery.Id())
+	storage.GetClient().Deletes <- hatchery.Id()
 
 	return true
 }

@@ -10,7 +10,7 @@ type CharacterObject struct {
 	entity.GameObject
 }
 
-func NewCharacterObject(e entity.IEngine, gameObj entity.IGameObject) *CharacterObject {
+func NewCharacterObject(gameObj entity.IGameObject) *CharacterObject {
 	character := &CharacterObject{moving_object.MovingObject{}, *gameObj.(*entity.GameObject)}
 	character.InitMovingObject(character)
 	return character

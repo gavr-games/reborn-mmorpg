@@ -16,6 +16,8 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries/hatchery_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/walls/wall_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims/claim_obelisk_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/cactuses/cactus_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs/npc_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
@@ -149,18 +151,24 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 	case "plant":
 		return &cactus_object.CactusObject{*gameObj.(*entity.GameObject)}
 	case "hatchery":
-		return &hatchery_object.HatcheryObject{*gameObj.(*entity.GameObject)}
+		return hatchery_object.NewHatcheryObject(gameObj)
+	case "wall":
+		return wall_object.NewWallObject(gameObj)
 	case "npc":
 		return &npc_object.NpcObject{*gameObj.(*entity.GameObject)}
 	case "mob":
 		return mob_object.NewMobObject(e, gameObj)
 	case "player":
 		if gameObj.Kind() == "player" {
-			return character_object.NewCharacterObject(e, gameObj)
+			return character_object.NewCharacterObject(gameObj)
 		}
 	case "container":
 		if gameObj.Kind() == "backpack" {
-			return backpack_object.NewBackpackObject(e, gameObj)
+			return backpack_object.NewBackpackObject(gameObj)
+		}
+	case "claim":
+		if gameObj.Kind() == "claim_obelisk" {
+			return &claim_obelisk_object.ClaimObeliskObject{*gameObj.(*entity.GameObject)}
 		}
 	default:
 		return gameObj

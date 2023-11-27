@@ -88,7 +88,7 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 	// Some templates might have actions to be created with the object
 	if currentAction, hasAction := gameObj.Properties()["current_action"]; hasAction {
 		actionParams := currentAction.(map[string]interface{})["params"].(map[string]interface{})
-		actionParams["game_object_id"] = gameObj.Id
+		actionParams["game_object_id"] = gameObj.Id()
 		timeLeft := currentAction.(map[string]interface{})["time_left"].(float64)
 		funcName := currentAction.(map[string]interface{})["func_name"].(string)
 		delayedAction := &entity.DelayedAction{

@@ -11,9 +11,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
   - IToolObject
   - IMeleeWeaponObject
   - IResourceObject
-  - IBuildingObject - mixin (claim, hatchery, walls)
-  - IClaimObeliskObject
-  - IWallObject
   - move targets to character object
   - IEffecObject
   - IPotionObject

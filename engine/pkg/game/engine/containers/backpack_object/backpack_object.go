@@ -10,7 +10,7 @@ type BackpackObject struct {
 	entity.GameObject
 }
 
-func NewBackpackObject(e entity.IEngine, gameObj entity.IGameObject) *BackpackObject {
+func NewBackpackObject(gameObj entity.IGameObject) *BackpackObject {
 	backpack := &BackpackObject{container_object.ContainerObject{}, *gameObj.(*entity.GameObject)}
 	backpack.InitContainerObject(backpack)
 	return backpack
