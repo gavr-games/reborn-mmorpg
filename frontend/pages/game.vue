@@ -39,7 +39,11 @@ export default {
       window.addEventListener("keydown",function (event) {
         if (document.activeElement && document.activeElement.tagName != "INPUT") {
           document.getElementById("game-canvas").focus()
+          EventBus.$emit("keydown", event.key);
         }
+      })
+      document.getElementById('game-canvas').addEventListener("mouseover",function (event) {
+        document.getElementById("game-canvas").focus()
       })
     }
   },
