@@ -17,13 +17,12 @@ class SurfaceObserver {
         this.create();
       });
     }
-
   }
 
   create() {
     let mesh = Atlas.get(this.state.kind + "Surface").createInstance("surface-" + this.state.id)
     mesh.setParent(null)
-    mesh.isPickable = true
+    mesh.isPickable = false
     mesh.name = "surface-" + this.state.id
     mesh.position.x = this.state.x
     mesh.position.y = 0

@@ -10,11 +10,11 @@ class Grid {
   create() {
     for (let n = 0; n < this.width; n++) {
       let myPoints = [
-        new BABYLON.Vector3(0, 0.1, 1.0 * n),
+        new BABYLON.Vector3(0.5, 0.1, 1.0 * n - 0.5),
         new BABYLON.Vector3(
-          1.0 * this.width,
+          this.width,
           0.1,
-          1.0 * n
+          1.0 * n - 0.5
         )
       ];
       this.lines.push(BABYLON.MeshBuilder.CreateLines(
@@ -25,11 +25,11 @@ class Grid {
     }
     for (let n = 0; n < this.width; n++) {
       let myPoints = [
-        new BABYLON.Vector3(1.0 * n, 0.1, 0),
+        new BABYLON.Vector3(1.0 * n + 0.5, 0.1, -0.5),
         new BABYLON.Vector3(
-          1.0 * n,
+          1.0 * n + 0.5,
           0.1,
-          1.0 * this.width
+          this.width
         )
       ];
       this.lines.push(BABYLON.MeshBuilder.CreateLines(

@@ -89,11 +89,13 @@ class GameObserver {
     );
 
     scene.onPointerMove = function (evt, result) {
-        const pickResult = scene.pick(evt.offsetX, evt.offsetY);
-        if (pickResult.hit) {
+        const ray = scene.createPickingRay(scene.pointerX, scene.pointerY, BABYLON.Matrix.Identity(), null);
+        const hit = scene.pickWithRay(ray);
+        const pickedPoint = hit.pickedPoint;
+        if (pickedPoint) {
           EventBus.$emit("scene-pointer-moved", {
-            x: pickResult.pickedPoint.x,
-            y: pickResult.pickedPoint.z,
+            x: pickedPoint.x,
+            y: pickedPoint.z,
           })
         }
     }
