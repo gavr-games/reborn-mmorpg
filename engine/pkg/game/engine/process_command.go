@@ -7,7 +7,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 )
 
 // Process commands from players
@@ -83,7 +82,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				int(params.(map[string]interface{})["position"].(float64)),
 				player)
 		case "apply_effect":
-			effects.ApplyPlayer(e, params.(string), player)
+			potion := e.GameObjects()[params.(string)]
+			potion.(entity.IPotionObject).ApplyToPlayer(e, player)
 		case "chop_tree":
 			tree := e.GameObjects()[params.(string)]
 			if tree.(entity.ITreeObject).CheckChop(e, charGameObj) {

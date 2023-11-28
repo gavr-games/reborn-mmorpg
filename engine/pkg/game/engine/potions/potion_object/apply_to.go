@@ -1,4 +1,4 @@
-package effects
+package potion_object
 
 import (
 	"github.com/satori/go.uuid"
@@ -6,16 +6,11 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 )
 
-func ApplyPlayer(e entity.IEngine, itemId string, player *entity.Player) bool {
-	item := e.GameObjects()[itemId]
+func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player) bool {
 	obj := e.GameObjects()[player.CharacterGameObjectId]
-
-	if item == nil {
-		e.SendSystemMessage("Wrong item.", player)
-		return false
-	}
 	
 	if (item.Properties()["container_id"] != nil) {
 		container := e.GameObjects()[item.Properties()["container_id"].(string)]
@@ -27,7 +22,7 @@ func ApplyPlayer(e entity.IEngine, itemId string, player *entity.Player) bool {
 
 		// Remove from container
 		if (item.Properties()["container_id"] != nil) {
-			if !container.(entity.IContainerObject).Remove(e, player, itemId) {
+			if !container.(entity.IContainerObject).Remove(e, player, item.Id()) {
 				return false
 			}
 		}
@@ -36,7 +31,7 @@ func ApplyPlayer(e entity.IEngine, itemId string, player *entity.Player) bool {
 		effectGroup := item.Properties()["effect"].(map[string]interface{})["group"].(string)
 		for effectId, effect := range obj.Effects() {
 			if effect.(map[string]interface{})["group"].(string) == effectGroup {
-				Remove(e, effectId, obj)
+				effects.Remove(e, effectId, obj)
 			}
 		}
 
@@ -49,9 +44,9 @@ func ApplyPlayer(e entity.IEngine, itemId string, player *entity.Player) bool {
 		e.SendGameObjectUpdate(obj, "update_object")
 
 		// Remove item
-		e.GameObjects()[itemId] = nil
-		delete(e.GameObjects(), itemId)
-		storage.GetClient().Deletes <- itemId
+		e.GameObjects()[item.Id()] = nil
+		delete(e.GameObjects(), item.Id())
+		storage.GetClient().Deletes <- item.Id()
 
 		return true
 	} else {

@@ -5,8 +5,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## TODO
 - refactor to interfaces
-  - IEffecObject
-  - IPotionObject
+  - create new architecture documentation
 - add baby dragons and raising them
 - add dragon breeding to get new eggs
 - add fighting and leveling dragins

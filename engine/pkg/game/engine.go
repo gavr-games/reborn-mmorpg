@@ -23,6 +23,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/resources/resource_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/tools/tool_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/weapons/weapon_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/potions/potion_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
@@ -151,6 +152,8 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return &tree_object.TreeObject{*gameObj.(*entity.GameObject)}
 	case "rock":
 		return &rock_object.RockObject{*gameObj.(*entity.GameObject)}
+	case "potion":
+		return &potion_object.PotionObject{*gameObj.(*entity.GameObject)}
 	case "plant":
 		return &cactus_object.CactusObject{*gameObj.(*entity.GameObject)}
 	case "hatchery":

@@ -41,7 +41,7 @@ export default {
 <style lang="scss">
 #effects-panel {
   position: absolute;
-  top: 170px;
+  top: 250px;
   right: 3px;
   width: 32px;
   display: flex;
