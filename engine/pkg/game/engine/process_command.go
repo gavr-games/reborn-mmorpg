@@ -8,7 +8,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/items"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 )
 
@@ -57,15 +56,20 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			container := e.GameObjects()[params.(string)].(entity.IContainerObject)
 			e.SendResponse("container_items", container.GetItems(e), player)
 		case "equip_item":
-			items.Equip(e, params.(string), player)
+			item := e.GameObjects()[params.(string)].(entity.IEquipableObject)
+			item.Equip(e, player)
 		case "unequip_item":
-			items.Unequip(e, params.(string), player)
+			item := e.GameObjects()[params.(string)].(entity.IEquipableObject)
+			item.Unequip(e, player)
 		case "drop_item":
-			items.Drop(e, params.(string), player)
+			item := e.GameObjects()[params.(string)].(entity.IPickableObject)
+			item.Drop(e, player)
 		case "pickup_item":
-			items.Pickup(e, params.(string), player)
+			item := e.GameObjects()[params.(string)].(entity.IPickableObject)
+			item.Pickup(e, player)
 		case "destroy_item":
-			items.Destroy(e, params.(string), player)
+			item := e.GameObjects()[params.(string)].(entity.IPickableObject)
+			item.Destroy(e, player)
 		case "destroy_building":
 			building := e.GameObjects()[params.(string)].(entity.IBuildingObject)
 			building.Destroy(e, player)
@@ -73,11 +77,11 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			claim := e.GameObjects()[params.(string)].(entity.IClaimObeliskObject)
 			claim.Destroy(e, player)
 		case "put_to_container":
-			items.PutToContainer(
+			item := e.GameObjects()[params.(map[string]interface{})["item_id"].(string)].(entity.IPickableObject)
+			item.PutToContainer(
 				e,
 				params.(map[string]interface{})["container_id"].(string),
 				int(params.(map[string]interface{})["position"].(float64)),
-				params.(map[string]interface{})["item_id"].(string),
 				player)
 		case "apply_effect":
 			effects.ApplyPlayer(e, params.(string), player)

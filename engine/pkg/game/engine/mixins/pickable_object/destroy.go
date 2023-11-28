@@ -1,23 +1,18 @@
-package items
+package pickable_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
-	item := e.GameObjects()[itemId]
+func (obj *PickableObject) Destroy(e entity.IEngine, player *entity.Player) bool {
+	item := obj.gameObj
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
-	if item == nil {
-		e.SendSystemMessage("Wrong item.", player)
-		return false
-	}
-
 	// check equipped
 	for _, slotItemId := range slots {
-		if slotItemId == itemId {
+		if slotItemId == item.Id() {
 			e.SendSystemMessage("Cannot destroy equipped item.", player)
 			return false
 		}
@@ -30,15 +25,15 @@ func Destroy(e entity.IEngine, itemId string, player *entity.Player) bool {
 			e.SendSystemMessage("You don't have access to this container", player)
 			return false
 		}
-		if !container.(entity.IContainerObject).Remove(e, player, itemId) {
+		if !container.(entity.IContainerObject).Remove(e, player, item.Id()) {
 			return false
 		}
 	}
 
 	// Destroy item
-	e.GameObjects()[itemId] = nil
-	delete(e.GameObjects(), itemId)
-	storage.GetClient().Deletes <- itemId
+	e.GameObjects()[item.Id()] = nil
+	delete(e.GameObjects(), item.Id())
+	storage.GetClient().Deletes <- item.Id()
 
 	return true
 }

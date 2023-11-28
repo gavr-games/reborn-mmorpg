@@ -20,6 +20,9 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims/claim_obelisk_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/cactuses/cactus_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs/npc_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/resources/resource_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/tools/tool_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/weapons/weapon_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
@@ -156,6 +159,12 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return wall_object.NewWallObject(gameObj)
 	case "npc":
 		return &npc_object.NpcObject{*gameObj.(*entity.GameObject)}
+	case "resource":
+		return resource_object.NewResourceObject(gameObj)
+	case "melee_weapon":
+		return weapon_object.NewWeaponObject(gameObj)
+	case "hammer", "knife", "pickaxe", "axe":
+		return tool_object.NewToolObject(gameObj)
 	case "mob":
 		return mob_object.NewMobObject(e, gameObj)
 	case "player":

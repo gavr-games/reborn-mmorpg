@@ -3,7 +3,6 @@ package mob_object
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/melee_weapons"
 )
 
 func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
@@ -21,7 +20,7 @@ func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 	}
 
 	// check collision with target
-	if !melee_weapons.CanHit(mob, mob, targetObj) {
+	if !mob.CanHit(mob, targetObj) {
 		return false
 	}
 

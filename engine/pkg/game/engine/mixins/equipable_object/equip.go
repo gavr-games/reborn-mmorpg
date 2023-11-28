@@ -1,4 +1,4 @@
-package items
+package equipable_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -6,8 +6,8 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
-func Equip(e entity.IEngine, itemId string, player *entity.Player) bool {
-	item := e.GameObjects()[itemId]
+func (obj *EquipableObject) Equip(e entity.IEngine, player *entity.Player) bool {
+	item := obj.gameObj
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 	targetSlots := item.Properties()["target_slots"].(map[string]interface{})
@@ -19,7 +19,7 @@ func Equip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	
 	// check already equipped
 	for _, slotItemId := range slots {
-		if slotItemId == itemId {
+		if slotItemId == item.Id() {
 			e.SendSystemMessage("This item is already equipped.", player)
 			return false
 		}
@@ -52,13 +52,13 @@ func Equip(e entity.IEngine, itemId string, player *entity.Player) bool {
 			return false
 		}
 		// remove from container if in container
-		if !container.(entity.IContainerObject).Remove(e, player, itemId) {
+		if !container.(entity.IContainerObject).Remove(e, player, item.Id()) {
 			return false
 		}
 	}
 	
 	// Add to slot
-	slots[freeTargetSlot] = itemId
+	slots[freeTargetSlot] = item.Id()
 	storage.GetClient().Updates <- charGameObj.Clone()
 	
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "equip_item", map[string]interface{}{

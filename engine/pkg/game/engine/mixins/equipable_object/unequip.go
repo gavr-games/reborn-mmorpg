@@ -1,4 +1,4 @@
-package items
+package equipable_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -6,8 +6,8 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
-func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
-	item := e.GameObjects()[itemId]
+func (obj *EquipableObject) Unequip(e entity.IEngine, player *entity.Player) bool {
+	item := obj.gameObj
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
@@ -19,7 +19,7 @@ func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	// check equipped
 	itemSlotKey := ""
 	for key, slotItemId := range slots {
-		if slotItemId == itemId {
+		if slotItemId == item.Id() {
 			itemSlotKey = key
 		}
 	}
@@ -37,7 +37,7 @@ func Unequip(e entity.IEngine, itemId string, player *entity.Player) bool {
 	// put to container
 	if (item.Properties()["container_id"] == nil) {
 		container := e.GameObjects()[slots["back"].(string)]
-		if !container.(entity.IContainerObject).Put(e, player, itemId, -1) {
+		if !container.(entity.IContainerObject).Put(e, player, item.Id(), -1) {
 			return false
 		}
 	}

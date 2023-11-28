@@ -1,23 +1,18 @@
-package items
+package pickable_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
-	item := e.GameObjects()[itemId]
+func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
+	item := obj.gameObj
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
-	if item == nil {
-		e.SendSystemMessage("Wrong item.", player)
-		return false
-	}
-
 	// check equipped
 	for _, slotItemId := range slots {
-		if slotItemId == itemId {
+		if slotItemId == item.Id() {
 			e.SendSystemMessage("Cannot drop equipped item.", player)
 			return false
 		}
@@ -31,7 +26,7 @@ func Drop(e entity.IEngine, itemId string, player *entity.Player) bool {
 			return false
 		}
 		//Remove from container
-		if !container.(entity.IContainerObject).Remove(e, player, itemId) {
+		if !container.(entity.IContainerObject).Remove(e, player, item.Id()) {
 			return false
 		}
 	} else {

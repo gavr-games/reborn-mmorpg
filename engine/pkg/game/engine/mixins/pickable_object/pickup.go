@@ -1,4 +1,4 @@
-package items
+package pickable_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
@@ -6,15 +6,10 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
-	item := e.GameObjects()[itemId]
+func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool {
+	item := obj.gameObj
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
-
-	if item == nil {
-		e.SendSystemMessage("Wrong item.", player)
-		return false
-	}
 
 	// intersects with character
 	itemBounds := utils.Bounds{
@@ -60,7 +55,7 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 			}
 		}
 		if performPut {
-			if !container.(entity.IContainerObject).Put(e, player, itemId, -1) {
+			if !container.(entity.IContainerObject).Put(e, player, item.Id(), -1) {
 				return false
 			}
 		}
@@ -68,7 +63,7 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 
 	// remove from world
 	e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
-		return itemId == b.(entity.IGameObject).Id()
+		return item.Id() == b.(entity.IGameObject).Id()
 	})
 	item.Properties()["visible"] = false
 
@@ -76,11 +71,11 @@ func Pickup(e entity.IEngine, itemId string, player *entity.Player) bool {
 
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "pickup_object", map[string]interface{}{
 		"character_id": charGameObj.Id(),
-		"id": itemId,
+		"id": item.Id(),
 	})
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "remove_object", map[string]interface{}{
 		"object": map[string]interface{}{
-			"Id": itemId,
+			"Id": item.Id(),
 		},
 	})
 

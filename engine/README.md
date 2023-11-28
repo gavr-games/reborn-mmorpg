@@ -5,12 +5,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## TODO
 - refactor to interfaces
-  - IPickableObject - mixin
-  - IEquipableObject - mixin
-  - IDestroyableObject - mixin
-  - IToolObject
-  - IMeleeWeaponObject
-  - IResourceObject
   - move targets to character object
   - IEffecObject
   - IPotionObject

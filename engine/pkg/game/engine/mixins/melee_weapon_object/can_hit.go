@@ -1,4 +1,4 @@
-package melee_weapons
+package melee_weapon_object
 
 import (
 	"math"
@@ -13,7 +13,8 @@ type WorldPoint struct {
 // Checks 21 points inside and on edges of weapon hit sector
 // (you can see this sector on frontend highlighted with red during melee hit)
 // If they are inside the target obj (rectangle or circle) - then CanHit -> true
-func CanHit(attacker entity.IGameObject, weapon entity.IGameObject, target entity.IGameObject) bool {
+func (obj *MeleeWeaponObject) CanHit(attacker entity.IGameObject, target entity.IGameObject) bool {
+	weapon := obj.gameObj
 	points := make([]WorldPoint, 21)
 
 	// Add center point

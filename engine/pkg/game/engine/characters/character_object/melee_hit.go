@@ -6,7 +6,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/melee_weapons"
 )
 
 // Tries to hit target with the melee weapon
@@ -58,7 +57,7 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 		})
 
 		// check collision with target
-		if !melee_weapons.CanHit(obj, weapon, targetObj) {
+		if !weapon.(entity.IMeleeWeaponObject).CanHit(obj, targetObj) {
 			return false
 		}
 
