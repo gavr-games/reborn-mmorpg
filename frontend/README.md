@@ -69,9 +69,7 @@ This directory contains your Vuex store files. Creating a file in this directory
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
 
 # TODO:
-- FPS is around 40 because of many surface meshes. Without them fps is 50-60
 - make draggable panels
-- Find a way to make craft objects placement more user friendly. Also calculate x/y in some other way so it is possible to turn off surface objects isPickable property and boost performance. Maybe create invisible plane during craft.
 - reuse code between character and mob objects
 - if you press move "a" and "s" you cannot press "1" to hit. Other directions work good.
 - it is very hard to position character between north_east, north_west, south_east, south_west. It depends on keyup handling.
