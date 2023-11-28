@@ -38,8 +38,12 @@ export default {
       // Give babylon scene back the keyboard control
       window.addEventListener("keydown",function (event) {
         if (document.activeElement && document.activeElement.tagName != "INPUT") {
-          document.getElementById("game-canvas").focus()
           EventBus.$emit("keydown", event.key);
+        }
+      })
+      window.addEventListener("keyup",function (event) {
+        if (document.activeElement && document.activeElement.tagName != "INPUT") {
+          EventBus.$emit("keyup", event.key);
         }
       })
       document.getElementById('game-canvas').addEventListener("mouseover",function (event) {

@@ -71,23 +71,6 @@ class GameObserver {
   }
 
   registerActions(scene) {
-    scene.actionManager.registerAction(
-      new BABYLON.ExecuteCodeAction(
-        BABYLON.ActionManager.OnKeyDownTrigger,
-        evt => {
-          EventBus.$emit("keydown", evt.sourceEvent.key);
-        }
-      )
-    );
-    scene.actionManager.registerAction(
-      new BABYLON.ExecuteCodeAction(
-        BABYLON.ActionManager.OnKeyUpTrigger,
-        evt => {
-          EventBus.$emit("keyup", evt.sourceEvent.key);
-        }
-      )
-    );
-
     scene.onPointerMove = function (evt, result) {
         const ray = scene.createPickingRay(scene.pointerX, scene.pointerY, BABYLON.Matrix.Identity(), null);
         const hit = scene.pickWithRay(ray);
