@@ -5,4 +5,6 @@ type ICharacterObject interface {
 	MeleeHit(e IEngine) bool
 	Move(e IEngine, newX float64, newY float64)
 	Reborn(e IEngine)
+	SelectTarget(e IEngine, targetId string) bool
+	DeselectTarget(e IEngine) bool
 }

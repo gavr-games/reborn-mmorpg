@@ -5,7 +5,6 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
 )
 
 // Tries to hit target with the melee weapon
@@ -25,7 +24,7 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 
 		targetObj := e.GameObjects()[targetId.(string)]
 		if targetObj == nil {
-			targets.Deselect(e, obj)
+			obj.DeselectTarget(e)
 			e.SendSystemMessage("No target to hit.", player)
 			return false
 		}
@@ -76,7 +75,7 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 
 		// die if health < 0
 		if targetObj.Properties()["health"].(float64) == 0.0 {
-			targets.Deselect(e, obj)
+			obj.DeselectTarget(e)
 			if targetObj.Properties()["type"].(string) == "mob" {
 				e.SendSystemMessage(fmt.Sprintf("You killed %s.", targetObj.Properties()["kind"].(string)), player)
 				e.Mobs()[targetObj.Id()].Die()

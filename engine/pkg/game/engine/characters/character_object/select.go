@@ -1,4 +1,4 @@
-package targets
+package character_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -6,7 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
-func Select(e entity.IEngine, obj entity.IGameObject, targetId string) bool {
+func (obj *CharacterObject) SelectTarget(e entity.IEngine, targetId string) bool {
 	target := e.GameObjects()[targetId]
 
 	if playerId, found := obj.Properties()["player_id"]; found {
@@ -53,7 +53,7 @@ func selectTarget(e entity.IEngine, obj entity.IGameObject, target entity.IGameO
 	// deselect previous target
 	if oldTargetId, ok := obj.Properties()["target_id"]; ok {
 		if oldTargetId != nil {
-			Deselect(e, obj)
+			obj.(entity.ICharacterObject).DeselectTarget(e)
 		}
 	}
 

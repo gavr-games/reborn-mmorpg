@@ -1,11 +1,11 @@
-package targets
+package character_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-func Deselect(e entity.IEngine, obj entity.IGameObject) bool {
+func (obj *CharacterObject) DeselectTarget(e entity.IEngine) bool {
 	targetId, ok := obj.Properties()["target_id"]
 	if !ok {
 		return true

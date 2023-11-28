@@ -5,7 +5,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## TODO
 - refactor to interfaces
-  - move targets to character object
   - IEffecObject
   - IPotionObject
 - add baby dragons and raising them

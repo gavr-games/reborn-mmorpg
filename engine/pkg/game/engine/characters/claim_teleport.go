@@ -2,7 +2,6 @@ package characters
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
 )
 
 // This func is called via delayed action mechanism
@@ -11,7 +10,7 @@ func ClaimTeleport(e entity.IEngine, params map[string]interface{}) bool {
 	playerId := int(params["playerId"].(float64))
 	if player, ok := e.Players()[playerId]; ok {
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-		targets.Deselect(e, charGameObj)
+		charGameObj.(entity.ICharacterObject).DeselectTarget(e)
 		obelisk := e.GameObjects()[charGameObj.Properties()["claim_obelisk_id"].(string)]
 		if obelisk == nil {
 			e.SendSystemMessage("You don't have a claim.", player)

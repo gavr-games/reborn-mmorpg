@@ -7,7 +7,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 )
 
@@ -150,9 +149,9 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "select_target":
 			targetId := params.(string)
-			targets.Select(e, charGameObj, targetId)
+			charGameObj.(entity.ICharacterObject).SelectTarget(e, targetId)
 		case "deselect_target":
-			targets.Deselect(e, charGameObj)
+			charGameObj.(entity.ICharacterObject).DeselectTarget(e)
 		case "melee_hit":
 			charGameObj.(entity.ICharacterObject).MeleeHit(e)
 		case "pay_rent":

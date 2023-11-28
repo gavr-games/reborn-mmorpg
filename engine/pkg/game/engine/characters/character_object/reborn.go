@@ -5,12 +5,11 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/targets"
 )
 
 func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 	charGameObj.Properties()["health"] = charGameObj.Properties()["max_health"]
-	targets.Deselect(e, charGameObj)
+	charGameObj.DeselectTarget(e)
 	
 	// Cancel delayed action
 	// TODO: refactor code so we can reuse delayed_actions.Cancel
