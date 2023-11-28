@@ -45,6 +45,11 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 - `cancel_delayed_action` - used to inform frontend that some time based action was cancelled (like craft).
 
 ## Game Object (GO) Architecture Design
+![Interfaces Architecture](imgs/interfaces_architecture.png "Interfaces Architecture")
+- Engine stores pointers to all Game Objects (GO)
+- Each GO is a specific struct, that ALWAYS includes a common GameObject struct inside itself
+- Some GOs use Mixins to use shared behaviour like PickableObject
+- The rest of the code uses GOs structs via interfaces
 
 ### What is a GO?
 Any physical thing in the game is a Game Object (GO). A character, a piece of grass/sand/water, a potion, a knife, a tree, a backpack, a mob, a NPC. Everything physical.

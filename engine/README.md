@@ -4,8 +4,6 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- refactor to interfaces
-  - create new architecture documentation
 - add baby dragons and raising them
 - add dragon breeding to get new eggs
 - add fighting and leveling dragins
