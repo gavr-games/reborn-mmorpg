@@ -22,6 +22,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs/npc_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/resources/resource_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/tools/tool_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/shovels/shovel_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/weapons/weapon_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/potions/potion_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
@@ -168,6 +169,8 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return weapon_object.NewWeaponObject(gameObj)
 	case "hammer", "knife", "pickaxe", "axe":
 		return tool_object.NewToolObject(gameObj)
+	case "shovel":
+		return shovel_object.NewShovelObject(gameObj)
 	case "mob":
 		return mob_object.NewMobObject(e, gameObj)
 	case "player":

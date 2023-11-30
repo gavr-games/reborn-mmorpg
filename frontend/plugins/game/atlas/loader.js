@@ -130,6 +130,7 @@ class Loader {
   loadSurfaces() {
     let surfaces = [
       "grass",
+      "dirt",
       "water",
       "sand",
       "stone",
@@ -210,6 +211,7 @@ class Loader {
       "stone_spear",
       "stone_knife",
       "stone_wall",
+      "wooden_shovel",
       "wooden_wall",
       "healing_balm",
       "fire_dragon_egg",
