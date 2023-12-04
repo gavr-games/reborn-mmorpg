@@ -23,6 +23,13 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"height": 1.0,
 				"shape": "rectangle",
 				"visible": true,
+				"current_action": map[string]interface{}{
+					"func_name": "GrowGrass",
+					"params": map[string]interface{}{
+						"game_object_id": nil,
+					},
+					"time_left": 60000.0,
+				},
 			},
 			"sand": map[string]interface{}{
 				"type": "surface",

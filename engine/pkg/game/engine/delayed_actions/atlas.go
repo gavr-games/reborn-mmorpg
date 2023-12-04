@@ -8,6 +8,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/shovels"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/surfaces"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 )
 
@@ -53,6 +54,10 @@ func GetDelayedActionsAtlas() map[string]map[string]interface{} {
 		"Dig": map[string]interface{}{
 			"func": shovels.Dig,
 			"duration": 500.0,
+		},
+		"GrowGrass": map[string]interface{}{
+			"func": surfaces.GrowGrass,
+			"duration": 60000.0,
 		},
 	}
 
