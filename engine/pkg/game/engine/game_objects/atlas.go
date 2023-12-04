@@ -16,6 +16,21 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape": "rectangle",
 				"visible": true,
 			},
+			"dirt": map[string]interface{}{
+				"type": "surface",
+				"kind": "dirt",
+				"width": 1.0,
+				"height": 1.0,
+				"shape": "rectangle",
+				"visible": true,
+				"current_action": map[string]interface{}{
+					"func_name": "GrowGrass",
+					"params": map[string]interface{}{
+						"game_object_id": nil,
+					},
+					"time_left": 60000.0,
+				},
+			},
 			"sand": map[string]interface{}{
 				"type": "surface",
 				"kind": "sand",
@@ -264,6 +279,50 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 					"pickup": map[string]interface{}{
 						"cmd": "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd": "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
+		"shovel": {
+			"wooden_shovel": map[string]interface{}{
+				"type": "shovel",
+				"kind": "wooden_shovel",
+				"width": 0.5,
+				"height": 2.0,
+				"shape": "rectangle",
+				"container_id": nil,
+				"pickable": true,
+				"droppable": true,
+				"equipable": true,
+				"visible": false,
+				"target_slots": map[string]interface{}{
+					"left_arm": true, 
+					"right_arm": true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd": "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd": "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd": "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd": "pickup_item",
+						"params": "self",
+					},
+					"dig": map[string]interface{}{
+						"cmd": "dig_surface",
 						"params": "self",
 					},
 					"destroy": map[string]interface{}{

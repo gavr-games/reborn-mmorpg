@@ -108,6 +108,14 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 					"cactusId": cactus.Id(),
 				}, -1.0)
 			}
+		case "dig_surface":
+			shovel := e.GameObjects()[params.(string)]
+			if shovel.(entity.IShovelObject).CheckDig(e, charGameObj) {
+				delayed_actions.Start(e, charGameObj, "Dig", map[string]interface{}{
+					"characterId": charGameObj.Id(),
+					"shovelId": shovel.Id(),
+				}, -1.0)
+			}
 		case "craft":
 			if craft.Check(e, player, params.(map[string]interface{})) {
 				params.(map[string]interface{})["playerId"] = float64(player.Id)

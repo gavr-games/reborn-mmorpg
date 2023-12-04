@@ -28,6 +28,9 @@ export default {
   &.pickaxe {
     background-position: 448px 546px;
   }
+  &.wooden_shovel {
+    background-position: 416px 546px;
+  }
   &.stone_hammer {
     background-position: 384px 546px;
   }

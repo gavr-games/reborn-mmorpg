@@ -40,6 +40,18 @@ func GetAtlas() map[string]interface{} {
 			"width": 0.3,
 			"height": 3.0,
 		},
+		"wooden_shovel": map[string]interface{}{
+			"skill": "lumberjacking",
+			"resources": map[string]interface{}{
+				"log": 2.0,
+			},
+			"title": "Wooden Shovel",
+			"description": "Basic shovel to dig fields for your crops.",
+			"inputs": []string{},
+			"tools": []string{},
+			"place_in_real_world": false,
+			"duration": 5000.0,
+		},
 		"stone_hammer": map[string]interface{}{
 			"skill": "stoneworking",
 			"resources": map[string]interface{}{
