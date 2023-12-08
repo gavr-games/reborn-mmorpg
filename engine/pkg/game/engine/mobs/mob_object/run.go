@@ -22,7 +22,7 @@ func (mob *MobObject) Run(newTickTime int64) {
 	if mob.State == StartFollowState {
 		mob.State = FollowingState
 		mob.TickTime = newTickTime
-		mob.directionTickTime = newTickTime
+		mob.setMoveTo(FollowingDirectionChangeTime)
 	} else
 	// Perform following
 	if mob.State == FollowingState {
@@ -31,7 +31,7 @@ func (mob *MobObject) Run(newTickTime int64) {
 		} else { // Perform actual following
 			targetObj, ok := mob.Engine.GameObjects()[mob.TargetObjectId]
 			if ok {
-				mob.performFollowing(newTickTime, targetObj, FollowingDirectionChangeTime)
+				mob.performFollowing(targetObj, FollowingDirectionChangeTime)
 			} else {
 				mob.Unfollow()
 			}
@@ -41,14 +41,14 @@ func (mob *MobObject) Run(newTickTime int64) {
 	if mob.State == StartAttackingState {
 		mob.State = AttackingState
 		mob.TickTime = newTickTime
-		mob.directionTickTime = newTickTime
+		mob.setMoveTo(AttackingDirectionChangeTime)
 		mob.Properties()["speed"] = mob.Properties()["speed"].(float64) * AttackSpeedUp
 	} else
 	// Renew Attacking
 	if mob.State == RenewAttackingState {
 		mob.State = AttackingState
 		mob.TickTime = newTickTime
-		mob.directionTickTime = newTickTime
+		mob.setMoveTo(AttackingDirectionChangeTime)
 	} else
 	// Stop attacking
 	if mob.State == StopAttackingingState {
@@ -64,7 +64,7 @@ func (mob *MobObject) Run(newTickTime int64) {
 		} else { // Perform actual following before hit
 			targetObj, ok := mob.Engine.GameObjects()[mob.TargetObjectId]
 			if ok {
-				mob.performFollowing(newTickTime, targetObj, AttackingDirectionChangeTime)
+				mob.performFollowing(targetObj, AttackingDirectionChangeTime)
 				mob.MeleeHit(targetObj)
 			} else {
 				mob.StopAttacking()

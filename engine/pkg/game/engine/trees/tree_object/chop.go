@@ -11,6 +11,16 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
+		if !tree.CheckChop(e, charGameObj) {
+			return false
+		}
+
+		// Check near the tree
+		if !tree.IsCloseTo(charGameObj) {
+			e.SendSystemMessage("You need to be closer to the tree.", player)
+			return false
+		}
+
 		// Create log
 		logObj := e.CreateGameObject("resource/log", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 

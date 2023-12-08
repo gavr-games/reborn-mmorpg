@@ -13,6 +13,9 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 			// Trigger Mob logic
 			mob.Run(newTickTime)
 
+			// Trigger Move to Coords logic
+			mobObj.(entity.IMovingObject).PerformMoveTo(e, tickDelta)
+
 			// Move mobs
 			speedX := mobObj.Properties()["speed_x"].(float64)
 			speedY := mobObj.Properties()["speed_y"].(float64)

@@ -11,6 +11,16 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
+		if !rock.CheckChip(e, charGameObj) {
+			return false
+		}
+
+		// Check near the rock
+		if !rock.IsCloseTo(charGameObj) {
+			e.SendSystemMessage("You need to be closer to the rock.", player)
+			return false
+		}
+
 		// Create stone
 		stoneObj := e.CreateGameObject("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 

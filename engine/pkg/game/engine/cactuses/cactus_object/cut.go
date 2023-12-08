@@ -11,8 +11,13 @@ func (cactus *CactusObject) Cut(e entity.IEngine, charGameObj entity.IGameObject
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
-		if cactus == nil {
-			e.SendSystemMessage("Cactus does not exist.", player)
+		if !cactus.CheckCut(e, charGameObj) {
+			return false
+		}
+
+		// Check near the cactus
+		if !cactus.IsCloseTo(charGameObj) {
+			e.SendSystemMessage("You need to be closer to the cactus.", player)
 			return false
 		}
 

@@ -12,7 +12,7 @@ The project consist of the following main services (you can see them in [docker-
 - `caddy` - web gateway.
 
 ## Game mechanics
-[Mechanics Doc](mechanics.md)
+[Game Mechanics Doc](game_mechanics.md)
 
 ## Frontend <-> Engine Architecture
 ![Frontend Engine Architecture](imgs/architecture.png "Frontend Engine Architecture")
@@ -174,3 +174,6 @@ That is why a trick is used. Instead we take 5 vectors from sector (Hit Area) ce
 Next step is to check if the dot is inside the Target figure (circle or rectangle) - this is a very fast and easy task =)
 
 If any dot is inside the Target figure we consider Hit Area and Target have collision.
+
+## Other engine mechanics
+[Engine Mechanics Doc](engine_mechanics.md)

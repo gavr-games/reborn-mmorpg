@@ -30,11 +30,5 @@ func (rock *RockObject) CheckChip(e entity.IEngine, charGameObj entity.IGameObje
 		return false
 	}
 
-	// Check near the rock
-	if !rock.IsCloseTo(charGameObj) {
-		e.SendSystemMessage("You need to be closer to the rock.", player)
-		return false
-	}
-
 	return true
 }

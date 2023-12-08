@@ -29,6 +29,7 @@ func (claimObelisk *ClaimObeliskObject) Init(e entity.IEngine) bool {
 			"claim_obelisk_id": claimObelisk.Id(),
 		},
 		TimeLeft: constants.ClaimRentDuration,
+		Status: entity.DelayedActionReady,
 	}
 	claimObelisk.SetCurrentAction(delayedAction)
 

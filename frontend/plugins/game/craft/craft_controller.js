@@ -48,6 +48,7 @@ class CraftController {
             }
           }
         });
+        this.rotation = 0
       }
     };
     this.keyDownHandler = (key) => {
@@ -56,10 +57,11 @@ class CraftController {
           case "Escape":
             this.state = IDLE_STATE
             this.observer.remove()
+            this.rotation = 0
             break;
           case "ArrowRight":
           case "ArrowLeft":
-            this.rotation = this.rotation == 0 ? 1 : 0
+            this.rotation = this.rotation == 0 ? Math.PI / 2 : 0
             this.observer.rotate()
             break;
         }
@@ -74,6 +76,7 @@ class CraftController {
 
   remove() {
     this.observer.remove()
+    this.rotation = 0
     EventBus.$off("select-coords-and-rotation", this.selectionHandler)
     EventBus.$off("scene-pointer-moved", this.pointerMovedHandler)
     EventBus.$off("scene-pointer-moved", this.pointerDownHandler)

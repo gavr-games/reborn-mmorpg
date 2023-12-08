@@ -13,7 +13,7 @@ const (
 	CraftDistance = 0.5
 )
 
-func Check(e entity.IEngine, player *entity.Player, params map[string]interface{}) bool {
+func Check(e entity.IEngine, player *entity.Player, params map[string]interface{}, checkDistanceNow bool) bool {
 	craftItemName := params["item_name"].(string)
 	craftItemConfig := GetAtlas()[craftItemName].(map[string]interface{})
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
@@ -57,10 +57,6 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		}
 		tempGameObj.SetFloor(charGameObj.Floor())
 		tempGameObj.Rotate(rotation)
-		if charGameObj.GetDistance(tempGameObj) > CraftDistance {
-			e.SendSystemMessage("You need to be closer.", player)
-			return false
-		}
 
 		// Check claim access
 		if !claims.CheckAccess(e, charGameObj, tempGameObj) {
@@ -107,6 +103,16 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 						return false
 					}
 				}
+			}
+		}
+
+		if charGameObj.GetDistance(tempGameObj) > CraftDistance {
+			if checkDistanceNow {
+				e.SendSystemMessage("You need to be closer.", player)
+				return false
+			} else {
+				// move to object to craft it
+				charGameObj.SetMoveToCoordsByObject(tempGameObj)
 			}
 		}
 	}
