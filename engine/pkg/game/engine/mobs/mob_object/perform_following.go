@@ -4,17 +4,15 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
-func (mob *MobObject) performFollowing(newTickTime int64, targetObj entity.IGameObject, directionChangeTime int64) {
-	if mob.GetDistance(targetObj) <= FollowingDistance {
-		// Stop the mob
-		if mob.Properties()["speed_x"].(float64) != 0.0 || mob.Properties()["speed_y"].(float64) != 0.0 {
-			mob.Stop(mob.Engine)
+func (mob *MobObject) performFollowing(targetObj entity.IGameObject, directionChangeTime float64) {
+	if mob.GetDistance(targetObj) > FollowingDistance {
+		if mob.MoveToCoords() == nil {
+			mob.setMoveTo(directionChangeTime)
 		}
-		mob.turnToTarget(targetObj) // TODO: send only on change
-	} else {
-		if (newTickTime - mob.directionTickTime >= directionChangeTime) {
-			mob.directionTickTime = newTickTime
-			mob.SetXYSpeeds(mob.Engine, mob.getDirectionToTarget(targetObj))
-		}
+		mob.MoveToCoords().Bounds.X = targetObj.X()
+		mob.MoveToCoords().Bounds.Y = targetObj.Y()
+	}
+	if mob.TurnToXY(targetObj.X(), targetObj.Y()) {
+		mob.Engine.SendGameObjectUpdate(mob, "update_object")
 	}
 }

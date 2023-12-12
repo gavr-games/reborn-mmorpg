@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	MaxDistance = 0.1
+	MaxDistance = 0.2
 )
 
 type IGameObject interface {
@@ -32,6 +32,10 @@ type IGameObject interface {
 	SetRotation(rotation float64)
 	CurrentAction() *DelayedAction
 	SetCurrentAction( currentAction *DelayedAction)
+	MoveToCoords() *MoveToCoords
+	SetMoveToCoords(moveToCoords *MoveToCoords)
+	SetMoveToCoordsByObject(moveToObj IGameObject)
+	SetMoveToCoordsByXY(x float64, y float64)
 	Properties() map[string]interface{}
 	SetProperties(properties map[string]interface{})
 	Effects() map[string]interface{}
@@ -41,10 +45,13 @@ type IGameObject interface {
 	Intersects(b utils.Bounds) bool
 	Clone() *GameObject
 	GetDistance(b IGameObject) float64
+	GetDistanceToXY(x float64, y float64) float64
 	IsCloseTo(b IGameObject) bool
 	Rotate(rotation float64)
 	SetRotationByDirection(direction string)
 	GetRotationByDirection(direction string) float64
+	GetDirectionToXY(x float64, y float64) string
+	TurnToXY(x float64, y float64) bool
 }
 
 type GameObject struct {
@@ -62,6 +69,7 @@ type GameObject struct {
 	rotation float64 // from 0 to math.Pi * 2
 	properties map[string]interface{}
 	effects map[string]interface{}
+	moveToCoords *MoveToCoords //used for engine to automatically move object to this coord
 }
 
 func (obj *GameObject) X() float64 {
@@ -160,6 +168,42 @@ func (obj *GameObject) Effects() map[string]interface{} {
 
 func (obj *GameObject) SetEffects(effects map[string]interface{}) {
 	obj.effects = effects
+}
+
+func (obj *GameObject) MoveToCoords() *MoveToCoords {
+	return obj.moveToCoords
+}
+
+func (obj *GameObject) SetMoveToCoords(moveToCoords *MoveToCoords) {
+	obj.moveToCoords = moveToCoords
+}
+
+func (obj *GameObject) SetMoveToCoordsByObject(moveToObj IGameObject) {
+	obj.moveToCoords = &MoveToCoords{
+		Mode: MoveCloseToBounds,
+		Bounds: utils.Bounds{
+			X:      moveToObj.X(),
+			Y:      moveToObj.Y(),
+			Width:  moveToObj.Width(),
+			Height: moveToObj.Height(),
+		},
+		DirectionChangeTime: constants.MoveToDefaultDirectionChangeTime,
+		TimeUntilDirectionChange: 0,
+	}
+}
+
+func (obj *GameObject) SetMoveToCoordsByXY(x float64, y float64) {
+	obj.moveToCoords = &MoveToCoords{
+		Mode: MoveToExactCoords,
+		Bounds: utils.Bounds{
+			X:      x,
+			Y:      y,
+			Width:  0.0,
+			Height: 0.0,
+		},
+		DirectionChangeTime: constants.MoveToDefaultDirectionChangeTime,
+		TimeUntilDirectionChange: 0,
+	}
 }
 
 func (obj *GameObject) UnmarshalJSON(b []byte) error {
@@ -309,6 +353,20 @@ func (a GameObject) GetDistance(b IGameObject) float64 {
 	return math.Sqrt(math.Pow(xDistance, 2.0) + math.Pow(yDistance, 2.0))
 }
 
+// Get approximate distance to coords from object center
+func (a GameObject) GetDistanceToXY(x float64, y float64) float64 {
+	aXCenter := a.X()
+	aYCenter := a.Y()
+	
+	bXCenter := x
+	bYCenter := y
+
+	xDistance := math.Abs(aXCenter - bXCenter)
+	yDistance := math.Abs(aYCenter - bYCenter)
+
+	return math.Sqrt(math.Pow(xDistance, 2.0) + math.Pow(yDistance, 2.0))
+}
+
 // Determines if 2 objects are close enough to each other
 func (a GameObject) IsCloseTo(b IGameObject) bool {
 	if (a.Floor() != b.Floor()) {
@@ -317,14 +375,10 @@ func (a GameObject) IsCloseTo(b IGameObject) bool {
 	return a.GetDistance(b) < MaxDistance
 }
 
-// Rotates Game object. Possible rotations 0 and 1 (0 and 90 dergrees)
+// Rotates Game object.
 func (obj *GameObject) Rotate(rotation float64) {
 	if obj.Rotation() != rotation {
-		if rotation == 0 {
-			obj.SetRotation(rotation)
-		} else {
-			obj.SetRotation(math.Pi / 2)
-		}
+		obj.SetRotation(rotation)
 		width := obj.Width()
 		obj.SetWidth(obj.Height())
 		obj.SetHeight(width)
@@ -371,4 +425,37 @@ func (obj *GameObject) GetRotationByDirection(direction string) float64 {
 	}
 
 	return 0.0
+}
+
+// Get direction from object to x,y coords
+func (obj *GameObject) GetDirectionToXY(x float64, y float64) string {
+	possibleDirections := constants.GetPossibleDirections()
+	// Calclate angle between mob and target
+	// Choose the closest direction by angle by calculatin index in PossibleDirections slice
+	dx := x - obj.X()
+	dy := y - obj.Y()
+	angle := math.Atan2(dy, dx) // range (-PI, PI)
+	if angle < 0.0 {
+		angle = angle + math.Pi * 2
+	}
+	quotient := math.Floor(angle / (math.Pi / 4)) // math.Pi / 4 - is the angle between movement directions
+	remainder := angle - (math.Pi / 4) * quotient
+	if (remainder > math.Pi / 8) {
+		quotient = quotient + 1.0
+	}
+	directionIndex := int(quotient)
+	if (directionIndex == len(possibleDirections)) {
+		directionIndex = 0
+	}
+	return possibleDirections[directionIndex]
+}
+
+// 
+func (obj *GameObject) TurnToXY(x float64, y float64) bool {
+	direction := obj.GetDirectionToXY(x, y)
+	if obj.Rotation() != obj.GetRotationByDirection(direction) {
+		obj.SetRotationByDirection(direction)
+		return true
+	}
+	return false
 }

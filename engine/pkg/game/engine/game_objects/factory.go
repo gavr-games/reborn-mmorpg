@@ -95,6 +95,7 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 			FuncName: funcName,
 			Params: actionParams,
 			TimeLeft: timeLeft,
+			Status: entity.DelayedActionReady,
 		}
 		gameObj.SetCurrentAction(delayedAction)
 	}

@@ -18,7 +18,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 	
 		// Call check again to make sure nothing changed.
 		// For example some player or mob could move to the place of future building
-		if !Check(e, player, params) {
+		if !Check(e, player, params, true) {
 			return false
 		}
 

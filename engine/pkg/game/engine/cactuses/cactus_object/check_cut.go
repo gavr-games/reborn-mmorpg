@@ -30,11 +30,5 @@ func (cactus *CactusObject) CheckCut(e entity.IEngine, charGameObj entity.IGameO
 		return false
 	}
 
-	// Check near the cactus
-	if !cactus.IsCloseTo(charGameObj) {
-		e.SendSystemMessage("You need to be closer to the cactus.", player)
-		return false
-	}
-
 	return true
 }

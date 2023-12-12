@@ -20,8 +20,7 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 			delete(e.GameObjects(), player.VisionAreaGameObjectId)
 			charObj := e.GameObjects()[player.CharacterGameObjectId]
 			charObj.Properties()["visible"] = false
-			charObj.Properties()["speed_x"] = 0.0
-			charObj.Properties()["speed_y"] = 0.0
+			charObj.(entity.IMovingObject).Stop(e)
 			storage.GetClient().Updates <- charObj.Clone()
 			e.SendResponseToVisionAreas(charObj, "remove_object", map[string]interface{}{
 				"object": charObj,

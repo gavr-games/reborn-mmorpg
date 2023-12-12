@@ -55,6 +55,7 @@ func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
 			"claim_obelisk_id": claimObelisk.Id(),
 		},
 		TimeLeft: claimObelisk.Properties()["payed_until"].(float64) - float64(utils.MakeTimestamp()),
+		Status: entity.DelayedActionReady,
 	}
 	claimObelisk.SetCurrentAction(delayedAction)
 

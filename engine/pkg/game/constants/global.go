@@ -12,6 +12,7 @@ const (
 	ClaimArea = 20.0
 	ClaimRentDuration = 2419200000.0 // 4 weeks
 	ClaimRentCost = 10.0 //gold
+	MoveToDefaultDirectionChangeTime = 1000.0 // ms, used for MoveToCoords feature
 )
 
 func GetPossibleDirections() []string {

@@ -30,11 +30,5 @@ func (tree *TreeObject) CheckChop(e entity.IEngine, charGameObj entity.IGameObje
 		return false
 	}
 
-	// Check near the tree
-	if !tree.IsCloseTo(charGameObj) {
-		e.SendSystemMessage("You need to be closer to the tree.", player)
-		return false
-	}
-
 	return true
 }

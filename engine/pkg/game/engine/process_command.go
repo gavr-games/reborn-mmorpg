@@ -19,9 +19,10 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		// List of commands, which don't interrupt current character action.
 		// Like get_character_info does not interrupt choping a tree, but any movement does
 		nonCancellingCmds := []string{"get_character_info", "open_container", "get_craft_atlas", "npc_trade_info", "get_item_info"}
-		// Cancel character delayed actions
+		// Cancel character delayed actions and auto moving
 		if !slices.Contains(nonCancellingCmds, cmd.(string)) {
 			delayed_actions.Cancel(e, charGameObj)
+			charGameObj.SetMoveToCoords(nil)
 		}
 
 		// Process Cmd
@@ -87,6 +88,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "chop_tree":
 			tree := e.GameObjects()[params.(string)]
 			if tree.(entity.ITreeObject).CheckChop(e, charGameObj) {
+				charGameObj.SetMoveToCoordsByObject(tree)
 				delayed_actions.Start(e, charGameObj, "Chop", map[string]interface{}{
 					"characterId": charGameObj.Id(),
 					"treeId": tree.Id(),
@@ -95,6 +97,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "chip_rock":
 			rock := e.GameObjects()[params.(string)]
 			if rock.(entity.IRockObject).CheckChip(e, charGameObj) {
+				charGameObj.SetMoveToCoordsByObject(rock)
 				delayed_actions.Start(e, charGameObj, "Chip", map[string]interface{}{
 					"characterId": charGameObj.Id(),
 					"rockId": rock.Id(),
@@ -103,6 +106,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "cut_cactus":
 			cactus := e.GameObjects()[params.(string)]
 			if cactus.(entity.ICactusObject).CheckCut(e, charGameObj) {
+				charGameObj.SetMoveToCoordsByObject(cactus)
 				delayed_actions.Start(e, charGameObj, "CutCactus", map[string]interface{}{
 					"characterId": charGameObj.Id(),
 					"cactusId": cactus.Id(),
@@ -117,7 +121,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				}, -1.0)
 			}
 		case "craft":
-			if craft.Check(e, player, params.(map[string]interface{})) {
+			if craft.Check(e, player, params.(map[string]interface{}), false) {
 				params.(map[string]interface{})["playerId"] = float64(player.Id)
 				craftItem := params.(map[string]interface{})["item_name"].(string)
 				delayed_actions.Start(
