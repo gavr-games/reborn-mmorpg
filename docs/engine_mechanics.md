@@ -10,7 +10,7 @@ CurrentAction actually means a function to execute in the future.
 To store function to be executed engine uses [DelayedAction struct](../engine/pkg/game/entity/delayed_action.go).
 This struct has FuncName to be executed and time to wait (`TimeLeft`).
 
-ENgine tick by tick decreases `TimeLeft`. When it becomes 0, the Engine goes to [Atlas](../engine/pkg/game/engine/craft/atlas.go), finds the appropriate golang functio and execute it with params.
+Engine tick by tick decreases `TimeLeft`. When it becomes 0, the Engine goes to [Atlas](../engine/pkg/game/engine/craft/atlas.go), finds the appropriate golang function and executes it with params.
 
 ## Move To Coords
 This is an engine mechanism to make character or mob to automatically move to some coords or approach and object.
