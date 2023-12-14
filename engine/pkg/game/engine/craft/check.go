@@ -3,10 +3,10 @@ package craft
 import (
 	"fmt"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 const (
@@ -31,7 +31,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 	// Check has resources
 	if len(craftItemConfig["resources"].(map[string]interface{})) != 0 {
 		// check character has container
-		if (slots["back"] == nil) {
+		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container with required resources.", player)
 			return false
 		}
@@ -76,9 +76,8 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			for _, val := range possibleCollidableObjects {
 				if val.(entity.IGameObject).Id() == charGameObj.Id() {
 					e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
-						return false
-				} else
-				if collidable, ok := val.(entity.IGameObject).Properties()["collidable"]; ok {
+					return false
+				} else if collidable, ok := val.(entity.IGameObject).Properties()["collidable"]; ok {
 					if collidable.(bool) {
 						e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
 						return false

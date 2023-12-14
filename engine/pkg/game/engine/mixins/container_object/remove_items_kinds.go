@@ -21,16 +21,16 @@ func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.P
 	}
 
 	//TODO: search inside sub containers
-  for _, itemId := range itemIds {
+	for _, itemId := range itemIds {
 		if itemId != nil {
 			item := e.GameObjects()[itemId.(string)]
-			itemKind := item.Properties()["kind"].(string)
+			itemKind := item.Kind()
 			itemStackable := false
 			if value, ok := item.Properties()["stackable"]; ok {
 				itemStackable = value.(bool)
 			}
 			// If item stackable substract "amount", otherwise remove items as 1 per each game_object
-    	if slices.Contains(itemsKinds, itemKind) {
+			if slices.Contains(itemsKinds, itemKind) {
 				performRemove := true
 				if itemStackable {
 					item.Properties()["amount"] = item.Properties()["amount"].(float64) - itemsCounts[itemKind]
@@ -60,6 +60,6 @@ func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.P
 				}
 			}
 		}
-  }
+	}
 	return false
 }

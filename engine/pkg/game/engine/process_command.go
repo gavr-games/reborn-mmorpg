@@ -3,10 +3,10 @@ package engine
 import (
 	"slices"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
 // Process commands from players
@@ -32,7 +32,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			charGameObj.Properties()["speed_y"] = 0.0
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		case "move_north", "move_south", "move_east", "move_west",
-				"move_north_east", "move_north_west", "move_south_east", "move_south_west":
+			"move_north_east", "move_north_west", "move_south_east", "move_south_west":
 			charGameObj.(entity.IMovingObject).SetXYSpeeds(e, cmd.(string))
 		case "move_xy":
 			charGameObj.SetMoveToCoordsByXY(params.(map[string]interface{})["x"].(float64), params.(map[string]interface{})["y"].(float64))
@@ -48,6 +48,12 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "npc_buy_item":
 			if npcObj, npcOk := e.GameObjects()[params.(map[string]interface{})["npc_id"].(string)]; npcOk {
 				npcObj.(entity.INpcObject).BuyItem(e, charGameObj,
+					params.(map[string]interface{})["item_name"].(string),
+					params.(map[string]interface{})["amount"].(float64))
+			}
+		case "npc_sell_item":
+			if npcObj, npcOk := e.GameObjects()[params.(map[string]interface{})["npc_id"].(string)]; npcOk {
+				npcObj.(entity.INpcObject).SellItem(e, charGameObj,
 					params.(map[string]interface{})["item_name"].(string),
 					params.(map[string]interface{})["amount"].(float64))
 			}
@@ -93,7 +99,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				charGameObj.SetMoveToCoordsByObject(tree)
 				delayed_actions.Start(e, charGameObj, "Chop", map[string]interface{}{
 					"characterId": charGameObj.Id(),
-					"treeId": tree.Id(),
+					"treeId":      tree.Id(),
 				}, -1.0)
 			}
 		case "chip_rock":
@@ -102,7 +108,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				charGameObj.SetMoveToCoordsByObject(rock)
 				delayed_actions.Start(e, charGameObj, "Chip", map[string]interface{}{
 					"characterId": charGameObj.Id(),
-					"rockId": rock.Id(),
+					"rockId":      rock.Id(),
 				}, -1.0)
 			}
 		case "cut_cactus":
@@ -111,7 +117,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				charGameObj.SetMoveToCoordsByObject(cactus)
 				delayed_actions.Start(e, charGameObj, "CutCactus", map[string]interface{}{
 					"characterId": charGameObj.Id(),
-					"cactusId": cactus.Id(),
+					"cactusId":    cactus.Id(),
 				}, -1.0)
 			}
 		case "dig_surface":
@@ -119,7 +125,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			if shovel.(entity.IShovelObject).CheckDig(e, charGameObj) {
 				delayed_actions.Start(e, charGameObj, "Dig", map[string]interface{}{
 					"characterId": charGameObj.Id(),
-					"shovelId": shovel.Id(),
+					"shovelId":    shovel.Id(),
 				}, -1.0)
 			}
 		case "craft":
@@ -136,7 +142,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			if hatchery.(entity.IHatcheryObject).CheckHatch(e, charGameObj) {
 				delayed_actions.Start(e, hatchery, "Hatch", map[string]interface{}{
 					"hatcheryId": hatchery.Id(),
-					"mobPath": "mob/fire_dragon",
+					"mobPath":    "mob/fire_dragon",
 				}, -1.0)
 			}
 		case "town_teleport":

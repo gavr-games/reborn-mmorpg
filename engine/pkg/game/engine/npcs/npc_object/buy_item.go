@@ -5,10 +5,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-const (
-	TradeDistance = 1.0
-)
-
 func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
@@ -48,7 +44,7 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 		// check character has container
 		for i := 0; i < int(amount); i++ {
 			putInContainer := false
-			if (slots["back"] != nil) {
+			if slots["back"] != nil {
 				// put log to container
 				putInContainer = container.(entity.IContainerObject).Put(e, player, itemObj.Id(), -1)
 			}
