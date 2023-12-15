@@ -4,10 +4,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
-const (
-	ExactCoordsDistance = 0.15
-)
-
 // Perform object moving to the selected coords
 func (mObj *MovingObject) PerformMoveTo(e entity.IEngine, tickDelta int64) {
 	obj := mObj.gameObj
@@ -28,7 +24,9 @@ func (mObj *MovingObject) needToStop() bool {
 	obj := mObj.gameObj
 	moveTo := obj.MoveToCoords()
 	// is close to exact coords
-	if (moveTo.Mode == entity.MoveToExactCoords && obj.GetDistanceToXY(moveTo.Bounds.X, moveTo.Bounds.Y) < ExactCoordsDistance) {
+	// there is an issue with moving EXACTLY to the required coordinate
+	// the object stops close to the target coordinates. In case I try to increase the aacuracy it starts to "miss" the point
+	if (moveTo.Mode == entity.MoveToExactCoords && obj.GetDistanceToXY(moveTo.Bounds.X, moveTo.Bounds.Y) < obj.Width() / 2) {
 		return true
 	}
 	// is close to bounds

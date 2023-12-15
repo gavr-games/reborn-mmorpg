@@ -34,6 +34,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "move_north", "move_south", "move_east", "move_west",
 				"move_north_east", "move_north_west", "move_south_east", "move_south_west":
 			charGameObj.(entity.IMovingObject).SetXYSpeeds(e, cmd.(string))
+		case "move_xy":
+			charGameObj.SetMoveToCoordsByXY(params.(map[string]interface{})["x"].(float64), params.(map[string]interface{})["y"].(float64))
 		case "get_character_info":
 			e.SendResponse("character_info", serializers.GetInfo(e.GameObjects(), charGameObj), player)
 		case "get_item_info":
