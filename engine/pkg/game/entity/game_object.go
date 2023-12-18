@@ -353,16 +353,16 @@ func (a GameObject) GetDistance(b IGameObject) float64 {
 	return math.Sqrt(math.Pow(xDistance, 2.0) + math.Pow(yDistance, 2.0))
 }
 
-// Get approximate distance to coords from object center
+// Get approximate distance to coords from object 
 func (a GameObject) GetDistanceToXY(x float64, y float64) float64 {
-	aXCenter := a.X()
-	aYCenter := a.Y()
+	aX := a.X()
+	aY := a.Y()
 	
-	bXCenter := x
-	bYCenter := y
+	bX := x
+	bY := y
 
-	xDistance := math.Abs(aXCenter - bXCenter)
-	yDistance := math.Abs(aYCenter - bYCenter)
+	xDistance := math.Abs(aX - bX)
+	yDistance := math.Abs(aY - bY)
 
 	return math.Sqrt(math.Pow(xDistance, 2.0) + math.Pow(yDistance, 2.0))
 }

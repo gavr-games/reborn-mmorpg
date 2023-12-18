@@ -26,6 +26,7 @@ class GameObserver {
     this.renderObservers = [];
     this.previousAlphaMeshes = [];
     this.previousAlphaMeshesIds = [];
+    this.pickCoordsPlane = null // this plane is used for picking coords on pointer moved
   }
 
   init() {
@@ -88,13 +89,24 @@ class GameObserver {
 
       var hit = scene.pickWithRay(ray);
       if (hit.pickedMesh) {
-        const gameObject = getMeshRoot(hit.pickedMesh)
-        if (gameObject) {
-          EventBus.$emit("game-object-clicked", {
-            game_object: gameObject.metadata.state.payload,
-            x: e.pageX,
-            y: e.pageY,
-          });
+        if (hit.pickedMesh.id == "xy-coords-plane") {
+          const pickedPoint = hit.pickedPoint;
+          EventBus.$emit("perform-game-action", {
+            cmd: "move_xy",
+            params: {
+              "x": pickedPoint.x,
+              "y": pickedPoint.z,
+            }
+          })
+        } else {
+          const gameObject = getMeshRoot(hit.pickedMesh)
+          if (gameObject) {
+            EventBus.$emit("game-object-clicked", {
+              game_object: gameObject.metadata.state.payload,
+              x: e.pageX,
+              y: e.pageY,
+            });
+          }
         }
       }
 
@@ -156,6 +168,17 @@ class GameObserver {
 
     this.grid = new Grid(this.scene);
     //this.grid.create();
+
+    // Create plane to pick coords - replace 1000 with floor width
+    this.pickCoordsPlane = BABYLON.MeshBuilder.CreatePlane("xy-coords-plane", {height: 1000, width: 1000}, this.scene)
+    this.pickCoordsPlane.position.x = 0
+    this.pickCoordsPlane.position.z = 0
+    this.pickCoordsPlane.position.y = 0.05
+    this.pickCoordsPlane.rotate(BABYLON.Axis.X, Math.PI / 2);
+    this.pickCoordsPlane.material = new BABYLON.StandardMaterial("ObjectplaneMaterial", this.scene)
+    this.pickCoordsPlane.material.alpha = 0;
+    this.pickCoordsPlane.convertToUnIndexedMesh()
+    this.pickCoordsPlane.doNotSyncBoundingInfo = true
 
     showWorldAxis(1, this.scene);
   }

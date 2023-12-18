@@ -9,7 +9,6 @@ class CraftObserver {
     this.container = null;
     this.mesh = null;
     this.rotation = 0
-    this.plane = null // this plane is used for picking coords on pointer moved
     if (GameObserver.loaded) {
       this.scene = GameObserver.scene;
     } else {
@@ -33,16 +32,6 @@ class CraftObserver {
     this.mesh = mesh;
     addAlpha(this.mesh, this.scene, 0.7)
     GameObserver.grid.create()
-    // replace 1000 with floor width
-    this.plane = BABYLON.MeshBuilder.CreatePlane("craft-plane", {height: 1000, width: 1000}, this.scene)
-    this.plane.position.x = 0
-    this.plane.position.z = 0
-    this.plane.position.y = 0.05
-    this.plane.rotate(BABYLON.Axis.X, Math.PI / 2);
-    this.plane.material = new BABYLON.StandardMaterial("ObjectplaneMaterial", this.scene)
-    this.plane.material.alpha = 0;
-    this.plane.convertToUnIndexedMesh()
-    this.plane.doNotSyncBoundingInfo = true
   }
 
   update(x, y) {
@@ -64,10 +53,7 @@ class CraftObserver {
     if (this.mesh) {
       this.mesh.dispose();
       this.mesh = null;
-
     }
-    this.plane.dispose()
-    this.plane = null
     GameObserver.grid.remove()
   }
 }
