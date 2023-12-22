@@ -4,17 +4,19 @@
 [docs/index.md](docs/index.md)
 
 ## Setup
-- `cp .env.example .env`
+- `make all`
 
-## Run
-- `docker-compose up -d`
-
-## Stop
-- `docker-compose stop`
+## Everyday usage
+- `make start` - start the project
+- `make stop` - stop the project
+- `make restart` - restart the project
+- `make attach-engine` - view engine container output
 
 ## Endpoints
 - [http://localhost](http://localhost)
 
 ## Reset game data
-- Stop engine
-- run `docker exec -it reborn-mmorpg-redis-1 redis-cli FLUSHALL`
+To delete current game data and regenerate the world execute `make reset-world`.
+
+## List available commands
+- `make help`
