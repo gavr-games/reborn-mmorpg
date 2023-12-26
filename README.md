@@ -8,6 +8,7 @@
 
 ## Everyday usage
 - `make start` - start the project
+- `make start-debug` - start the project in debug mode
 - `make stop` - stop the project
 - `make restart` - restart the project
 - `make attach-engine` - view engine container output

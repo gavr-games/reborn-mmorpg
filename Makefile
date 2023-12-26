@@ -1,5 +1,5 @@
 # Define variables
-DOCKER_COMPOSE = docker-compose
+DOCKER_COMPOSE = docker compose
 DOCKER = docker
 
 # Containers
@@ -38,6 +38,9 @@ attach-engine: ## Attach to the engine container
 .PHONY: start
 start: ## Start all Docker containers
 	$(DOCKER_COMPOSE) up -d
+
+start-debug: docker-compose.yml docker-compose.debug.yml ## Start all Docker containers in debug mode
+	$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.debug.yml up
 
 .PHONY: stop
 stop: ## Stop all Docker containers

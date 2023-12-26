@@ -1,4 +1,4 @@
 #!/bin/sh
 
 go mod download
-go run cmd/chat/main.go
+dlv debug ./cmd/chat/
