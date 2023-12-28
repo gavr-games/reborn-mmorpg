@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+  chat:
+    command: ./bin/debug/start_chat.sh
+
+  engine_api:
+    command: ./bin/debug/start_api.sh
+
+  engine:
+    command: ./bin/debug/start.sh
