@@ -11,6 +11,11 @@ func (cactus *CactusObject) Cut(e entity.IEngine, charGameObj entity.IGameObject
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
+		if slots["back"] == nil {
+			e.SendSystemMessage("You don't have container", player)
+			return false
+		}
+
 		if !cactus.CheckCut(e, charGameObj) {
 			return false
 		}
@@ -24,23 +29,9 @@ func (cactus *CactusObject) Cut(e entity.IEngine, charGameObj entity.IGameObject
 		// Create cactus slice
 		sliceObj := e.CreateGameObject("resource/cactus_slice", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
-		// check character has container
-		putInContainer := false
-		if (slots["back"] != nil) {
-			// put log to container
-			container := e.GameObjects()[slots["back"].(string)]
-			putInContainer = container.(entity.IContainerObject).Put(e, player, sliceObj.Id(), -1)
-		}
-
-		// OR drop logs on the ground
-		if !putInContainer {
-			sliceObj.SetFloor(charGameObj.Floor())
-			e.Floors()[sliceObj.Floor()].Insert(sliceObj)
-			storage.GetClient().Updates <- sliceObj.Clone()
-			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
-				"object": sliceObj,
-			})
-		}
+		// put log to container or drop it to the ground
+		container := e.GameObjects()[slots["back"].(string)]
+		container.(entity.IContainerObject).PutOrDrop(e, player, sliceObj.Id(), -1)
 
 		// Decrease slices stored in the cactus
 		resources := cactus.Properties()["resources"].(map[string]interface{})

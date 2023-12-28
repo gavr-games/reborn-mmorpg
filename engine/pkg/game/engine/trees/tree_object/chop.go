@@ -11,6 +11,11 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
+		if slots["back"] == nil {
+			e.SendSystemMessage("You don't have container", player)
+			return false
+		}
+
 		if !tree.CheckChop(e, charGameObj) {
 			return false
 		}
@@ -24,23 +29,9 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 		// Create log
 		logObj := e.CreateGameObject("resource/log", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
-		// check character has container
-		putInContainer := false
-		if (slots["back"] != nil) {
-			// put log to container
-			container := e.GameObjects()[slots["back"].(string)]
-			putInContainer = container.(entity.IContainerObject).Put(e, player, logObj.Id(), -1)
-		}
-
-		// OR drop logs on the ground
-		if !putInContainer {
-			logObj.SetFloor(charGameObj.Floor())
-			e.Floors()[logObj.Floor()].Insert(logObj)
-			storage.GetClient().Updates <- logObj.Clone()
-			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
-				"object": logObj,
-			})
-		}
+		// Put to container or drop to the ground
+		container := e.GameObjects()[slots["back"].(string)]
+		container.(entity.IContainerObject).PutOrDrop(e, player, logObj.Id(), -1)
 
 		// Decrease logs stored in the tree
 		resources := tree.Properties()["resources"].(map[string]interface{})

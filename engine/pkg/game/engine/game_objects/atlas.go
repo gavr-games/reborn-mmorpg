@@ -837,17 +837,17 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"resource/fire_dragon_egg": map[string]interface{}{
 						"amount":   1.0,
 						"resource": "gold",
-						"price":    3.0,
+						"price":    1.0,
 					},
 					"resource/log": map[string]interface{}{
 						"amount":   1.0,
 						"resource": "gold",
-						"price":    1.5,
+						"price":    2.0,
 					},
 					"resource/cactus_slice": map[string]interface{}{
 						"amount":   1.0,
 						"resource": "fire_dragon_egg",
-						"price":    2.0,
+						"price":    3.0,
 					},
 				},
 				"actions": map[string]interface{}{
