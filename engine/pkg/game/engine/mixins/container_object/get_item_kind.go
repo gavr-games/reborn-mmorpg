@@ -10,13 +10,13 @@ func (cont *ContainerObject) GetItemKind(e entity.IEngine, itemKind string) enti
 	itemIds := container.Properties()["items_ids"].([]interface{})
 
 	//TODO: search inside sub containers
-  for _, itemId := range itemIds {
+	for _, itemId := range itemIds {
 		if itemId != nil {
-			kind := e.GameObjects()[itemId.(string)].Properties()["kind"].(string)
-    	if kind == itemKind {
+			kind := e.GameObjects()[itemId.(string)].Kind()
+			if kind == itemKind {
 				return e.GameObjects()[itemId.(string)]
 			}
 		}
-  }
+	}
 	return nil
 }

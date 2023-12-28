@@ -4,44 +4,44 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs/mob_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters/character_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/backpack_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries/hatchery_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/walls/wall_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims/claim_obelisk_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/cactuses/cactus_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs/npc_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/resources/resource_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/tools/tool_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/shovels/shovel_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/weapons/weapon_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/potions/potion_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters/character_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims/claim_obelisk_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/backpack_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries/hatchery_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs/mob_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs/npc_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/potions/potion_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/resources/resource_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/shovels/shovel_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/tools/tool_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/walls/wall_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/weapons/weapon_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 // Engine runs the game
 type Engine struct {
-	tickTime int64 //last tick time in milliseconds
-	floors []*utils.Quadtree // slice of global game areas, underground, etc
-	players map[int]*entity.Player // map of all players
-	gameObjects map[string]entity.IGameObject // map of ALL objects in the game
-	mobs map[string] entity.IMobObject // map of ALL mobs in the game
-	effects map[string]map[string]interface{} // all active effects in the game
-	commands chan *ClientCommand // Inbound messages from the clients.
-	register chan *Client // Register requests from the clients.
-	unregister chan *Client // Unregister requests from clients.
+	tickTime    int64                             //last tick time in milliseconds
+	floors      []*utils.Quadtree                 // slice of global game areas, underground, etc
+	players     map[int]*entity.Player            // map of all players
+	gameObjects map[string]entity.IGameObject     // map of ALL objects in the game
+	mobs        map[string]entity.IMobObject      // map of ALL mobs in the game
+	effects     map[string]map[string]interface{} // all active effects in the game
+	commands    chan *ClientCommand               // Inbound messages from the clients.
+	register    chan *Client                      // Register requests from the clients.
+	unregister  chan *Client                      // Unregister requests from clients.
 }
 
 func (e Engine) Floors() []*utils.Quadtree {
@@ -52,7 +52,7 @@ func (e Engine) GameObjects() map[string]entity.IGameObject {
 	return e.gameObjects
 }
 
-func (e Engine) Mobs() map[string] entity.IMobObject {
+func (e Engine) Mobs() map[string]entity.IMobObject {
 	return e.mobs
 }
 
@@ -103,12 +103,12 @@ func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseTy
 	}
 	message, err := json.Marshal(resp)
 	if err != nil {
-			fmt.Println(err)
-			return
+		fmt.Println(err)
+		return
 	}
 
 	for _, obj := range intersectingObjects {
-		if obj.(entity.IGameObject).Type() == "player" && obj.(entity.IGameObject).Properties()["kind"].(string) == "player_vision_area" {
+		if obj.(entity.IGameObject).Type() == "player" && obj.(entity.IGameObject).Kind() == "player_vision_area" {
 			playerId := obj.(entity.IGameObject).Properties()["player_id"].(int)
 			if player, ok := e.Players()[playerId]; ok {
 				if player.Client != nil {
@@ -140,7 +140,7 @@ func (e Engine) SendGameObjectUpdate(gameObj entity.IGameObject, updateType stri
 // Sends errors and other system response messages to specific player
 func (e Engine) SendSystemMessage(message string, player *entity.Player) {
 	e.SendResponse("add_message", map[string]interface{}{
-		"type": "system",
+		"type":    "system",
 		"message": message,
 	}, player)
 }
@@ -210,7 +210,7 @@ func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation 
 
 	e.GameObjects()[gameObj.Id()] = gameObj
 
-	if gameObj.Properties()["kind"].(string) != "player_vision_area" {
+	if gameObj.Kind() != "player_vision_area" {
 		storage.GetClient().Updates <- gameObj.Clone()
 	}
 
@@ -226,7 +226,7 @@ func NewEngine() *Engine {
 		tickTime:    0,
 		players:     make(map[int]*entity.Player),
 		gameObjects: make(map[string]entity.IGameObject),
-		mobs:        make(map[string] entity.IMobObject),
+		mobs:        make(map[string]entity.IMobObject),
 		effects:     make(map[string]map[string]interface{}),
 		floors:      make([]*utils.Quadtree, constants.FloorCount),
 		commands:    make(chan *ClientCommand),
@@ -270,11 +270,11 @@ func (e *Engine) Run() {
 		default:
 			// Run world once in TickSize
 			newTickTime := utils.MakeTimestamp()
-			if newTickTime - e.tickTime >= constants.TickSize {
-				characters.Update(e, newTickTime - e.tickTime)
-				mobs.Update(e, newTickTime - e.tickTime, newTickTime)
-				effects.Update(e, newTickTime - e.tickTime)
-				delayed_actions.UpdateAll(e, newTickTime - e.tickTime)
+			if newTickTime-e.tickTime >= constants.TickSize {
+				characters.Update(e, newTickTime-e.tickTime)
+				mobs.Update(e, newTickTime-e.tickTime, newTickTime)
+				effects.Update(e, newTickTime-e.tickTime)
+				delayed_actions.UpdateAll(e, newTickTime-e.tickTime)
 				e.tickTime = newTickTime
 			}
 		}

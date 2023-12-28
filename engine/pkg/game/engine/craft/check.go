@@ -86,7 +86,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			}
 		}
 
-		if tempGameObj.Properties()["kind"].(string) == "claim_obelisk" {
+		if tempGameObj.Kind() == "claim_obelisk" {
 			// check cannot create 2 claims
 			if claimId, hasClaimId := charGameObj.Properties()["claim_obelisk_id"]; hasClaimId {
 				if claimId != nil {
@@ -97,7 +97,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			// check cannot create if there is another claim area
 			if len(possibleCollidableObjects) > 0 {
 				for _, val := range possibleCollidableObjects {
-					if val.(entity.IGameObject).Properties()["kind"] == "claim_area" {
+					if val.(entity.IGameObject).Kind() == "claim_area" {
 						e.SendSystemMessage("Cannot build it here. There is another claim area in the way.", player)
 						return false
 					}
