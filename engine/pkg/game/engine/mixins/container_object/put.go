@@ -3,9 +3,9 @@ package container_object
 import (
 	"slices"
 
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 // position: -1 for any empty slot
@@ -13,22 +13,36 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 	container := cont.gameObj
 	item := e.GameObjects()[itemId]
 
-	if container.Properties()["free_capacity"] == 0.0 {
-		e.SendSystemMessage("This container is full.", player)
-		return false
-	}
-
 	if !cont.CheckAccess(e, player) {
 		e.SendSystemMessage("You don't have access to this container", player)
 		return false
 	}
 
+	itemStackable := false
+	if value, ok := item.Properties()["stackable"]; ok {
+		itemStackable = value.(bool)
+	}
+
 	//TODO: also search free space inside sub-containers
 	freePosition := position
 	if position == -1 {
+		if itemStackable {
+			existingItem := container.(entity.IContainerObject).GetItemKind(e, item.Kind())
+			if existingItem != nil {
+				existingItem.Properties()["amount"] = existingItem.Properties()["amount"].(float64) + item.Properties()["amount"].(float64)
+				e.SendGameObjectUpdate(existingItem, "update_object")
+				return true
+			}
+		}
+
+		if container.Properties()["free_capacity"] == 0.0 {
+			e.SendSystemMessage("This container is full.", player)
+			return false
+		}
+
 		freePosition = slices.IndexFunc(container.Properties()["items_ids"].([]interface{}), func(id interface{}) bool { return id == nil })
 	} else {
-		if (container.Properties()["items_ids"].([]interface{})[position] == nil) {
+		if container.Properties()["items_ids"].([]interface{})[position] == nil {
 			freePosition = position
 		} else {
 			e.SendSystemMessage("This slot inside the container is already occupied.", player)
@@ -48,9 +62,9 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 
 	// Send updates to players
 	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "put_item_to_container", map[string]interface{}{
-		"item": serializers.GetInfo(e.GameObjects(), item),
+		"item":         serializers.GetInfo(e.GameObjects(), item),
 		"container_id": container.Id(),
-		"position": freePosition,
+		"position":     freePosition,
 	})
 
 	return true

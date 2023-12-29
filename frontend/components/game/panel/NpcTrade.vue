@@ -12,6 +12,12 @@
       </div>
       <h4 class="heading" @click="toggleExpandTab('buys')">Sell</h4>
       <div class="items" v-if="expandTabs['buys']">
+        <div v-for="(item, itemName) in buyItems" :key="itemName" class="item">
+          <GameItemsIcon v-bind:item="itemName.split('/')[1]" />:{{ item.amount }}
+          for
+          <GameItemsIcon v-bind:item="item.resource" />: {{ item.price }}
+          <button type="button" class="rpgui-button" @click="sellItem(itemName)"><p>Sell</p></button>
+        </div>
       </div>
       <button type="button" class="rpgui-button" @click="showNpcTradePanel = false"><p>Close</p></button>
     </div>
@@ -45,6 +51,7 @@ export default {
       this.showNpcTradePanel = true
       this.npcInfo = data
       this.sellItems = data.sells
+      this.buyItems = data.buys
     },
     toggleExpandTab(skillName) {
       if (this.expandTabs[skillName]) {
@@ -57,6 +64,16 @@ export default {
     buyItem(itemName) {
       EventBus.$emit("perform-game-action", {
         cmd: "npc_buy_item",
+        params: {
+          "npc_id": this.npcInfo.id,
+          "item_name": itemName,
+          "amount": 1,
+        }
+      });
+    },
+    sellItem(itemName) {
+      EventBus.$emit("perform-game-action", {
+        cmd: "npc_sell_item",
         params: {
           "npc_id": this.npcInfo.id,
           "item_name": itemName,

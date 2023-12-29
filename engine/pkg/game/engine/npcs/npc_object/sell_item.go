@@ -1,10 +1,12 @@
 package npc_object
 
 import (
+	"strings"
+
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
-func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) bool {
+func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
@@ -19,14 +21,12 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 			return false
 		}
 
-		// get required resources amounts
-		resourceKey := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
-		resourceAmount := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
-
 		container := e.GameObjects()[slots["back"].(string)]
+		itemKind := strings.Split(itemKey, "/")[1]
+
 		// check container has items
 		if !container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
-			(resourceKey): resourceAmount,
+			itemKind: amount,
 		}) {
 			e.SendSystemMessage("You don't have required resources.", player)
 			return false
@@ -34,33 +34,36 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 
 		// substract resources/money
 		if !container.(entity.IContainerObject).RemoveItemsKinds(e, player, map[string]interface{}{
-			(resourceKey): resourceAmount,
+			itemKind: amount,
 		}) {
 			e.SendSystemMessage("Can't remove required resources.", player)
 			return false
 		}
 
-		// Create items
-		itemObj := e.CreateGameObject(itemKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+		resourceAmount := npcObj.Properties()["buys"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
+		resourceKind := npcObj.Properties()["buys"].(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
+		resourceKey := "resource/" + resourceKind
+
+		resourceObj := e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
 			"visible": false,
 		})
 
-		if isStackable, ok := itemObj.Properties()["stackable"]; ok {
+		if isStackable, ok := resourceObj.Properties()["stackable"]; ok {
 			if isStackable.(bool) {
-				itemObj.Properties()["amount"] = amount
-				return container.(entity.IContainerObject).PutOrDrop(e, charGameObj, itemObj.Id(), -1)
+				resourceObj.Properties()["amount"] = resourceAmount
+				return container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1)
 			}
 		}
 
-		for i := 0; i < int(amount); i++ {
-			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, itemObj.Id(), -1)
+		for i := 0; i < int(resourceAmount); i++ {
+			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1)
 
 			// eliminate creating redundant object
 			if i == int(resourceAmount)-1 {
 				break
 			}
 
-			itemObj = e.CreateGameObject(itemKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+			resourceObj = e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
 				"visible": false,
 			})
 		}

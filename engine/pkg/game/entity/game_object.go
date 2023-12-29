@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"math"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 
 type IGameObject interface {
 	X() float64
-	SetX(x float64) 
+	SetX(x float64)
 	Y() float64
 	SetY(y float64)
 	Width() float64
@@ -31,7 +31,7 @@ type IGameObject interface {
 	Rotation() float64
 	SetRotation(rotation float64)
 	CurrentAction() *DelayedAction
-	SetCurrentAction( currentAction *DelayedAction)
+	SetCurrentAction(currentAction *DelayedAction)
 	MoveToCoords() *MoveToCoords
 	SetMoveToCoords(moveToCoords *MoveToCoords)
 	SetMoveToCoordsByObject(moveToObj IGameObject)
@@ -62,14 +62,14 @@ type GameObject struct {
 	height float64
 
 	// game params
-	id string
-	objType string
-	floor int // -1 for does not belong to any floor
+	id            string
+	objType       string
+	floor         int // -1 for does not belong to any floor
 	currentAction *DelayedAction
-	rotation float64 // from 0 to math.Pi * 2
-	properties map[string]interface{}
-	effects map[string]interface{}
-	moveToCoords *MoveToCoords //used for engine to automatically move object to this coord
+	rotation      float64 // from 0 to math.Pi * 2
+	properties    map[string]interface{}
+	effects       map[string]interface{}
+	moveToCoords  *MoveToCoords //used for engine to automatically move object to this coord
 }
 
 func (obj *GameObject) X() float64 {
@@ -187,7 +187,7 @@ func (obj *GameObject) SetMoveToCoordsByObject(moveToObj IGameObject) {
 			Width:  moveToObj.Width(),
 			Height: moveToObj.Height(),
 		},
-		DirectionChangeTime: constants.MoveToDefaultDirectionChangeTime,
+		DirectionChangeTime:      constants.MoveToDefaultDirectionChangeTime,
 		TimeUntilDirectionChange: 0,
 	}
 }
@@ -201,28 +201,28 @@ func (obj *GameObject) SetMoveToCoordsByXY(x float64, y float64) {
 			Width:  0.0,
 			Height: 0.0,
 		},
-		DirectionChangeTime: constants.MoveToDefaultDirectionChangeTime,
+		DirectionChangeTime:      constants.MoveToDefaultDirectionChangeTime,
 		TimeUntilDirectionChange: 0,
 	}
 }
 
 func (obj *GameObject) UnmarshalJSON(b []byte) error {
 	var tmp struct {
-		X float64
-		Y float64
-		Width float64
-		Height float64
-		Id string
-		Type string
-		Floor int 
+		X             float64
+		Y             float64
+		Width         float64
+		Height        float64
+		Id            string
+		Type          string
+		Floor         int
 		CurrentAction *DelayedAction
-		Rotation float64
-		Properties map[string]interface{}
-		Effects map[string]interface{}
+		Rotation      float64
+		Properties    map[string]interface{}
+		Effects       map[string]interface{}
 	}
 	err := json.Unmarshal(b, &tmp)
 	if err != nil {
-			return err
+		return err
 	}
 	obj.x = tmp.X
 	obj.y = tmp.Y
@@ -235,47 +235,47 @@ func (obj *GameObject) UnmarshalJSON(b []byte) error {
 	obj.rotation = tmp.Rotation
 	obj.properties = tmp.Properties
 	obj.effects = tmp.Effects
-	return nil 
+	return nil
 }
 
 func (obj *GameObject) MarshalJSON() ([]byte, error) {
 	return json.Marshal(struct {
-		X float64
-		Y float64
-		Width float64
-		Height float64
-		Id string
-		Type string
-		Floor int 
+		X             float64
+		Y             float64
+		Width         float64
+		Height        float64
+		Id            string
+		Type          string
+		Floor         int
 		CurrentAction *DelayedAction
-		Rotation float64
-		Properties map[string]interface{}
-		Effects map[string]interface{}
+		Rotation      float64
+		Properties    map[string]interface{}
+		Effects       map[string]interface{}
 	}{
-		X: obj.x,
-		Y: obj.y,
-		Width: obj.width,
-		Height: obj.height,
-		Id: obj.id,
-		Type: obj.objType,
-		Floor: obj.floor,
+		X:             obj.x,
+		Y:             obj.y,
+		Width:         obj.width,
+		Height:        obj.height,
+		Id:            obj.id,
+		Type:          obj.objType,
+		Floor:         obj.floor,
 		CurrentAction: obj.currentAction,
-		Rotation: obj.rotation,
-		Properties: obj.properties,
-		Effects: obj.effects,
+		Rotation:      obj.rotation,
+		Properties:    obj.properties,
+		Effects:       obj.effects,
 	})
 }
 
 func (obj *GameObject) HitBox() utils.Bounds {
 	return utils.Bounds{
-		X: obj.X(),
-		Y: obj.Y(),
-		Width: obj.Width(),
+		X:      obj.X(),
+		Y:      obj.Y(),
+		Width:  obj.Width(),
 		Height: obj.Height(),
 	}
 }
 
-//IsPoint - Checks if a bounds object is a point or not (has no width or height)
+// IsPoint - Checks if a bounds object is a point or not (has no width or height)
 func (obj *GameObject) IsPoint() bool {
 	if obj.Width() == 0 && obj.Height() == 0 {
 		return true
@@ -316,16 +316,16 @@ func (a GameObject) Intersects(b utils.Bounds) bool {
 
 func (obj *GameObject) Clone() *GameObject {
 	clone := &GameObject{
-		x: obj.X(),
-		y: obj.Y(),
-		width: obj.Width(),
-		height: obj.Height(),
-		id: obj.Id(),
-		objType: obj.Type(),
-		floor: obj.Floor(),
-		rotation: obj.Rotation(),
+		x:          obj.X(),
+		y:          obj.Y(),
+		width:      obj.Width(),
+		height:     obj.Height(),
+		id:         obj.Id(),
+		objType:    obj.Type(),
+		floor:      obj.Floor(),
+		rotation:   obj.Rotation(),
 		properties: make(map[string]interface{}),
-		effects: make(map[string]interface{}),
+		effects:    make(map[string]interface{}),
 	}
 	clone.SetProperties(utils.CopyMap(obj.Properties()))
 	clone.SetEffects(utils.CopyMap(obj.Effects()))
@@ -334,18 +334,18 @@ func (obj *GameObject) Clone() *GameObject {
 
 // Get approximate distance between objects. Assuming all of them are rectangles
 func (a GameObject) GetDistance(b IGameObject) float64 {
-	aXCenter := a.X() + a.Width() / 2
-	aYCenter := a.Y() + a.Height() / 2
-	
-	bXCenter := b.X() + b.Width() / 2
-	bYCenter := b.Y() + b.Height() / 2
+	aXCenter := a.X() + a.Width()/2
+	aYCenter := a.Y() + a.Height()/2
 
-	xDistance := math.Abs(aXCenter - bXCenter) - (a.Width() / 2 + b.Width() / 2)
+	bXCenter := b.X() + b.Width()/2
+	bYCenter := b.Y() + b.Height()/2
+
+	xDistance := math.Abs(aXCenter-bXCenter) - (a.Width()/2 + b.Width()/2)
 	if xDistance < 0 {
 		xDistance = 0.0
 	}
 
-	yDistance := math.Abs(aYCenter - bYCenter) - (a.Height() / 2 + b.Height() / 2)
+	yDistance := math.Abs(aYCenter-bYCenter) - (a.Height()/2 + b.Height()/2)
 	if yDistance < 0 {
 		yDistance = 0.0
 	}
@@ -353,11 +353,11 @@ func (a GameObject) GetDistance(b IGameObject) float64 {
 	return math.Sqrt(math.Pow(xDistance, 2.0) + math.Pow(yDistance, 2.0))
 }
 
-// Get approximate distance to coords from object 
+// Get approximate distance to coords from object
 func (a GameObject) GetDistanceToXY(x float64, y float64) float64 {
 	aX := a.X()
 	aY := a.Y()
-	
+
 	bX := x
 	bY := y
 
@@ -369,7 +369,7 @@ func (a GameObject) GetDistanceToXY(x float64, y float64) float64 {
 
 // Determines if 2 objects are close enough to each other
 func (a GameObject) IsCloseTo(b IGameObject) bool {
-	if (a.Floor() != b.Floor()) {
+	if a.Floor() != b.Floor() {
 		return false
 	}
 	return a.GetDistance(b) < MaxDistance
@@ -406,22 +406,22 @@ func (obj *GameObject) GetRotationByDirection(direction string) float64 {
 	}
 
 	switch direction {
-		case "move_north":
-			return math.Pi / 2
-		case "move_south":
-			return math.Pi * 3 / 2
-		case "move_east":
-			return 0.0
-		case "move_west":
-			return math.Pi
-		case "move_north_east":
-			return math.Pi / 4
-		case "move_north_west":
-			return math.Pi * 3 / 4
-		case "move_south_east":
-			return math.Pi * 7 / 4
-		case "move_south_west":
-			return math.Pi * 5 / 4
+	case "move_north":
+		return math.Pi / 2
+	case "move_south":
+		return math.Pi * 3 / 2
+	case "move_east":
+		return 0.0
+	case "move_west":
+		return math.Pi
+	case "move_north_east":
+		return math.Pi / 4
+	case "move_north_west":
+		return math.Pi * 3 / 4
+	case "move_south_east":
+		return math.Pi * 7 / 4
+	case "move_south_west":
+		return math.Pi * 5 / 4
 	}
 
 	return 0.0
@@ -436,21 +436,20 @@ func (obj *GameObject) GetDirectionToXY(x float64, y float64) string {
 	dy := y - obj.Y()
 	angle := math.Atan2(dy, dx) // range (-PI, PI)
 	if angle < 0.0 {
-		angle = angle + math.Pi * 2
+		angle = angle + math.Pi*2
 	}
 	quotient := math.Floor(angle / (math.Pi / 4)) // math.Pi / 4 - is the angle between movement directions
-	remainder := angle - (math.Pi / 4) * quotient
-	if (remainder > math.Pi / 8) {
+	remainder := angle - (math.Pi/4)*quotient
+	if remainder > math.Pi/8 {
 		quotient = quotient + 1.0
 	}
 	directionIndex := int(quotient)
-	if (directionIndex == len(possibleDirections)) {
+	if directionIndex == len(possibleDirections) {
 		directionIndex = 0
 	}
 	return possibleDirections[directionIndex]
 }
 
-// 
 func (obj *GameObject) TurnToXY(x float64, y float64) bool {
 	direction := obj.GetDirectionToXY(x, y)
 	if obj.Rotation() != obj.GetRotationByDirection(direction) {

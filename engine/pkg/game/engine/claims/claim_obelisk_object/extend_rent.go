@@ -3,11 +3,11 @@ package claim_obelisk_object
 import (
 	"fmt"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
@@ -55,7 +55,7 @@ func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
 			"claim_obelisk_id": claimObelisk.Id(),
 		},
 		TimeLeft: claimObelisk.Properties()["payed_until"].(float64) - float64(utils.MakeTimestamp()),
-		Status: entity.DelayedActionReady,
+		Status:   entity.DelayedActionReady,
 	}
 	claimObelisk.SetCurrentAction(delayedAction)
 

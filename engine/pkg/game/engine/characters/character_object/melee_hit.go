@@ -3,8 +3,8 @@ package character_object
 import (
 	"fmt"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 // Tries to hit target with the melee weapon
@@ -40,7 +40,7 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 		// here we cast everything to float64, because go restores from json everything as float64
 		lastHitAt, hitted := weapon.Properties()["last_hit_at"]
 		if hitted {
-			if float64(utils.MakeTimestamp()) - lastHitAt.(float64) >= weapon.Properties()["cooldown"].(float64) {
+			if float64(utils.MakeTimestamp())-lastHitAt.(float64) >= weapon.Properties()["cooldown"].(float64) {
 				weapon.Properties()["last_hit_at"] = float64(utils.MakeTimestamp())
 			} else {
 				return false
@@ -71,13 +71,13 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 		}
 		e.SendGameObjectUpdate(targetObj, "update_object")
 
-		e.SendSystemMessage(fmt.Sprintf("You dealt %d damage to %s.", int(weapon.Properties()["damage"].(float64)), targetObj.Properties()["kind"].(string)), player)
+		e.SendSystemMessage(fmt.Sprintf("You dealt %d damage to %s.", int(weapon.Properties()["damage"].(float64)), targetObj.Kind()), player)
 
 		// die if health < 0
 		if targetObj.Properties()["health"].(float64) == 0.0 {
 			obj.DeselectTarget(e)
 			if targetObj.Properties()["type"].(string) == "mob" {
-				e.SendSystemMessage(fmt.Sprintf("You killed %s.", targetObj.Properties()["kind"].(string)), player)
+				e.SendSystemMessage(fmt.Sprintf("You killed %s.", targetObj.Kind()), player)
 				e.Mobs()[targetObj.Id()].Die()
 			} else {
 				// for characters

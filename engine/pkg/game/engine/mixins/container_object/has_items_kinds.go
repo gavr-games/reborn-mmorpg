@@ -20,16 +20,16 @@ func (cont *ContainerObject) HasItemsKinds(e entity.IEngine, items map[string]in
 	}
 
 	//TODO: search inside sub containers
-  for _, itemId := range itemIds {
+	for _, itemId := range itemIds {
 		if itemId != nil {
 			item := e.GameObjects()[itemId.(string)]
-			itemKind := item.Properties()["kind"].(string)
+			itemKind := item.Kind()
 			itemStackable := false
 			if value, ok := item.Properties()["stackable"]; ok {
 				itemStackable = value.(bool)
 			}
 			// If item stackable check item has enough "amount", otherwise count items as 1 per each game_object
-    	if slices.Contains(itemsKinds, itemKind) {
+			if slices.Contains(itemsKinds, itemKind) {
 				if itemStackable {
 					if item.Properties()["amount"].(float64) >= itemsCounts[itemKind] {
 						itemsCounts[itemKind] = 0.0
@@ -47,6 +47,6 @@ func (cont *ContainerObject) HasItemsKinds(e entity.IEngine, items map[string]in
 				}
 			}
 		}
-  }
+	}
 	return false
 }

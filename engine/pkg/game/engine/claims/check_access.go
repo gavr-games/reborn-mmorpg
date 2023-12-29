@@ -1,8 +1,8 @@
 package claims
 
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 // Check that charGameObj can interract with targetObj
@@ -19,7 +19,7 @@ func CheckAccess(e entity.IEngine, charGameObj entity.IGameObject, targetObj ent
 	if len(possibleCollidableObjects) > 0 {
 		for _, val := range possibleCollidableObjects {
 			obj := val.(entity.IGameObject)
-			if obj.Properties()["kind"] == "claim_area" {
+			if obj.Kind() == "claim_area" {
 				obelisk := e.GameObjects()[obj.Properties()["claim_obelisk_id"].(string)]
 				owner := e.GameObjects()[obelisk.Properties()["crafted_by_character_id"].(string)]
 				return owner.Id() == charGameObj.Id()

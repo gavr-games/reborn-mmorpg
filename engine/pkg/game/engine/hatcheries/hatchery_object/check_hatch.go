@@ -1,8 +1,8 @@
 package hatchery_object
 
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
 func (hatchery *HatcheryObject) CheckHatch(e entity.IEngine, charGameObj entity.IGameObject) bool {
@@ -37,11 +37,11 @@ func (hatchery *HatcheryObject) CheckHatch(e entity.IEngine, charGameObj entity.
 		e.SendSystemMessage("You need to be closer to the hatchery.", player)
 		return false
 	}
-	
+
 	// Check has resources
 	if len(resources) != 0 {
 		// check character has container
-		if (slots["back"] == nil) {
+		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container with required resources.", player)
 			return false
 		}

@@ -8,7 +8,7 @@ import (
 // Finds information about game object and prepares it for serialization
 func GetInfo(gameObjects map[string]entity.IGameObject, obj entity.IGameObject) map[string]interface{} {
 	info := utils.CopyMap(obj.Properties())
-	if (obj.Properties()["kind"].(string) == "player") {
+	if obj.Kind() == "player" {
 		// Inject slot items info
 		for slotKey, itemId := range obj.Properties()["slots"].(map[string]interface{}) {
 			if itemId != nil {

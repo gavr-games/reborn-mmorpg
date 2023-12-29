@@ -11,6 +11,11 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
+		if slots["back"] == nil {
+			e.SendSystemMessage("You don't have container", player)
+			return false
+		}
+
 		if !rock.CheckChip(e, charGameObj) {
 			return false
 		}
@@ -24,23 +29,8 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 		// Create stone
 		stoneObj := e.CreateGameObject("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
-		// check character has container
-		putInContainer := false
-		if (slots["back"] != nil) {
-			// put log to container
-			container := e.GameObjects()[slots["back"].(string)]
-			putInContainer = container.(entity.IContainerObject).Put(e, player, stoneObj.Id(), -1)
-		}
-
-		// OR drop stone on the ground
-		if !putInContainer {
-			stoneObj.SetFloor(charGameObj.Floor())
-			e.Floors()[stoneObj.Floor()].Insert(stoneObj)
-			storage.GetClient().Updates <- stoneObj.Clone()
-			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
-				"object": stoneObj,
-			})
-		}
+		container := e.GameObjects()[slots["back"].(string)]
+		container.(entity.IContainerObject).PutOrDrop(e, charGameObj, stoneObj.Id(), -1)
 
 		// Decrease stones stored in the rock
 		resources := rock.Properties()["resources"].(map[string]interface{})

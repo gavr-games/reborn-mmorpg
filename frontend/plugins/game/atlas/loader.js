@@ -219,6 +219,7 @@ class Loader {
       "gold",
       "claim_stone",
       "claim_obelisk",
+      "cactus_slice",
     ];
     items.forEach(item => {
       let task = this.assetsManager.addContainerTask(
