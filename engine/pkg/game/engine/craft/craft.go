@@ -64,7 +64,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			e.GameObjects()[itemObj.Id()] = itemObj
 
 			// put item to container or drop it to the ground
-			container.(entity.IContainerObject).PutOrDrop(e, player, itemObj.Id(), -1)
+			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, itemObj.Id(), -1)
 		}
 
 		e.SendSystemMessage(fmt.Sprintf("You crafted %s.", craftItemName), player)

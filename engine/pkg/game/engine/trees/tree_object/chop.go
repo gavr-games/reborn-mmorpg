@@ -31,7 +31,7 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 
 		// Put to container or drop to the ground
 		container := e.GameObjects()[slots["back"].(string)]
-		container.(entity.IContainerObject).PutOrDrop(e, player, logObj.Id(), -1)
+		container.(entity.IContainerObject).PutOrDrop(e, charGameObj, logObj.Id(), -1)
 
 		// Decrease logs stored in the tree
 		resources := tree.Properties()["resources"].(map[string]interface{})

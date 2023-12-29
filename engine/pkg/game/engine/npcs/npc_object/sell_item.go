@@ -48,8 +48,24 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 			"visible": false,
 		})
 
+		if isStackable, ok := resourceObj.Properties()["stackable"]; ok {
+			if isStackable.(bool) {
+				resourceObj.Properties()["amount"] = resourceAmount
+				return container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1)
+			}
+		}
+
 		for i := 0; i < int(resourceAmount); i++ {
-			container.(entity.IContainerObject).PutOrDrop(e, player, resourceObj.Id(), -1)
+			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1)
+
+			// eliminate creating redundant object
+			if i == int(resourceAmount)-1 {
+				break
+			}
+
+			resourceObj = e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+				"visible": false,
+			})
 		}
 
 		return true

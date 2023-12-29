@@ -31,7 +31,7 @@ func (cactus *CactusObject) Cut(e entity.IEngine, charGameObj entity.IGameObject
 
 		// put log to container or drop it to the ground
 		container := e.GameObjects()[slots["back"].(string)]
-		container.(entity.IContainerObject).PutOrDrop(e, player, sliceObj.Id(), -1)
+		container.(entity.IContainerObject).PutOrDrop(e, charGameObj, sliceObj.Id(), -1)
 
 		// Decrease slices stored in the cactus
 		resources := cactus.Properties()["resources"].(map[string]interface{})

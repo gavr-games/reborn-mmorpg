@@ -27,7 +27,6 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 	freePosition := position
 	if position == -1 {
 		if itemStackable {
-			item.Properties()["amount"] = 1.0
 			existingItem := container.(entity.IContainerObject).GetItemKind(e, item.Kind())
 			if existingItem != nil {
 				existingItem.Properties()["amount"] = existingItem.Properties()["amount"].(float64) + item.Properties()["amount"].(float64)
