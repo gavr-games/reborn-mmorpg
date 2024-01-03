@@ -91,13 +91,15 @@ class GameObserver {
       if (hit.pickedMesh) {
         if (hit.pickedMesh.id == "xy-coords-plane") {
           const pickedPoint = hit.pickedPoint;
-          EventBus.$emit("perform-game-action", {
-            cmd: "move_xy",
-            params: {
-              "x": pickedPoint.x,
-              "y": pickedPoint.z,
-            }
-          })
+          if (scene.getNodeByName("craft-item") === null ) {
+            EventBus.$emit("perform-game-action", {
+              cmd: "move_xy",
+              params: {
+                "x": pickedPoint.x,
+                "y": pickedPoint.z,
+              }
+            })
+          }
         } else {
           const gameObject = getMeshRoot(hit.pickedMesh)
           if (gameObject) {

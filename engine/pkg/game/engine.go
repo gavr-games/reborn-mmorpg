@@ -154,7 +154,7 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 	case "rock":
 		return &rock_object.RockObject{*gameObj.(*entity.GameObject)}
 	case "potion":
-		return &potion_object.PotionObject{*gameObj.(*entity.GameObject)}
+		return potion_object.NewPotionObject(gameObj)
 	case "plant":
 		return &cactus_object.CactusObject{*gameObj.(*entity.GameObject)}
 	case "hatchery":
