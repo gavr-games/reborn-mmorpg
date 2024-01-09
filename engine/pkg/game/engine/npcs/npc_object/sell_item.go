@@ -1,24 +1,25 @@
 package npc_object
 
 import (
+	"errors"
 	"strings"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
-func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) bool {
+func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) (bool, error) {
 	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players()[playerId]; ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
-			return false
+			return false, errors.New("Player does not have container")
 		}
 
 		if npcObj.GetDistance(charGameObj) > TradeDistance {
 			e.SendSystemMessage("You need to be closer.", player)
-			return false
+			return false, errors.New("Player need to be closer to NPC")
 		}
 
 		container := e.GameObjects()[slots["back"].(string)]
@@ -29,7 +30,7 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 			itemKind: amount,
 		}) {
 			e.SendSystemMessage("You don't have required resources.", player)
-			return false
+			return false, errors.New("Player does not have required resources")
 		}
 
 		// substract resources/money
@@ -37,7 +38,7 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 			itemKind: amount,
 		}) {
 			e.SendSystemMessage("Can't remove required resources.", player)
-			return false
+			return false, errors.New("Player can not remove required resources")
 		}
 
 		resourceAmount := npcObj.Properties()["buys"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
@@ -51,7 +52,7 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 		if isStackable, ok := resourceObj.Properties()["stackable"]; ok {
 			if isStackable.(bool) {
 				resourceObj.Properties()["amount"] = resourceAmount
-				return container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1)
+				return container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1), nil
 			}
 		}
 
@@ -68,8 +69,8 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 			})
 		}
 
-		return true
+		return true, nil
 	}
 
-	return false
+	return false, errors.New("Player does not exist")
 }

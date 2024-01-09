@@ -1,0 +1,18 @@
+version: '3.9'
+
+services:
+  engine:
+    build: ./engine
+    volumes:
+      - ./engine:/src/github.com/gavr-games/reborn-mmorpg:cached
+    ports:
+      - 8080:8080
+    stdin_open: true
+    tty: true
+    environment:
+      - REDIS_URL=redis://redis-test:6379/0
+
+  redis-test:
+    image: redis:6.2-alpine
+    ports:
+      - 6379:6379
