@@ -35,9 +35,11 @@ func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.P
 				if itemStackable {
 					item.Properties()["amount"] = item.Properties()["amount"].(float64) - itemsCounts[itemKind]
 					e.SendGameObjectUpdate(item, "update_object")
-					itemsCounts[itemKind] = 0.0
 					if item.Properties()["amount"].(float64) != 0.0 {
 						performRemove = false
+						itemsCounts[itemKind] = 0.0
+					} else {
+						itemsCounts[itemKind] = 1.0 // will be decreased during object removing
 					}
 				}
 				if performRemove {
