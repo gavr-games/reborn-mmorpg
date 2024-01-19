@@ -6,11 +6,12 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/cactuses/cactus_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/plants/plant_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters/character_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims/claim_obelisk_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/backpack_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/bag_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
@@ -156,7 +157,7 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 	case "potion":
 		return potion_object.NewPotionObject(gameObj)
 	case "plant":
-		return &cactus_object.CactusObject{*gameObj.(*entity.GameObject)}
+		return &plant_object.PlantObject{*gameObj.(*entity.GameObject)}
 	case "hatchery":
 		return hatchery_object.NewHatcheryObject(gameObj)
 	case "wall":
@@ -167,7 +168,7 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return resource_object.NewResourceObject(gameObj)
 	case "melee_weapon":
 		return weapon_object.NewWeaponObject(gameObj)
-	case "hammer", "knife", "pickaxe", "axe":
+	case "hammer", "knife", "pickaxe", "axe", "needle", "fishing_rod":
 		return tool_object.NewToolObject(gameObj)
 	case "shovel":
 		return shovel_object.NewShovelObject(gameObj)
@@ -180,6 +181,8 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 	case "container":
 		if gameObj.Kind() == "backpack" {
 			return backpack_object.NewBackpackObject(gameObj)
+		} else {
+			return bag_object.NewBagObject(gameObj)
 		}
 	case "claim":
 		if gameObj.Kind() == "claim_obelisk" {

@@ -24,6 +24,10 @@ func (cont *ContainerObject) Remove(e entity.IEngine, player *entity.Player, ite
 	container.Properties()["items_ids"].([]interface{})[itemPosition] = nil
 	container.Properties()["free_capacity"] = container.Properties()["free_capacity"].(float64) + 1
 	item.Properties()["container_id"] = nil
+	if item.Type() == "container" {
+		item.Properties()["owner_id"] = nil
+		item.Properties()["parent_container_id"] = nil
+	}
 
 	// Save game objects updates to storage
 	storage.GetClient().Updates <- container.Clone()

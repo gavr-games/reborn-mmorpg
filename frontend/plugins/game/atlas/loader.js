@@ -187,6 +187,7 @@ class Loader {
   loadPlants() {
     let plants = [
       "cactus",
+      "grass_plant",
     ];
     plants.forEach(plant => {
       let task = this.assetsManager.addContainerTask(
@@ -204,22 +205,29 @@ class Loader {
   loadItems() {
     let items = [
       "axe",
-      "pickaxe",
+      "animal_skin",
+      "bone",
+      "bone_needle",
+      "claim_stone",
+      "claim_obelisk",
+      "cactus_slice",
+      "fire_dragon_egg",
+      "fire_dragon_hatchery",
+      "gold",
+      "grass",
+      "healing_balm",
       "log",
+      "pickaxe",
+      "rope",
+      "small_bag",
       "stone",
       "stone_hammer",
       "stone_spear",
       "stone_knife",
       "stone_wall",
+      "wooden_fishing_rod",
       "wooden_shovel",
       "wooden_wall",
-      "healing_balm",
-      "fire_dragon_egg",
-      "fire_dragon_hatchery",
-      "gold",
-      "claim_stone",
-      "claim_obelisk",
-      "cactus_slice",
     ];
     items.forEach(item => {
       let task = this.assetsManager.addContainerTask(

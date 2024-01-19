@@ -11,7 +11,6 @@ import (
 // items example - {"log": 1.0, "stone": 2.0}
 func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.Player, items map[string]interface{}) bool {
 	container := cont.gameObj
-	itemIds := container.Properties()["items_ids"].([]interface{})
 
 	itemsCounts := make(map[string]float64)
 	var itemsKinds []string
@@ -20,7 +19,12 @@ func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.P
 		itemsKinds = append(itemsKinds, k)
 	}
 
-	//TODO: search inside sub containers
+	return removeItemsKinds(e, player, container, itemsCounts, itemsKinds)
+}
+
+func removeItemsKinds(e entity.IEngine, player *entity.Player, container entity.IGameObject, itemsCounts map[string]float64, itemsKinds []string) bool {
+	itemIds := container.Properties()["items_ids"].([]interface{})
+
 	for _, itemId := range itemIds {
 		if itemId != nil {
 			item := e.GameObjects()[itemId.(string)]
@@ -43,7 +47,7 @@ func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.P
 					}
 				}
 				if performRemove {
-					if cont.Remove(e, player, itemId.(string)) {
+					if container.(entity.IContainerObject).Remove(e, player, itemId.(string)) {
 						e.GameObjects()[item.Id()] = nil
 						delete(e.GameObjects(), item.Id())
 						storage.GetClient().Deletes <- item.Id()
@@ -63,5 +67,18 @@ func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.P
 			}
 		}
 	}
+
+	//Search inside sub containers
+	for _, itemId := range itemIds {
+		if itemId != nil {
+			item := e.GameObjects()[itemId.(string)]
+			if item.Type() == "container" {
+				if removeItemsKinds(e, player, item, itemsCounts, itemsKinds) {
+					return true
+				}
+			}
+		}
+	}
+
 	return false
 }

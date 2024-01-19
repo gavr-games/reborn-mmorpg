@@ -10,8 +10,7 @@
     <GamePanelMap />
     <GamePanelTarget />
     <GamePanelEffects />
-    <div v-for="(container, key) in gameContainers" :key="key">
-      {{key}}
+    <div v-for="(container, _key) in gameContainers" :key="container.id">
       <GamePanelContainer v-bind:container="container" />
     </div>
     <GameObjectContextMenu />

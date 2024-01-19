@@ -16,20 +16,53 @@ export default {
   width: 32px;
   height: 32px;
   background-image: url("~assets/img/icons/game-items-icons.png");
-  &.backpack {
-    background-position: 224px 608px;
+  &.animal_skin {
+    background-position: 256px 320px;
   }
   &.axe {
     background-position: 480px 546px;
   }
+  &.backpack {
+    background-position: 224px 608px;
+  }
+  &.bone {
+    background-position: 224px 320px;
+  }
+  &.bone_needle {
+    background-position: 320px 514px;
+  }
+  &.cactus_slice {
+    background-position: 448px 288px;
+  }
   &.claim_stone {
     background-position: 512px 514px;
+  }
+  &.fire_dragon_egg {
+    background-position: 320px 386px;
+  }
+  &.grass {
+    background-position: 32px 514px;
+  }
+  &.gold {
+    background-position: 192px 482px;
+  }
+  &.healing_balm {
+    background-position: 448px 578px;
+  }
+  &.log {
+    background-position: 512px 320px;
   }
   &.pickaxe {
     background-position: 448px 546px;
   }
-  &.wooden_shovel {
-    background-position: 416px 546px;
+  &.rope {
+    background-position: 96px 546px;
+  }
+  &.small_bag {
+    background-position: 320px 482px;
+  }
+  &.stone {
+    background-position: 480px 320px;
   }
   &.stone_hammer {
     background-position: 384px 546px;
@@ -40,23 +73,11 @@ export default {
   &.stone_knife {
     background-position: 800px 707px;
   }
-  &.log {
-    background-position: 512px 320px;
+  &.wooden_fishing_rod {
+    background-position: 512px 352px;
   }
-  &.stone {
-    background-position: 480px 320px;
-  }
-  &.cactus_slice {
-    background-position: 448px 288px;
-  }
-  &.healing_balm {
-    background-position: 448px 578px;
-  }
-  &.fire_dragon_egg {
-    background-position: 320px 386px;
-  }
-  &.gold {
-    background-position: 192px 482px;
+  &.wooden_shovel {
+    background-position: 416px 546px;
   }
 }
 </style>

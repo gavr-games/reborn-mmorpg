@@ -1,9 +1,9 @@
-package cactus_object
+package plant_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
-type CactusObject struct {
+type PlantObject struct {
 	entity.GameObject
 }

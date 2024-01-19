@@ -82,7 +82,7 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 	gameObj.SetRotation(rotation)
 
 	if (gameObj.Properties()["type"].(string) == "container") {
-		gameObj.Properties()["items_ids"] = make([]interface{}, gameObj.Properties()["max_capacity"].(int))
+		gameObj.Properties()["items_ids"] = make([]interface{}, int(gameObj.Properties()["max_capacity"].(float64)))
 	}
 
 	// Some templates might have actions to be created with the object

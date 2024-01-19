@@ -65,18 +65,22 @@ export default {
         evt.dataTransfer.dropEffect = 'move'
         evt.dataTransfer.effectAllowed = 'move'
         evt.dataTransfer.setData('item_id', item.id)
+        evt.dataTransfer.setData('cmd', 'put_to_container')
       }
     },
     onDrop(evt, pos) {
-      const itemID = evt.dataTransfer.getData('item_id')
-      EventBus.$emit("perform-game-action", {
-        cmd: "put_to_container",
-        params: {
-          "container_id": this.container.id,
-          "position": pos,
-          "item_id": itemID,
-        }
-      })
+      const cmd = evt.dataTransfer.getData('cmd')
+      if (cmd === 'put_to_container') {
+        const itemID = evt.dataTransfer.getData('item_id')
+        EventBus.$emit("perform-game-action", {
+          cmd: "put_to_container",
+          params: {
+            "container_id": this.container.id,
+            "position": pos,
+            "item_id": itemID,
+          }
+        })
+      }
     },
     allowDrag(evt) {
       evt.preventDefault()
@@ -94,6 +98,13 @@ export default {
   &.size-4 {
     width: 165px;
     height: 165px;
+    padding-top: 14px;
+    padding-left: 14px;
+    background-image: url("~assets/img/backpack-16.png");
+  }
+  &.size-2 {
+    width: 83px;
+    height: 83px;
     padding-top: 14px;
     padding-left: 14px;
     background-image: url("~assets/img/backpack-16.png");

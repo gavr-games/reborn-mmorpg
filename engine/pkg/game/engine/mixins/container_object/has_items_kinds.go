@@ -10,7 +10,6 @@ import (
 // items example - {"log": 1.0, "stone": 2.0}
 func (cont *ContainerObject) HasItemsKinds(e entity.IEngine, items map[string]interface{}) bool {
 	container := cont.gameObj
-	itemIds := container.Properties()["items_ids"].([]interface{})
 
 	itemsCounts := make(map[string]float64)
 	var itemsKinds []string
@@ -19,7 +18,12 @@ func (cont *ContainerObject) HasItemsKinds(e entity.IEngine, items map[string]in
 		itemsKinds = append(itemsKinds, k)
 	}
 
-	//TODO: search inside sub containers
+	return calcItemsKinds(e, container, itemsCounts, itemsKinds)
+}
+
+func calcItemsKinds(e entity.IEngine, container entity.IGameObject, itemsCounts map[string]float64, itemsKinds []string) bool {
+	itemIds := container.Properties()["items_ids"].([]interface{})
+
 	for _, itemId := range itemIds {
 		if itemId != nil {
 			item := e.GameObjects()[itemId.(string)]
@@ -48,5 +52,18 @@ func (cont *ContainerObject) HasItemsKinds(e entity.IEngine, items map[string]in
 			}
 		}
 	}
+
+	//Search inside sub containers
+	for _, itemId := range itemIds {
+		if itemId != nil {
+			item := e.GameObjects()[itemId.(string)]
+			if item.Type() == "container" {
+				if calcItemsKinds(e, item, itemsCounts, itemsKinds) {
+					return true
+				}
+			}
+		}
+	}
+
 	return false
 }

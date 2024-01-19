@@ -52,6 +52,50 @@ func GetAtlas() map[string]interface{} {
 			"place_in_real_world": false,
 			"duration": 5000.0,
 		},
+		"wooden_fishing_rod": map[string]interface{}{
+			"skill": "fishing",
+			"resources": map[string]interface{}{
+				"log": 1.0,
+				"bone": 1.0,
+				"rope": 1.0,
+			},
+			"title": "Wooden Fishing Rod",
+			"description": "Useful to catch some fish.",
+			"inputs": []string{},
+			"tools": []string{
+				"knife",
+			},
+			"place_in_real_world": false,
+			"duration": 10000.0,
+		},
+		"bone_needle": map[string]interface{}{
+			"skill": "survival",
+			"resources": map[string]interface{}{
+				"bone": 1.0,
+			},
+			"title": "Bone needle",
+			"description": "A needle to create some bags or leather armor.",
+			"inputs": []string{},
+			"tools": []string{
+				"knife",
+			},
+			"place_in_real_world": false,
+			"duration": 4000.0,
+		},
+		"rope": map[string]interface{}{
+			"skill": "survival",
+			"resources": map[string]interface{}{
+				"grass": 4.0,
+			},
+			"title": "A rope",
+			"description": "Very useful rope to craft bags and everything else.",
+			"inputs": []string{},
+			"tools": []string{
+				"knife",
+			},
+			"place_in_real_world": false,
+			"duration": 6000.0,
+		},
 		"stone_hammer": map[string]interface{}{
 			"skill": "stoneworking",
 			"resources": map[string]interface{}{
@@ -150,6 +194,22 @@ func GetAtlas() map[string]interface{} {
 			"duration": 20000.0, // ms
 			"width": 1.0,
 			"height": 1.0,
+		},
+		"small_bag": map[string]interface{}{
+			"skill": "Leatherworking",
+			"resources": map[string]interface{}{
+				"rope": 1.0,
+				"animal_skin": 4.0,
+			},
+			"title": "Small Bag",
+			"description": "Useful for carrying more items.",
+			"inputs": []string{},
+			"tools": []string{
+				"knife",
+				"needle",
+			},
+			"place_in_real_world": false,
+			"duration": 15000.0,
 		},
 	}
 

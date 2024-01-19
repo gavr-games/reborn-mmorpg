@@ -130,7 +130,25 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 				"actions": map[string]interface{}{
 					"cut": map[string]interface{}{
-						"cmd":    "cut_cactus",
+						"cmd":    "cut_plant",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"grass_plant": map[string]interface{}{
+				"type":       "plant",
+				"kind":       "grass_plant",
+				"width":      0.5,
+				"height":     0.5,
+				"shape":      "circle",
+				"collidable": false,
+				"visible":    true,
+				"resources": map[string]interface{}{
+					"grass": 3.0,
+				},
+				"actions": map[string]interface{}{
+					"cut": map[string]interface{}{
+						"cmd":    "cut_plant",
 						"params": "self", // self - id of current object
 					},
 				},
@@ -332,6 +350,90 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 			},
 		},
+		"needle": {
+			"bone_needle": map[string]interface{}{
+				"type":         "needle",
+				"kind":         "bone_needle",
+				"width":        0.5,
+				"height":       0.02,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"equipable":    true,
+				"visible":      false,
+				"target_slots": map[string]interface{}{
+					"left_arm":  true,
+					"right_arm": true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd":    "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd":    "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
+		"fishing_rod": {
+			"wooden_fishing_rod": map[string]interface{}{
+				"type":         "fishing_rod",
+				"kind":         "wooden_fishing_rod",
+				"width":        2.0,
+				"height":       0.1,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"equipable":    true,
+				"visible":      false,
+				"target_slots": map[string]interface{}{
+					"left_arm":  true,
+					"right_arm": true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd":    "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd":    "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"catch_fish": map[string]interface{}{
+						"cmd":    "catch_fish",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
 		"container": {
 			"backpack": map[string]interface{}{
 				"type":                "container",
@@ -339,9 +441,9 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"width":               0.5,
 				"height":              0.5,
 				"shape":               "rectangle",
-				"max_capacity":        16,
+				"max_capacity":        16.0,
 				"free_capacity":       16.0,
-				"size":                4,
+				"size":                4.0,
 				"parent_container_id": nil,
 				"owner_id":            nil,
 				"equipable":           true,
@@ -352,6 +454,38 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"actions": map[string]interface{}{
 					"open": map[string]interface{}{
 						"cmd":    "open_container",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"small_bag": map[string]interface{}{
+				"type":                "container",
+				"kind":                "small_bag",
+				"width":               0.5,
+				"height":              0.48,
+				"shape":               "circle",
+				"max_capacity":        4.0,
+				"free_capacity":       4.0,
+				"size":                2.0,
+				"parent_container_id": nil,
+				"owner_id":            nil,
+				"equipable":           true,
+				"visible":             false,
+				"actions": map[string]interface{}{
+					"open": map[string]interface{}{
+						"cmd":    "open_container",
+						"params": "self", // self - id of current object
+					},
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
 						"params": "self", // self - id of current object
 					},
 				},
@@ -517,12 +651,112 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"grass": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "grass",
+				"width":        0.5,
+				"height":       0.185,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"rope": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "rope",
+				"width":        0.9,
+				"height":       0.75,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 			"fire_dragon_egg": map[string]interface{}{
 				"type":         "resource",
 				"kind":         "fire_dragon_egg",
 				"width":        1.0,
 				"height":       1.0,
 				"shape":        "circle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"bone": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "bone",
+				"width":        0.3,
+				"height":       1.0,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"animal_skin": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "animal_skin",
+				"width":        0.8,
+				"height":       1.0,
+				"shape":        "rectangle",
 				"container_id": nil,
 				"pickable":     true,
 				"droppable":    true,
@@ -759,6 +993,12 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"min":         10.0,
 						"max":         100.0,
 					},
+					"resource/bone": map[string]interface{}{
+						"probability": 0.7,
+					},
+					"resource/animal_skin": map[string]interface{}{
+						"probability": 0.7,
+					},
 				},
 				"actions": map[string]interface{}{
 					"select as target": map[string]interface{}{
@@ -803,6 +1043,12 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"probability": 1.0,
 						"min":         5.0,
 						"max":         50.0,
+					},
+					"resource/bone": map[string]interface{}{
+						"probability": 0.7,
+					},
+					"resource/animal_skin": map[string]interface{}{
+						"probability": 0.7,
 					},
 				},
 				"actions": map[string]interface{}{

@@ -1,11 +1,11 @@
-package cactus_object
+package plant_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
-func (cactus *CactusObject) CheckCut(e entity.IEngine, charGameObj entity.IGameObject) bool {
+func (plant *PlantObject) CheckCut(e entity.IEngine, charGameObj entity.IGameObject) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
 	player := e.Players()[playerId]
 	if player == nil {
@@ -13,13 +13,13 @@ func (cactus *CactusObject) CheckCut(e entity.IEngine, charGameObj entity.IGameO
 	}
 
 	// check object type
-	if cactus.Properties()["type"].(string) != "plant" {
+	if plant.Properties()["type"].(string) != "plant" {
 		e.SendSystemMessage("Please choose plant.", player)
 		return false
 	}
 
 	// Check claim access
-	if !claims.CheckAccess(e, charGameObj, cactus) {
+	if !claims.CheckAccess(e, charGameObj, plant) {
 		e.SendSystemMessage("You don't have an access to this claim.", player)
 		return false
 	}

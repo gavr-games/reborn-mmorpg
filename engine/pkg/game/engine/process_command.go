@@ -111,13 +111,13 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 					"rockId":      rock.Id(),
 				}, -1.0)
 			}
-		case "cut_cactus":
-			cactus := e.GameObjects()[params.(string)]
-			if cactus.(entity.ICactusObject).CheckCut(e, charGameObj) {
-				charGameObj.SetMoveToCoordsByObject(cactus)
-				delayed_actions.Start(e, charGameObj, "CutCactus", map[string]interface{}{
+		case "cut_plant":
+			plant := e.GameObjects()[params.(string)]
+			if plant.(entity.IPlantObject).CheckCut(e, charGameObj) {
+				charGameObj.SetMoveToCoordsByObject(plant)
+				delayed_actions.Start(e, charGameObj, "CutPlant", map[string]interface{}{
 					"characterId": charGameObj.Id(),
-					"cactusId":    cactus.Id(),
+					"plantId":     plant.Id(),
 				}, -1.0)
 			}
 		case "dig_surface":

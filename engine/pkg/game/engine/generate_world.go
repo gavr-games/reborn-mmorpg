@@ -21,6 +21,7 @@ const (
 	RockProbability = 0.02
 	BatProbability = 0.02
 	EggProbability = 0.02
+	GrassProbability = 0.02
 	CactusProbability = 0.1
 )
 
@@ -60,9 +61,12 @@ func GenerateWorld(e entity.IEngine) {
 								"visible": true,
 							}, EggProbability)
 						case p >= 0.6 && p < 0.8:
+							createWithProbability(e, "plant/grass_plant", x, y, 0, map[string]interface{}{
+								"visible": true,
+							}, GrassProbability)
+						case p >= 0.8 && p < 1.0:
 							createWithProbability(e, "mob/bat", x, y, 0, nil, TreeProbability)
 						}
-						// 0.8 - 1.0 - nothing
 					}
 				}
 			e.CreateGameObject(surfaceKind, x, y, 0.0, 0, nil)

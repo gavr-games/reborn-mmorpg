@@ -1,13 +1,13 @@
-package cactuses
+package plants
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
 // This func is called via delayed action mechanism
-// params: characterId, cactusId
+// params: characterId, plantId
 func Cut(e entity.IEngine, params map[string]interface{}) bool {
-	cactus := e.GameObjects()[params["cactusId"].(string)].(entity.ICactusObject)
+	plant := e.GameObjects()[params["plantId"].(string)].(entity.IPlantObject)
 	character := e.GameObjects()[params["characterId"].(string)]
-	return cactus.Cut(e, character)
+	return plant.Cut(e, character)
 }

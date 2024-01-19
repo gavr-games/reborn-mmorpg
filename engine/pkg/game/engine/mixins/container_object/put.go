@@ -18,16 +18,20 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 		return false
 	}
 
+	if item.Type() == "container" && item.Properties()["max_capacity"].(float64) >= container.Properties()["max_capacity"].(float64) {
+		e.SendSystemMessage("Container is too big to put it here.", player)
+		return false
+	}
+
 	itemStackable := false
 	if value, ok := item.Properties()["stackable"]; ok {
 		itemStackable = value.(bool)
 	}
 
-	//TODO: also search free space inside sub-containers
 	freePosition := position
 	if position == -1 {
 		if itemStackable {
-			existingItem := container.(entity.IContainerObject).GetItemKind(e, item.Kind())
+			existingItem := cont.GetItemKind(e, item.Kind())
 			if existingItem != nil {
 				existingItem.Properties()["amount"] = existingItem.Properties()["amount"].(float64) + item.Properties()["amount"].(float64)
 				e.SendGameObjectUpdate(existingItem, "update_object")
@@ -36,6 +40,19 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 		}
 
 		if container.Properties()["free_capacity"] == 0.0 {
+			// Also search free space inside sub-containers
+			// TODO: mute messages for sub containers
+			subItemIds := container.Properties()["items_ids"].([]interface{})
+			for _, subItemId := range subItemIds {
+				if subItemId != nil {
+					subItem := e.GameObjects()[subItemId.(string)]
+					if subItem.Type() == "container" {
+						if subItem.(entity.IContainerObject).Put(e, player, itemId, position) {
+							return true
+						}
+					}
+				}
+			}
 			e.SendSystemMessage("This container is full.", player)
 			return false
 		}
@@ -55,6 +72,10 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 	container.Properties()["free_capacity"] = container.Properties()["free_capacity"].(float64) - 1.0
 	item.Properties()["container_id"] = container.Id()
 	item.Properties()["visible"] = false
+	if item.Type() == "container" {
+		item.Properties()["owner_id"] = container.Properties()["owner_id"]
+		item.Properties()["parent_container_id"] = container.Id()
+	}
 
 	// Save game objects updates to storage
 	storage.GetClient().Updates <- container.Clone()
