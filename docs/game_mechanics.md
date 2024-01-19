@@ -13,3 +13,7 @@ Claim Obelisk can expire after 4 weeks. To extend the rent you should pay for it
 Each character can have only one obelisk installed.
 
 Two Claim Areas cannot intersect.
+
+## Containers
+
+Containers have different size. You can put smaller containers inside bigger ones.

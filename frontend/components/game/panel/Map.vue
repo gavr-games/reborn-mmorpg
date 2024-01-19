@@ -1,11 +1,13 @@
 <template>
-  <div :class="`game-panel map ${showMapPanel ? '' : 'hide-map'}`">
-    <div class="game-panel-content">
-      <div class="pin" :style="{ left: left + 'px', top: top + 'px' }"></div>
-      <img src="/engine_api/maps/floor_0_map.jpg" alt="Floor map" id="floor-map" /> <br />
-      <button type="button" class="rpgui-button" @click="showMapPanel = false"><p>Close</p></button>
+  <GameDraggablePanel :panelId="'map'">
+    <div :class="`game-panel ${showMapPanel ? '' : 'hide-map'}`">
+      <div class="game-panel-content">
+        <div class="pin" :style="{ left: left + 'px', top: top + 'px' }"></div>
+        <img src="/engine_api/maps/floor_0_map.jpg" alt="Floor map" id="floor-map" /> <br />
+        <button type="button" class="rpgui-button" @click="showMapPanel = false"><p>Close</p></button>
+      </div>
     </div>
-  </div>
+  </GameDraggablePanel>
 </template>
 
 <script>
@@ -52,10 +54,6 @@ export default {
 <style lang="scss">
 .hide-map {
   display:none;
-}
-.map {
-  position: absolute;
-  top: 100px;
 }
 .pin {
   width: 30px;

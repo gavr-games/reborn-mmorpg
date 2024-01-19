@@ -69,7 +69,6 @@ This directory contains your Vuex store files. Creating a file in this directory
 More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
 
 # TODO:
-- make draggable panels
 - reuse code between character and mob objects
 - if you press move "a" and "s" you cannot press "1" to hit. Other directions work good.
 - it is very hard to position character between north_east, north_west, south_east, south_west. It depends on keyup handling.

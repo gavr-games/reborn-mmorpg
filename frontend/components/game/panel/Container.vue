@@ -1,16 +1,19 @@
 <template>
-  <div :class="`game-container size-${container.size}`" v-if="showContainerPanel">
-    <a href="#" class="close-btn" @click="showContainerPanel = false"></a>
-    <div v-for="(item, key) in container.items" :key="key" class="slot">
-      <div
-        draggable
-        @dragstart="startDrag($event, item)"
-      >
-        <GameItem v-if="item !== null" v-bind:item="item" />
+  <GameDraggablePanel v-bind:panelId="container.id">
+    <div :class="`game-container size-${container.size}`" v-if="showContainerPanel">
+      <a href="#" class="close-btn" @click="showContainerPanel = false"></a>
+      <div v-for="(item, key) in container.items" :key="key" class="slot">
+        <div
+          draggable
+          @dragstart="startDrag($event, item)"
+          @dragend="endDrag($event)"
+        >
+          <GameItem v-if="item !== null" v-bind:item="item" />
+        </div>
+        <div class="empty-slot" @dragover="allowDrag" @drop="onDrop($event, key)" v-if="item === null" />
       </div>
-      <div class="empty-slot" @dragover="allowDrag" @drop="onDrop($event, key)" v-if="item === null" />
     </div>
-  </div>
+  </GameDraggablePanel>
 </template>
 
 <script>
@@ -65,22 +68,23 @@ export default {
         evt.dataTransfer.dropEffect = 'move'
         evt.dataTransfer.effectAllowed = 'move'
         evt.dataTransfer.setData('item_id', item.id)
-        evt.dataTransfer.setData('cmd', 'put_to_container')
+        evt.stopPropagation()
       }
     },
+    endDrag(evt, item) {
+      evt.stopPropagation()
+    },
     onDrop(evt, pos) {
-      const cmd = evt.dataTransfer.getData('cmd')
-      if (cmd === 'put_to_container') {
-        const itemID = evt.dataTransfer.getData('item_id')
-        EventBus.$emit("perform-game-action", {
-          cmd: "put_to_container",
-          params: {
-            "container_id": this.container.id,
-            "position": pos,
-            "item_id": itemID,
-          }
-        })
-      }
+      evt.stopPropagation()
+      const itemID = evt.dataTransfer.getData('item_id')
+      EventBus.$emit("perform-game-action", {
+        cmd: "put_to_container",
+        params: {
+          "container_id": this.container.id,
+          "position": pos,
+          "item_id": itemID,
+        }
+      })
     },
     allowDrag(evt) {
       evt.preventDefault()
@@ -92,9 +96,6 @@ export default {
 
 <style lang="scss">
 .game-container {
-  position: absolute;
-  top: 50px;
-  left: 250px;
   &.size-4 {
     width: 165px;
     height: 165px;

@@ -1,16 +1,18 @@
 <template>
-  <div id="item_info-panel" class="game-panel" v-if="showItemInfoPanel">
-    <div class="game-panel-content">
-      <h4 class="heading">{{ itemInfo["kind"] }}</h4>
-      <div v-if="itemInfo['crafted_by']">
-        Crafted by: {{ itemInfo["crafted_by"]["name"] }}
+  <GameDraggablePanel :panelId="'item_info'">
+    <div id="item_info-panel" class="game-panel" v-if="showItemInfoPanel">
+      <div class="game-panel-content">
+        <h4 class="heading">{{ itemInfo["kind"] }}</h4>
+        <div v-if="itemInfo['crafted_by']">
+          Crafted by: {{ itemInfo["crafted_by"]["name"] }}
+        </div>
+        <div v-if="itemInfo['payed_until']">
+          Payed until: {{ new Date(itemInfo["payed_until"]) }}
+        </div>
+        <button type="button" class="rpgui-button" @click="showItemInfoPanel = false"><p>Close</p></button>
       </div>
-      <div v-if="itemInfo['payed_until']">
-        Payed until: {{ new Date(itemInfo["payed_until"]) }}
-      </div>
-      <button type="button" class="rpgui-button" @click="showItemInfoPanel = false"><p>Close</p></button>
     </div>
-  </div>
+  </GameDraggablePanel>
 </template>
 
 <script>
@@ -44,9 +46,6 @@ export default {
 
 <style lang="scss">
 #item_info-panel {
-  position: absolute;
-  top: 300px;
-  left: 350px;
   color: white;
   .heading {
     margin-top: 0px;
