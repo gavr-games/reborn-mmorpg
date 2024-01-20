@@ -19,7 +19,7 @@ func Update(e entity.IEngine, tickDelta int64) {
 				dx := speedX / 1000.0 * float64(tickDelta)
 				dy := speedY / 1000.0 * float64(tickDelta)
 
-				dx, dy = charGameObj.(entity.IMovingObject).CanMove(e, dx, dy)
+				dx, dy = charGameObj.(entity.IMovingObject).CanMove(e, dx, dy, false)
 
 				// Stop the object
 				if dx == 0.0 && dy == 0.0 {

@@ -4,7 +4,7 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- BUG: character not always goes close enough to stone or tree to chip or chop. This happens because some times tick time is very big because of GetVisibleObjects calculation. This should be moved to a goroutine?
+- REFACTOR: optimize GetVisibleObjects calculation to take less time.
 - add baby dragons and raising them
 - add dragon breeding to get new eggs
 - add fighting and leveling dragins

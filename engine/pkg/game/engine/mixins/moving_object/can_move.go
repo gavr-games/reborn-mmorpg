@@ -8,7 +8,7 @@ import (
 
 // Check object can move and does not collide with other objects
 // TODO: implement accurate check for circles
-func (mObj *MovingObject) CanMove(e entity.IEngine, dx float64, dy float64) (float64, float64) {
+func (mObj *MovingObject) CanMove(e entity.IEngine, dx float64, dy float64, stop bool) (float64, float64) {
 	obj := mObj.gameObj
 	floor := e.Floors()[obj.Floor()]
 	// floor edges
@@ -40,6 +40,11 @@ func (mObj *MovingObject) CanMove(e entity.IEngine, dx float64, dy float64) (flo
 	if len(possibleCollidableObjects) == 0 {
 		return dx, dy
 	} else {
-		return 0.0, 0.0
+		if stop {
+			return 0.0, 0.0
+		} else {
+			// Try to move less. This saves from bugs, when tickDelta is very big.
+			return mObj.CanMove(e, dx / 2.0, dy / 2.0, true)
+		}
 	}
 }
