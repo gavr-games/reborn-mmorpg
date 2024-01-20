@@ -77,6 +77,7 @@ export default {
       this.gameContainers.push(data)
     },
     initGame() {
+      // Init containers
       let openedContainers = localStorage.getItem("opened_containers")
       if (openedContainers) {
         openedContainers = JSON.parse(openedContainers)
@@ -86,6 +87,14 @@ export default {
             params: containerId
           })
         })
+      }
+      // Init Character info
+      const openCharacterInfo = localStorage.getItem("open_character_info")
+      if (openCharacterInfo) {
+        EventBus.$emit("perform-game-action", {
+          cmd: "get_character_info",
+          params: {}
+        });
       }
     }
   }

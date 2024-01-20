@@ -9,7 +9,7 @@
             <GameItem v-bind:item="slotItem" />
           </span>
         </div>
-        <button type="button" class="rpgui-button" @click="showCharacterInfoPanel = false"><p>Close</p></button>
+        <button type="button" class="rpgui-button" @click="close()"><p>Close</p></button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -44,6 +44,7 @@ export default {
     showCharacterInfo(data) {
       this.showCharacterInfoPanel = true
       this.characterInfo = data
+      localStorage.setItem("open_character_info", "true")
     },
     equipItem(data) {
       if (this.characterInfo.id === data.character_id) {
@@ -54,6 +55,10 @@ export default {
       if (this.characterInfo.id === data.character_id) {
         this.characterInfo.slots[data.slot] = null
       }
+    },
+    close() {
+      this.showCharacterInfoPanel = false
+      localStorage.removeItem("open_character_info")
     }
   }
 }
