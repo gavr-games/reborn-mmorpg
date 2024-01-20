@@ -273,11 +273,12 @@ func (e *Engine) Run() {
 		default:
 			// Run world once in TickSize
 			newTickTime := utils.MakeTimestamp()
-			if newTickTime-e.tickTime >= constants.TickSize {
-				characters.Update(e, newTickTime-e.tickTime)
-				mobs.Update(e, newTickTime-e.tickTime, newTickTime)
-				effects.Update(e, newTickTime-e.tickTime)
-				delayed_actions.UpdateAll(e, newTickTime-e.tickTime)
+			tickDelta := newTickTime-e.tickTime
+			if tickDelta >= constants.TickSize {
+				characters.Update(e, tickDelta)
+				mobs.Update(e, tickDelta, newTickTime)
+				effects.Update(e, tickDelta)
+				delayed_actions.UpdateAll(e, tickDelta)
 				e.tickTime = newTickTime
 			}
 		}

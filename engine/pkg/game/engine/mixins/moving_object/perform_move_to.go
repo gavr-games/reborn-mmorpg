@@ -9,13 +9,13 @@ func (mObj *MovingObject) PerformMoveTo(e entity.IEngine, tickDelta int64) {
 	obj := mObj.gameObj
 	moveTo := obj.MoveToCoords()
 	if moveTo != nil {
-		if mObj.needToStop() {
-			mObj.Stop(e)
-		}
 		moveTo.TimeUntilDirectionChange = moveTo.TimeUntilDirectionChange - float64(tickDelta)
 		if (moveTo.TimeUntilDirectionChange <= 0) {
 			moveTo.TimeUntilDirectionChange = moveTo.DirectionChangeTime
 			mObj.SetXYSpeeds(e, obj.GetDirectionToXY(moveTo.Bounds.X, moveTo.Bounds.Y))
+		}
+		if mObj.needToStop() {
+			mObj.Stop(e)
 		}
 	}
 }
