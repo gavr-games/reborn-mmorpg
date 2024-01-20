@@ -6,7 +6,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 ## TODO
 - BUG: character not always goes close enough to stone or tree to chip or chop
 - BUG: automatic patthfinding is very BUGGY
-- BUG: remove all players from the world on engine start
 - add baby dragons and raising them
 - add dragon breeding to get new eggs
 - add fighting and leveling dragins

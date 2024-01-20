@@ -12,7 +12,7 @@ func LoadGameObjects(e entity.IEngine) {
 			e.Floors()[gameObj.Floor()].Insert(gameObj)
 		}
 		// init player
-		if gameObj.Type() == "player" {
+		if gameObj.Kind() == "player" {
 			playerId := int(gameObj.Properties()["player_id"].(float64))
 			gameObj.Properties()["player_id"] = playerId
 			e.Players()[playerId] = &entity.Player{
@@ -22,6 +22,7 @@ func LoadGameObjects(e entity.IEngine) {
 				Client: nil,
 				VisibleObjects: make(map[string]bool),
 			}
+			gameObj.Properties()["visible"] = false
 		}
 		// init effects
 		for effectId, effect := range gameObj.Effects() {
