@@ -1,7 +1,7 @@
 <template>
   <GameDraggablePanel v-bind:panelId="container.id">
     <div :class="`game-container size-${container.size}`" v-if="showContainerPanel">
-      <a href="#" class="close-btn" @click="showContainerPanel = false"></a>
+      <a href="#" class="close-btn" @click="close()"></a>
       <div v-for="(item, key) in container.items" :key="key" class="slot">
         <div
           draggable
@@ -31,6 +31,19 @@ export default {
     EventBus.$on("put_item_to_container", this.addItem)
     EventBus.$on("remove_item_from_container", this.removeItem)
     EventBus.$on("update-item-in-container", this.updateItem)
+  },
+
+  mounted() {
+    let openedContainers = localStorage.getItem("opened_containers")
+    if (openedContainers) {
+      openedContainers = JSON.parse(openedContainers)
+    } else {
+      openedContainers = []
+    }
+    if (!openedContainers.includes(this.container.id)) {
+      openedContainers.push(this.container.id)
+      localStorage.setItem("opened_containers", JSON.stringify(openedContainers))
+    }
   },
 
   beforeDestroy() {
@@ -88,6 +101,18 @@ export default {
     },
     allowDrag(evt) {
       evt.preventDefault()
+    },
+    close() {
+      this.showContainerPanel = false
+      let openedContainers = localStorage.getItem("opened_containers")
+      if (openedContainers) {
+        openedContainers = JSON.parse(openedContainers)
+        const index = openedContainers.indexOf(this.container.id);
+        if (index !== -1) {
+          openedContainers.splice(index, 1);
+          localStorage.setItem("opened_containers", JSON.stringify(openedContainers))
+        }
+      }
     }
   }
 }
@@ -104,11 +129,11 @@ export default {
     background-image: url("~assets/img/backpack-16.png");
   }
   &.size-2 {
-    width: 83px;
-    height: 83px;
+    width: 84px;
+    height: 87px;
     padding-top: 14px;
     padding-left: 14px;
-    background-image: url("~assets/img/backpack-16.png");
+    background-image: url("~assets/img/container-4.png");
   }
   .slot {
     display: inline-block;

@@ -53,11 +53,13 @@ export default {
 
   created() {
     EventBus.$on("container_items", this.addContainer)
+    EventBus.$on("init_game", this.initGame)
   },
 
   beforeDestroy() {
     this.$game.destroy()
     EventBus.$off("container_items", this.addContainer)
+    EventBus.$off("init_game", this.initGame)
   },
 
   computed: {
@@ -73,6 +75,18 @@ export default {
         this.gameContainers.pop[contIndex]
       }
       this.gameContainers.push(data)
+    },
+    initGame() {
+      let openedContainers = localStorage.getItem("opened_containers")
+      if (openedContainers) {
+        openedContainers = JSON.parse(openedContainers)
+        openedContainers.forEach(containerId => {
+          EventBus.$emit("perform-game-action", {
+            cmd: "open_container",
+            params: containerId
+          })
+        })
+      }
     }
   }
 }
