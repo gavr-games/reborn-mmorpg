@@ -35,7 +35,7 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 			resource_key = k
 			break
 		}
-		resourceObj := e.CreateGameObject(resource_key, charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+		resourceObj := e.CreateGameObject(fmt.Sprintf("resource/%s", resource_key), charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
 		// put resource to container or drop it to the ground
 		container := e.GameObjects()[slots["back"].(string)]
