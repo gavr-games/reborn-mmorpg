@@ -32,6 +32,11 @@ reset-world: ## Delete all world data from redis and restart engine, execute whe
 attach-engine: ## Attach to the engine container
 	$(DOCKER) attach $(ENGINE_CONTAINER_NAME)
 
+.PHONY: gm-set
+gm-set: ## Set player with ID as Game Master
+	$(DOCKER_COMPOSE) stop engine
+	$(DOCKER_COMPOSE) run --rm engine go run cmd/cli/main.go gm:set --goid=$(ID)
+	$(DOCKER_COMPOSE) start engine
 
 ##@ Everyday usage
 
