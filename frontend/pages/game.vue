@@ -8,6 +8,7 @@
     <GamePanelItemInfo />
     <GamePanelCharacter />
     <GamePanelMap />
+    <GamePanelGm />
     <GamePanelTarget />
     <GamePanelEffects />
     <div v-for="(container, _key) in gameContainers" :key="container.id">

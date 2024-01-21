@@ -6,6 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/gm"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
@@ -177,6 +178,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "pay_rent":
 			claim := e.GameObjects()[params.(string)].(entity.IClaimObeliskObject)
 			claim.ExtendRent(e)
+		case "gm_create_object":
+			gm.CreateObject(e, charGameObj, params.(map[string]interface{}))
 		}
 	}
 }

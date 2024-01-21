@@ -1,11 +1,12 @@
 <template>
   <div id="character-menu" class="game-panel">
     <div class="game-panel-content">
-      <div class="menu-item hero-icon" @click="getCharacterInfo"></div>
-      <div class="menu-item craft-icon" @click="getCraftAtlas"></div>
-      <div class="menu-item map-icon"  @click="showMap"></div>
-      <div class="menu-item town-icon"  @click="townTeleport"></div>
-      <div class="menu-item obelisk-icon"  @click="claimTeleport"></div>
+      <div class="menu-item hero-icon" @click="getCharacterInfo" title="Character"></div>
+      <div class="menu-item craft-icon" @click="getCraftAtlas" title="Craft"></div>
+      <div class="menu-item map-icon"  @click="showMap" title="Map"></div>
+      <div class="menu-item town-icon"  @click="townTeleport" title="Teleport to Town"></div>
+      <div class="menu-item obelisk-icon"  @click="claimTeleport" title="Teleport to Claim"></div>
+      <div class="menu-item gm-icon"  @click="showGMPanel" title="Game Master" v-if="showGMIcon"></div>
     </div>
   </div>
 </template>
@@ -16,7 +17,16 @@ import { EventBus } from "~/plugins/game/event_bus";
 export default {
   data() {
     return {
+      showGMIcon: false,
     }
+  },
+
+  created() {
+    EventBus.$on("my-character-info", this.showGameMasterIcon)
+  },
+
+  beforeDestroy() {
+    EventBus.$off("my-character-info", this.showGameMasterIcon)
   },
 
   methods: {
@@ -47,6 +57,14 @@ export default {
         params: {}
       });
     },
+    showGameMasterIcon(characterData) {
+      if (characterData.Properties["game_master"] === true) {
+        this.showGMIcon = true
+      }
+    },
+    showGMPanel() {
+      EventBus.$emit("show-gm-panel", {});
+    }
   }
 }
 </script>
@@ -86,6 +104,10 @@ export default {
   }
   .obelisk-icon {
     background-image: url("~assets/img/icons/obelisk.png");
+    background-repeat: no-repeat;
+  }
+  .gm-icon {
+    background-image: url("~assets/img/icons/gm.png");
     background-repeat: no-repeat;
   }
 }

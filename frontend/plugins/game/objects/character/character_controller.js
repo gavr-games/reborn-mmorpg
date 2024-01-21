@@ -17,6 +17,10 @@ class CharacterController {
     if (this.state.player_id == this.myCharacterId && this.state.payload.Properties["target"]) {
       EventBus.$emit("select_target", this.state.payload.Properties["target"])
     }
+    // Publish info about player's character
+    if (this.state.player_id == this.myCharacterId) {
+      EventBus.$emit("my-character-info", this.state.payload)
+    }
   }
 
   update(gameObject) {
