@@ -45,7 +45,7 @@ start: ## Start all Docker containers
 	$(DOCKER_COMPOSE) up -d
 
 start-debug: docker-compose.yml docker-compose.debug.yml ## Start all Docker containers in debug mode
-	$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.debug.yml up
+	$(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.debug.yml up -d
 
 .PHONY: stop
 stop: ## Stop all Docker containers

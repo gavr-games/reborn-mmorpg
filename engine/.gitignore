@@ -1,2 +1,3 @@
 .env
 out/server
+__debug*

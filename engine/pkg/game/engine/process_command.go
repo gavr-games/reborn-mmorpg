@@ -61,8 +61,10 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "get_craft_atlas":
 			e.SendResponse("craft_atlas", craft.GetAtlas(), player)
 		case "open_container":
-			container := e.GameObjects()[params.(string)].(entity.IContainerObject)
-			e.SendResponse("container_items", container.GetItems(e), player)
+			if e.GameObjects()[params.(string)] != nil {
+				container := e.GameObjects()[params.(string)].(entity.IContainerObject)
+				e.SendResponse("container_items", container.GetItems(e), player)
+			}
 		case "equip_item":
 			item := e.GameObjects()[params.(string)].(entity.IEquipableObject)
 			item.Equip(e, player)
@@ -117,6 +119,15 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			if plant.(entity.IPlantObject).CheckCut(e, charGameObj) {
 				charGameObj.SetMoveToCoordsByObject(plant)
 				delayed_actions.Start(e, charGameObj, "CutPlant", map[string]interface{}{
+					"characterId": charGameObj.Id(),
+					"plantId":     plant.Id(),
+				}, -1.0)
+			}
+		case "harvest_plant":
+			plant := e.GameObjects()[params.(string)]
+			if plant.(entity.IPlantObject).CheckHarvest(e, charGameObj) {
+				charGameObj.SetMoveToCoordsByObject(plant)
+				delayed_actions.Start(e, charGameObj, "HarvestPlant", map[string]interface{}{
 					"characterId": charGameObj.Id(),
 					"plantId":     plant.Id(),
 				}, -1.0)

@@ -15,49 +15,57 @@ import (
 
 func GetDelayedActionsAtlas() map[string]map[string]interface{} {
 	delayedActionsAtlas:= map[string]map[string]interface{}{
-		"Chop": map[string]interface{}{
-			"func": trees.Chop,
-			"duration": 3000.0, // ms
-		},
 		"Chip": map[string]interface{}{
 			"func": rocks.Chip,
 			"duration": 3000.0, // ms
 		},
-		"CutPlant": map[string]interface{}{
-			"func": plants.Cut,
+		"Chop": map[string]interface{}{
+			"func": trees.Chop,
 			"duration": 3000.0, // ms
-		},
-		"Craft": map[string]interface{}{
-			"func": craft.Craft,
-			"duration": 0.0, // will be taken from craft atlas
-		},
-		"Hatch": map[string]interface{}{
-			"func": hatcheries.Hatch,
-			"duration": 60000.0,
-		},
-		"TownTeleport": map[string]interface{}{
-			"func": characters.TownTeleport,
-			"duration": 10000.0,
 		},
 		"ClaimTeleport": map[string]interface{}{
 			"func": characters.ClaimTeleport,
 			"duration": 10000.0,
 		},
-		"InitClaim": map[string]interface{}{
-			"func": claims.Init,
-			"duration": 1.0,
+		"Craft": map[string]interface{}{
+			"func": craft.Craft,
+			"duration": 0.0, // will be taken from craft atlas
 		},
-		"ExpireClaim": map[string]interface{}{
-			"func": claims.Expire,
-			"duration": constants.ClaimRentDuration,
+		"CutPlant": map[string]interface{}{
+			"func": plants.Cut,
+			"duration": 3000.0, // ms
 		},
 		"Dig": map[string]interface{}{
 			"func": shovels.Dig,
 			"duration": 500.0,
 		},
+		"ExpireClaim": map[string]interface{}{
+			"func": claims.Expire,
+			"duration": constants.ClaimRentDuration,
+		},
 		"GrowGrass": map[string]interface{}{
 			"func": surfaces.GrowGrass,
 			"duration": 60000.0,
+		},
+		"GrowPlant": map[string]interface{}{
+			"func": plants.Grow,
+			"duration": 60000.0,
+		},
+		"HarvestPlant": map[string]interface{}{
+			"func": plants.Harvest,
+			"duration": 500.0, // ms
+		},
+		"Hatch": map[string]interface{}{
+			"func": hatcheries.Hatch,
+			"duration": 60000.0,
+		},
+		"InitClaim": map[string]interface{}{
+			"func": claims.Init,
+			"duration": 1.0,
+		},
+		"TownTeleport": map[string]interface{}{
+			"func": characters.TownTeleport,
+			"duration": 10000.0,
 		},
 	}
 

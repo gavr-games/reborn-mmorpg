@@ -19,7 +19,13 @@ class CraftObserver {
   }
 
   create(itemKey, x, y) {
-    let mesh = Atlas.get(itemKey + "Item").clone("craft-item");
+    let mesh = null
+    try {
+      mesh = Atlas.get(itemKey + "Item").clone("craft-item");
+    } catch(e) {
+      mesh = Atlas.get(itemKey + "Plant").clone("craft-item");
+    }
+    console.log(mesh)
     mesh.setParent(null)
     mesh.setEnabled(true);
     mesh.name = "craft-item"

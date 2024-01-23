@@ -49,22 +49,22 @@ func (b Bounds) Intersects(a Bounds) bool {
 	bMaxY := b.Y + b.Height
 
 	// a is left of b
-	if aMaxX < b.X {
+	if aMaxX <= b.X {
 		return false
 	}
 
 	// a is right of b
-	if a.X > bMaxX {
+	if a.X >= bMaxX {
 		return false
 	}
 
 	// a is above b
-	if aMaxY < b.Y {
+	if aMaxY <= b.Y {
 		return false
 	}
 
 	// a is below b
-	if a.Y > bMaxY {
+	if a.Y >= bMaxY {
 		return false
 	}
 

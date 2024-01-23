@@ -34,6 +34,12 @@ export default {
   &.cactus_slice {
     background-position: 448px 288px;
   }
+  &.carrot {
+    background-position: 320px 418px;
+  }
+  &.carrot_seed {
+    background-position: 416px 482px;
+  }
   &.claim_stone {
     background-position: 512px 514px;
   }

@@ -2,6 +2,7 @@ package craft
 
 import (
 	"fmt"
+	"slices"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
@@ -74,12 +75,22 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 
 		if len(possibleCollidableObjects) > 0 {
 			for _, val := range possibleCollidableObjects {
-				if val.(entity.IGameObject).Id() == charGameObj.Id() {
+				gameObj := val.(entity.IGameObject)
+				if gameObj.Id() == charGameObj.Id() && tempGameObj.Properties()["collidable"].(bool) {
 					e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
 					return false
-				} else if collidable, ok := val.(entity.IGameObject).Properties()["collidable"]; ok {
+				}
+				if collidable, ok := gameObj.Properties()["collidable"]; ok {
 					if collidable.(bool) {
 						e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
+						return false
+					}
+				}
+				// Check can build only on allowed surfaces
+				if gameObj.Type() == "surface" {
+					if !slices.Contains(craftItemConfig["surfaces"].([]string), gameObj.Kind()) {
+
+						e.SendSystemMessage(fmt.Sprintf("Cannot build it on %s.", gameObj.Kind()), player)
 						return false
 					}
 				}

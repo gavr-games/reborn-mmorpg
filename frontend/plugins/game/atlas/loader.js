@@ -188,6 +188,8 @@ class Loader {
     let plants = [
       "cactus",
       "grass_plant",
+      "carrot_sprout",
+      "carrot_ripe",
     ];
     plants.forEach(plant => {
       let task = this.assetsManager.addContainerTask(
@@ -208,6 +210,8 @@ class Loader {
       "animal_skin",
       "bone",
       "bone_needle",
+      "carrot",
+      "carrot_seed",
       "claim_stone",
       "claim_obelisk",
       "cactus_slice",

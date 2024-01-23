@@ -117,6 +117,59 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 			},
 		},
 		"plant": {
+			"carrot_sprout": map[string]interface{}{
+				"type":       "plant",
+				"kind":       "carrot_sprout",
+				"width":      1.0,
+				"height":     1.0,
+				"shape":      "circle",
+				"collidable": false,
+				"visible":    true,
+				"grows_into": "plant/carrot_ripe",
+				"resources": map[string]interface{}{
+					"carrot_seed": 1.0,
+				},
+				"current_action": map[string]interface{}{
+					"func_name": "GrowPlant",
+					"params": map[string]interface{}{
+						"game_object_id": nil,
+					},
+					"time_left": 60000.0,
+				},
+				"actions": map[string]interface{}{
+					"harvest": map[string]interface{}{
+						"cmd":    "harvest_plant",
+						"params": "self", // self - id of current object
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"carrot_ripe": map[string]interface{}{
+				"type":       "plant",
+				"kind":       "carrot_ripe",
+				"width":      1.0,
+				"height":     1.0,
+				"shape":      "circle",
+				"collidable": false,
+				"visible":    true,
+				"resources": map[string]interface{}{
+					"carrot_seed": 2.0,
+					"carrot": 1.0,
+				},
+				"actions": map[string]interface{}{
+					"harvest": map[string]interface{}{
+						"cmd":    "harvest_plant",
+						"params": "self", // self - id of current object
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 			"cactus": map[string]interface{}{
 				"type":       "plant",
 				"kind":       "cactus",
@@ -575,6 +628,57 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 			},
 		},
 		"resource": {
+			"carrot": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "carrot",
+				"width":        0.24,
+				"height":       0.88,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"eatable":      true,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"carrot_seed": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "carrot_seed",
+				"width":        0.75,
+				"height":       0.5,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 			"stone": map[string]interface{}{
 				"type":         "resource",
 				"kind":         "stone",
@@ -599,8 +703,6 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"params": "self", // self - id of current object
 					},
 				},
-				"price":            1.0,
-				"trading_resource": "fire_dragon_egg",
 			},
 			"log": map[string]interface{}{
 				"type":         "resource",
@@ -1078,6 +1180,11 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"amount":   1.0,
 						"resource": "gold",
 						"price":    10.0,
+					},
+					"resource/carrot_seed": map[string]interface{}{
+						"amount":   1.0,
+						"resource": "gold",
+						"price":    3.0,
 					},
 				},
 				"buys": map[string]interface{}{

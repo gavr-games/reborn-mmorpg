@@ -3,7 +3,7 @@ import { EventBus } from "~/plugins/game/event_bus";
 
 const IDLE_STATE = 0
 const SELECT_COORDS_AND_ROTATION_STATE = 1
-const STICK_TO_GRID = 1
+const STICK_TO_GRID = 0.5
 
 class CraftController {
   constructor() {

@@ -14,12 +14,18 @@ You can debug the Go packages using [Delve](https://github.com/go-delve/delve). 
 
 - `make attach-engine`
 
-4. Use **dlv** commands to debug the engine. You can find the list of **dlv CLI** commands in the [Delve](https://github.com/go-delve/delve/tree/master/Documentation/cli) documentation.
+4. Use **dlv** commands to debug the engine. You can find the list of **dlv CLI** commands in the [Delve](https://github.com/go-delve/delve/tree/master/Documentation/cli) documentation. Set a breakpoint for example.
+
+5. Run `continue` dlv command
+
+6. Play game until break point is hit.
 
 ## Most useful **dlv CLI** commands
 
 - `sources` - prints list of source files
-- `break <absolute path to file>:<line number>` - sets a breakpoint on the specified line
+- `break <absolute path to file>:<line number>` - sets a breakpoint on the specified line. Example: `break /src/github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft/check.go:93`
+- `breakpoints` - list all breakpoints
+- `clear <breakpoint name or id>` - deletes breakpoint.
 - `continue` - run until breakpoint or program termination
 - `next` - step over to next source line
 - `print <expression>` - evaluates an expression
