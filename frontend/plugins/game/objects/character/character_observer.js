@@ -2,6 +2,7 @@ import Atlas from "~/plugins/game/atlas/atlas";
 import Camera from "~/plugins/game/camera/camera";
 import GameObserver from "~/plugins/game/game_observer";
 import HealthBar from "~/plugins/game/components/health_bar";
+import Nickname from "~/plugins/game/components/nickname";
 import MeleeHitArea from "~/plugins/game/components/melee_hit_area";
 import HighlightShape from "~/plugins/game/components/highlight_shape";
 import freezeMaterials from "~/plugins/game/utils/freeze_materials";
@@ -73,6 +74,7 @@ class Character {
       this.camera.create();
     }
     this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
+    this.nickname = new Nickname(this.state.name, this.scene)
     GameObserver.addRenderObserver(`character-${this.state.id}`, this);
   }
 
@@ -96,6 +98,7 @@ class Character {
     this.mesh.position.x = this.state.x
     this.mesh.position.z = this.state.y
     this.healthbar.update(this.state.health, this.state.max_health, this.mesh.position)
+    this.nickname.update(this.mesh.position)
     if (this.targetHighlight) {
       this.targetHighlight.update(this.mesh.position)
     }
@@ -114,6 +117,8 @@ class Character {
     EventBus.$off("finish_delayed_action", this.cancelActionCallback)
     this.healthbar.remove()
     this.healthbar = null
+    this.nickname.remove()
+    this.nickname = null
     if (this.targetHighlight) {
       this.targetHighlight.remove()
       this.targetHighlight = null
