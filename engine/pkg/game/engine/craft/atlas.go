@@ -16,6 +16,21 @@ func GetAtlas() map[string]interface{} {
 			"place_in_real_world": false,
 			"duration": 4000.0,
 		},
+		"bone_saw": map[string]interface{}{
+			"skill": "lumberjacking",
+			"resources": map[string]interface{}{
+				"bone": 2.0,
+				"log": 1.0,
+			},
+			"title": "Bone saw",
+			"description": "A solid saw for beginners.",
+			"inputs": []string{},
+			"tools": []string{
+				"knife",
+			},
+			"place_in_real_world": false,
+			"duration": 4000.0,
+		},
 		"carrot_sprout": map[string]interface{}{
 			"skill": "farming",
 			"resources": map[string]interface{}{
@@ -117,6 +132,22 @@ func GetAtlas() map[string]interface{} {
 			"place_in_real_world": false,
 			"duration": 6000.0,
 		},
+		"small_bag": map[string]interface{}{
+			"skill": "Leatherworking",
+			"resources": map[string]interface{}{
+				"rope": 1.0,
+				"animal_skin": 4.0,
+			},
+			"title": "Small Bag",
+			"description": "Useful for carrying more items.",
+			"inputs": []string{},
+			"tools": []string{
+				"knife",
+				"needle",
+			},
+			"place_in_real_world": false,
+			"duration": 15000.0,
+		},
 		"stone_hammer": map[string]interface{}{
 			"skill": "stoneworking",
 			"resources": map[string]interface{}{
@@ -130,21 +161,6 @@ func GetAtlas() map[string]interface{} {
 			"place_in_real_world": false,
 			"duration": 5000.0,
 		},
-		"stone_spear": map[string]interface{}{
-			"skill": "stoneworking",
-			"resources": map[string]interface{}{
-				"stone": 1.0,
-				"log": 1.0,
-			},
-			"title": "Stone Spear",
-			"description": "Basic weapon to defend yourself.",
-			"inputs": []string{},
-			"tools": []string{
-				"axe",
-			},
-			"place_in_real_world": false,
-			"duration": 5000.0,
-		},
 		"stone_knife": map[string]interface{}{
 			"skill": "stoneworking",
 			"resources": map[string]interface{}{
@@ -153,6 +169,21 @@ func GetAtlas() map[string]interface{} {
 			},
 			"title": "Stone Knife",
 			"description": "Useful to cut something like cactus.",
+			"inputs": []string{},
+			"tools": []string{
+				"axe",
+			},
+			"place_in_real_world": false,
+			"duration": 5000.0,
+		},
+		"stone_spear": map[string]interface{}{
+			"skill": "stoneworking",
+			"resources": map[string]interface{}{
+				"stone": 1.0,
+				"log": 1.0,
+			},
+			"title": "Stone Spear",
+			"description": "Basic weapon to defend yourself.",
 			"inputs": []string{},
 			"tools": []string{
 				"axe",
@@ -183,21 +214,58 @@ func GetAtlas() map[string]interface{} {
 			"width": 1.0,
 			"height": 2.0,
 		},
-		"small_bag": map[string]interface{}{
-			"skill": "Leatherworking",
-			"resources": map[string]interface{}{
-				"rope": 1.0,
-				"animal_skin": 4.0,
+		"wooden_chest": map[string]interface{}{
+			"skill": "lumberjacking",
+			"resources": map[string]interface{}{ // TODO: add nails
+				"log": 3.0,
+				"iron_nails": 2.0,
 			},
-			"title": "Small Bag",
-			"description": "Useful for carrying more items.",
+			"title": "Wooden chest",
+			"description": "Great to store some more items. Put it on Claim for more safety.",
+			"inputs": []string{
+				"coordinates",
+				"rotation",
+			},
+			"tools": []string{
+				"saw", "axe",
+			}, //tools equipped required to craft something
+			"surfaces": []string{
+				"grass",
+				"stone",
+				"sand",
+			}, //allowed surfaces to craft this item on
+			"place_in_real_world": true, //place item in real world or put into container
+			"duration": 10000.0, // ms
+			"width": 2.0,
+			"height": 1.66,
+		},
+		"wooden_fishing_rod": map[string]interface{}{
+			"skill": "fishing",
+			"resources": map[string]interface{}{
+				"log": 1.0,
+				"bone": 1.0,
+				"rope": 1.0,
+			},
+			"title": "Wooden Fishing Rod",
+			"description": "Useful to catch some fish.",
 			"inputs": []string{},
 			"tools": []string{
 				"knife",
-				"needle",
 			},
 			"place_in_real_world": false,
-			"duration": 15000.0,
+			"duration": 10000.0,
+		},
+		"wooden_shovel": map[string]interface{}{
+			"skill": "lumberjacking",
+			"resources": map[string]interface{}{
+				"log": 2.0,
+			},
+			"title": "Wooden Shovel",
+			"description": "Basic shovel to dig fields for your crops.",
+			"inputs": []string{},
+			"tools": []string{},
+			"place_in_real_world": false,
+			"duration": 5000.0,
 		},
 		"wooden_wall": map[string]interface{}{
 			"skill": "lumberjacking",
@@ -221,34 +289,6 @@ func GetAtlas() map[string]interface{} {
 			"duration": 6000.0, // ms
 			"width": 0.3,
 			"height": 3.0,
-		},
-		"wooden_shovel": map[string]interface{}{
-			"skill": "lumberjacking",
-			"resources": map[string]interface{}{
-				"log": 2.0,
-			},
-			"title": "Wooden Shovel",
-			"description": "Basic shovel to dig fields for your crops.",
-			"inputs": []string{},
-			"tools": []string{},
-			"place_in_real_world": false,
-			"duration": 5000.0,
-		},
-		"wooden_fishing_rod": map[string]interface{}{
-			"skill": "fishing",
-			"resources": map[string]interface{}{
-				"log": 1.0,
-				"bone": 1.0,
-				"rope": 1.0,
-			},
-			"title": "Wooden Fishing Rod",
-			"description": "Useful to catch some fish.",
-			"inputs": []string{},
-			"tools": []string{
-				"knife",
-			},
-			"place_in_real_world": false,
-			"duration": 10000.0,
 		},
 	}
 

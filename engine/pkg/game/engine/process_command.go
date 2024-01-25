@@ -63,7 +63,11 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "open_container":
 			if e.GameObjects()[params.(string)] != nil {
 				container := e.GameObjects()[params.(string)].(entity.IContainerObject)
-				e.SendResponse("container_items", container.GetItems(e), player)
+				if container.CheckAccess(e, player) {
+					e.SendResponse("container_items", container.GetItems(e), player)
+				} else {
+					e.SendSystemMessage("You don't have access to this container", player)
+				}
 			}
 		case "equip_item":
 			item := e.GameObjects()[params.(string)].(entity.IEquipableObject)

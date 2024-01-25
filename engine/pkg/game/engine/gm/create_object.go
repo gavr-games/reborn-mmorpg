@@ -32,6 +32,8 @@ func CreateObject(e entity.IEngine, charGameObj entity.IGameObject, params map[s
 		return false
 	}
 
+	additionalProps.(map[string]interface{})["visible"] = true
+
 	gameObj := e.CreateGameObject(objPath, charGameObj.X() + offsetX, charGameObj.Y() + offsetY, 0.0, charGameObj.Floor(), additionalProps.(map[string]interface{}))
 
 	e.SendResponseToVisionAreas(gameObj, "add_object", map[string]interface{}{

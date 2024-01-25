@@ -121,6 +121,13 @@ export default {
 
 <style lang="scss">
 .game-container {
+  &.size-8 {
+    width: 330px;
+    height: 165px;
+    padding-top: 14px;
+    padding-left: 14px;
+    background-image: url("~assets/img/container-8.png");
+  }
   &.size-4 {
     width: 165px;
     height: 165px;

@@ -31,6 +31,9 @@ export default {
   &.bone_needle {
     background-position: 320px 514px;
   }
+  &.bone_saw {
+    background-position: 736px 739px;
+  }
   &.cactus_slice {
     background-position: 448px 288px;
   }
@@ -54,6 +57,9 @@ export default {
   }
   &.healing_balm {
     background-position: 448px 578px;
+  }
+  &.iron_nails {
+    background-position: 800px 867px;
   }
   &.log {
     background-position: 512px 320px;

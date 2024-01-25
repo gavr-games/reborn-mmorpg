@@ -1,7 +1,7 @@
 import * as BABYLON from "babylonjs"
 import { AdvancedDynamicTexture, TextBlock } from "babylonjs-gui"
 
-const TEXT_SIZE = 0.4
+const TEXT_SIZE = 24
 const TEXT_Y = 4
 
 class Nickname {
@@ -15,7 +15,7 @@ class Nickname {
     this.text = new TextBlock()
     this.text.text = nickname
     this.text.color = "black"
-    this.text.fontSize = 24
+    this.text.fontSize = TEXT_SIZE
     this.advancedTexture.addControl(this.text)
     this.plane.convertToUnIndexedMesh()
     this.plane.isPickable = false

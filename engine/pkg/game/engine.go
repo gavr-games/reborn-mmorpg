@@ -168,7 +168,7 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return resource_object.NewResourceObject(gameObj)
 	case "melee_weapon":
 		return weapon_object.NewWeaponObject(gameObj)
-	case "hammer", "knife", "pickaxe", "axe", "needle", "fishing_rod":
+	case "hammer", "knife", "pickaxe", "axe", "needle", "fishing_rod", "saw":
 		return tool_object.NewToolObject(gameObj)
 	case "shovel":
 		return shovel_object.NewShovelObject(gameObj)

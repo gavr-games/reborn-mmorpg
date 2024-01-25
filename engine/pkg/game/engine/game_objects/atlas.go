@@ -283,8 +283,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 			"stone_knife": map[string]interface{}{
 				"type":         "knife",
 				"kind":         "stone_knife",
-				"width":        0.06,
-				"height":       0.5,
+				"width":        0.1,
+				"height":       1.0,
 				"shape":        "rectangle",
 				"container_id": nil,
 				"pickable":     true,
@@ -325,6 +325,46 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"kind":         "stone_hammer",
 				"width":        1.181,
 				"height":       2.5,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"equipable":    true,
+				"visible":      false,
+				"target_slots": map[string]interface{}{
+					"left_arm":  true,
+					"right_arm": true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd":    "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd":    "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
+		"saw": {
+			"bone_saw": map[string]interface{}{
+				"type":         "saw",
+				"kind":         "bone_saw",
+				"width":        0.9,
+				"height":       0.33,
 				"shape":        "rectangle",
 				"container_id": nil,
 				"pickable":     true,
@@ -535,6 +575,40 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"wooden_chest": map[string]interface{}{
+				"type":                "container",
+				"kind":                "wooden_chest",
+				"width":               2.0,
+				"height":              1.66,
+				"shape":               "rectangle",
+				"max_capacity":        32.0,
+				"free_capacity":       32.0,
+				"size":                8.0,
+				"parent_container_id": nil,
+				"owner_id":            nil,
+				"equipable":           true,
+				"visible":             true,
+				"collidable":          true,
+				"liftable":            true,
+				"actions": map[string]interface{}{
+					"open": map[string]interface{}{
+						"cmd":    "open_container",
+						"params": "self", // self - id of current object
+					},
+					"lift": map[string]interface{}{
+						"cmd":    "lift",
+						"params": "self",
+					},
+					"put": map[string]interface{}{
+						"cmd":    "put_lifted",
 						"params": "self",
 					},
 					"destroy": map[string]interface{}{
@@ -931,6 +1005,31 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"iron_nails": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "iron_nails",
+				"width":        0.7,
+				"height":       0.7,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 		},
 		"potion": {
 			"healing_balm": map[string]interface{}{
@@ -1185,6 +1284,11 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"amount":   1.0,
 						"resource": "gold",
 						"price":    3.0,
+					},
+					"resource/iron_nails": map[string]interface{}{
+						"amount":   1.0,
+						"resource": "gold",
+						"price":    5.0,
 					},
 				},
 				"buys": map[string]interface{}{
