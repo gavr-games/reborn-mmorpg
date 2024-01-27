@@ -5,5 +5,4 @@ type Player struct {
 	CharacterGameObjectId string
 	VisionAreaGameObjectId string
 	Client IClient
-	VisibleObjects map[string]bool
 }

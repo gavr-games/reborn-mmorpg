@@ -3,7 +3,7 @@ package engine
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/players"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
@@ -14,7 +14,6 @@ func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 		CharacterGameObjectId: "",
 		VisionAreaGameObjectId: "",
 		Client: client,
-		VisibleObjects: make(map[string]bool),
 	}
 	e.Players()[player.Id] = player
 	additionalProps := make(map[string]interface{})
@@ -67,9 +66,9 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 		CreatePlayerVisionArea(e, player)
 	}
 	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
-		visibleObjects := players.GetVisibleObjects(e, player)
+		visionArea := e.GameObjects()[player.VisionAreaGameObjectId]
+		visibleObjects := game_objects.GetVisibleObjects(e, visionArea.Floor(), visionArea.HitBox())
 		for key, val := range visibleObjects {
-			player.VisibleObjects[val.(entity.IGameObject).Id()] = true
 			// This is required to send target info on first character object rendering
 			if val.(entity.IGameObject).Id() == player.CharacterGameObjectId {
 				clone := val.(entity.IGameObject).Clone()

@@ -41,6 +41,8 @@ class GameController {
     this.updateObjectHandler = gameObj => {
       if (this.gameObjects[gameObj["Id"]]) {
         this.gameObjects[gameObj["Id"]].update(gameObj)
+      } else {
+        this.createObject(gameObj)
       }
       if (gameObj.Properties && gameObj.Properties["container_id"]) {
         EventBus.$emit("update-item-in-container", {

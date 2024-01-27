@@ -20,7 +20,6 @@ func LoadGameObjects(e entity.IEngine) {
 				CharacterGameObjectId: gameObj.Id(),
 				VisionAreaGameObjectId: "",
 				Client: nil,
-				VisibleObjects: make(map[string]bool),
 			}
 			gameObj.Properties()["visible"] = false
 		}
