@@ -5,7 +5,6 @@ DOCKER = docker
 # Containers
 ENGINE_CONTAINER_NAME = $(shell docker ps | grep engine- | rev | cut -d' ' -f1 | rev)
 REDIS_CONTAINER_NAME = $(shell docker ps | grep redis | rev | cut -d' ' -f1 | rev)
-REDIS_TEST_CONTAINER_NAME = $(shell docker ps -a | grep redis-test | rev | cut -d' ' -f1 | rev)
 
 # Default target
 all: setup
@@ -61,16 +60,9 @@ clean: ## Stop and remove Docker containers
 	$(DOCKER_COMPOSE) down
 	$(DOCKER_COMPOSE) rm -f
 
-start-test-env: docker-compose.test.yml
-	$(DOCKER_COMPOSE) -f docker-compose.test.yml up -d
-
-stop-test-env: docker-compose.test.yml
-	$(DOCKER_COMPOSE) -f docker-compose.test.yml stop
-
-test-engine: docker-compose.test.yml
-	$(DOCKER) exec -it $(REDIS_TEST_CONTAINER_NAME) redis-cli FLUSHALL
-	$(DOCKER_COMPOSE) -f docker-compose.test.yml run engine go test ./pkg/game_test/engine_test/... -v
-	$(DOCKER) exec -it $(REDIS_TEST_CONTAINER_NAME) redis-cli FLUSHALL
+.PHONY: test-engine
+test-engine: 
+	$(DOCKER_COMPOSE) run engine go test ./pkg/game_test/... -v
 
 ##@ Other
 

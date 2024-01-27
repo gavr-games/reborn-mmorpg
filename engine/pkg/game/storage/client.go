@@ -1,24 +1,24 @@
 package storage
 
 import (
-	"os"
-	"encoding/json"
 	"context"
+	"encoding/json"
+	"os"
 	"sync"
 
-	"github.com/go-redis/redis/v8"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/redis/go-redis/v9"
 )
 
 const (
 	ChanelCapacity = 1000
 )
 
-// declaration defined type 
+// declaration defined type
 type StorageClient struct {
 	redisClient *redis.Client
-	Updates chan entity.IGameObject
-	Deletes chan string
+	Updates     chan entity.IGameObject
+	Deletes     chan string
 }
 
 var instance *StorageClient = nil
@@ -26,19 +26,31 @@ var ctx = context.Background()
 var once sync.Once
 
 func GetClient() *StorageClient {
+	if instance != nil {
+		return instance
+	}
+
 	once.Do(func() {
 		opt, err := redis.ParseURL(os.Getenv("REDIS_URL"))
 		if err != nil {
-				panic(err)
+			panic(err)
 		}
 		rdb := redis.NewClient(opt)
 		instance = &StorageClient{
 			redisClient: rdb,
-			Updates: make(chan entity.IGameObject, ChanelCapacity),
-			Deletes: make(chan string, ChanelCapacity),
+			Updates:     make(chan entity.IGameObject, ChanelCapacity),
+			Deletes:     make(chan string, ChanelCapacity),
 		}
 	})
 	return instance
+}
+
+func SetClient(rdb *redis.Client) {
+	instance = &StorageClient{
+		redisClient: rdb,
+		Updates:     make(chan entity.IGameObject, ChanelCapacity),
+		Deletes:     make(chan string, ChanelCapacity),
+	}
 }
 
 func (sc *StorageClient) SaveGameObject(obj entity.IGameObject) {
@@ -48,9 +60,9 @@ func (sc *StorageClient) SaveGameObject(obj entity.IGameObject) {
 	}
 
 	setErr := sc.redisClient.Set(ctx, obj.Id(), message, 0).Err()
-  if setErr != nil {
-    panic(setErr)
-  }
+	if setErr != nil {
+		panic(setErr)
+	}
 }
 
 func (sc *StorageClient) RemoveGameObject(objId string) {

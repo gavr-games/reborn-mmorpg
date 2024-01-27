@@ -1,9 +1,8 @@
 package destroyable_object
 
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) bool {
@@ -20,7 +19,7 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 	}
 
 	// check container belongs to character
-	if (item.Properties()["container_id"] != nil) {
+	if item.Properties()["container_id"] != nil {
 		container := e.GameObjects()[item.Properties()["container_id"].(string)]
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
 			e.SendSystemMessage("You don't have access to this container", player)
@@ -32,7 +31,7 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 	}
 
 	// Destroy items inside container
-	if (item.Type() == "container") {
+	if item.Type() == "container" {
 		itemIds := item.Properties()["items_ids"].([]interface{})
 		for _, itemId := range itemIds {
 			if itemId != nil {

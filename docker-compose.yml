@@ -50,6 +50,7 @@ services:
     env_file: .env
     volumes:
       - ./engine:/src/github.com/gavr-games/reborn-mmorpg:cached
+      - go-modules:/go/pkg/mod
     ports:
       - 8080:8080
     depends_on:
@@ -101,3 +102,4 @@ volumes:
   db-data: null
   bundle-cache: null
   redis-data: null
+  go-modules:
