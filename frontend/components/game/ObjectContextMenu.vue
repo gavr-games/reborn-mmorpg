@@ -48,10 +48,31 @@ export default {
     },
     handleAction(actionKey) {
       this.showActionsMenu = false
-      EventBus.$emit("perform-game-action", {
-        cmd: this.item.Properties.actions[actionKey].cmd,
-        params: this.item.Properties.actions[actionKey].params.replace("self", this.item.Properties.id)
-      });
+
+      // For example put chest on the ground
+      if (this.item.Properties.actions[actionKey].params.includes("coordinates,rotation")) {
+        EventBus.$emit("select-coords-and-rotation", {
+          "item_key": this.item.Properties.kind,
+          "item": this.item.Properties,
+          "cmd": "craft",
+          "callback": (x, y, rotation) => {
+            EventBus.$emit("perform-game-action", {
+              cmd: this.item.Properties.actions[actionKey].cmd,
+              params: {
+                "item_id": this.item.Properties.id,
+                "x": x,
+                "y": y,
+                "rotation": rotation
+              }
+            })
+          }
+        })
+      } else {
+        EventBus.$emit("perform-game-action", {
+          cmd: this.item.Properties.actions[actionKey].cmd,
+          params: this.item.Properties.actions[actionKey].params.replace("self", this.item.Properties.id)
+        })
+      }
     },
   }
 }

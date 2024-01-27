@@ -10,7 +10,7 @@ import CharacterController from "./objects/character/character_controller";
 import MobController from "./objects/mob/mob_controller";
 import NpcController from "./objects/npc/npc_controller";
 import ClaimAreaController from "./objects/claim_area/claim_area_controller";
-import CraftController from "./craft/craft_controller";
+import SelectCoordsController from "./select_coords/select_coords_controller";
 import GameConnnection from "./game_connection";
 
 class GameController {
@@ -100,7 +100,7 @@ class GameController {
     GameConnnection.init(token, character_id)
     GameObserver.init()
     ChatController.init(token, character_id)
-    new CraftController()
+    new SelectCoordsController()
   }
 
   initGameObjects(gameObjects) {

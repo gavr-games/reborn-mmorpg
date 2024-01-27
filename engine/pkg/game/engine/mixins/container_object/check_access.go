@@ -17,7 +17,9 @@ func (cont *ContainerObject) CheckAccess(e entity.IEngine, player *entity.Player
 		return e.GameObjects()[parentContainerId.(string)].(entity.IContainerObject).CheckAccess(e, player)
 	} else {
 		if liftable, ok := container.Properties()["liftable"]; ok {
-			if liftable.(bool) {
+			if liftedBy, ok2 := container.Properties()["lifted_by"]; ok2 && liftedBy != nil {
+				return liftedBy.(string) == charGameObj.Id()
+			} else if liftable.(bool) {
 				return container.IsCloseTo(charGameObj) && claims.CheckAccess(e, charGameObj, container)
 			}
 		}

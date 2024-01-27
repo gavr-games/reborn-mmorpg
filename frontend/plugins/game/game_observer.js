@@ -91,7 +91,7 @@ class GameObserver {
       if (hit.pickedMesh) {
         if (hit.pickedMesh.id == "xy-coords-plane") {
           const pickedPoint = hit.pickedPoint;
-          if (scene.getNodeByName("craft-item") === null ) {
+          if (scene.getNodeByName("select-coords-item") === null ) {
             EventBus.$emit("perform-game-action", {
               cmd: "move_xy",
               params: {

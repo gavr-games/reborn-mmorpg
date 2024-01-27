@@ -1,23 +1,25 @@
-import CraftObserver from "~/plugins/game/craft/craft_observer";
+import SelectCoordsObserver from "~/plugins/game/select_coords/select_coords_observer";
 import { EventBus } from "~/plugins/game/event_bus";
 
 const IDLE_STATE = 0
 const SELECT_COORDS_AND_ROTATION_STATE = 1
 const STICK_TO_GRID = 0.5
 
-class CraftController {
+class SelectCoordsController {
   constructor() {
-    this.observer = new CraftObserver(this.state);
+    this.observer = new SelectCoordsObserver(this.state);
     this.x = 0
     this.y = 0
     this.rotation = 0
     this.itemKey = null
     this.item = null
+    this.cmd = null
     this.state = IDLE_STATE
     this.selectionHandler = params => {
       this.state = SELECT_COORDS_AND_ROTATION_STATE
       this.itemKey = params.item_key
       this.item = params.item
+      this.callback = params.callback
       this.observer.create(params.item_key, this.x, this.y)
     };
     this.pointerMovedHandler = params => {
@@ -35,19 +37,7 @@ class CraftController {
         // but on frontend all assets have pivot points in the center of the object.
         const transformX = this.rotation == 0 ? this.item.width / 2 : this.item.height / 2
         const transformY = this.rotation == 0 ? this.item.height / 2 : this.item.width / 2
-        EventBus.$emit("perform-game-action", {
-          cmd: "craft",
-          params: {
-            "item_name": this.itemKey,
-            "inputs": {
-              "coordinates": {
-                "x": this.x - transformX,
-                "y": this.y - transformY,
-              },
-              "rotation": this.rotation,
-            }
-          }
-        });
+        this.callback(this.x - transformX, this.y - transformY, this.rotation)
         this.rotation = 0
       }
     };
@@ -84,4 +74,4 @@ class CraftController {
   }
 }
 
-export default CraftController;
+export default SelectCoordsController;

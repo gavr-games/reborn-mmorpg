@@ -1,4 +1,4 @@
-package pickable_object
+package destroyable_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
@@ -6,7 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
-func (obj *PickableObject) Destroy(e entity.IEngine, player *entity.Player) bool {
+func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) bool {
 	item := obj.gameObj
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
@@ -36,18 +36,21 @@ func (obj *PickableObject) Destroy(e entity.IEngine, player *entity.Player) bool
 		itemIds := item.Properties()["items_ids"].([]interface{})
 		for _, itemId := range itemIds {
 			if itemId != nil {
-				e.GameObjects()[itemId.(string)].(entity.IPickableObject).Destroy(e, player)
+				e.GameObjects()[itemId.(string)].(entity.IDestroyableObject).Destroy(e, player)
 			}
 		}
 	}
 
 	// Destroy item
-	e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
-		return item.Id() == b.(entity.IGameObject).Id()
-	})
+	// TODO: refactor to RemoveObject func in engine
+	if item.Floor() != -1 {
+		e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
+			return item.Id() == b.(entity.IGameObject).Id()
+		})
+	}
 	e.GameObjects()[item.Id()] = nil
 	delete(e.GameObjects(), item.Id())
-	storage.GetClient().Deletes <- item.Id()
+	e.SendGameObjectUpdate(item, "remove_object")
 
 	return true
 }

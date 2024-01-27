@@ -18,18 +18,29 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 		dy := newY - charGameObj.Y()
 		charGameObj.SetX(newX)
 		charGameObj.SetY(newY)
-		charGameObj.Properties()["x"] = newX
-		charGameObj.Properties()["y"] = newY
 		e.Floors()[charGameObj.Floor()].Insert(charGameObj)
+
 		// Update vision area game object
 		e.Floors()[visionAreaGameObj.Floor()].FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
 			return visionAreaGameObj.Id() == b.(entity.IGameObject).Id()
 		})
 		visionAreaGameObj.SetX(visionAreaGameObj.X() + dx)
 		visionAreaGameObj.SetY(visionAreaGameObj.Y() + dy)
-		visionAreaGameObj.Properties()["x"] = visionAreaGameObj.Properties()["x"].(float64) + dx
-		visionAreaGameObj.Properties()["y"] = visionAreaGameObj.Properties()["y"].(float64) + dy
 		e.Floors()[visionAreaGameObj.Floor()].Insert(visionAreaGameObj)
+
+		// Update lifted item
+		liftedObjectId, propExists := charGameObj.Properties()["lifted_object_id"]
+		if propExists && liftedObjectId != nil {
+			liftedObj := e.GameObjects()[liftedObjectId.(string)]
+			if liftedObj != nil {
+				e.Floors()[liftedObj.Floor()].FilteredRemove(liftedObj, func(b utils.IBounds) bool {
+					return liftedObj.Id() == b.(entity.IGameObject).Id()
+				})
+				liftedObj.SetX(charGameObj.X())
+				liftedObj.SetY(charGameObj.Y())
+				e.Floors()[liftedObj.Floor()].Insert(liftedObj)
+			}
+		}
 
 		// determine new and old visible objects, send updates to client
 		visibleObjects := players.GetVisibleObjects(e, player)

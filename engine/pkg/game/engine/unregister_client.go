@@ -25,6 +25,17 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 			e.SendResponseToVisionAreas(charObj, "remove_object", map[string]interface{}{
 				"object": charObj,
 			})
+			// Hide lifted object
+			if liftedObjectId, ok := e.GameObjects()[player.CharacterGameObjectId].Properties()["lifted_object_id"]; ok && liftedObjectId != nil {
+				liftedObj := e.GameObjects()[liftedObjectId.(string)]
+				if liftedObj != nil {
+					liftedObj.Properties()["visible"] = false
+					storage.GetClient().Updates <- liftedObj.Clone()
+					e.SendResponseToVisionAreas(liftedObj, "remove_object", map[string]interface{}{
+						"object": liftedObj,
+					})
+				}
+			}
 		}
 	}
 }

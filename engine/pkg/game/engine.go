@@ -3,6 +3,7 @@ package game
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
@@ -12,6 +13,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims/claim_obelisk_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/backpack_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/bag_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/chest_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
@@ -179,10 +181,12 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 			return character_object.NewCharacterObject(gameObj)
 		}
 	case "container":
-		if gameObj.Kind() == "backpack" {
-			return backpack_object.NewBackpackObject(gameObj)
-		} else {
+		if strings.Contains(gameObj.Kind(), "bag") {
 			return bag_object.NewBagObject(gameObj)
+		} else if strings.Contains(gameObj.Kind(), "chest") {
+			return chest_object.NewChestObject(gameObj)
+		} else {
+			return backpack_object.NewBackpackObject(gameObj)
 		}
 	case "claim":
 		if gameObj.Kind() == "claim_obelisk" {

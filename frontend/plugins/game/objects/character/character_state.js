@@ -19,6 +19,7 @@ class CharacterState {
     this.health = gameObject["Properties"]["health"]
     this.max_health = gameObject["Properties"]["max_health"]
     this.name = gameObject["Properties"]["name"]
+    this.liftedObjectId = gameObject["Properties"]["lifted_object_id"]
     this.payload = gameObject;
   }
 }

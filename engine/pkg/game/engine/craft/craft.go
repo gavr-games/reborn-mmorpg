@@ -8,6 +8,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
+// This func is trigerred by delayed action mechanism
 func Craft(e entity.IEngine, params map[string]interface{}) bool {
 	playerId := int(params["playerId"].(float64))
 	if player, ok := e.Players()[playerId]; ok {
@@ -41,12 +42,12 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			y := coords["y"].(float64)
 			rotation := params["inputs"].(map[string]interface{})["rotation"].(float64)
 			itemObj, err := game_objects.CreateFromTemplate(e, craftItemName, x, y, 0.0)
-			itemObj.Properties()["crafted_by_character_id"] = charGameObj.Id()
-			itemObj.Rotate(rotation)
 			if err != nil {
 				e.SendSystemMessage(err.Error(), player)
 				return false
 			}
+			itemObj.Properties()["crafted_by_character_id"] = charGameObj.Id()
+			itemObj.Rotate(rotation)
 			e.GameObjects()[itemObj.Id()] = itemObj
 			itemObj.SetFloor(charGameObj.Floor())
 			e.Floors()[itemObj.Floor()].Insert(itemObj)

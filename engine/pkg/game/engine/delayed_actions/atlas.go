@@ -9,6 +9,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/shovels"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/surfaces"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/liftable_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 )
 
@@ -61,6 +62,14 @@ func GetDelayedActionsAtlas() map[string]map[string]interface{} {
 		},
 		"InitClaim": map[string]interface{}{
 			"func": claims.Init,
+			"duration": 1.0,
+		},
+		"Lift": map[string]interface{}{
+			"func": liftable_object.Lift,
+			"duration": 1.0,
+		},
+		"PutLifted": map[string]interface{}{
+			"func": liftable_object.PutLifted,
 			"duration": 1.0,
 		},
 		"TownTeleport": map[string]interface{}{

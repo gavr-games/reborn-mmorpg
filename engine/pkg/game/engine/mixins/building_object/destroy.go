@@ -3,7 +3,6 @@ package building_object
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
 
@@ -30,7 +29,6 @@ func (building *BuildingObject) Destroy(e entity.IEngine, player *entity.Player)
 	// Destroy building
 	e.GameObjects()[buildingObj.Id()] = nil
 	delete(e.GameObjects(), buildingObj.Id())
-	storage.GetClient().Deletes <- buildingObj.Id()
 
 	return true
 }

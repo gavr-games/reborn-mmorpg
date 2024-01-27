@@ -71,8 +71,24 @@ export default {
       if (item.place_in_real_world) {
         EventBus.$emit("select-coords-and-rotation", {
           "item_key": itemKey,
-          "item": item
-        });
+          "item": item,
+          "cmd": "craft",
+          "callback": (x, y, rotation) => {
+            EventBus.$emit("perform-game-action", {
+              cmd: "craft",
+              params: {
+                "item_name": itemKey,
+                "inputs": {
+                  "coordinates": {
+                    "x": x,
+                    "y": y,
+                  },
+                  "rotation": rotation,
+                }
+              }
+            })
+          }
+        })
       } else {
         EventBus.$emit("perform-game-action", {
           cmd: "craft",

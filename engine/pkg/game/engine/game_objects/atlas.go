@@ -609,7 +609,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 					"put": map[string]interface{}{
 						"cmd":    "put_lifted",
-						"params": "self",
+						"params": "self,coordinates,rotation",
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",

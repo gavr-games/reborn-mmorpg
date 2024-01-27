@@ -3,7 +3,6 @@ package surfaces
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
 // This func is called via delayed action mechanism
@@ -24,7 +23,6 @@ func GrowGrass(e entity.IEngine, params map[string]interface{}) bool {
 	})
 	e.GameObjects()[dirt.Id()] = nil
 	delete(e.GameObjects(), dirt.Id())
-	storage.GetClient().Deletes <- dirt.Id()
 	
 	return true
 }

@@ -4,6 +4,10 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
+- Lift container
+- Drop container - placement
+- what happens with lifted object on disconnect? What happens if player dies?
+- character update while lifting.
 - REFACTOR: optimize GetVisibleObjects calculation to take less time. Move player vision area top and left. Calculate GetVisibleObjects only on the difference between rectangles, not each time the whole new rectangle. https://en.wikibooks.org/wiki/Algorithm_Implementation/Geometry/Rectangle_difference
 - send visible objects updates once per 500ms and check performance
 - add baby dragons and raising them

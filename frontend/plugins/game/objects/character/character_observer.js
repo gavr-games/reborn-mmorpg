@@ -97,6 +97,13 @@ class Character {
     }
     this.mesh.position.x = this.state.x
     this.mesh.position.z = this.state.y
+    if (this.state.liftedObjectId !== undefined && this.state.liftedObjectId !== null) {
+      const liftedMesh = this.scene.getNodeByName(`item-${this.state.liftedObjectId}`)
+      if (liftedMesh !== null) {
+        liftedMesh.position.x = this.state.x
+        liftedMesh.position.z = this.state.y
+      }
+    }
     this.healthbar.update(this.state.health, this.state.max_health, this.mesh.position)
     this.nickname.update(this.mesh.position)
     if (this.targetHighlight) {

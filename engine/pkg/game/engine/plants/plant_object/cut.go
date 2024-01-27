@@ -53,7 +53,6 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 			})
 			e.GameObjects()[plant.Id()] = nil
 			delete(e.GameObjects(), plant.Id())
-			storage.GetClient().Deletes <- plant.Id()
 		} else {
 			storage.GetClient().Updates <- plant.Clone()
 		}

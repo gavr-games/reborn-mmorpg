@@ -51,11 +51,11 @@ func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool 
 
 	storage.GetClient().Updates <- item.Clone()
 
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "pickup_object", map[string]interface{}{
+	e.SendResponseToVisionAreas(charGameObj, "pickup_object", map[string]interface{}{
 		"character_id": charGameObj.Id(),
 		"id":           item.Id(),
 	})
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "remove_object", map[string]interface{}{
+	e.SendResponseToVisionAreas(charGameObj, "remove_object", map[string]interface{}{
 		"object": map[string]interface{}{
 			"Id": item.Id(),
 		},

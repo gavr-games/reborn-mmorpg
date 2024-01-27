@@ -83,5 +83,13 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 		}, player)
 		// Send character obj to another players
 		e.SendGameObjectUpdate(e.GameObjects()[player.CharacterGameObjectId], "add_object")
+		// Show lifted object
+		if liftedObjectId, ok := e.GameObjects()[player.CharacterGameObjectId].Properties()["lifted_object_id"]; ok && liftedObjectId != nil {
+			liftedObj := e.GameObjects()[liftedObjectId.(string)]
+			if liftedObj != nil {
+				liftedObj.Properties()["visible"] = true
+				e.SendGameObjectUpdate(liftedObj, "add_object")
+			}
+		}
 	}
 }

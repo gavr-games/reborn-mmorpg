@@ -19,7 +19,6 @@ func (claimObelisk *ClaimObeliskObject) Remove(e entity.IEngine) bool {
 	})
 	e.GameObjects()[claimAreaObj.Id()] = nil
 	delete(e.GameObjects(), claimAreaObj.Id())
-	storage.GetClient().Deletes <- claimAreaObj.Id()
 	e.SendGameObjectUpdate(claimAreaObj, "remove_object")
 
 	// remove obelisk
@@ -28,7 +27,6 @@ func (claimObelisk *ClaimObeliskObject) Remove(e entity.IEngine) bool {
 	})
 	e.GameObjects()[claimObelisk.Id()] = nil
 	delete(e.GameObjects(), claimObelisk.Id())
-	storage.GetClient().Deletes <- claimObelisk.Id()
 	e.SendGameObjectUpdate(claimObelisk, "remove_object")
 
 	// remove obelisk from character

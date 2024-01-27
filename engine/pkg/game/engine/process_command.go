@@ -11,6 +11,7 @@ import (
 )
 
 // Process commands from players
+// TODO: move commands processing to funcs
 func ProcessCommand(e entity.IEngine, characterId int, command map[string]interface{}) {
 	if player, ok := e.Players()[characterId]; ok {
 		cmd := command["cmd"]
@@ -82,7 +83,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			item := e.GameObjects()[params.(string)].(entity.IPickableObject)
 			item.Pickup(e, player)
 		case "destroy_item":
-			item := e.GameObjects()[params.(string)].(entity.IPickableObject)
+			item := e.GameObjects()[params.(string)].(entity.IDestroyableObject)
 			item.Destroy(e, player)
 		case "destroy_building":
 			building := e.GameObjects()[params.(string)].(entity.IBuildingObject)
@@ -97,6 +98,31 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				params.(map[string]interface{})["container_id"].(string),
 				int(params.(map[string]interface{})["position"].(float64)),
 				player)
+		case "lift":
+			item := e.GameObjects()[params.(string)]
+			charGameObj.SetMoveToCoordsByObject(item)
+			delayed_actions.Start(e, charGameObj, "Lift", map[string]interface{}{
+				"characterId": charGameObj.Id(),
+				"itemId":      item.Id(),
+			}, -1.0)
+		case "put_lifted":
+			// TODO: move to func
+			item := e.GameObjects()[params.(map[string]interface{})["item_id"].(string)]
+			x := params.(map[string]interface{})["x"].(float64)
+			y := params.(map[string]interface{})["y"].(float64)
+			rotation := params.(map[string]interface{})["rotation"].(float64)
+			clone := item.Clone()
+			clone.SetX(x)
+			clone.SetY(y)
+			clone.Rotate(rotation)
+			charGameObj.SetMoveToCoordsByObject(clone)
+			delayed_actions.Start(e, charGameObj, "PutLifted", map[string]interface{}{
+				"characterId": charGameObj.Id(),
+				"x":           x,
+				"y":           y,
+				"rotation":    rotation,
+				"itemId":      item.Id(),
+			}, -1.0)
 		case "apply_effect":
 			potion := e.GameObjects()[params.(string)]
 			potion.(entity.IPotionObject).ApplyToPlayer(e, player)

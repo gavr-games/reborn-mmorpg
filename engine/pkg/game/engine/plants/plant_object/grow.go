@@ -2,7 +2,6 @@ package plant_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
@@ -23,7 +22,6 @@ func (plant *PlantObject) Grow(e entity.IEngine) bool {
 	})
 	e.GameObjects()[plant.Id()] = nil
 	delete(e.GameObjects(), plant.Id())
-	storage.GetClient().Deletes <- plant.Id()
 
 	return true
 }

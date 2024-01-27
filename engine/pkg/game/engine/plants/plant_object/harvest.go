@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
@@ -47,7 +46,6 @@ func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObje
 		})
 		e.GameObjects()[plant.Id()] = nil
 		delete(e.GameObjects(), plant.Id())
-		storage.GetClient().Deletes <- plant.Id()
 
 		e.SendSystemMessage(fmt.Sprintf("You harvested a %s.", plant.Kind()), player)
 	} else {

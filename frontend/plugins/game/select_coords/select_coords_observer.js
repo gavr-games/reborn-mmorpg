@@ -3,7 +3,7 @@ import Atlas from "~/plugins/game/atlas/atlas";
 import GameObserver from "~/plugins/game/game_observer";
 import addAlpha from "~/plugins/game/utils/add_alpha";
 
-class CraftObserver {
+class SelectCoordsObserver {
   constructor() {
     this.scene = null;
     this.container = null;
@@ -21,14 +21,14 @@ class CraftObserver {
   create(itemKey, x, y) {
     let mesh = null
     try {
-      mesh = Atlas.get(itemKey + "Item").clone("craft-item");
+      mesh = Atlas.get(itemKey + "Item").clone("select-coords-item");
     } catch(e) {
-      mesh = Atlas.get(itemKey + "Plant").clone("craft-item");
+      mesh = Atlas.get(itemKey + "Plant").clone("select-coords-item");
     }
     console.log(mesh)
     mesh.setParent(null)
     mesh.setEnabled(true);
-    mesh.name = "craft-item"
+    mesh.name = "select-coords-item"
     mesh.position.x = x
     mesh.position.y = 0
     mesh.position.z = y
@@ -64,4 +64,4 @@ class CraftObserver {
   }
 }
 
-export default CraftObserver;
+export default SelectCoordsObserver;
