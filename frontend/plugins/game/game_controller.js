@@ -13,12 +13,16 @@ import ClaimAreaController from "./objects/claim_area/claim_area_controller";
 import SelectCoordsController from "./select_coords/select_coords_controller";
 import GameConnnection from "./game_connection";
 
+const PING_INTERVAL = 5000
+
 class GameController {
   constructor() {
     this.gameObjects = []
     this.token = null
     this.characterId = null
     this.targetObjId = null
+    this.ping = [0, 0, 0]
+    this.pingIndex = 0
     this.controls = {
       w: false,
       a: false,
@@ -28,6 +32,7 @@ class GameController {
     }
     this.initGameObjectsHandler = gameObjects => {
       this.initGameObjects(gameObjects)
+      this.startPing()
     };
     this.keyUpHandler = key => {
       this.handleKeyUp(key)
@@ -79,6 +84,13 @@ class GameController {
         EventBus.$emit("remove_object", gameObj)
       })
     };
+    this.setPingHandler = data => {
+      this.ping[this.pingIndex] = data.server_time - data.start_time
+      this.pingIndex++
+      if (this.pingIndex === 3) {
+        this.pingIndex = 0
+      }
+    };
     this.performGameAction = action => {
       GameConnnection.sendCmd(action.cmd, action.params)
     };
@@ -93,6 +105,7 @@ class GameController {
     EventBus.$on("deselect_target", this.deselectTargetHandler)
     EventBus.$on("add_objects", this.addObjectsHandler)
     EventBus.$on("remove_objects", this.removeObjectsHandler)
+    EventBus.$on("ping_info", this.setPingHandler)
   }
 
   init(token, character_id) {
@@ -103,6 +116,13 @@ class GameController {
     GameObserver.init()
     ChatController.init(token, character_id)
     new SelectCoordsController()
+  }
+
+  startPing() {
+    GameConnnection.sendCmd("get_ping", { start_time: Date.now() })
+    setInterval(() => {
+      GameConnnection.sendCmd("get_ping", { start_time: Date.now() })
+    }, PING_INTERVAL)
   }
 
   initGameObjects(gameObjects) {
@@ -205,6 +225,10 @@ class GameController {
         break;
     }
     if (cmd != this.controls.lastCmd) {
+      EventBus.$emit("emulate-character-move", {
+        cmd: cmd,
+        ping: this.ping.reduce((a, b) => a + b) / this.ping.length
+      }) // this helps to predict character movement before server answer and get rid of "jumps" (ping)
       GameConnnection.sendCmd(cmd)
       this.controls.lastCmd = cmd
     }
@@ -223,6 +247,7 @@ class GameController {
     EventBus.$off("deselect_target", this.deselectTargetHandler)
     EventBus.$off("add_objects", this.addObjectsHandler)
     EventBus.$off("remove_objects", this.removeObjectsHandler)
+    EventBus.$off("ping_info", this.setPingHandler)
   }
 }
 

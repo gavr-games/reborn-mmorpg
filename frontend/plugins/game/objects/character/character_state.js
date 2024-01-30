@@ -20,6 +20,7 @@ class CharacterState {
     this.max_health = gameObject["Properties"]["max_health"]
     this.name = gameObject["Properties"]["name"]
     this.liftedObjectId = gameObject["Properties"]["lifted_object_id"]
+    this.lastUpdate = Date.now()
     this.payload = gameObject;
   }
 }
