@@ -3,49 +3,63 @@
     <div class="container mt-20">
       <div class="inner rpgui-container framed">
         <header>
-          <h1 class="main-title">REBORN</h1>
-		      <hr class="golden" />
+          <h1 class="main-title">
+            REBORN
+          </h1>
+          <hr class="golden">
           <h2>Hello {{ username }}, please select the character</h2>
         </header>
 
         <div class="rpgui-center">
-          <NuxtLink to="/"><button type="button" class="rpgui-button"><p>Home</p></button></NuxtLink>
-		    </div>
-		    <br /><br />
+          <NuxtLink to="/">
+            <button type="button" class="rpgui-button">
+              <p>Home</p>
+            </button>
+          </NuxtLink>
+        </div>
+        <br><br>
 
         <div class="row">
-          <div class="col-3 rpgui-container framed-golden-2" v-for="char in characters" :key="char.id" @click="selectCharacter(char.id)">
-            <div class="rpgui-icon helmet-slot add rpgui-cursor-point"></div>
+          <div v-for="char in characters" :key="char.id" class="col-3 rpgui-container framed-golden-2" @click="selectCharacter(char.id)">
+            <div class="rpgui-icon helmet-slot add rpgui-cursor-point" />
             {{ char.name }}
           </div>
-          <div class="col-3 rpgui-container framed-golden-2" v-for="index in (4 - characters.length)" :key="'index'+index">
-            <div class="rpgui-icon empty-slot add rpgui-cursor-point" @click="displayCreateForm"><p>+</p></div>
+          <div v-for="index in (4 - characters.length)" :key="'index'+index" class="col-3 rpgui-container framed-golden-2">
+            <div class="rpgui-icon empty-slot add rpgui-cursor-point" @click="displayCreateForm">
+              <p>+</p>
+            </div>
           </div>
         </div>
 
-        <div class="rpgui-center" v-if="showCreateForm">
+        <div v-if="showCreateForm" class="rpgui-center">
           <div class="add-character-form">
             <label>Your character name:</label>
-            <input type="text" v-model="name" placeholder="myhero">
-            <br/><br/>
+            <input v-model="name" type="text" placeholder="myhero">
+            <br><br>
 
             <label>Choose appearance:</label>
-            <select class="rpgui-dropdown" data-rpguitype="dropdown" v-model="gender">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
+            <select v-model="gender" class="rpgui-dropdown" data-rpguitype="dropdown">
+              <option value="male">
+                Male
+              </option>
+              <option value="female">
+                Female
+              </option>
             </select>
-            <br /><br />
-            <button type="button" class="rpgui-button golden" @click="create"><p>Create</p></button>
+            <br><br>
+            <button type="button" class="rpgui-button golden" @click="create">
+              <p>Create</p>
+            </button>
           </div>
-		    </div>
+        </div>
 
-		    <br /><br />
+        <br><br>
         <p v-show="showErrorMessage" class="error">
           {{ errorMessage }}
-			  </p>
-        <br /><br />
+        </p>
+        <br><br>
         <hr style="clear:both">
-		    <br /><br />
+        <br><br>
       </div>
     </div>
   </div>
@@ -53,18 +67,28 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       characters: [],
       name: '',
       gender: 'male',
       errorMessage: '',
       showErrorMessage: false,
-      showCreateForm: false,
+      showCreateForm: false
     }
   },
 
-  mounted() {
+  computed: {
+    username () {
+      if (this.$auth.user) {
+        return this.$auth.user.username
+      } else {
+        return ''
+      }
+    }
+  },
+
+  mounted () {
     if (!this.$auth.loggedIn) {
       this.$router.push('login')
     } else {
@@ -72,49 +96,39 @@ export default {
     }
   },
 
-  computed: {
-    username() {
-      if (this.$auth.user) {
-        return this.$auth.user.username
-      } else {
-        ''
-      }
-    }
-  },
-
   methods: {
-    displayCreateForm() {
-      this.showCreateForm = true;
+    displayCreateForm () {
+      this.showCreateForm = true
     },
-    create() {
+    create () {
       this.showErrorMessage = false
       const context = this
       this.$axios.$post('/characters', {
         name: this.name,
         gender: this.gender
       })
-      .then(response => {
-        context.name = ''
-        context.gender = 'male'
-        context.showCreateForm = false
-        context.characters.push(response)
-      })
-      .catch(error => {
-        if (error.response) {
-          context.errorMessage = error.response.data.error
-          context.showErrorMessage = true
-        }
-      });
+        .then((response) => {
+          context.name = ''
+          context.gender = 'male'
+          context.showCreateForm = false
+          context.characters.push(response)
+        })
+        .catch((error) => {
+          if (error.response) {
+            context.errorMessage = error.response.data.error
+            context.showErrorMessage = true
+          }
+        })
     },
-    getList() {
+    getList () {
       this.$axios.$get('/characters')
-      .then(response => {
-        this.characters = response
-      })
+        .then((response) => {
+          this.characters = response
+        })
     },
-    selectCharacter(id) {
+    selectCharacter (id) {
       this.$store.commit('characters/set', id)
-      this.$router.push('/game');
+      this.$router.push('/game')
     }
   }
 }

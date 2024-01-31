@@ -3,33 +3,39 @@
     <div class="container mt-20 small">
       <div class="inner rpgui-container framed">
         <header>
-          <h1 class="main-title">REBORN</h1>
-		      <hr class="golden" />
+          <h1 class="main-title">
+            REBORN
+          </h1>
+          <hr class="golden">
           <h2>Login</h2>
         </header>
 
         <div class="rpgui-center">
-            <label>Your username:</label>
-            <input type="text" v-model="username" placeholder="myusername">
-            <br/><br/>
+          <label>Your username:</label>
+          <input v-model="username" type="text" placeholder="myusername">
+          <br><br>
 
-            <label>Your password:</label>
-            <input type="password" v-model="password">
-            <br/><br/>
-		    </div>
-        <br/><br/>
+          <label>Your password:</label>
+          <input v-model="password" type="password">
+          <br><br>
+        </div>
+        <br><br>
         <div class="rpgui-center">
           <a @click.prevent="login()"><button type="button" class="rpgui-button golden"><p>Login</p></button></a>
-          <br />
-          <NuxtLink to="/"><button type="button" class="rpgui-button"><p>Back</p></button></NuxtLink>
+          <br>
+          <NuxtLink to="/">
+            <button type="button" class="rpgui-button">
+              <p>Back</p>
+            </button>
+          </NuxtLink>
         </div>
-        <br /><br />
+        <br><br>
         <p v-show="showErrorMessage" class="error">
           {{ errorMessage }}
-			  </p>
-		    <br /><br />
+        </p>
+        <br><br>
         <hr style="clear:both">
-		    <br /><br />
+        <br><br>
       </div>
     </div>
   </div>
@@ -37,16 +43,16 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       username: '',
       password: '',
       errorMessage: '',
-      showErrorMessage: false,
+      showErrorMessage: false
     }
   },
   methods: {
-    async login() {
+    async login () {
       this.showErrorMessage = false
       const context = this
       try {
@@ -56,7 +62,7 @@ export default {
             password: this.password
           }
         })
-        context.$router.push('/characters');
+        context.$router.push('/characters')
       } catch (err) {
         if (err.response) {
           context.errorMessage = err.response.data.error

@@ -1,4 +1,4 @@
-export default function getMeshRoot(mesh) {
+export default function getMeshRoot (mesh) {
   if (mesh.metadata && mesh.metadata.id) {
     return mesh
   }

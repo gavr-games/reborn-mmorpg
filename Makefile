@@ -1,6 +1,7 @@
 # Define variables
 DOCKER_COMPOSE = docker compose
 DOCKER = docker
+FRONTEND_RUNNER = docker compose run --rm frontend
 
 # Containers
 ENGINE_CONTAINER_NAME = $(shell docker ps | grep engine- | rev | cut -d' ' -f1 | rev)
@@ -60,6 +61,22 @@ restart: ## Restart all Docker containers
 clean: ## Stop and remove Docker containers
 	$(DOCKER_COMPOSE) down
 	$(DOCKER_COMPOSE) rm -f
+
+.PHONY: lint
+lint: ## Lint all files
+	$(MAKE) lint-front
+
+.PHONY: lint-front
+lint-front: ## Lint all *.js files
+	$(FRONTEND_RUNNER) yarn lint
+
+.PHONY: format
+format: ## Lint all files
+	$(MAKE) format-front
+
+.PHONY: lint-front
+format-front: ## Lint all *.js files
+	$(FRONTEND_RUNNER) yarn fix
 
 
 ##@ Other

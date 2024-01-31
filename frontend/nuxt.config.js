@@ -47,7 +47,7 @@ export default {
   ],
 
   axios: {
-    baseURL: '/api/v1',
+    baseURL: '/api/v1'
   },
 
   auth: {

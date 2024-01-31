@@ -24,5 +24,11 @@ You need to find out your player game_object's id. You can do that by watching w
 
 `make gm-set ID=<player_game_object_id>`
 
+## Code linting
+- `make lint` - perform code linting for whole project
+- `make lint-front` - perform code linting for frontend
+- `make format` - perform code linting for whole project and try to fix errors
+- `make format-front` - perform code linting for frontend and try to fix errors
+
 ## List available commands
 - `make help`

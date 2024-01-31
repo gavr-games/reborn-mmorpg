@@ -3,26 +3,36 @@
     <div class="container mt-20">
       <div class="inner rpgui-container framed">
         <header>
-          <h1 class="main-title">REBORN</h1>
-		      <hr class="golden" />
+          <h1 class="main-title">
+            REBORN
+          </h1>
+          <hr class="golden">
           <h2>Craft &amp; Sandbox MMORGP</h2>
         </header>
 
         <div class="rpgui-center">
-          <NuxtLink to="/register"><button type="button" class="rpgui-button"><p>Register</p></button></NuxtLink>
-          <NuxtLink to="/login"><button type="button" class="rpgui-button"><p>Login</p></button></NuxtLink>
-		    </div>
-		    <br /><br />
-			  <p>
+          <NuxtLink to="/register">
+            <button type="button" class="rpgui-button">
+              <p>Register</p>
+            </button>
+          </NuxtLink>
+          <NuxtLink to="/login">
+            <button type="button" class="rpgui-button">
+              <p>Login</p>
+            </button>
+          </NuxtLink>
+        </div>
+        <br><br>
+        <p>
           REBORN is a free to play game with open world and real-world crafting system.
-			    <br /><br />
+          <br><br>
           Inspired by the Rogalia project.
-			    <br /><br />
-			    Want to see more? <a href="/">Welcome to forum and wiki</a>.
-			  </p>
-		    <br /><br /><br /><br />
+          <br><br>
+          Want to see more? <a href="/">Welcome to forum and wiki</a>.
+        </p>
+        <br><br><br><br>
         <hr style="clear:both">
-		    <br /><br />
+        <br><br>
       </div>
     </div>
   </div>

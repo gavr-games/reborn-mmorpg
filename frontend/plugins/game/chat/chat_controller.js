@@ -1,36 +1,36 @@
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 class ChatController {
-  constructor() {
+  constructor () {
     this.conn = null
-    this.sendChatMessage = message => {
+    this.sendChatMessage = (message) => {
       if (this.conn) {
-        this.conn.send(message);
+        this.conn.send(message)
       }
-    };
-    EventBus.$on("send-chat-message", this.sendChatMessage);
+    }
+    EventBus.$on('send-chat-message', this.sendChatMessage)
   }
 
-  init(token, character_id) {
-    if (window["WebSocket"]) {
-      this.conn = new WebSocket("ws://" + document.location.host + "/chat/ws?token=" + token + "&character_id=" + character_id);
-      this.conn.onclose = function (evt) {
-        console.log("Chat ws connection is closed")
-      };
+  init (token, characterId) {
+    if (window.WebSocket) {
+      this.conn = new WebSocket('ws://' + document.location.host + '/chat/ws?token=' + token + '&character_id=' + characterId)
+      /* this.conn.onclose = function (evt) {
+        console.log('Chat ws connection is closed')
+      } */
       this.conn.onmessage = function (evt) {
-        var messages = evt.data.split('\n');
-        for (var i = 0; i < messages.length; i++) {
-          EventBus.$emit("new-chat-message", messages[i])
+        const messages = evt.data.split('\n')
+        for (let i = 0; i < messages.length; i++) {
+          EventBus.$emit('new-chat-message', messages[i])
         }
-      };
+      }
     }
   }
 
-  destroy() {
-    EventBus.$off("send-chat-message")
+  destroy () {
+    EventBus.$off('send-chat-message')
   }
 }
 
-const chatController = new ChatController();
+const chatController = new ChatController()
 
-export default chatController;
+export default chatController
