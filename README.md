@@ -12,11 +12,7 @@
 - `make stop` - stop the project
 - `make restart` - restart the project
 - `make attach-engine` - view engine container output
-
-## Running tests
-- `make start-test-env` - start the test environment
 - `make test-engine` - run the engine tests
-- `make stop-test-env` - stop the test environment
 
 ## Endpoints
 - [http://localhost](http://localhost)

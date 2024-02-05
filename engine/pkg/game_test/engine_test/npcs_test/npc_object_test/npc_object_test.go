@@ -17,8 +17,14 @@ var testFunction func() (bool, error)
 
 const (
 	amount           = 1.0
+	sellingPrice     = 2.0
+	buyingPrice      = 10.0
+	resourceObjKey   = "resource/gold"
+	resourceKind     = "gold"
 	itemToSellObjKey = "resource/log"
+	itemToSellKind   = "log"
 	itemToBuyObjKey  = "resource/claim_stone"
+	itemToBuyKind    = "claim_stone"
 )
 
 func TestMain(m *testing.M) {

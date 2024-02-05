@@ -22,6 +22,12 @@ func (f *GameObjectFactory) CreateCharGameObject(e *game.Engine) entity.IGameObj
 	return e.CreateGameObject(playerObjKey, 0.0, 0.0, 0, 0, map[string]interface{}{"player_id": maxId + 1})
 }
 
+func (f *GameObjectFactory) CreatePlayer(e *game.Engine, charGameObj entity.IGameObject) *entity.Player {
+	playerId := charGameObj.Properties()["player_id"].(int)
+	e.Players()[playerId] = &entity.Player{Id: playerId, CharacterGameObjectId: charGameObj.Id()}
+	return e.Players()[playerId]
+}
+
 func (f *GameObjectFactory) CreateNpcGameObject(e *game.Engine) entity.IGameObject {
 	return e.CreateGameObject(npcObjKey, 0, 0, 0, 0, nil)
 }

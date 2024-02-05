@@ -5,6 +5,7 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game_test/factories"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSellItem(t *testing.T) {
@@ -16,9 +17,7 @@ func TestSellItem(t *testing.T) {
 	t.Run("Player does not exist", testPlayerDoesNotExist)
 
 	// Create a new player
-	playerId := charGameObj.Properties()["player_id"].(int)
-	e.Players()[playerId] = &entity.Player{Id: playerId, CharacterGameObjectId: charGameObj.Id()}
-	player := e.Players()[playerId]
+	player := gameObjectFactory.CreatePlayer(e, charGameObj)
 
 	t.Run("Player does not have container", testPlayerDoesNotHaveContainer)
 
@@ -44,4 +43,16 @@ func TestSellItem(t *testing.T) {
 	container.(entity.IContainerObject).Put(e, player, itemToSellObj.Id(), -1)
 
 	t.Run("Player sold item successfully", testSuccess)
+	t.Run("Player got rid of item", func(t *testing.T) {
+		hasItem := container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
+			itemToSellKind: amount,
+		})
+		assert.False(t, hasItem)
+	})
+	t.Run("Player received resources", func(t *testing.T) {
+		hasItem := container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
+			resourceKind: sellingPrice,
+		})
+		assert.True(t, hasItem)
+	})
 }

@@ -62,7 +62,7 @@ clean: ## Stop and remove Docker containers
 
 .PHONY: test-engine
 test-engine: 
-	$(DOCKER_COMPOSE) run engine go test ./pkg/game_test/... -v
+	$(DOCKER_COMPOSE) run --rm engine go test ./pkg/game_test/... -v
 
 ##@ Other
 
