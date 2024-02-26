@@ -81,6 +81,22 @@ services:
         limits:
           cpus: '0.50'
 
+  admin:
+    build: ./admin
+    command:
+      - /bin/sh
+      - '-c'
+      - |
+        npm install
+        npm run dev
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./admin:/app:cached
+    ports:
+      - 3000
+    env_file: .env
+
   db:
     image: postgres:12-alpine
     volumes:

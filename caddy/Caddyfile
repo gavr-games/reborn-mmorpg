@@ -14,6 +14,10 @@ localhost:80, localhost:443 {
   proxy / frontend:3000 {
     transparent
   }
+	proxy /admin admin:3000 {
+    transparent
+		websocket
+  }
 	log stdout
 	errors stdout
   tls self_signed
