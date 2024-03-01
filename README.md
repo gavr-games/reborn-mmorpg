@@ -15,6 +15,7 @@
 
 ## Endpoints
 - [http://localhost](http://localhost)
+- [http://localhost/admin](http://localhost/admin) - Administrator portal with following creds: `admin@reborn.game`/`adminpass`
 
 ## Reset game data
 To delete current game data and regenerate the world execute `make reset-world`.
