@@ -7,7 +7,7 @@ const (
 	TickSize = 10 // Game tick size in ms
 	InitialPlayerX = 100.0
 	InitialPlayerY = 100.0
-	PlayerVisionArea = 70.0
+	PlayerVisionArea = 60.0
 	PlayerSpeed = 3.0
 	ClaimArea = 20.0
 	ClaimRentDuration = 2419200000.0 // 4 weeks

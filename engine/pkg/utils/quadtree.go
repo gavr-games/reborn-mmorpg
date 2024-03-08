@@ -229,7 +229,9 @@ func (qt *Quadtree) Retrieve(pRect IBounds) []IBounds {
 		} else {
 			//if pRect does not fit into a subnode, check it against all subnodes
 			for i := 0; i < len(qt.Nodes); i++ {
-				returnObjects = append(returnObjects, qt.Nodes[i].Retrieve(pRect)...)
+				if qt.Nodes[i].Bounds.Intersects(pRect.HitBox()) {
+					returnObjects = append(returnObjects, qt.Nodes[i].Retrieve(pRect)...)
+				}
 			}
 		}
 	}

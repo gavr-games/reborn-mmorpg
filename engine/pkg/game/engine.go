@@ -253,7 +253,7 @@ func (e *Engine) Init() {
 			Width:  constants.FloorSize,
 			Height: constants.FloorSize,
 		},
-		MaxObjects: 30,
+		MaxObjects: constants.FloorSize,
 		MaxLevels:  10,
 		Level:      0,
 		Objects:    make([]utils.IBounds, 0),

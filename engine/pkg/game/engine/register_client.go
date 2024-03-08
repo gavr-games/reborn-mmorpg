@@ -29,7 +29,7 @@ func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) entity.IGam
 	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
-	gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.X() - constants.PlayerVisionArea / 2, charGameObj.Y() - constants.PlayerVisionArea / 2, 0.0, charGameObj.Floor(), additionalProps)
+	gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.X() - constants.PlayerVisionArea / 2 - 5, charGameObj.Y() - constants.PlayerVisionArea / 2 + 5, 0.0, charGameObj.Floor(), additionalProps)
 	player.VisionAreaGameObjectId = gameObj.Id()
 	return gameObj
 }

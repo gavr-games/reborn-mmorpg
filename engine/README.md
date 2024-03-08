@@ -4,7 +4,7 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## TODO
-- send visible objects updates once per 500ms and check performance
+- Create routine for each floor, which handles not important but time consuming actions, like sending visibility updates to characters
 - add baby dragons and raising them
 - add dragon breeding to get new eggs
 - add fighting and leveling dragins
