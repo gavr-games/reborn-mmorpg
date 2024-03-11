@@ -8,7 +8,7 @@ import (
 // params: game_object_id
 func Init(e entity.IEngine, params map[string]interface{}) bool {
 	claimObeliskId := params["game_object_id"].(string)
-	if obelisk, ok := e.GameObjects()[claimObeliskId]; ok {
+	if obelisk, ok := e.GameObjects().Load(claimObeliskId); ok {
 		return obelisk.(entity.IClaimObeliskObject).Init(e)
 	} else {
 		return false

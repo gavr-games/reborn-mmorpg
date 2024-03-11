@@ -10,10 +10,18 @@ import (
 )
 
 func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player) bool {
-	obj := e.GameObjects()[player.CharacterGameObjectId]
+	var (
+		obj, container entity.IGameObject
+		ok, contOk bool
+	)
+	if obj, ok = e.GameObjects().Load(player.CharacterGameObjectId); !ok {
+		return false
+	}
 	
 	if (item.Properties()["container_id"] != nil) {
-		container := e.GameObjects()[item.Properties()["container_id"].(string)]
+		if container, contOk = e.GameObjects().Load(item.Properties()["container_id"].(string)); !contOk {
+			return false
+		}
 		// check container belongs to character
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
 			e.SendSystemMessage("You don't have access to this container", player)
@@ -45,8 +53,7 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 		e.SendGameObjectUpdate(obj, "update_object")
 
 		// Remove item
-		e.GameObjects()[item.Id()] = nil
-		delete(e.GameObjects(), item.Id())
+		e.GameObjects().Delete(item.Id())
 		storage.GetClient().Deletes <- item.Id()
 
 		return true

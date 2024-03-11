@@ -11,8 +11,11 @@ import (
 )
 
 func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
-	charGameObj := e.GameObjects()[claimObelisk.Properties()["crafted_by_character_id"].(string)]
-	if charGameObj == nil {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
+	if charGameObj, charOk = e.GameObjects().Load(claimObelisk.Properties()["crafted_by_character_id"].(string)); !charOk {
 		return false
 	}
 
@@ -31,7 +34,9 @@ func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
 	}
 
 	// check container has money
-	container := e.GameObjects()[slots["back"].(string)]
+	if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+		return false
+	}
 	if !container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
 		"gold": constants.ClaimRentCost,
 	}) {

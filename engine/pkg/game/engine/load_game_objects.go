@@ -30,10 +30,11 @@ func LoadGameObjects(e entity.IEngine) {
 			effectMap["target_id"] = gameObj.Id()
 			e.Effects().Store(effectId, effectMap)
 		}
-		e.GameObjects()[gameObj.Id()] = e.CreateGameObjectStruct(gameObj)
+		gameObjStruct := e.CreateGameObjectStruct(gameObj)
+		e.GameObjects().Store(gameObj.Id(), gameObjStruct)
 		// init mob
 		if gameObj.Type() == "mob" {
-			e.Mobs().Store(gameObj.Id(), e.GameObjects()[gameObj.Id()].(entity.IMobObject))
+			e.Mobs().Store(gameObj.Id(), gameObjStruct.(entity.IMobObject))
 		}
 	})
 

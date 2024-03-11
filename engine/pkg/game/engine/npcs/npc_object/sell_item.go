@@ -21,7 +21,13 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 			return false
 		}
 
-		container := e.GameObjects()[slots["back"].(string)]
+		var (
+			container entity.IGameObject
+			contOk bool
+		)
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 		itemKind := strings.Split(itemKey, "/")[1]
 
 		// check container has items

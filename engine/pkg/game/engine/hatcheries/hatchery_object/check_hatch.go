@@ -46,7 +46,13 @@ func (hatchery *HatcheryObject) CheckHatch(e entity.IEngine, charGameObj entity.
 			return false
 		}
 
-		container := e.GameObjects()[slots["back"].(string)]
+		var (
+			container entity.IGameObject
+			contOk bool
+		)
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 
 		// check container has items
 		if !container.(entity.IContainerObject).HasItemsKinds(e, resources) {

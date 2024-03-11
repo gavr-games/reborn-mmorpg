@@ -18,8 +18,7 @@ func (hatchery *HatcheryObject) Hatch(e entity.IEngine, mobPath string) bool {
 	e.Floors()[hatchery.Floor()].FilteredRemove(hatchery, func(b utils.IBounds) bool {
 		return hatchery.Id() == b.(entity.IGameObject).Id()
 	})
-	e.GameObjects()[hatchery.Id()] = nil
-	delete(e.GameObjects(), hatchery.Id())
+	e.GameObjects().Delete(hatchery.Id())
 
 	return true
 }

@@ -7,9 +7,12 @@ import (
 // Goes through all effects and tries to apply them
 func Update(e entity.IEngine, tickDelta int64) {
 	e.Effects().Range(func(effectId string, effect map[string]interface{}) bool {
-		obj := e.GameObjects()[effect["target_id"].(string)]
-		// remove effect if game object is gone
-		if obj == nil {
+		var (
+			obj entity.IGameObject
+			ok bool
+		)
+		if obj, ok = e.GameObjects().Load(effect["target_id"].(string)); !ok {
+			// remove effect if game object is gone
 			Remove(e, effectId, nil)
 		}
 

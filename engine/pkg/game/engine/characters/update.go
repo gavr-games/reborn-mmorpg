@@ -8,7 +8,13 @@ import (
 func Update(e entity.IEngine, tickDelta int64) {
 	e.Players().Range(func(playerId int, player *entity.Player) bool {
     if player.Client != nil && player.CharacterGameObjectId != "" && player.VisionAreaGameObjectId != "" {
-			charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+			var (
+				charGameObj entity.IGameObject
+				charOk bool
+			)
+			if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+				return false
+			}
 
 			// Trigger Move to Coords logic
 			charGameObj.(entity.IMovingObject).PerformMoveTo(e, tickDelta)

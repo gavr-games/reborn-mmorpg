@@ -8,8 +8,14 @@ import (
 )
 
 func (cont *ContainerObject) Remove(e entity.IEngine, player *entity.Player, itemId string) bool {
+	var (
+		item entity.IGameObject
+		itemOk bool
+	)
 	container := cont.gameObj
-	item := e.GameObjects()[itemId]
+	if item, itemOk = e.GameObjects().Load(itemId); !itemOk {
+		return false
+	}
 
 	if !cont.CheckAccess(e, player) {
 		e.SendSystemMessage("You don't have access to this container", player)
@@ -34,11 +40,13 @@ func (cont *ContainerObject) Remove(e entity.IEngine, player *entity.Player, ite
 	storage.GetClient().Updates <- item.Clone()
 
 	// Send updates to players
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "remove_item_from_container", map[string]interface{}{
-		"item_id": itemId,
-		"container_id": container.Id(),
-		"position": itemPosition,
-	})
+	if charGameObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
+		e.SendResponseToVisionAreas(charGameObj, "remove_item_from_container", map[string]interface{}{
+			"item_id": itemId,
+			"container_id": container.Id(),
+			"position": itemPosition,
+		})
+	}
 
 	return true
 }

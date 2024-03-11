@@ -15,9 +15,15 @@ const (
 )
 
 func Check(e entity.IEngine, player *entity.Player, params map[string]interface{}, checkDistanceNow bool) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	craftItemName := params["item_name"].(string)
 	craftItemConfig := GetAtlas()[craftItemName].(map[string]interface{})
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 	// Has required tools equipped
@@ -37,7 +43,9 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			return false
 		}
 		// check container has items
-		container := e.GameObjects()[slots["back"].(string)]
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).HasItemsKinds(e, craftItemConfig["resources"].(map[string]interface{})) {
 			e.SendSystemMessage("You don't have required resources.", player)
 			return false

@@ -6,8 +6,14 @@ import (
 )
 
 func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	item := obj.gameObj
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 	// check equipped
@@ -20,7 +26,9 @@ func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
 	
 	// check container belongs to character
 	if (item.Properties()["container_id"] != nil) {
-		container := e.GameObjects()[item.Properties()["container_id"].(string)]
+		if container, contOk = e.GameObjects().Load(item.Properties()["container_id"].(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
 			e.SendSystemMessage("You don't have access to this container", player)
 			return false
@@ -43,7 +51,7 @@ func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
 
 	storage.GetClient().Updates <- item.Clone()
 
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
+	e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{
 		"object": item,
 	})
 

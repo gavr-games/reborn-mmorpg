@@ -10,11 +10,17 @@ import (
 
 // This func is trigerred by delayed action mechanism
 func Craft(e entity.IEngine, params map[string]interface{}) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	playerId := int(params["playerId"].(float64))
 	if player, ok := e.Players().Load(playerId); ok {
 		craftItemName := params["item_name"].(string)
 		craftItemConfig := GetAtlas()[craftItemName].(map[string]interface{})
-		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+		if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+			return false
+		}
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 		// Call check again to make sure nothing changed.
@@ -28,7 +34,9 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			return false
 		}
 
-		container := e.GameObjects()[slots["back"].(string)]
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 
 		if !container.(entity.IContainerObject).RemoveItemsKinds(e, player, craftItemConfig["resources"].(map[string]interface{})) {
 			e.SendSystemMessage("Cannot consume required resources.", player)
@@ -48,12 +56,12 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			}
 			itemObj.Properties()["crafted_by_character_id"] = charGameObj.Id()
 			itemObj.Rotate(rotation)
-			e.GameObjects()[itemObj.Id()] = itemObj
 			itemObj.SetFloor(charGameObj.Floor())
+			e.GameObjects().Store(itemObj.Id(), itemObj)
 			e.Floors()[itemObj.Floor()].Insert(itemObj)
 			storage.GetClient().Updates <- itemObj.Clone()
 
-			e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "add_object", map[string]interface{}{
+			e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{
 				"object": itemObj,
 			})
 		} else {
@@ -62,7 +70,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 				e.SendSystemMessage(err.Error(), player)
 				return false
 			}
-			e.GameObjects()[itemObj.Id()] = itemObj
+			e.GameObjects().Store(itemObj.Id(), itemObj)
 
 			// put item to container or drop it to the ground
 			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, itemObj.Id(), -1)

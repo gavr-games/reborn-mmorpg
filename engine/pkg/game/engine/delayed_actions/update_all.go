@@ -6,7 +6,7 @@ import (
 )
 
 func UpdateAll(e entity.IEngine, tickDelta int64) {
-	for _, gameObj := range e.GameObjects() {
+	e.GameObjects().Range(func(objId string, gameObj entity.IGameObject) bool {
 		delayedAction := gameObj.CurrentAction()
 		if gameObj != nil && delayedAction != nil {
 			// Moving to coords has higher priority, then action. For example: first move to coords, then build a wall there.
@@ -14,7 +14,7 @@ func UpdateAll(e entity.IEngine, tickDelta int64) {
 				if delayedAction.Status == entity.DelayedActionReady {
 					delayedAction.Status = entity.DelayedActionStarted
 					e.SendResponseToVisionAreas(gameObj, "start_delayed_action", map[string]interface{}{
-						"object": serializers.GetInfo(e.GameObjects(), gameObj),
+						"object": serializers.GetInfo(e, gameObj),
 						"duration": delayedAction.TimeLeft,
 						"action": delayedAction.FuncName,
 					})
@@ -25,6 +25,7 @@ func UpdateAll(e entity.IEngine, tickDelta int64) {
 				}
 			}
 		}
-	}
+		return true
+	})
 }
 

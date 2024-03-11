@@ -23,11 +23,17 @@ func (cont *ContainerObject) RemoveItemsKinds(e entity.IEngine, player *entity.P
 }
 
 func removeItemsKinds(e entity.IEngine, player *entity.Player, container entity.IGameObject, itemsCounts map[string]float64, itemsKinds []string) bool {
+	var (
+		item entity.IGameObject
+		itemOk bool
+	)
 	itemIds := container.Properties()["items_ids"].([]interface{})
 
 	for _, itemId := range itemIds {
 		if itemId != nil {
-			item := e.GameObjects()[itemId.(string)]
+			if item, itemOk = e.GameObjects().Load(itemId.(string)); !itemOk {
+				return false
+			}
 			itemKind := item.Kind()
 			itemStackable := false
 			if value, ok := item.Properties()["stackable"]; ok {
@@ -48,8 +54,7 @@ func removeItemsKinds(e entity.IEngine, player *entity.Player, container entity.
 				}
 				if performRemove {
 					if container.(entity.IContainerObject).Remove(e, player, itemId.(string)) {
-						e.GameObjects()[item.Id()] = nil
-						delete(e.GameObjects(), item.Id())
+						e.GameObjects().Delete(item.Id())
 						storage.GetClient().Deletes <- item.Id()
 						itemsCounts[itemKind] = itemsCounts[itemKind] - 1.0
 					} else {
@@ -71,10 +76,11 @@ func removeItemsKinds(e entity.IEngine, player *entity.Player, container entity.
 	//Search inside sub containers
 	for _, itemId := range itemIds {
 		if itemId != nil {
-			item := e.GameObjects()[itemId.(string)]
-			if item.Type() == "container" {
-				if removeItemsKinds(e, player, item, itemsCounts, itemsKinds) {
-					return true
+			if item, itemOk := e.GameObjects().Load(itemId.(string)); itemOk {
+				if item.Type() == "container" {
+					if removeItemsKinds(e, player, item, itemsCounts, itemsKinds) {
+						return true
+					}
 				}
 			}
 		}

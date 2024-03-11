@@ -8,12 +8,14 @@ import (
 func (cont *ContainerObject) GetItems(e entity.IEngine) map[string]interface{} {
 	container := cont.gameObj
 	itemIds := container.Properties()["items_ids"].([]interface{})
-	contInfo := serializers.GetInfo(e.GameObjects(), container)
+	contInfo := serializers.GetInfo(e, container)
 	contInfo["items"] = make([]map[string]interface{}, len(itemIds))
 
 	for i, itemId := range itemIds {
 		if itemId != nil {
-			contInfo["items"].([]map[string]interface{})[i] = serializers.GetInfo(e.GameObjects(), e.GameObjects()[itemId.(string)])
+			if item, itemOk := e.GameObjects().Load(itemId.(string)); itemOk {
+				contInfo["items"].([]map[string]interface{})[i] = serializers.GetInfo(e, item)
+			}
 		}
 	}
 	return contInfo

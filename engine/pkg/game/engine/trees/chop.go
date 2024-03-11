@@ -7,7 +7,15 @@ import (
 // This func is called via delayed action mechanism
 // params: characterId, treeId
 func Chop(e entity.IEngine, params map[string]interface{}) bool {
-	tree := e.GameObjects()[params["treeId"].(string)].(entity.ITreeObject)
-	character := e.GameObjects()[params["characterId"].(string)]
-	return tree.Chop(e, character)
+	var (
+		tree, character entity.IGameObject
+		treeOk, charOk bool
+	)
+	if tree, treeOk = e.GameObjects().Load(params["treeId"].(string)); !treeOk {
+		return false
+	}
+	if character, charOk = e.GameObjects().Load(params["characterId"].(string)); !charOk {
+		return false
+	}
+	return tree.(entity.ITreeObject).Chop(e, character)
 }

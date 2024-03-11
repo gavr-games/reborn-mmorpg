@@ -7,17 +7,19 @@ import (
 )
 
 func (obj *CharacterObject) SelectTarget(e entity.IEngine, targetId string) bool {
-	target := e.GameObjects()[targetId]
-
-	if playerId, found := obj.Properties()["player_id"]; found {
-		playerIdInt := playerId.(int)
-		if player, ok := e.Players().Load(playerIdInt); ok {
-			return selectTarget(e, obj, target, player)
+	if target, targetOk := e.GameObjects().Load(targetId); targetOk {
+		if playerId, found := obj.Properties()["player_id"]; found {
+			playerIdInt := playerId.(int)
+			if player, ok := e.Players().Load(playerIdInt); ok {
+				return selectTarget(e, obj, target, player)
+			} else {
+				return false
+			}
 		} else {
-			return false
+			return selectTarget(e, obj, target, nil)
 		}
 	} else {
-		return selectTarget(e, obj, target, nil)
+		return false
 	}
 }
 
@@ -61,7 +63,7 @@ func selectTarget(e entity.IEngine, obj entity.IGameObject, target entity.IGameO
 	storage.GetClient().Updates <- obj.Clone()
 
 	if player != nil {
-		e.SendResponse("select_target", serializers.GetInfo(e.GameObjects(), target), player)
+		e.SendResponse("select_target", serializers.GetInfo(e, target), player)
 	}
 
 	return true

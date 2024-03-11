@@ -23,8 +23,7 @@ func (shovel *ShovelObject) Dig(e entity.IEngine, charGameObj entity.IGameObject
 		e.Floors()[grass.Floor()].FilteredRemove(grass, func(b utils.IBounds) bool {
 			return grass.Id() == b.(entity.IGameObject).Id()
 		})
-		e.GameObjects()[grass.Id()] = nil
-		delete(e.GameObjects(), grass.Id())
+		e.GameObjects().Delete(grass.Id())
 		e.SendSystemMessage("You've created some dirt.", player)
 	} else {
 		return false

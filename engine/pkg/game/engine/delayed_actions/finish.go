@@ -23,7 +23,7 @@ func Finish(e entity.IEngine, gameObj entity.IGameObject) bool {
 	storage.GetClient().Updates <- gameObj.Clone()
 
 	e.SendResponseToVisionAreas(gameObj, "finish_delayed_action", map[string]interface{}{
-		"object": serializers.GetInfo(e.GameObjects(), gameObj),
+		"object": serializers.GetInfo(e, gameObj),
 		"action": delayedActionFuncName,
 	})
 

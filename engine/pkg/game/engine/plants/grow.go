@@ -7,6 +7,9 @@ import (
 // This func is called via delayed action mechanism
 // params: game_object_id
 func Grow(e entity.IEngine, params map[string]interface{}) bool {
-	plant := e.GameObjects()[params["game_object_id"].(string)].(entity.IPlantObject)
-	return plant.Grow(e)
+	if plant, plantOk := e.GameObjects().Load(params["game_object_id"].(string)); plantOk {
+		return plant.(entity.IPlantObject).Grow(e)
+	} else {
+		return false
+	}
 }

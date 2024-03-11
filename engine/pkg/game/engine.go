@@ -41,7 +41,7 @@ type Engine struct {
 	tickTime    int64                                        //last tick time in milliseconds
 	floors      []*utils.Quadtree                            // slice of global game areas, underground, etc
 	players     *xsync.MapOf[int, *entity.Player]            // map of all players
-	gameObjects map[string]entity.IGameObject                // map of ALL objects in the game
+	gameObjects *xsync.MapOf[string, entity.IGameObject]     // map of ALL objects in the game
 	mobs        *xsync.MapOf[string, entity.IMobObject]      // map of ALL mobs in the game
 	effects     *xsync.MapOf[string, map[string]interface{}] // all active effects in the game
 	commands    chan *ClientCommand                          // Inbound messages from the clients.
@@ -53,7 +53,7 @@ func (e Engine) Floors() []*utils.Quadtree {
 	return e.floors
 }
 
-func (e Engine) GameObjects() map[string]entity.IGameObject {
+func (e Engine) GameObjects() *xsync.MapOf[string, entity.IGameObject] {
 	return e.gameObjects
 }
 
@@ -217,7 +217,7 @@ func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation 
 		e.Floors()[gameObj.Floor()].Insert(gameObj)
 	}
 
-	e.GameObjects()[gameObj.Id()] = gameObj
+	e.GameObjects().Store(gameObj.Id(), gameObj)
 
 	if gameObj.Kind() != "player_vision_area" {
 		storage.GetClient().Updates <- gameObj.Clone()
@@ -234,7 +234,7 @@ func NewEngine() *Engine {
 	return &Engine{
 		tickTime:    0,
 		players:     xsync.NewMapOf[int, *entity.Player](),
-		gameObjects: make(map[string]entity.IGameObject),
+		gameObjects: xsync.NewMapOf[string, entity.IGameObject](),
 		mobs:        xsync.NewMapOf[string, entity.IMobObject](),
 		effects:     xsync.NewMapOf[string, map[string]interface{}](),
 		floors:      make([]*utils.Quadtree, constants.FloorCount),

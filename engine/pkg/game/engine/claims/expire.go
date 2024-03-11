@@ -8,7 +8,7 @@ import (
 // params: claim_obelisk_id
 func Expire(e entity.IEngine, params map[string]interface{}) bool {
 	claimObeliskId := params["claim_obelisk_id"].(string)
-	if obelisk, ok := e.GameObjects()[claimObeliskId]; ok {
+	if obelisk, ok := e.GameObjects().Load(claimObeliskId); ok {
 		return obelisk.(entity.IClaimObeliskObject).Remove(e)
 	} else {
 		return false

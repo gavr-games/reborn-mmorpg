@@ -7,7 +7,15 @@ import (
 // This func is called via delayed action mechanism
 // params: characterId, plantId
 func Cut(e entity.IEngine, params map[string]interface{}) bool {
-	plant := e.GameObjects()[params["plantId"].(string)].(entity.IPlantObject)
-	character := e.GameObjects()[params["characterId"].(string)]
-	return plant.Cut(e, character)
+	var (
+		plant, character entity.IGameObject
+		plantOk, charOk bool
+	)
+	if plant, plantOk = e.GameObjects().Load(params["plantId"].(string)); !plantOk {
+		return false
+	}
+	if character, charOk = e.GameObjects().Load(params["characterId"].(string)); !charOk {
+		return false
+	}
+	return plant.(entity.IPlantObject).Cut(e, character)
 }

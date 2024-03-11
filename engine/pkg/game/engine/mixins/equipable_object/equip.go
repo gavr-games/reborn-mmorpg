@@ -7,8 +7,14 @@ import (
 )
 
 func (obj *EquipableObject) Equip(e entity.IEngine, player *entity.Player) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	item := obj.gameObj
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 	targetSlots := item.Properties()["target_slots"].(map[string]interface{})
 
@@ -46,7 +52,9 @@ func (obj *EquipableObject) Equip(e entity.IEngine, player *entity.Player) bool 
 
 	// check container belongs to character
 	if (item.Properties()["container_id"] != nil) {
-		container := e.GameObjects()[item.Properties()["container_id"].(string)]
+		if container, contOk = e.GameObjects().Load(item.Properties()["container_id"].(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
 			e.SendSystemMessage("You don't have access to this container", player)
 			return false
@@ -61,10 +69,10 @@ func (obj *EquipableObject) Equip(e entity.IEngine, player *entity.Player) bool 
 	slots[freeTargetSlot] = item.Id()
 	storage.GetClient().Updates <- charGameObj.Clone()
 	
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "equip_item", map[string]interface{}{
+	e.SendResponseToVisionAreas(charGameObj, "equip_item", map[string]interface{}{
 		"slot": freeTargetSlot,
 		"character_id": player.CharacterGameObjectId,
-		"item": serializers.GetInfo(e.GameObjects(), item),
+		"item": serializers.GetInfo(e, item),
 	})
 
 	return true

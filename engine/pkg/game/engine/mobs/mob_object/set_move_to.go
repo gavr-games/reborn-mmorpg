@@ -6,7 +6,7 @@ import (
 )
 
 func (mob *MobObject) setMoveTo(directionChangeTime float64) {
-	if targetObj, ok := mob.Engine.GameObjects()[mob.TargetObjectId]; ok {
+	if targetObj, ok := mob.Engine.GameObjects().Load(mob.TargetObjectId); ok {
 		mob.SetMoveToCoords(&entity.MoveToCoords{
 			Mode: entity.MoveToExactCoords,
 			Bounds: utils.Bounds{

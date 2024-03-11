@@ -7,8 +7,14 @@ import (
 )
 
 func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	item := obj.gameObj
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 	// intersects with character
@@ -37,7 +43,9 @@ func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool 
 
 	// put to container
 	if item.Properties()["container_id"] == nil {
-		container := e.GameObjects()[slots["back"].(string)]
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).Put(e, player, item.Id(), -1) {
 			return false
 		}

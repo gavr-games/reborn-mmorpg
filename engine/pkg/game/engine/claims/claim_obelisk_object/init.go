@@ -8,8 +8,11 @@ import (
 )
 
 func (claimObelisk *ClaimObeliskObject) Init(e entity.IEngine) bool {
-	charGameObj := e.GameObjects()[claimObelisk.Properties()["crafted_by_character_id"].(string)]
-	if charGameObj == nil {
+	var (
+		charGameObj entity.IGameObject
+		charOk bool
+	)
+	if charGameObj, charOk = e.GameObjects().Load(claimObelisk.Properties()["crafted_by_character_id"].(string)); !charOk {
 		return false
 	}
 

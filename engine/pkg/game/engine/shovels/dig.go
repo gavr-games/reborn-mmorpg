@@ -7,7 +7,15 @@ import (
 // This func is called via delayed action mechanism
 // params: characterId, shovelId
 func Dig(e entity.IEngine, params map[string]interface{}) bool {
-	shovel := e.GameObjects()[params["shovelId"].(string)].(entity.IShovelObject)
-	character := e.GameObjects()[params["characterId"].(string)]
-	return shovel.Dig(e, character)
+	var (
+		shovel, character entity.IGameObject
+		shovelOk, charOk bool
+	)
+	if shovel, shovelOk = e.GameObjects().Load(params["shovelId"].(string)); !shovelOk {
+		return false
+	}
+	if character, charOk = e.GameObjects().Load(params["characterId"].(string)); !charOk {
+		return false
+	}
+	return shovel.(entity.IShovelObject).Dig(e, character)
 }

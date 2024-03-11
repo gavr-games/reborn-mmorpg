@@ -22,8 +22,11 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 			return false
 		}
 
-		targetObj := e.GameObjects()[targetId.(string)]
-		if targetObj == nil {
+		var (
+			targetObj entity.IGameObject
+			targetOk bool
+		)
+		if targetObj, targetOk = e.GameObjects().Load(targetId.(string)); !targetOk {
 			obj.DeselectTarget(e)
 			e.SendSystemMessage("No target to hit.", player)
 			return false

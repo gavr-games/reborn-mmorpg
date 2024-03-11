@@ -38,7 +38,13 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 		resourceObj := e.CreateGameObject(fmt.Sprintf("resource/%s", resourceKey), charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
 		// put resource to container or drop it to the ground
-		container := e.GameObjects()[slots["back"].(string)]
+		var (
+			container entity.IGameObject
+			contOk bool
+		)
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 		container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1)
 
 		// Decrease resources stored in the cactus
@@ -48,11 +54,10 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 		if resources[resourceKey].(float64) <= 0 {
 			e.SendGameObjectUpdate(plant, "remove_object")
 
-			e.Floors()[plant.Floor()].FilteredRemove(e.GameObjects()[plant.Id()], func(b utils.IBounds) bool {
+			e.Floors()[plant.Floor()].FilteredRemove(plant, func(b utils.IBounds) bool {
 				return plant.Id() == b.(entity.IGameObject).Id()
 			})
-			e.GameObjects()[plant.Id()] = nil
-			delete(e.GameObjects(), plant.Id())
+			e.GameObjects().Delete(plant.Id())
 		} else {
 			storage.GetClient().Updates <- plant.Clone()
 		}

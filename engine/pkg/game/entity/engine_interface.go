@@ -9,7 +9,7 @@ import (
 type IEngine interface {
 	Floors() []*utils.Quadtree
 	Players() *xsync.MapOf[int, *Player]
-	GameObjects() map[string]IGameObject
+	GameObjects() *xsync.MapOf[string, IGameObject]
 	Mobs() *xsync.MapOf[string, IMobObject]
 	Effects() *xsync.MapOf[string, map[string]interface{}]
 	CurrentTickTime() int64

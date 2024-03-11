@@ -29,8 +29,7 @@ func (mob *MobObject) Run(newTickTime int64) {
 		if (newTickTime - mob.TickTime) >= FollowingTime {
 			mob.Unfollow()
 		} else { // Perform actual following
-			targetObj, ok := mob.Engine.GameObjects()[mob.TargetObjectId]
-			if ok {
+			if targetObj, ok := mob.Engine.GameObjects().Load(mob.TargetObjectId); ok {
 				mob.performFollowing(targetObj, FollowingDirectionChangeTime)
 			} else {
 				mob.Unfollow()
@@ -62,8 +61,7 @@ func (mob *MobObject) Run(newTickTime int64) {
 		if (newTickTime - mob.TickTime) >= AttackingTime {
 			mob.StopAttacking()
 		} else { // Perform actual following before hit
-			targetObj, ok := mob.Engine.GameObjects()[mob.TargetObjectId]
-			if ok {
+			if targetObj, ok := mob.Engine.GameObjects().Load(mob.TargetObjectId); ok {
 				mob.performFollowing(targetObj, AttackingDirectionChangeTime)
 				mob.MeleeHit(targetObj)
 			} else {

@@ -8,7 +8,13 @@ import (
 
 func (building *BuildingObject) Destroy(e entity.IEngine, player *entity.Player) bool {
 	buildingObj := building.gameObj
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+	var (
+		charGameObj entity.IGameObject
+		charOk bool
+	)
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
 
 	// Check claim access
 	if !claims.CheckAccess(e, charGameObj, buildingObj) {
@@ -22,13 +28,12 @@ func (building *BuildingObject) Destroy(e entity.IEngine, player *entity.Player)
 		return false
 	}
 	e.SendGameObjectUpdate(buildingObj, "remove_object")
-	e.Floors()[buildingObj.Floor()].FilteredRemove(e.GameObjects()[buildingObj.Id()], func(b utils.IBounds) bool {
+	e.Floors()[buildingObj.Floor()].FilteredRemove(buildingObj, func(b utils.IBounds) bool {
 		return buildingObj.Id() == b.(entity.IGameObject).Id()
 	})
 
 	// Destroy building
-	e.GameObjects()[buildingObj.Id()] = nil
-	delete(e.GameObjects(), buildingObj.Id())
+	e.GameObjects().Delete(buildingObj.Id())
 
 	return true
 }

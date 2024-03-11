@@ -21,7 +21,7 @@ func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 		storage.GetClient().Updates <- charGameObj.Clone()
 
 		e.SendResponseToVisionAreas(charGameObj, "cancel_delayed_action", map[string]interface{}{
-			"object": serializers.GetInfo(e.GameObjects(), charGameObj),
+			"object": serializers.GetInfo(e, charGameObj),
 			"action": delayedActionFuncName,
 		})
 	}

@@ -6,7 +6,13 @@ import (
 )
 
 func (claimObelisk *ClaimObeliskObject) Destroy(e entity.IEngine, player *entity.Player) bool {
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+	var (
+		charGameObj entity.IGameObject
+		charOk bool
+	)
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
 
 	// Check claim access
 	if !claims.CheckAccess(e, charGameObj, claimObelisk) {
@@ -16,7 +22,7 @@ func (claimObelisk *ClaimObeliskObject) Destroy(e entity.IEngine, player *entity
 
 	// Check near building
 	if !claimObelisk.IsCloseTo(charGameObj) {
-		e.SendSystemMessage("You need to be closer to the item.", player)
+		e.SendSystemMessage("You need to be closer to the claim.", player)
 		return false
 	}
 

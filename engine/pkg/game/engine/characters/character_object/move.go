@@ -11,40 +11,41 @@ import (
 func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY float64) {
 	playerId := charGameObj.Properties()["player_id"].(int)
 	if player, ok := e.Players().Load(playerId); ok {
-		visionAreaGameObj := e.GameObjects()[player.VisionAreaGameObjectId]
+		if visionAreaGameObj, visionAreaOk := e.GameObjects().Load(player.VisionAreaGameObjectId); visionAreaOk {
+			e.Floors()[charGameObj.Floor()].FilteredRemove(charGameObj, func(b utils.IBounds) bool {
+				return charGameObj.Id() == b.(entity.IGameObject).Id()
+			})
+			dx := newX - charGameObj.X()
+			dy := newY - charGameObj.Y()
+			charGameObj.SetX(newX)
+			charGameObj.SetY(newY)
+			e.Floors()[charGameObj.Floor()].Insert(charGameObj)
 
-		e.Floors()[charGameObj.Floor()].FilteredRemove(charGameObj, func(b utils.IBounds) bool {
-			return charGameObj.Id() == b.(entity.IGameObject).Id()
-		})
-		dx := newX - charGameObj.X()
-		dy := newY - charGameObj.Y()
-		charGameObj.SetX(newX)
-		charGameObj.SetY(newY)
-		e.Floors()[charGameObj.Floor()].Insert(charGameObj)
+			// Update vision area game object
+			e.Floors()[visionAreaGameObj.Floor()].FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
+				return visionAreaGameObj.Id() == b.(entity.IGameObject).Id()
+			})
+			visionAreaGameObj.SetX(visionAreaGameObj.X() + dx)
+			visionAreaGameObj.SetY(visionAreaGameObj.Y() + dy)
+			e.Floors()[visionAreaGameObj.Floor()].Insert(visionAreaGameObj)
 
-		// Update vision area game object
-		e.Floors()[visionAreaGameObj.Floor()].FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
-			return visionAreaGameObj.Id() == b.(entity.IGameObject).Id()
-		})
-		visionAreaGameObj.SetX(visionAreaGameObj.X() + dx)
-		visionAreaGameObj.SetY(visionAreaGameObj.Y() + dy)
-		e.Floors()[visionAreaGameObj.Floor()].Insert(visionAreaGameObj)
-
-		// Update lifted item
-		liftedObjectId, propExists := charGameObj.Properties()["lifted_object_id"]
-		if propExists && liftedObjectId != nil {
-			liftedObj := e.GameObjects()[liftedObjectId.(string)]
-			if liftedObj != nil {
-				e.Floors()[liftedObj.Floor()].FilteredRemove(liftedObj, func(b utils.IBounds) bool {
-					return liftedObj.Id() == b.(entity.IGameObject).Id()
-				})
-				liftedObj.SetX(charGameObj.X())
-				liftedObj.SetY(charGameObj.Y())
-				e.Floors()[liftedObj.Floor()].Insert(liftedObj)
+			// Update lifted item
+			liftedObjectId, propExists := charGameObj.Properties()["lifted_object_id"]
+			if propExists && liftedObjectId != nil {
+				if liftedObj, liftOk := e.GameObjects().Load(liftedObjectId.(string)); liftOk {
+					if liftedObj != nil {
+						e.Floors()[liftedObj.Floor()].FilteredRemove(liftedObj, func(b utils.IBounds) bool {
+							return liftedObj.Id() == b.(entity.IGameObject).Id()
+						})
+						liftedObj.SetX(charGameObj.X())
+						liftedObj.SetY(charGameObj.Y())
+						e.Floors()[liftedObj.Floor()].Insert(liftedObj)
+					}
+				}
 			}
-		}
 
-		updateVisibleObjects(e, player, dx, dy, visionAreaGameObj)
+			updateVisibleObjects(e, player, dx, dy, visionAreaGameObj)
+		}
 	}
 }
 

@@ -10,8 +10,14 @@ import (
 
 // position: -1 for any empty slot
 func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId string, position int) bool {
+	var (
+		item entity.IGameObject
+		itemOk bool
+	)
 	container := cont.gameObj
-	item := e.GameObjects()[itemId]
+	if item, itemOk = e.GameObjects().Load(itemId); !itemOk {
+		return false
+	}
 
 	if !cont.CheckAccess(e, player) {
 		e.SendSystemMessage("You don't have access to this container", player)
@@ -45,10 +51,11 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 			subItemIds := container.Properties()["items_ids"].([]interface{})
 			for _, subItemId := range subItemIds {
 				if subItemId != nil {
-					subItem := e.GameObjects()[subItemId.(string)]
-					if subItem.Type() == "container" {
-						if subItem.(entity.IContainerObject).Put(e, player, itemId, position) {
-							return true
+					if subItem, subItemOk := e.GameObjects().Load(subItemId.(string)); subItemOk {
+						if subItem.Type() == "container" {
+							if subItem.(entity.IContainerObject).Put(e, player, itemId, position) {
+								return true
+							}
 						}
 					}
 				}
@@ -82,11 +89,13 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 	storage.GetClient().Updates <- item.Clone()
 
 	// Send updates to players
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "put_item_to_container", map[string]interface{}{
-		"item":         serializers.GetInfo(e.GameObjects(), item),
-		"container_id": container.Id(),
-		"position":     freePosition,
-	})
+	if charGameObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
+		e.SendResponseToVisionAreas(charGameObj, "put_item_to_container", map[string]interface{}{
+			"item":         serializers.GetInfo(e, item),
+			"container_id": container.Id(),
+			"position":     freePosition,
+		})
+	}
 
 	return true
 }

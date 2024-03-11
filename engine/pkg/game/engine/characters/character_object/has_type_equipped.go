@@ -9,9 +9,10 @@ func (charGameObj *CharacterObject) HasTypeEquipped(e entity.IEngine, itemType s
 	
 	for _, slotItemId := range slots {
 		if slotItemId != nil {
-			slotItem := e.GameObjects()[slotItemId.(string)]
-			if slotItem.Properties()["type"].(string) == itemType {
-				return slotItem, true
+			if slotItem, slotOk := e.GameObjects().Load(slotItemId.(string)); slotOk {
+				if slotItem.Properties()["type"].(string) == itemType {
+					return slotItem, true
+				}
 			}
 		}
 	}
