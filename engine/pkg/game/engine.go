@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/puzpuzpuz/xsync/v3"
+
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/plants/plant_object"
@@ -36,15 +38,15 @@ import (
 
 // Engine runs the game
 type Engine struct {
-	tickTime    int64                             //last tick time in milliseconds
-	floors      []*utils.Quadtree                 // slice of global game areas, underground, etc
-	players     map[int]*entity.Player            // map of all players
-	gameObjects map[string]entity.IGameObject     // map of ALL objects in the game
-	mobs        map[string]entity.IMobObject      // map of ALL mobs in the game
-	effects     map[string]map[string]interface{} // all active effects in the game
-	commands    chan *ClientCommand               // Inbound messages from the clients.
-	register    chan *Client                      // Register requests from the clients.
-	unregister  chan *Client                      // Unregister requests from clients.
+	tickTime    int64                                        //last tick time in milliseconds
+	floors      []*utils.Quadtree                            // slice of global game areas, underground, etc
+	players     *xsync.MapOf[int, *entity.Player]            // map of all players
+	gameObjects map[string]entity.IGameObject                // map of ALL objects in the game
+	mobs        *xsync.MapOf[string, entity.IMobObject]      // map of ALL mobs in the game
+	effects     *xsync.MapOf[string, map[string]interface{}] // all active effects in the game
+	commands    chan *ClientCommand                          // Inbound messages from the clients.
+	register    chan *Client                                 // Register requests from the clients.
+	unregister  chan *Client                                 // Unregister requests from clients.
 }
 
 func (e Engine) Floors() []*utils.Quadtree {
@@ -55,15 +57,15 @@ func (e Engine) GameObjects() map[string]entity.IGameObject {
 	return e.gameObjects
 }
 
-func (e Engine) Mobs() map[string]entity.IMobObject {
+func (e Engine) Mobs() *xsync.MapOf[string, entity.IMobObject] {
 	return e.mobs
 }
 
-func (e Engine) Players() map[int]*entity.Player {
+func (e Engine) Players() *xsync.MapOf[int, *entity.Player] {
 	return e.players
 }
 
-func (e Engine) Effects() map[string]map[string]interface{} {
+func (e Engine) Effects() *xsync.MapOf[string, map[string]interface{}] {
 	return e.effects
 }
 
@@ -113,7 +115,7 @@ func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseTy
 	for _, obj := range intersectingObjects {
 		if obj.(entity.IGameObject).Type() == "player" && obj.(entity.IGameObject).Kind() == "player_vision_area" {
 			playerId := obj.(entity.IGameObject).Properties()["player_id"].(int)
-			if player, ok := e.Players()[playerId]; ok {
+			if player, ok := e.Players().Load(playerId); ok {
 				if player.Client != nil {
 					select {
 					case player.Client.GetSendChannel() <- message:
@@ -222,7 +224,7 @@ func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation 
 	}
 
 	if gameObj.Properties()["type"].(string) == "mob" {
-		e.Mobs()[gameObj.Id()] = gameObj.(entity.IMobObject)
+		e.Mobs().Store(gameObj.Id(), gameObj.(entity.IMobObject))
 	}
 
 	return gameObj
@@ -231,10 +233,10 @@ func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation 
 func NewEngine() *Engine {
 	return &Engine{
 		tickTime:    0,
-		players:     make(map[int]*entity.Player),
+		players:     xsync.NewMapOf[int, *entity.Player](),
 		gameObjects: make(map[string]entity.IGameObject),
-		mobs:        make(map[string]entity.IMobObject),
-		effects:     make(map[string]map[string]interface{}),
+		mobs:        xsync.NewMapOf[string, entity.IMobObject](),
+		effects:     xsync.NewMapOf[string, map[string]interface{}](),
 		floors:      make([]*utils.Quadtree, constants.FloorCount),
 		commands:    make(chan *ClientCommand),
 		register:    make(chan *Client),

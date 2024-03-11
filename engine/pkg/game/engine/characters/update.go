@@ -6,7 +6,7 @@ import (
 
 // Move characters
 func Update(e entity.IEngine, tickDelta int64) {
-	for _, player := range e.Players() {
+	e.Players().Range(func(playerId int, player *entity.Player) bool {
     if player.Client != nil && player.CharacterGameObjectId != "" && player.VisionAreaGameObjectId != "" {
 			charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 
@@ -24,12 +24,13 @@ func Update(e entity.IEngine, tickDelta int64) {
 				// Stop the object
 				if dx == 0.0 && dy == 0.0 {
 					charGameObj.(entity.IMovingObject).Stop(e)
-					continue
+					return true
 				}
 
 				// Update player character game object
 				charGameObj.(entity.ICharacterObject).Move(e, charGameObj.X() + dx, charGameObj.Y() + dy)
 			}
 		}
-	}
+		return true
+	})
 }

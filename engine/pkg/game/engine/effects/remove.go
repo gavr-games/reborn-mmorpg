@@ -11,6 +11,5 @@ func Remove(e entity.IEngine, effectId string, obj entity.IGameObject) {
 		delete(obj.Effects(), effectId)
 		e.SendGameObjectUpdate(obj, "update_object")
 	}
-	e.Effects()[effectId] = nil
-	delete(e.Effects(), effectId)
+	e.Effects().Delete(effectId)
 }

@@ -15,7 +15,7 @@ func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 		VisionAreaGameObjectId: "",
 		Client: client,
 	}
-	e.Players()[player.Id] = player
+	e.Players().Store(player.Id, player)
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
 	additionalProps["name"] = character.Name
@@ -52,7 +52,7 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 // Process when new player logs into the game
 func RegisterClient(e entity.IEngine, client entity.IClient) {
 	// lookup if engine has already created player object
-	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
+	if player, ok := e.Players().Load(client.GetCharacter().Id); ok {
 		if player.Client != nil {
 			// close previous socket connection for this player
 			close(player.Client.GetSendChannel())
@@ -65,7 +65,7 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 		player = CreatePlayer(e, client)
 		CreatePlayerVisionArea(e, player)
 	}
-	if player, ok := e.Players()[client.GetCharacter().Id]; ok {
+	if player, ok := e.Players().Load(client.GetCharacter().Id); ok {
 		visionArea := e.GameObjects()[player.VisionAreaGameObjectId]
 		visibleObjects := game_objects.GetVisibleObjects(e, visionArea.Floor(), visionArea.HitBox())
 		for key, val := range visibleObjects {

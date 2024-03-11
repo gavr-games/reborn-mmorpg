@@ -15,24 +15,25 @@ func LoadGameObjects(e entity.IEngine) {
 		if gameObj.Kind() == "player" {
 			playerId := int(gameObj.Properties()["player_id"].(float64))
 			gameObj.Properties()["player_id"] = playerId
-			e.Players()[playerId] = &entity.Player{
+			e.Players().Store(playerId, &entity.Player{
 				Id: playerId,
 				CharacterGameObjectId: gameObj.Id(),
 				VisionAreaGameObjectId: "",
 				Client: nil,
-			}
+			})
 			gameObj.Properties()["visible"] = false
 		}
 		// init effects
 		for effectId, effect := range gameObj.Effects() {
-			e.Effects()[effectId] = utils.CopyMap(effect.(map[string]interface{}))
-			e.Effects()[effectId]["id"] = effectId
-			e.Effects()[effectId]["target_id"] = gameObj.Id()
+			effectMap := utils.CopyMap(effect.(map[string]interface{}))
+			effectMap["id"] = effectId
+			effectMap["target_id"] = gameObj.Id()
+			e.Effects().Store(effectId, effectMap)
 		}
 		e.GameObjects()[gameObj.Id()] = e.CreateGameObjectStruct(gameObj)
 		// init mob
 		if gameObj.Type() == "mob" {
-			e.Mobs()[gameObj.Id()] = e.GameObjects()[gameObj.Id()].(entity.IMobObject)
+			e.Mobs().Store(gameObj.Id(), e.GameObjects()[gameObj.Id()].(entity.IMobObject))
 		}
 	})
 

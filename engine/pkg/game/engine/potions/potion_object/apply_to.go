@@ -38,9 +38,10 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 		// Apply effect
 		effectId := uuid.NewV4().String()
 		obj.Effects()[effectId] = utils.CopyMap(item.Properties()["effect"].(map[string]interface{}))
-		e.Effects()[effectId] = utils.CopyMap(item.Properties()["effect"].(map[string]interface{}))
-		e.Effects()[effectId]["id"] = effectId
-		e.Effects()[effectId]["target_id"] = obj.Id()
+		effectMap := utils.CopyMap(item.Properties()["effect"].(map[string]interface{}))
+		effectMap["id"] = effectId
+		effectMap["target_id"] = obj.Id()
+		e.Effects().Store(effectId, effectMap)
 		e.SendGameObjectUpdate(obj, "update_object")
 
 		// Remove item

@@ -19,8 +19,8 @@ func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
 	slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 	playerId := charGameObj.Properties()["player_id"].(int)
-	player := e.Players()[playerId]
-	if player == nil {
+	player, ok := e.Players().Load(playerId)
+	if player == nil || !ok {
 		return false
 	}
 

@@ -6,7 +6,7 @@ import (
 
 func (cont *ContainerObject) PutOrDrop(e entity.IEngine, charGameObj entity.IGameObject, itemId string, position int) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		container := cont.gameObj
 		item := e.GameObjects()[itemId]
 

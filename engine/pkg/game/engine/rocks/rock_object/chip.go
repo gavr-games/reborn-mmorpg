@@ -8,7 +8,7 @@ import (
 
 func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 		if slots["back"] == nil {

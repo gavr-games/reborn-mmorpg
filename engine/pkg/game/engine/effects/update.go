@@ -6,7 +6,7 @@ import (
 
 // Goes through all effects and tries to apply them
 func Update(e entity.IEngine, tickDelta int64) {
-	for effectId, effect := range e.Effects() {
+	e.Effects().Range(func(effectId string, effect map[string]interface{}) bool {
 		obj := e.GameObjects()[effect["target_id"].(string)]
 		// remove effect if game object is gone
 		if obj == nil {
@@ -45,7 +45,9 @@ func Update(e entity.IEngine, tickDelta int64) {
 					// die if health < 0
 					if obj.Properties()["health"].(float64) <= 0.0 {
 						if obj.Properties()["type"].(string) == "mob" {
-							e.Mobs()[obj.Id()].Die()
+							if mob, ok := e.Mobs().Load(obj.Id()); ok {
+								mob.Die()
+							}
 						} else {
 							// for characters
 							obj.(entity.ICharacterObject).Reborn(e)
@@ -54,5 +56,6 @@ func Update(e entity.IEngine, tickDelta int64) {
 				}
 			}
 		}
-	}
+		return true
+	})
 }

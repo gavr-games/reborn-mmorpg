@@ -14,14 +14,14 @@ import (
 // Process commands from players
 // TODO: move commands processing to funcs
 func ProcessCommand(e entity.IEngine, characterId int, command map[string]interface{}) {
-	if player, ok := e.Players()[characterId]; ok {
+	if player, ok := e.Players().Load(characterId); ok {
 		cmd := command["cmd"]
 		params := command["params"]
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 
 		// List of commands, which don't interrupt current character action.
 		// Like get_character_info does not interrupt choping a tree, but any movement does
-		nonCancellingCmds := []string{"get_character_info", "open_container", "get_craft_atlas", "npc_trade_info", "get_item_info"}
+		nonCancellingCmds := []string{"get_ping", "get_character_info", "open_container", "get_craft_atlas", "npc_trade_info", "get_item_info"}
 		// Cancel character delayed actions and auto moving
 		if !slices.Contains(nonCancellingCmds, cmd.(string)) {
 			delayed_actions.Cancel(e, charGameObj)
@@ -203,14 +203,14 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}, -1.0)
 		case "follow":
 			mobId := params.(string)
-			mob, ok := e.Mobs()[mobId]
+			mob, ok := e.Mobs().Load(mobId)
 			if ok {
 				//TODO: Check commands  can be executed only close enough to the mob
 				mob.Follow(charGameObj.Id())
 			}
 		case "unfollow":
 			mobId := params.(string)
-			mob, ok := e.Mobs()[mobId]
+			mob, ok := e.Mobs().Load(mobId)
 			if ok {
 				//TODO: Check commands  can be executed only close enough to the mob
 				mob.Unfollow()

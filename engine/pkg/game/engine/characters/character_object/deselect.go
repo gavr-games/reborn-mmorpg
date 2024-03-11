@@ -17,7 +17,7 @@ func (obj *CharacterObject) DeselectTarget(e entity.IEngine) bool {
 
 	if playerId, found := obj.Properties()["player_id"]; found {
 		playerIdInt := playerId.(int)
-		if player, ok := e.Players()[playerIdInt]; ok {
+		if player, ok := e.Players().Load(playerIdInt); ok {
 			e.SendResponse("deselect_target", map[string]interface{}{
 				"id": targetId,
 			}, player)

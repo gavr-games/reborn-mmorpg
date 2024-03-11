@@ -37,7 +37,9 @@ func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 	}
 	// Trigger mob to aggro
 	if targetObj.Properties()["type"].(string) == "mob" {
-		mob.Engine.Mobs()[targetObj.Id()].Attack(mob.Id())
+		if targetMob, ok := mob.Engine.Mobs().Load(targetObj.Id()); ok {
+			targetMob.Attack(mob.Id())
+		}
 	}
 	mob.Engine.SendGameObjectUpdate(targetObj, "update_object")
 
@@ -45,7 +47,9 @@ func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 	if targetObj.Properties()["health"].(float64) == 0.0 {
 		mob.StopAttacking()
 		if targetObj.Properties()["type"].(string) == "mob" {
-			mob.Engine.Mobs()[targetObj.Id()].Die()
+			if targetMob, ok := mob.Engine.Mobs().Load(targetObj.Id()); ok {
+				targetMob.Die()
+			}
 		} else {
 			// for characters
 			targetObj.(entity.ICharacterObject).Reborn(mob.Engine)

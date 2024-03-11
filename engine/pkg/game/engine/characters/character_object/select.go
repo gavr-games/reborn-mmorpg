@@ -11,7 +11,7 @@ func (obj *CharacterObject) SelectTarget(e entity.IEngine, targetId string) bool
 
 	if playerId, found := obj.Properties()["player_id"]; found {
 		playerIdInt := playerId.(int)
-		if player, ok := e.Players()[playerIdInt]; ok {
+		if player, ok := e.Players().Load(playerIdInt); ok {
 			return selectTarget(e, obj, target, player)
 		} else {
 			return false

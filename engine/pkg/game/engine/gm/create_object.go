@@ -10,8 +10,8 @@ import (
 // Create object
 func CreateObject(e entity.IEngine, charGameObj entity.IGameObject, params map[string]interface{}) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
-	player := e.Players()[playerId]
-	if player == nil {
+	player, ok := e.Players().Load(playerId)
+	if player == nil || !ok {
 		return false
 	}
 

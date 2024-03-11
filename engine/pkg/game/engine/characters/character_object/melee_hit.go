@@ -10,7 +10,7 @@ import (
 // Tries to hit target with the melee weapon
 func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 	playerId := obj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		targetId, ok := obj.Properties()["target_id"]
 		if !ok {
 			e.SendSystemMessage("No target to hit.", player)
@@ -67,7 +67,9 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 		}
 		// Trigger mob to aggro
 		if targetObj.Properties()["type"].(string) == "mob" {
-			e.Mobs()[targetObj.Id()].Attack(obj.Id())
+			if mob, ok := e.Mobs().Load(targetObj.Id()); ok {
+				mob.Attack(obj.Id())
+			}
 		}
 		e.SendGameObjectUpdate(targetObj, "update_object")
 
@@ -78,7 +80,9 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 			obj.DeselectTarget(e)
 			if targetObj.Properties()["type"].(string) == "mob" {
 				e.SendSystemMessage(fmt.Sprintf("You killed %s.", targetObj.Kind()), player)
-				e.Mobs()[targetObj.Id()].Die()
+				if mob, ok := e.Mobs().Load(targetObj.Id()); ok {
+					mob.Die()
+				}
 			} else {
 				// for characters
 				targetObj.(entity.ICharacterObject).Reborn(e)

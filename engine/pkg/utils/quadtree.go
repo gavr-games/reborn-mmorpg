@@ -1,5 +1,9 @@
 package utils
 
+import (
+	"sync"
+)
+
 // Quadtree - The quadtree data structure
 type Quadtree struct {
 	Bounds     Bounds
@@ -9,6 +13,7 @@ type Quadtree struct {
 	Objects    []IBounds
 	Nodes      []Quadtree
 	Total      int
+	mu         sync.RWMutex
 }
 
 // TotalNodes - Retrieve the total number of sub-Quadtrees in a Quadtree
@@ -145,6 +150,9 @@ func (qt *Quadtree) getIndex(pRect IBounds) int {
 // Insert - Insert the object into the node. If the node exceeds the capacity,
 // it will split and add all objects to their corresponding subnodes.
 func (qt *Quadtree) Insert(pRect IBounds) {
+	qt.mu.Lock()
+	defer qt.mu.Unlock()
+
 	qt.Total++
 
 	i := 0
@@ -184,6 +192,9 @@ func (qt *Quadtree) Insert(pRect IBounds) {
 
 // Find object in quadtree via filter and removes it
 func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
+	qt.mu.Lock()
+	defer qt.mu.Unlock()
+
 	index := qt.getIndex(pRect)
 
 	//if we have subnodes ...
@@ -217,6 +228,9 @@ func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
 
 // Retrieve - Return all objects that could collide with the given object
 func (qt *Quadtree) Retrieve(pRect IBounds) []IBounds {
+	qt.mu.RLock()
+	defer qt.mu.RUnlock()
+
 	index := qt.getIndex(pRect)
 	// Array with all detected objects
 	returnObjects := qt.Objects

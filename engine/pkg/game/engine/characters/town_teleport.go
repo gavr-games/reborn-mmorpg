@@ -9,7 +9,7 @@ import (
 // params: playerId
 func TownTeleport(e entity.IEngine, params map[string]interface{}) bool {
 	playerId := int(params["playerId"].(float64))
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 		charGameObj.(entity.ICharacterObject).DeselectTarget(e)
 		charGameObj.(entity.ICharacterObject).Move(e, constants.InitialPlayerX, constants.InitialPlayerY)

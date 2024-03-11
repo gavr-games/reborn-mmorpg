@@ -6,7 +6,7 @@ import (
 
 func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		slots := charGameObj.Properties()["slots"].(map[string]interface{})
 
 		if slots["back"] == nil {

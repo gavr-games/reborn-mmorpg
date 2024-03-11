@@ -8,7 +8,7 @@ import (
 // params: playerId
 func ClaimTeleport(e entity.IEngine, params map[string]interface{}) bool {
 	playerId := int(params["playerId"].(float64))
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
 		charGameObj.(entity.ICharacterObject).DeselectTarget(e)
 		obelisk := e.GameObjects()[charGameObj.Properties()["claim_obelisk_id"].(string)]

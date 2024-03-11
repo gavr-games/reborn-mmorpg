@@ -11,7 +11,7 @@ import (
 // This func is trigerred by delayed action mechanism
 func Craft(e entity.IEngine, params map[string]interface{}) bool {
 	playerId := int(params["playerId"].(float64))
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		craftItemName := params["item_name"].(string)
 		craftItemConfig := GetAtlas()[craftItemName].(map[string]interface{})
 		charGameObj := e.GameObjects()[player.CharacterGameObjectId]

@@ -9,7 +9,7 @@ import (
 // The idea is that character can lift up some items like chests, carry them  and put in another place.
 func (obj *LiftableObject) Lift(e entity.IEngine, charGameObj entity.IGameObject) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		item := obj.gameObj
 
 		if item == nil {

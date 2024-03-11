@@ -11,7 +11,7 @@ const (
 
 func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameObject, x float64, y float64, rotation float64) bool {
 	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	if player, ok := e.Players().Load(playerId); ok {
 		item := obj.gameObj
 
 		if item == nil {
