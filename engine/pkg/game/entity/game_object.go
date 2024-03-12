@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"math"
 
+	"go.uber.org/atomic"
+
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
@@ -13,6 +15,7 @@ const (
 )
 
 type IGameObject interface {
+	InitGameObject()
 	X() float64
 	SetX(x float64)
 	Y() float64
@@ -56,64 +59,79 @@ type IGameObject interface {
 
 type GameObject struct {
 	// params for quadtree
-	x      float64
-	y      float64
-	width  float64
-	height float64
+	x      *atomic.Float64
+	y      *atomic.Float64
+	width  *atomic.Float64
+	height *atomic.Float64
 
 	// game params
-	id            string
-	objType       string
-	floor         int // -1 for does not belong to any floor
-	currentAction *DelayedAction
-	rotation      float64 // from 0 to math.Pi * 2
-	properties    map[string]interface{}
-	effects       map[string]interface{}
-	moveToCoords  *MoveToCoords //used for engine to automatically move object to this coord
+	id            *atomic.String
+	objType       *atomic.String
+	floor         *atomic.Int64           // -1 for does not belong to any floor
+	currentAction *atomic.Pointer[DelayedAction] //TODO: Refactor to thread safe access
+	rotation      *atomic.Float64         // from 0 to math.Pi * 2
+	properties    map[string]interface{}  //TODO: Refactor to thread safe access
+	effects       map[string]interface{}  //TODO: Refactor to thread safe access
+	moveToCoords  *atomic.Pointer[MoveToCoords]  //used for engine to automatically move object to this coord. TODO: Refactor to thread safe access
+}
+
+func (obj *GameObject) InitGameObject() {
+	obj.x = atomic.NewFloat64(0.0)
+	obj.y = atomic.NewFloat64(0.0)
+	obj.width = atomic.NewFloat64(0.0)
+	obj.height = atomic.NewFloat64(0.0)
+	obj.id = atomic.NewString("")
+	obj.objType = atomic.NewString("")
+	obj.floor = atomic.NewInt64(int64(-1))
+	obj.currentAction = atomic.NewPointer[DelayedAction](nil)
+	obj.moveToCoords = atomic.NewPointer[MoveToCoords](nil)
+	obj.rotation = atomic.NewFloat64(0.0)
+	obj.SetProperties(make(map[string]interface{}))
+	obj.SetEffects(make(map[string]interface{}))
 }
 
 func (obj *GameObject) X() float64 {
-	return obj.x
+	return obj.x.Load()
 }
 
 func (obj *GameObject) SetX(x float64) {
-	obj.x = x
+	obj.x.Store(x)
 	obj.properties["x"] = x
 }
 
 func (obj *GameObject) Y() float64 {
-	return obj.y
+	return obj.y.Load()
 }
 
 func (obj *GameObject) SetY(y float64) {
-	obj.y = y
+	obj.y.Store(y)
 	obj.properties["y"] = y
 }
 
 func (obj *GameObject) Width() float64 {
-	return obj.width
+	return obj.width.Load()
 }
 
 func (obj *GameObject) SetWidth(width float64) {
-	obj.width = width
+	obj.width.Store(width)
 	obj.properties["width"] = width
 }
 
 func (obj *GameObject) Height() float64 {
-	return obj.height
+	return obj.height.Load()
 }
 
 func (obj *GameObject) SetHeight(height float64) {
-	obj.height = height
+	obj.height.Store(height)
 	obj.properties["height"] = height
 }
 
 func (obj *GameObject) Id() string {
-	return obj.id
+	return obj.id.Load()
 }
 
 func (obj *GameObject) SetId(id string) {
-	obj.id = id
+	obj.id.Store(id)
 	obj.properties["id"] = id
 }
 
@@ -122,36 +140,36 @@ func (obj *GameObject) Kind() string {
 }
 
 func (obj *GameObject) Type() string {
-	return obj.objType
+	return obj.objType.Load()
 }
 
 func (obj *GameObject) SetType(t string) {
-	obj.objType = t
+	obj.objType.Store(t)
 	obj.properties["type"] = t
 }
 
 func (obj *GameObject) Floor() int {
-	return obj.floor
+	return int(obj.floor.Load())
 }
 
 func (obj *GameObject) SetFloor(floor int) {
-	obj.floor = floor
+	obj.floor.Store(int64(floor))
 }
 
 func (obj *GameObject) Rotation() float64 {
-	return obj.rotation
+	return obj.rotation.Load()
 }
 
 func (obj *GameObject) SetRotation(rotation float64) {
-	obj.rotation = rotation
+	obj.rotation.Store(rotation)
 }
 
 func (obj *GameObject) CurrentAction() *DelayedAction {
-	return obj.currentAction
+	return obj.currentAction.Load()
 }
 
 func (obj *GameObject) SetCurrentAction(currentAction *DelayedAction) {
-	obj.currentAction = currentAction
+	obj.currentAction.Store(currentAction)
 }
 
 func (obj *GameObject) Properties() map[string]interface{} {
@@ -171,15 +189,15 @@ func (obj *GameObject) SetEffects(effects map[string]interface{}) {
 }
 
 func (obj *GameObject) MoveToCoords() *MoveToCoords {
-	return obj.moveToCoords
+	return obj.moveToCoords.Load()
 }
 
 func (obj *GameObject) SetMoveToCoords(moveToCoords *MoveToCoords) {
-	obj.moveToCoords = moveToCoords
+	obj.moveToCoords.Store(moveToCoords)
 }
 
 func (obj *GameObject) SetMoveToCoordsByObject(moveToObj IGameObject) {
-	obj.moveToCoords = &MoveToCoords{
+	obj.SetMoveToCoords(&MoveToCoords{
 		Mode: MoveCloseToBounds,
 		Bounds: utils.Bounds{
 			X:      moveToObj.X(),
@@ -189,11 +207,11 @@ func (obj *GameObject) SetMoveToCoordsByObject(moveToObj IGameObject) {
 		},
 		DirectionChangeTime:      constants.MoveToDefaultDirectionChangeTime,
 		TimeUntilDirectionChange: 0,
-	}
+	})
 }
 
 func (obj *GameObject) SetMoveToCoordsByXY(x float64, y float64) {
-	obj.moveToCoords = &MoveToCoords{
+	obj.SetMoveToCoords(&MoveToCoords{
 		Mode: MoveToExactCoords,
 		Bounds: utils.Bounds{
 			X:      x,
@@ -203,10 +221,11 @@ func (obj *GameObject) SetMoveToCoordsByXY(x float64, y float64) {
 		},
 		DirectionChangeTime:      constants.MoveToDefaultDirectionChangeTime,
 		TimeUntilDirectionChange: 0,
-	}
+	})
 }
 
 func (obj *GameObject) UnmarshalJSON(b []byte) error {
+	//TODO: Unmarshal moveToCoords
 	var tmp struct {
 		X             float64
 		Y             float64
@@ -224,21 +243,23 @@ func (obj *GameObject) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	obj.x = tmp.X
-	obj.y = tmp.Y
-	obj.width = tmp.Width
-	obj.height = tmp.Height
-	obj.id = tmp.Id
-	obj.objType = tmp.Type
-	obj.floor = tmp.Floor
-	obj.currentAction = tmp.CurrentAction
-	obj.rotation = tmp.Rotation
-	obj.properties = tmp.Properties
-	obj.effects = tmp.Effects
+	obj.InitGameObject()
+	obj.SetX(tmp.X)
+	obj.SetY(tmp.Y)
+	obj.SetWidth(tmp.Width)
+	obj.SetHeight(tmp.Height)
+	obj.SetId(tmp.Id)
+	obj.SetType(tmp.Type)
+	obj.SetFloor(tmp.Floor)
+	obj.SetCurrentAction(tmp.CurrentAction)
+	obj.SetRotation(tmp.Rotation)
+	obj.SetProperties(tmp.Properties)
+	obj.SetEffects(tmp.Effects)
 	return nil
 }
 
 func (obj *GameObject) MarshalJSON() ([]byte, error) {
+	//TODO: Marshal moveToCoords
 	return json.Marshal(struct {
 		X             float64
 		Y             float64
@@ -252,17 +273,17 @@ func (obj *GameObject) MarshalJSON() ([]byte, error) {
 		Properties    map[string]interface{}
 		Effects       map[string]interface{}
 	}{
-		X:             obj.x,
-		Y:             obj.y,
-		Width:         obj.width,
-		Height:        obj.height,
-		Id:            obj.id,
-		Type:          obj.objType,
-		Floor:         obj.floor,
-		CurrentAction: obj.currentAction,
-		Rotation:      obj.rotation,
-		Properties:    obj.properties,
-		Effects:       obj.effects,
+		X:             obj.X(),
+		Y:             obj.Y(),
+		Width:         obj.Width(),
+		Height:        obj.Height(),
+		Id:            obj.Id(),
+		Type:          obj.Type(),
+		Floor:         obj.Floor(),
+		CurrentAction: obj.CurrentAction(),
+		Rotation:      obj.Rotation(),
+		Properties:    obj.Properties(),
+		Effects:       obj.Effects(),
 	})
 }
 
@@ -315,17 +336,20 @@ func (a GameObject) Intersects(b utils.Bounds) bool {
 }
 
 func (obj *GameObject) Clone() *GameObject {
+	//TODO: Clone currentAction and moveToCoords
 	clone := &GameObject{
-		x:          obj.X(),
-		y:          obj.Y(),
-		width:      obj.Width(),
-		height:     obj.Height(),
-		id:         obj.Id(),
-		objType:    obj.Type(),
-		floor:      obj.Floor(),
-		rotation:   obj.Rotation(),
-		properties: make(map[string]interface{}),
-		effects:    make(map[string]interface{}),
+		x:             atomic.NewFloat64(obj.X()),
+		y:             atomic.NewFloat64(obj.Y()),
+		width:         atomic.NewFloat64(obj.Width()),
+		height:        atomic.NewFloat64(obj.Height()),
+		id:            atomic.NewString(obj.Id()),
+		objType:       atomic.NewString(obj.Type()),
+		floor:         atomic.NewInt64(int64(obj.Floor())),
+		rotation:      atomic.NewFloat64(obj.Rotation()),
+		currentAction: atomic.NewPointer[DelayedAction](nil),
+		moveToCoords:  atomic.NewPointer[MoveToCoords](nil),
+		properties:    make(map[string]interface{}),
+		effects:       make(map[string]interface{}),
 	}
 	clone.SetProperties(utils.CopyMap(obj.Properties()))
 	clone.SetEffects(utils.CopyMap(obj.Effects()))

@@ -70,6 +70,7 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 	}
 
 	gameObj := &entity.GameObject{}
+	gameObj.InitGameObject()
 	gameObj.SetProperties(utils.CopyMap(objTemplate))
 	gameObj.SetEffects(make(map[string]interface{}))
 	gameObj.SetId(id)

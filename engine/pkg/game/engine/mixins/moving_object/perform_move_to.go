@@ -32,6 +32,7 @@ func (mObj *MovingObject) needToStop() bool {
 	// is close to bounds
 	if (moveTo.Mode == entity.MoveCloseToBounds) {
 		tempGameObj := &entity.GameObject{}
+		tempGameObj.InitGameObject()
 		tempGameObj.SetProperties(make(map[string]interface{}))
 		tempGameObj.SetX(moveTo.Bounds.X)
 		tempGameObj.SetY(moveTo.Bounds.Y)

@@ -72,7 +72,9 @@ class ItemObserver {
 
   remove () {
     EventBus.$off('scene-created', this.sceneCreatedCallback)
-    this.mesh.dispose()
+    if (this.mesh !== null) {
+      this.mesh.dispose()
+    }
     this.mesh = null
     this.state = null
   }
