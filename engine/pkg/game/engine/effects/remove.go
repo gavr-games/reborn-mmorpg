@@ -7,8 +7,7 @@ import (
 // Removes effect from obj and engine map
 func Remove(e entity.IEngine, effectId string, obj entity.IGameObject) {
 	if obj != nil {
-		obj.Effects()[effectId] = nil
-		delete(obj.Effects(), effectId)
+		obj.RemoveEffect(effectId)
 		e.SendGameObjectUpdate(obj, "update_object")
 	}
 	e.Effects().Delete(effectId)

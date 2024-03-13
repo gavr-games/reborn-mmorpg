@@ -2,9 +2,9 @@ package entity
 
 import (
 	"encoding/json"
-	"math"
-
 	"go.uber.org/atomic"
+	"math"
+	"sync"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
@@ -41,8 +41,13 @@ type IGameObject interface {
 	SetMoveToCoordsByXY(x float64, y float64)
 	Properties() map[string]interface{}
 	SetProperties(properties map[string]interface{})
+	GetProperty(key string) interface{}
+	SetProperty(key string, value interface{})
 	Effects() map[string]interface{}
 	SetEffects(effects map[string]interface{})
+	GetEffect(key string) interface{}
+	SetEffect(key string, value interface{})
+	RemoveEffect(key string)
 	HitBox() utils.Bounds
 	IsPoint() bool
 	Intersects(b utils.Bounds) bool
@@ -73,6 +78,8 @@ type GameObject struct {
 	properties    map[string]interface{}  //TODO: Refactor to thread safe access
 	effects       map[string]interface{}  //TODO: Refactor to thread safe access
 	moveToCoords  *atomic.Pointer[MoveToCoords]  //used for engine to automatically move object to this coord. TODO: Refactor to thread safe access
+	propsMutex    sync.RWMutex
+	effectsMutex  sync.RWMutex
 }
 
 func (obj *GameObject) InitGameObject() {
@@ -96,6 +103,8 @@ func (obj *GameObject) X() float64 {
 
 func (obj *GameObject) SetX(x float64) {
 	obj.x.Store(x)
+	obj.propsMutex.Lock()
+	defer obj.propsMutex.Unlock()
 	obj.properties["x"] = x
 }
 
@@ -105,6 +114,8 @@ func (obj *GameObject) Y() float64 {
 
 func (obj *GameObject) SetY(y float64) {
 	obj.y.Store(y)
+	obj.propsMutex.Lock()
+	defer obj.propsMutex.Unlock()
 	obj.properties["y"] = y
 }
 
@@ -114,6 +125,8 @@ func (obj *GameObject) Width() float64 {
 
 func (obj *GameObject) SetWidth(width float64) {
 	obj.width.Store(width)
+	obj.propsMutex.Lock()
+	defer obj.propsMutex.Unlock()
 	obj.properties["width"] = width
 }
 
@@ -123,6 +136,8 @@ func (obj *GameObject) Height() float64 {
 
 func (obj *GameObject) SetHeight(height float64) {
 	obj.height.Store(height)
+	obj.propsMutex.Lock()
+	defer obj.propsMutex.Unlock()
 	obj.properties["height"] = height
 }
 
@@ -132,10 +147,14 @@ func (obj *GameObject) Id() string {
 
 func (obj *GameObject) SetId(id string) {
 	obj.id.Store(id)
+	obj.propsMutex.Lock()
+	defer obj.propsMutex.Unlock()
 	obj.properties["id"] = id
 }
 
 func (obj *GameObject) Kind() string {
+	obj.propsMutex.RLock()
+	defer obj.propsMutex.RUnlock()
 	return obj.properties["kind"].(string)
 }
 
@@ -145,6 +164,8 @@ func (obj *GameObject) Type() string {
 
 func (obj *GameObject) SetType(t string) {
 	obj.objType.Store(t)
+	obj.propsMutex.Lock()
+	defer obj.propsMutex.Unlock()
 	obj.properties["type"] = t
 }
 
@@ -173,19 +194,58 @@ func (obj *GameObject) SetCurrentAction(currentAction *DelayedAction) {
 }
 
 func (obj *GameObject) Properties() map[string]interface{} {
+	obj.propsMutex.RLock()
+	defer obj.propsMutex.RUnlock()
 	return obj.properties
 }
 
 func (obj *GameObject) SetProperties(properties map[string]interface{}) {
+	obj.propsMutex.Lock()
+	defer obj.propsMutex.Unlock()
 	obj.properties = properties
 }
 
+func (obj *GameObject) GetProperty(key string) interface{} {
+	obj.propsMutex.RLock()
+	defer obj.propsMutex.RUnlock()
+	return obj.properties[key]
+}
+
+func (obj *GameObject) SetProperty(key string, value interface{}) {
+	obj.propsMutex.Lock()
+	defer obj.propsMutex.Unlock()
+	obj.properties[key] = value
+}
+
 func (obj *GameObject) Effects() map[string]interface{} {
-	return obj.effects
+	obj.effectsMutex.RLock()
+	defer obj.effectsMutex.RUnlock()
+	return utils.CopyMap(obj.effects) // returns a copy of map, so external code could work without Mutex Lock  (no parallel access to original effects map)
 }
 
 func (obj *GameObject) SetEffects(effects map[string]interface{}) {
+	obj.effectsMutex.Lock()
+	defer obj.effectsMutex.Unlock()
 	obj.effects = effects
+}
+
+func (obj *GameObject) GetEffect(key string) interface{} {
+	obj.effectsMutex.RLock()
+	defer obj.effectsMutex.RUnlock()
+	return obj.effects[key]
+}
+
+func (obj *GameObject) SetEffect(key string, value interface{}) {
+	obj.effectsMutex.Lock()
+	defer obj.effectsMutex.Unlock()
+	obj.effects[key] = value
+}
+
+func (obj *GameObject) RemoveEffect(key string) {
+	obj.effectsMutex.Lock()
+	defer obj.effectsMutex.Unlock()
+	obj.effects[key] = nil
+	delete(obj.effects, key)
 }
 
 func (obj *GameObject) MoveToCoords() *MoveToCoords {
@@ -259,6 +319,10 @@ func (obj *GameObject) UnmarshalJSON(b []byte) error {
 }
 
 func (obj *GameObject) MarshalJSON() ([]byte, error) {
+	obj.propsMutex.RLock()
+	defer obj.propsMutex.RUnlock()
+	obj.effectsMutex.RLock()
+	defer obj.effectsMutex.RUnlock()
 	//TODO: Marshal moveToCoords
 	return json.Marshal(struct {
 		X             float64
@@ -336,6 +400,10 @@ func (a GameObject) Intersects(b utils.Bounds) bool {
 }
 
 func (obj *GameObject) Clone() *GameObject {
+	obj.propsMutex.RLock()
+	defer obj.propsMutex.RUnlock()
+	obj.effectsMutex.RLock()
+	defer obj.effectsMutex.RUnlock()
 	//TODO: Clone currentAction and moveToCoords
 	clone := &GameObject{
 		x:             atomic.NewFloat64(obj.X()),

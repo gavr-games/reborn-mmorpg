@@ -45,7 +45,7 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 
 		// Apply effect
 		effectId := uuid.NewV4().String()
-		obj.Effects()[effectId] = utils.CopyMap(item.Properties()["effect"].(map[string]interface{}))
+		obj.SetEffect(effectId, utils.CopyMap(item.Properties()["effect"].(map[string]interface{})))
 		effectMap := utils.CopyMap(item.Properties()["effect"].(map[string]interface{}))
 		effectMap["id"] = effectId
 		effectMap["target_id"] = obj.Id()

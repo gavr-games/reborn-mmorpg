@@ -10,7 +10,7 @@ func (charGameObj *CharacterObject) HasTypeEquipped(e entity.IEngine, itemType s
 	for _, slotItemId := range slots {
 		if slotItemId != nil {
 			if slotItem, slotOk := e.GameObjects().Load(slotItemId.(string)); slotOk {
-				if slotItem.Properties()["type"].(string) == itemType {
+				if slotItem.Type() == itemType {
 					return slotItem, true
 				}
 			}
