@@ -11,16 +11,16 @@ func UpdateAll(e entity.IEngine, tickDelta int64) {
 		if gameObj != nil && delayedAction != nil {
 			// Moving to coords has higher priority, then action. For example: first move to coords, then build a wall there.
 			if gameObj.MoveToCoords() == nil {
-				if delayedAction.Status == entity.DelayedActionReady {
-					delayedAction.Status = entity.DelayedActionStarted
+				if delayedAction.Status() == entity.DelayedActionReady {
+					delayedAction.SetStatus(entity.DelayedActionStarted)
 					e.SendResponseToVisionAreas(gameObj, "start_delayed_action", map[string]interface{}{
 						"object": serializers.GetInfo(e, gameObj),
-						"duration": delayedAction.TimeLeft,
-						"action": delayedAction.FuncName,
+						"duration": delayedAction.TimeLeft(),
+						"action": delayedAction.FuncName(),
 					})
 				}
-				delayedAction.TimeLeft = delayedAction.TimeLeft - float64(tickDelta)
-				if (delayedAction.TimeLeft <= 0.0) {
+				delayedAction.SetTimeLeft(delayedAction.TimeLeft() - float64(tickDelta))
+				if (delayedAction.TimeLeft() <= 0.0) {
 					Finish(e, gameObj)
 				}
 			}

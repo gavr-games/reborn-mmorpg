@@ -11,7 +11,7 @@ func Cancel(e entity.IEngine, gameObj entity.IGameObject) bool {
 		return true
 	}
 
-	delayedActionFuncName := gameObj.CurrentAction().FuncName
+	delayedActionFuncName := gameObj.CurrentAction().FuncName()
 
 	gameObj.SetCurrentAction(nil)
 

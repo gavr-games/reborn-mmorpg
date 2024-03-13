@@ -92,12 +92,12 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 		actionParams["game_object_id"] = gameObj.Id()
 		timeLeft := currentAction.(map[string]interface{})["time_left"].(float64)
 		funcName := currentAction.(map[string]interface{})["func_name"].(string)
-		delayedAction := &entity.DelayedAction{
-			FuncName: funcName,
-			Params: actionParams,
-			TimeLeft: timeLeft,
-			Status: entity.DelayedActionReady,
-		}
+		delayedAction := entity.NewDelayedAction(
+			funcName,
+			actionParams,
+			timeLeft,
+			entity.DelayedActionReady,
+		)
 		gameObj.SetCurrentAction(delayedAction)
 	}
 

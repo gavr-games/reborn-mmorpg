@@ -26,14 +26,14 @@ func (claimObelisk *ClaimObeliskObject) Init(e entity.IEngine) bool {
 	// Init rent
 	claimObelisk.Properties()["payed_until"] = float64(utils.MakeTimestamp()) + constants.ClaimRentDuration
 
-	delayedAction := &entity.DelayedAction{
-		FuncName: "ExpireClaim",
-		Params: map[string]interface{}{
+	delayedAction := entity.NewDelayedAction(
+		"ExpireClaim",
+		map[string]interface{}{
 			"claim_obelisk_id": claimObelisk.Id(),
 		},
-		TimeLeft: constants.ClaimRentDuration,
-		Status: entity.DelayedActionReady,
-	}
+		constants.ClaimRentDuration,
+		entity.DelayedActionReady,
+	)
 	claimObelisk.SetCurrentAction(delayedAction)
 
 	// Set claim obelisk id for character

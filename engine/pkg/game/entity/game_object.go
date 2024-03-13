@@ -68,7 +68,7 @@ type GameObject struct {
 	id            *atomic.String
 	objType       *atomic.String
 	floor         *atomic.Int64           // -1 for does not belong to any floor
-	currentAction *atomic.Pointer[DelayedAction] //TODO: Refactor to thread safe access
+	currentAction *atomic.Pointer[DelayedAction]
 	rotation      *atomic.Float64         // from 0 to math.Pi * 2
 	properties    map[string]interface{}  //TODO: Refactor to thread safe access
 	effects       map[string]interface{}  //TODO: Refactor to thread safe access

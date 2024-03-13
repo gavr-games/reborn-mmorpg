@@ -54,14 +54,14 @@ func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
 
 	// replace delayed action
 	claimObelisk.Properties()["payed_until"] = claimObelisk.Properties()["payed_until"].(float64) + constants.ClaimRentDuration
-	delayedAction := &entity.DelayedAction{
-		FuncName: "ExpireClaim",
-		Params: map[string]interface{}{
+	delayedAction := entity.NewDelayedAction(
+		"ExpireClaim",
+		map[string]interface{}{
 			"claim_obelisk_id": claimObelisk.Id(),
 		},
-		TimeLeft: claimObelisk.Properties()["payed_until"].(float64) - float64(utils.MakeTimestamp()),
-		Status:   entity.DelayedActionReady,
-	}
+		claimObelisk.Properties()["payed_until"].(float64) - float64(utils.MakeTimestamp()),
+		entity.DelayedActionReady,
+	)
 	claimObelisk.SetCurrentAction(delayedAction)
 
 	storage.GetClient().Updates <- claimObelisk.Clone()

@@ -14,7 +14,7 @@ func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 	// Cancel delayed action
 	// TODO: refactor code so we can reuse delayed_actions.Cancel
 	if charGameObj.CurrentAction() != nil {
-		delayedActionFuncName := charGameObj.CurrentAction().FuncName
+		delayedActionFuncName := charGameObj.CurrentAction().FuncName()
 
 		charGameObj.SetCurrentAction(nil)
 
