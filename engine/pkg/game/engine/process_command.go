@@ -42,8 +42,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				"server_time": utils.MakeTimestamp(),
 			}, player)
 		case "stop":
-			charGameObj.Properties()["speed_x"] = 0.0
-			charGameObj.Properties()["speed_y"] = 0.0
+			charGameObj.SetProperty("speed_x", 0.0)
+			charGameObj.SetProperty("speed_y", 0.0)
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		case "move_north", "move_south", "move_east", "move_west",
 			"move_north_east", "move_north_west", "move_south_east", "move_south_west":

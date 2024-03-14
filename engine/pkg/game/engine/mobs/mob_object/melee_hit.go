@@ -8,15 +8,14 @@ import (
 func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 	// Check Cooldown
 	// here we cast everything to float64, because go restores from json everything as float64
-	lastHitAt, hitted := mob.Properties()["last_hit_at"]
-	if hitted {
-		if float64(utils.MakeTimestamp()) - lastHitAt.(float64) >= mob.Properties()["cooldown"].(float64) {
-			mob.Properties()["last_hit_at"] = float64(utils.MakeTimestamp())
+	if lastHitAt := mob.GetProperty("last_hit_at"); lastHitAt != nil {
+		if float64(utils.MakeTimestamp()) - lastHitAt.(float64) >= mob.GetProperty("cooldown").(float64) {
+			mob.SetProperty("last_hit_at", float64(utils.MakeTimestamp()))
 		} else {
 			return false
 		}
 	} else {
-		mob.Properties()["last_hit_at"] = float64(utils.MakeTimestamp())
+		mob.SetProperty("last_hit_at", float64(utils.MakeTimestamp()))
 	}
 
 	// check collision with target
@@ -31,12 +30,12 @@ func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 	})
 
 	// deduct health and update object
-	targetObj.Properties()["health"] = targetObj.Properties()["health"].(float64) - mob.Properties()["damage"].(float64)
-	if targetObj.Properties()["health"].(float64) <= 0.0 {
-		targetObj.Properties()["health"] = 0.0
+	targetObj.SetProperty("health", targetObj.GetProperty("health").(float64) - mob.GetProperty("damage").(float64))
+	if targetObj.GetProperty("health").(float64) <= 0.0 {
+		targetObj.SetProperty("health", 0.0)
 	}
 	// Trigger mob to aggro
-	if targetObj.Properties()["type"].(string) == "mob" {
+	if targetObj.Type() == "mob" {
 		if targetMob, ok := mob.Engine.Mobs().Load(targetObj.Id()); ok {
 			targetMob.Attack(mob.Id())
 		}
@@ -44,9 +43,9 @@ func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 	mob.Engine.SendGameObjectUpdate(targetObj, "update_object")
 
 	// die if health < 0
-	if targetObj.Properties()["health"].(float64) == 0.0 {
+	if targetObj.GetProperty("health").(float64) == 0.0 {
 		mob.StopAttacking()
-		if targetObj.Properties()["type"].(string) == "mob" {
+		if targetObj.Type() == "mob" {
 			if targetMob, ok := mob.Engine.Mobs().Load(targetObj.Id()); ok {
 				targetMob.Die()
 			}

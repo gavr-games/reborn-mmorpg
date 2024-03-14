@@ -28,7 +28,7 @@ func (mObj *MovingObject) CanMove(e entity.IEngine, dx float64, dy float64, stop
 	// Filter collidable objects
 	n := 0
 	for _, val := range possibleCollidableObjects {
-		if collidable, ok := val.(entity.IGameObject).Properties()["collidable"]; ok {
+		if collidable := val.(entity.IGameObject).GetProperty("collidable"); collidable != nil {
 			if collidable.(bool) {
 				possibleCollidableObjects[n] = val
 				n++

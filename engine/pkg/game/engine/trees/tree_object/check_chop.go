@@ -6,14 +6,14 @@ import (
 )
 
 func (tree *TreeObject) CheckChop(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	player, ok := e.Players().Load(playerId)
 	if player == nil || !ok {
 		return false
 	}
 
 	// check object type
-	if tree.Properties()["type"].(string) != "tree" {
+	if tree.Type() != "tree" {
 		e.SendSystemMessage("Please choose a tree.", player)
 		return false
 	}

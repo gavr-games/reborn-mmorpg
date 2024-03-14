@@ -7,7 +7,7 @@ import (
 
 func (plant *PlantObject) Grow(e entity.IEngine) bool {
 	// Create next plant
-	if growsInto, ok := plant.Properties()["grows_into"]; ok {
+	if growsInto := plant.GetProperty("grows_into"); growsInto != nil {
 		nextPlant := e.CreateGameObject(growsInto.(string), plant.X(), plant.Y(), 0.0, plant.Floor(), nil)
 		e.SendResponseToVisionAreas(nextPlant, "add_object", map[string]interface{}{
 			"object": nextPlant,

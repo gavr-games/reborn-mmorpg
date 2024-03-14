@@ -7,9 +7,9 @@ import (
 )
 
 func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -36,8 +36,9 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 		}
 
 		// Decrease stones stored in the rock
-		resources := rock.Properties()["resources"].(map[string]interface{})
+		resources := rock.GetProperty("resources").(map[string]interface{})
 		resources["stone"] = resources["stone"].(float64) - 1.0
+		rock.SetProperty("resources", resources)
 
 		// Remove rock if no stones inside
 		if resources["stone"].(float64) <= 0 {

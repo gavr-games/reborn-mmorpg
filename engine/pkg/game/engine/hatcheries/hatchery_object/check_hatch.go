@@ -6,17 +6,17 @@ import (
 )
 
 func (hatchery *HatcheryObject) CheckHatch(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	resources := hatchery.Properties()["hatching_resources"].(map[string]interface{})
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	resources := hatchery.GetProperty("hatching_resources").(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	player, ok := e.Players().Load(playerId)
 	if player == nil || !ok {
 		return false
 	}
 
 	// check object type
-	if hatchery.Properties()["type"].(string) != "hatchery" {
+	if hatchery.Type() != "hatchery" {
 		e.SendSystemMessage("Please choose hatchery.", player)
 		return false
 	}

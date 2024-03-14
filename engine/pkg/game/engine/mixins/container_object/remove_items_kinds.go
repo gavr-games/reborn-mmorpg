@@ -27,7 +27,7 @@ func removeItemsKinds(e entity.IEngine, player *entity.Player, container entity.
 		item entity.IGameObject
 		itemOk bool
 	)
-	itemIds := container.Properties()["items_ids"].([]interface{})
+	itemIds := container.GetProperty("items_ids").([]interface{})
 
 	for _, itemId := range itemIds {
 		if itemId != nil {
@@ -36,16 +36,16 @@ func removeItemsKinds(e entity.IEngine, player *entity.Player, container entity.
 			}
 			itemKind := item.Kind()
 			itemStackable := false
-			if value, ok := item.Properties()["stackable"]; ok {
-				itemStackable = value.(bool)
+			if stackable := item.GetProperty("stackable"); stackable != nil {
+				itemStackable = stackable.(bool)
 			}
 			// If item stackable substract "amount", otherwise remove items as 1 per each game_object
 			if slices.Contains(itemsKinds, itemKind) {
 				performRemove := true
 				if itemStackable {
-					item.Properties()["amount"] = item.Properties()["amount"].(float64) - itemsCounts[itemKind]
+					item.SetProperty("amount", item.GetProperty("amount").(float64) - itemsCounts[itemKind])
 					e.SendGameObjectUpdate(item, "update_object")
-					if item.Properties()["amount"].(float64) != 0.0 {
+					if item.GetProperty("amount").(float64) != 0.0 {
 						performRemove = false
 						itemsCounts[itemKind] = 0.0
 					} else {

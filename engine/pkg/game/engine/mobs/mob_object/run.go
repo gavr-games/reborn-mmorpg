@@ -41,7 +41,7 @@ func (mob *MobObject) Run(newTickTime int64) {
 		mob.State = AttackingState
 		mob.TickTime = newTickTime
 		mob.setMoveTo(AttackingDirectionChangeTime)
-		mob.Properties()["speed"] = mob.Properties()["speed"].(float64) * AttackSpeedUp
+		mob.SetProperty("speed", mob.GetProperty("speed").(float64) * AttackSpeedUp)
 	} else
 	// Renew Attacking
 	if mob.State == RenewAttackingState {
@@ -52,7 +52,7 @@ func (mob *MobObject) Run(newTickTime int64) {
 	// Stop attacking
 	if mob.State == StopAttackingingState {
 		mob.TargetObjectId = ""
-		mob.Properties()["speed"] = mob.Properties()["speed"].(float64) / AttackSpeedUp
+		mob.SetProperty("speed", mob.GetProperty("speed").(float64) / AttackSpeedUp)
 		mob.stop()
 		mob.TickTime = newTickTime
 	} else

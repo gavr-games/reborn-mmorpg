@@ -21,7 +21,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 		if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
 			return false
 		}
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		// Call check again to make sure nothing changed.
 		// For example some player or mob could move to the place of future building
@@ -54,7 +54,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 				e.SendSystemMessage(err.Error(), player)
 				return false
 			}
-			itemObj.Properties()["crafted_by_character_id"] = charGameObj.Id()
+			itemObj.SetProperty("crafted_by_character_id", charGameObj.Id())
 			itemObj.Rotate(rotation)
 			itemObj.SetFloor(charGameObj.Floor())
 			e.GameObjects().Store(itemObj.Id(), itemObj)

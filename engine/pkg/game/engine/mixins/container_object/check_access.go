@@ -14,7 +14,7 @@ func (cont *ContainerObject) CheckAccess(e entity.IEngine, player *entity.Player
 		charOk, parentContOk bool
 	)
 	container := cont.gameObj
-	parentContainerId := container.Properties()["parent_container_id"]
+	parentContainerId := container.GetProperty("parent_container_id")
 	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
 		return false
 	}
@@ -25,13 +25,13 @@ func (cont *ContainerObject) CheckAccess(e entity.IEngine, player *entity.Player
 		}
 		return parentContainer.(entity.IContainerObject).CheckAccess(e, player)
 	} else {
-		if liftable, ok := container.Properties()["liftable"]; ok {
-			if liftedBy, ok2 := container.Properties()["lifted_by"]; ok2 && liftedBy != nil {
+		if liftable := container.GetProperty("liftable"); liftable != nil {
+			if liftedBy := container.GetProperty("lifted_by"); liftedBy != nil {
 				return liftedBy.(string) == charGameObj.Id()
 			} else if liftable.(bool) {
 				return container.IsCloseTo(charGameObj) && claims.CheckAccess(e, charGameObj, container)
 			}
 		}
-		return player.CharacterGameObjectId  == container.Properties()["owner_id"]
+		return player.CharacterGameObjectId  == container.GetProperty("owner_id")
 	}
 }

@@ -10,7 +10,7 @@ import (
 // Set x and y speeds depending on the direction
 func (mObj *MovingObject) SetXYSpeeds(e entity.IEngine, direction string) {
 	obj := mObj.gameObj
-	speed := obj.Properties()["speed"].(float64)
+	speed := obj.GetProperty("speed").(float64)
 	axisSpeed := math.Sqrt(speed * speed / 2)
 
 	validDirection := false
@@ -28,29 +28,29 @@ func (mObj *MovingObject) SetXYSpeeds(e entity.IEngine, direction string) {
 
 	switch direction {
 		case "move_north":
-			obj.Properties()["speed_x"] = 0.0
-			obj.Properties()["speed_y"] = speed
+			obj.SetProperty("speed_x", 0.0)
+			obj.SetProperty("speed_y", speed)
 		case "move_south":
-			obj.Properties()["speed_x"] = 0.0
-			obj.Properties()["speed_y"] = -speed
+			obj.SetProperty("speed_x", 0.0)
+			obj.SetProperty("speed_y", -speed)
 		case "move_east":
-			obj.Properties()["speed_x"] = speed
-			obj.Properties()["speed_y"] = 0.0
+			obj.SetProperty("speed_x", speed)
+			obj.SetProperty("speed_y", 0.0)
 		case "move_west":
-			obj.Properties()["speed_x"] = -speed
-			obj.Properties()["speed_y"] = 0.0
+			obj.SetProperty("speed_x", -speed)
+			obj.SetProperty("speed_y", 0.0)
 		case "move_north_east":
-			obj.Properties()["speed_x"] = axisSpeed
-			obj.Properties()["speed_y"] = axisSpeed
+			obj.SetProperty("speed_x", axisSpeed)
+			obj.SetProperty("speed_y", axisSpeed)
 		case "move_north_west":
-			obj.Properties()["speed_x"] = -axisSpeed
-			obj.Properties()["speed_y"] = axisSpeed
+			obj.SetProperty("speed_x", -axisSpeed)
+			obj.SetProperty("speed_y", axisSpeed)
 		case "move_south_east":
-			obj.Properties()["speed_x"] = axisSpeed
-			obj.Properties()["speed_y"] = -axisSpeed
+			obj.SetProperty("speed_x", axisSpeed)
+			obj.SetProperty("speed_y", -axisSpeed)
 		case "move_south_west":
-			obj.Properties()["speed_x"] = -axisSpeed
-			obj.Properties()["speed_y"] = -axisSpeed
+			obj.SetProperty("speed_x", -axisSpeed)
+			obj.SetProperty("speed_y", -axisSpeed)
 	}
 
 	// this is required to determine where character/mob looks, when stopped

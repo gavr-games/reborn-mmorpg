@@ -11,7 +11,7 @@ func ClaimTeleport(e entity.IEngine, params map[string]interface{}) bool {
 	if player, ok := e.Players().Load(playerId); ok {
 		if charGameObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
 			charGameObj.(entity.ICharacterObject).DeselectTarget(e)
-			if obelisk, obeliskOk := e.GameObjects().Load(charGameObj.Properties()["claim_obelisk_id"].(string)); obeliskOk {
+			if obelisk, obeliskOk := e.GameObjects().Load(charGameObj.GetProperty("claim_obelisk_id").(string)); obeliskOk {
 				if obelisk == nil {
 					e.SendSystemMessage("You don't have a claim.", player)
 					return false

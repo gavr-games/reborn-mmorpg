@@ -6,7 +6,7 @@ import (
 )
 
 func (shovel *ShovelObject) Dig(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
 		// Check again
 		if !shovel.CheckDig(e, charGameObj) {

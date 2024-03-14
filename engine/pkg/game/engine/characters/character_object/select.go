@@ -8,7 +8,7 @@ import (
 
 func (obj *CharacterObject) SelectTarget(e entity.IEngine, targetId string) bool {
 	if target, targetOk := e.GameObjects().Load(targetId); targetOk {
-		if playerId, found := obj.Properties()["player_id"]; found {
+		if playerId := obj.GetProperty("player_id"); playerId != nil {
 			playerIdInt := playerId.(int)
 			if player, ok := e.Players().Load(playerIdInt); ok {
 				return selectTarget(e, obj, target, player)
@@ -38,7 +38,7 @@ func selectTarget(e entity.IEngine, obj entity.IGameObject, target entity.IGameO
 		return false
 	}
 
-	if targetable, ok := target.Properties()["targetable"]; ok {
+	if targetable := target.GetProperty("targetable"); targetable != nil {
 		if !targetable.(bool) {
 			if player != nil {
 				e.SendSystemMessage("Cannot target this object.", player)
@@ -53,13 +53,11 @@ func selectTarget(e entity.IEngine, obj entity.IGameObject, target entity.IGameO
 	}
 
 	// deselect previous target
-	if oldTargetId, ok := obj.Properties()["target_id"]; ok {
-		if oldTargetId != nil {
-			obj.(entity.ICharacterObject).DeselectTarget(e)
-		}
+	if oldTargetId := obj.GetProperty("target_id"); oldTargetId != nil {
+		obj.(entity.ICharacterObject).DeselectTarget(e)
 	}
 
-	obj.Properties()["target_id"] = target.Id()
+	obj.SetProperty("target_id", target.Id())
 	storage.GetClient().Updates <- obj.Clone()
 
 	if player != nil {

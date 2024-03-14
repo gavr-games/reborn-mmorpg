@@ -8,7 +8,7 @@ import (
 )
 
 func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
-	charGameObj.Properties()["health"] = charGameObj.Properties()["max_health"]
+	charGameObj.SetProperty("health", charGameObj.GetProperty("max_health"))
 	charGameObj.DeselectTarget(e)
 	
 	// Cancel delayed action

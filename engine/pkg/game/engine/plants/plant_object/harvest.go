@@ -8,9 +8,9 @@ import (
 )
 
 func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -35,7 +35,7 @@ func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObje
 		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
 			return false
 		}
-		resources := plant.Properties()["resources"].(map[string]interface{})
+		resources := plant.GetProperty("resources").(map[string]interface{})
 		for resourceKey, amount := range resources {
 			for i := 0; i < int(amount.(float64)); i++ {
 				resourceObj := e.CreateGameObject(fmt.Sprintf("resource/%s", resourceKey), charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)

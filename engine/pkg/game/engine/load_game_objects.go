@@ -13,15 +13,15 @@ func LoadGameObjects(e entity.IEngine) {
 		}
 		// init player
 		if gameObj.Kind() == "player" {
-			playerId := int(gameObj.Properties()["player_id"].(float64))
-			gameObj.Properties()["player_id"] = playerId
+			playerId := int(gameObj.GetProperty("player_id").(float64))
+			gameObj.SetProperty("player_id", playerId)
 			e.Players().Store(playerId, &entity.Player{
 				Id: playerId,
 				CharacterGameObjectId: gameObj.Id(),
 				VisionAreaGameObjectId: "",
 				Client: nil,
 			})
-			gameObj.Properties()["visible"] = false
+			gameObj.SetProperty("visible", false)
 		}
 		// init effects
 		for effectId, effect := range gameObj.Effects() {

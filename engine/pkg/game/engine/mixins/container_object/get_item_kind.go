@@ -7,7 +7,7 @@ import (
 // Checks if container has specified itemKind and return first
 func (cont *ContainerObject) GetItemKind(e entity.IEngine, itemKind string) entity.IGameObject {
 	container := cont.gameObj
-	itemIds := container.Properties()["items_ids"].([]interface{})
+	itemIds := container.GetProperty("items_ids").([]interface{})
 
 	for _, itemId := range itemIds {
 		if itemId != nil {

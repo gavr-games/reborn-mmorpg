@@ -22,17 +22,19 @@ func (cont *ContainerObject) Remove(e entity.IEngine, player *entity.Player, ite
 		return false
 	}
 
-	itemPosition := slices.IndexFunc(container.Properties()["items_ids"].([]interface{}), func(id interface{}) bool { return id != nil && id.(string) == itemId })
+	itemPosition := slices.IndexFunc(container.GetProperty("items_ids").([]interface{}), func(id interface{}) bool { return id != nil && id.(string) == itemId })
 	if (itemPosition == -1) {
 		e.SendSystemMessage("Item is not found in container", player)
 	}
 
-	container.Properties()["items_ids"].([]interface{})[itemPosition] = nil
-	container.Properties()["free_capacity"] = container.Properties()["free_capacity"].(float64) + 1
-	item.Properties()["container_id"] = nil
+	contItemsIds := container.GetProperty("items_ids").([]interface{})
+	contItemsIds[itemPosition] = nil
+	container.SetProperty("items_ids", contItemsIds)
+	container.SetProperty("free_capacity", container.GetProperty("free_capacity").(float64) + 1)
+	item.SetProperty("container_id", nil)
 	if item.Type() == "container" {
-		item.Properties()["owner_id"] = nil
-		item.Properties()["parent_container_id"] = nil
+		item.SetProperty("owner_id", nil)
+		item.SetProperty("parent_container_id", nil)
 	}
 
 	// Save game objects updates to storage

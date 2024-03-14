@@ -114,7 +114,7 @@ func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseTy
 
 	for _, obj := range intersectingObjects {
 		if obj.(entity.IGameObject).Type() == "player" && obj.(entity.IGameObject).Kind() == "player_vision_area" {
-			playerId := obj.(entity.IGameObject).Properties()["player_id"].(int)
+			playerId := obj.(entity.IGameObject).GetProperty("player_id").(int)
 			if player, ok := e.Players().Load(playerId); ok {
 				if player.Client != nil {
 					select {
@@ -208,7 +208,7 @@ func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation 
 	}
 	if additionalProps != nil {
 		for k, v := range additionalProps {
-			gameObj.Properties()[k] = v
+			gameObj.SetProperty(k, v)
 		}
 	}
 
@@ -223,7 +223,7 @@ func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation 
 		storage.GetClient().Updates <- gameObj.Clone()
 	}
 
-	if gameObj.Properties()["type"].(string) == "mob" {
+	if gameObj.Type() == "mob" {
 		e.Mobs().Store(gameObj.Id(), gameObj.(entity.IMobObject))
 	}
 

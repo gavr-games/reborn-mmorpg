@@ -9,9 +9,9 @@ import (
 )
 
 func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -29,7 +29,7 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 		}
 
 		// Create plant resource
-		resources := plant.Properties()["resources"].(map[string]interface{})
+		resources := plant.GetProperty("resources").(map[string]interface{})
 		resourceKey := ""
 		for k, _ := range resources {
 			resourceKey = k
@@ -49,6 +49,7 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 
 		// Decrease resources stored in the cactus
 		resources[resourceKey] = resources[resourceKey].(float64) - 1.0
+		plant.SetProperty("resources", resources)
 
 		// Remove plant if no resource inside
 		if resources[resourceKey].(float64) <= 0 {

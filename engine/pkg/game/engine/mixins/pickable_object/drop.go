@@ -14,7 +14,7 @@ func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
 	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
 		return false
 	}
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 	// check equipped
 	for _, slotItemId := range slots {
@@ -25,8 +25,8 @@ func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
 	}
 	
 	// check container belongs to character
-	if (item.Properties()["container_id"] != nil) {
-		if container, contOk = e.GameObjects().Load(item.Properties()["container_id"].(string)); !contOk {
+	if containerId := item.GetProperty("container_id"); containerId != nil {
+		if container, contOk = e.GameObjects().Load(containerId.(string)); !contOk {
 			return false
 		}
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
@@ -44,7 +44,7 @@ func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
 
 	// Drop into the world
 	item.SetFloor(charGameObj.Floor())
-	item.Properties()["visible"] = true
+	item.SetProperty("visible", true)
 	item.SetX(charGameObj.X())
 	item.SetY(charGameObj.Y())
 	e.Floors()[item.Floor()].Insert(item)

@@ -6,16 +6,13 @@ import (
 )
 
 func (obj *CharacterObject) DeselectTarget(e entity.IEngine) bool {
-	targetId, ok := obj.Properties()["target_id"]
-	if !ok {
-		return true
-	}
+	targetId := obj.GetProperty("target_id")
 
 	if targetId == nil {
 		return true
 	}
 
-	if playerId, found := obj.Properties()["player_id"]; found {
+	if playerId := obj.GetProperty("player_id"); playerId != nil {
 		playerIdInt := playerId.(int)
 		if player, ok := e.Players().Load(playerIdInt); ok {
 			e.SendResponse("deselect_target", map[string]interface{}{
@@ -24,7 +21,7 @@ func (obj *CharacterObject) DeselectTarget(e entity.IEngine) bool {
 		}
 	}
 
-	obj.Properties()["target_id"] = nil
+	obj.SetProperty("target_id", nil)
 	storage.GetClient().Updates <- obj.Clone()
 
 	return true

@@ -8,7 +8,7 @@ import (
 
 // The idea is that character can lift up some items like chests, carry them  and put in another place.
 func (obj *LiftableObject) Lift(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
 		item := obj.gameObj
 
@@ -17,21 +17,20 @@ func (obj *LiftableObject) Lift(e entity.IEngine, charGameObj entity.IGameObject
 			return false
 		}
 
-		if !item.Properties()["liftable"].(bool) {
+		if liftable := item.GetProperty("liftable"); liftable == nil || !liftable.(bool) {
 			e.SendSystemMessage("Wrong item.", player)
 			return false
 		}
 		
 		// Check already lifted something
-		liftedObjectId, propExists := charGameObj.Properties()["lifted_object_id"]
-		if propExists && liftedObjectId != nil {
+		
+		if liftedObjectId := charGameObj.GetProperty("lifted_object_id"); liftedObjectId != nil {
 			e.SendSystemMessage("You are already carrying something.", player)
 			return false
 		}
 
 		// Check already lifted by someone
-		liftedBy, propExists2 := item.Properties()["lifted_by"]
-		if propExists2 && liftedBy != nil {
+		if liftedBy := item.GetProperty("lifted_by"); liftedBy != nil {
 			e.SendSystemMessage("Item is already lifted.", player)
 			return false
 		}
@@ -49,9 +48,9 @@ func (obj *LiftableObject) Lift(e entity.IEngine, charGameObj entity.IGameObject
 		}
 
 		// Update lifted_by and lifted_object_id
-		charGameObj.Properties()["lifted_object_id"] = item.Id()
-		item.Properties()["lifted_by"] = charGameObj.Id()
-		item.Properties()["collidable"] = false
+		charGameObj.SetProperty("lifted_object_id", item.Id())
+		item.SetProperty("lifted_by", charGameObj.Id())
+		item.SetProperty("collidable", false)
 		e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
 			return item.Id() == b.(entity.IGameObject).Id()
 		})

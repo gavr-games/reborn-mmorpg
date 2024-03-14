@@ -5,7 +5,7 @@ import (
 )
 
 func (charGameObj *CharacterObject) HasTypeEquipped(e entity.IEngine, itemType string) (entity.IGameObject, bool) {
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 	
 	for _, slotItemId := range slots {
 		if slotItemId != nil {

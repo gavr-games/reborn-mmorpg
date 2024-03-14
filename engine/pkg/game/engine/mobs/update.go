@@ -17,8 +17,8 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 			mobObj.(entity.IMovingObject).PerformMoveTo(e, tickDelta)
 
 			// Move mobs
-			speedX := mobObj.Properties()["speed_x"].(float64)
-			speedY := mobObj.Properties()["speed_y"].(float64)
+			speedX := mobObj.GetProperty("speed_x").(float64)
+			speedY := mobObj.GetProperty("speed_y").(float64)
 			if speedX != 0 || speedY != 0 {
 				dx := speedX / 1000.0 * float64(tickDelta)
 				dy := speedY / 1000.0 * float64(tickDelta)

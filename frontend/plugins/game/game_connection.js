@@ -10,7 +10,7 @@ class GameConnnection {
     if (window.WebSocket) {
       this.conn = new WebSocket('ws://' + document.location.host + '/engine/ws?token=' + token + '&character_id=' + characterId)
       this.conn.onclose = function (evt) {
-        window.location.href = '/characters'
+        window.location.href = '/login'
       }
       this.conn.onmessage = function (evt) {
         const messages = evt.data.split('\n')

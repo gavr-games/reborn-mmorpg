@@ -5,13 +5,13 @@ import (
 )
 
 func (cont *ContainerObject) PutOrDrop(e entity.IEngine, charGameObj entity.IGameObject, itemId string, position int) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
 		container := cont.gameObj
 		if item, itemOk := e.GameObjects().Load(itemId); itemOk {
 			if !container.(entity.IContainerObject).Put(e, player, itemId, position) {
 				item.SetFloor(charGameObj.Floor())
-				item.Properties()["visible"] = true
+				item.SetProperty("visible", true)
 				e.Floors()[item.Floor()].Insert(item)
 				e.SendGameObjectUpdate(item, "add_object")
 				e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{

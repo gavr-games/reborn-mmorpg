@@ -9,7 +9,7 @@ import (
 )
 
 func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY float64) {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
 		if visionAreaGameObj, visionAreaOk := e.GameObjects().Load(player.VisionAreaGameObjectId); visionAreaOk {
 			e.Floors()[charGameObj.Floor()].FilteredRemove(charGameObj, func(b utils.IBounds) bool {
@@ -30,8 +30,8 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 			e.Floors()[visionAreaGameObj.Floor()].Insert(visionAreaGameObj)
 
 			// Update lifted item
-			liftedObjectId, propExists := charGameObj.Properties()["lifted_object_id"]
-			if propExists && liftedObjectId != nil {
+			liftedObjectId := charGameObj.GetProperty("lifted_object_id")
+			if liftedObjectId != nil {
 				if liftedObj, liftOk := e.GameObjects().Load(liftedObjectId.(string)); liftOk {
 					if liftedObj != nil {
 						e.Floors()[liftedObj.Floor()].FilteredRemove(liftedObj, func(b utils.IBounds) bool {

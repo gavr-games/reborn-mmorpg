@@ -26,7 +26,7 @@ func calcItemsKinds(e entity.IEngine, container entity.IGameObject, itemsCounts 
 		item entity.IGameObject
 		itemOk bool
 	)
-	itemIds := container.Properties()["items_ids"].([]interface{})
+	itemIds := container.GetProperty("items_ids").([]interface{})
 
 	for _, itemId := range itemIds {
 		if itemId != nil {
@@ -35,13 +35,13 @@ func calcItemsKinds(e entity.IEngine, container entity.IGameObject, itemsCounts 
 			}
 			itemKind := item.Kind()
 			itemStackable := false
-			if value, ok := item.Properties()["stackable"]; ok {
-				itemStackable = value.(bool)
+			if stackable := item.GetProperty("stackable"); stackable != nil {
+				itemStackable = stackable.(bool)
 			}
 			// If item stackable check item has enough "amount", otherwise count items as 1 per each game_object
 			if slices.Contains(itemsKinds, itemKind) {
 				if itemStackable {
-					if item.Properties()["amount"].(float64) >= itemsCounts[itemKind] {
+					if item.GetProperty("amount").(float64) >= itemsCounts[itemKind] {
 						itemsCounts[itemKind] = 0.0
 					}
 				} else {

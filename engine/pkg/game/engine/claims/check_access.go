@@ -24,10 +24,10 @@ func CheckAccess(e entity.IEngine, charGameObj entity.IGameObject, targetObj ent
 					obelisk, owner entity.IGameObject
 					obeliskOk, ownerOk bool
 				)
-				if obelisk, obeliskOk = e.GameObjects().Load(obj.Properties()["claim_obelisk_id"].(string)); !obeliskOk {
+				if obelisk, obeliskOk = e.GameObjects().Load(obj.GetProperty("claim_obelisk_id").(string)); !obeliskOk {
 					return false
 				}
-				if owner, ownerOk = e.GameObjects().Load(obelisk.Properties()["crafted_by_character_id"].(string)); !ownerOk {
+				if owner, ownerOk = e.GameObjects().Load(obelisk.GetProperty("crafted_by_character_id").(string)); !ownerOk {
 					return false
 				}
 				return owner.Id() == charGameObj.Id()

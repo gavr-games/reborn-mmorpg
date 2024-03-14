@@ -11,7 +11,7 @@ func GetVisibleObjects(e entity.IEngine, floor int, bounds utils.Bounds) []utils
 	// Filter visible objects
 	n := 0
 	for _, val := range visibleObjects {
-		if visible, ok := val.(entity.IGameObject).Properties()["visible"]; ok {
+		if visible := val.(entity.IGameObject).GetProperty("visible"); visible != nil {
 			if visible.(bool) {
 				visibleObjects[n] = val
 				n++

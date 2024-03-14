@@ -18,8 +18,9 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 		return false
 	}
 	
-	if (item.Properties()["container_id"] != nil) {
-		if container, contOk = e.GameObjects().Load(item.Properties()["container_id"].(string)); !contOk {
+	containerId := item.GetProperty("container_id")
+	if containerId != nil {
+		if container, contOk = e.GameObjects().Load(containerId.(string)); !contOk {
 			return false
 		}
 		// check container belongs to character
@@ -29,14 +30,15 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 		}
 
 		// Remove from container
-		if (item.Properties()["container_id"] != nil) {
+		if containerId != nil {
 			if !container.(entity.IContainerObject).Remove(e, player, item.Id()) {
 				return false
 			}
 		}
 
 		// Check same group effect is already applied and remove
-		effectGroup := item.Properties()["effect"].(map[string]interface{})["group"].(string)
+		itemEffectMap := item.GetProperty("effect").(map[string]interface{})
+		effectGroup := itemEffectMap["group"].(string)
 		for effectId, effect := range obj.Effects() {
 			if effect.(map[string]interface{})["group"].(string) == effectGroup {
 				effects.Remove(e, effectId, obj)
@@ -45,8 +47,8 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 
 		// Apply effect
 		effectId := uuid.NewV4().String()
-		obj.SetEffect(effectId, utils.CopyMap(item.Properties()["effect"].(map[string]interface{})))
-		effectMap := utils.CopyMap(item.Properties()["effect"].(map[string]interface{}))
+		obj.SetEffect(effectId, utils.CopyMap(itemEffectMap))
+		effectMap := utils.CopyMap(itemEffectMap)
 		effectMap["id"] = effectId
 		effectMap["target_id"] = obj.Id()
 		e.Effects().Store(effectId, effectMap)

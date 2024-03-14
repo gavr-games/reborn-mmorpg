@@ -5,9 +5,9 @@ import (
 )
 
 func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -20,8 +20,8 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 		}
 
 		// get required resources amounts
-		resourceKey := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
-		resourceAmount := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
+		resourceKey := npcObj.GetProperty("sells").(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
+		resourceAmount := npcObj.GetProperty("sells").(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
 
 		var (
 			container entity.IGameObject
@@ -51,9 +51,9 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 			"visible": false,
 		})
 
-		if isStackable, ok := itemObj.Properties()["stackable"]; ok {
+		if isStackable := itemObj.GetProperty("stackable"); isStackable != nil {
 			if isStackable.(bool) {
-				itemObj.Properties()["amount"] = amount
+				itemObj.SetProperty("amount", amount)
 				return container.(entity.IContainerObject).PutOrDrop(e, charGameObj, itemObj.Id(), -1)
 			}
 		}

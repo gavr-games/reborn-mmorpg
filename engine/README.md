@@ -6,7 +6,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 ## TODO
 - move init/move vision area to goroutine
 - move send update to vision areas to goroutine
-- refactor GameObject to xsync
 - add baby dragons and raising them
 - add dragon breeding to get new eggs
 - add fighting and leveling dragins

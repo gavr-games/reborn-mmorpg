@@ -7,9 +7,9 @@ import (
 )
 
 func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
+	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -37,8 +37,9 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 		}
 
 		// Decrease logs stored in the tree
-		resources := tree.Properties()["resources"].(map[string]interface{})
+		resources := tree.GetProperty("resources").(map[string]interface{})
 		resources["log"] = resources["log"].(float64) - 1.0
+		tree.SetProperty("resources", resources)
 
 		// Remove tree if no logs inside
 		if resources["log"].(float64) <= 0 {

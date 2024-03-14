@@ -15,7 +15,7 @@ func (obj *EquipableObject) Unequip(e entity.IEngine, player *entity.Player) boo
 	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
 		return false
 	}
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 	if item == nil {
 		e.SendSystemMessage("Wrong item.", player)
@@ -41,7 +41,7 @@ func (obj *EquipableObject) Unequip(e entity.IEngine, player *entity.Player) boo
 	}
 
 	// put to container
-	if (item.Properties()["container_id"] == nil) {
+	if (item.GetProperty("container_id") == nil) {
 		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
 			return false
 		}
@@ -52,6 +52,7 @@ func (obj *EquipableObject) Unequip(e entity.IEngine, player *entity.Player) boo
 	
 	// Remove from slot
 	slots[itemSlotKey] = nil
+	charGameObj.SetProperty("slots", slots)
 	storage.GetClient().Updates <- charGameObj.Clone()
 	
 	e.SendResponseToVisionAreas(charGameObj, "unequip_item", map[string]interface{}{

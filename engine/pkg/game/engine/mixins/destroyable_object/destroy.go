@@ -14,7 +14,7 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
 		return false
 	}
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 	// check equipped
 	for _, slotItemId := range slots {
@@ -25,8 +25,9 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 	}
 
 	// check container belongs to character
-	if (item.Properties()["container_id"] != nil) {
-		if container, contOk = e.GameObjects().Load(item.Properties()["container_id"].(string)); !contOk {
+	
+	if containerId := item.GetProperty("container_id"); containerId != nil {
+		if container, contOk = e.GameObjects().Load(containerId.(string)); !contOk {
 			return false
 		}
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
@@ -40,7 +41,7 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 
 	// Destroy items inside container
 	if (item.Type() == "container") {
-		itemIds := item.Properties()["items_ids"].([]interface{})
+		itemIds := item.GetProperty("items_ids").([]interface{})
 		for _, itemId := range itemIds {
 			if itemId != nil {
 				if itemInside, itemInsideOk := e.GameObjects().Load(itemId.(string)); itemInsideOk {

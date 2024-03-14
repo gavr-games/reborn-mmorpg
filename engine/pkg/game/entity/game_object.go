@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"go.uber.org/atomic"
 	"math"
+	"reflect"
 	"sync"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
@@ -196,7 +197,7 @@ func (obj *GameObject) SetCurrentAction(currentAction *DelayedAction) {
 func (obj *GameObject) Properties() map[string]interface{} {
 	obj.propsMutex.RLock()
 	defer obj.propsMutex.RUnlock()
-	return obj.properties
+	return utils.CopyMap(obj.properties) // returns a copy of map, so external code could work without Mutex Lock (no parallel access to original properties map)
 }
 
 func (obj *GameObject) SetProperties(properties map[string]interface{}) {
@@ -208,7 +209,23 @@ func (obj *GameObject) SetProperties(properties map[string]interface{}) {
 func (obj *GameObject) GetProperty(key string) interface{} {
 	obj.propsMutex.RLock()
 	defer obj.propsMutex.RUnlock()
-	return obj.properties[key]
+	value := obj.properties[key]
+	if value == nil {
+		return nil
+	}
+	// We want to create copies of maps and slices, so they stay "immutable" and allow safe parallel access
+	switch reflect.TypeOf(value).Kind() {
+	case reflect.Map:
+		return utils.CopyMap(value.(map[string]interface{}))
+	case reflect.Slice:
+		var slice []interface{} = make([]interface{}, len(value.([]interface{})))
+		for k, v := range value.([]interface{}) {
+			slice[k] = v
+		}
+		return slice
+	default:
+		return value
+	}
 }
 
 func (obj *GameObject) SetProperty(key string, value interface{}) {
@@ -220,7 +237,7 @@ func (obj *GameObject) SetProperty(key string, value interface{}) {
 func (obj *GameObject) Effects() map[string]interface{} {
 	obj.effectsMutex.RLock()
 	defer obj.effectsMutex.RUnlock()
-	return utils.CopyMap(obj.effects) // returns a copy of map, so external code could work without Mutex Lock  (no parallel access to original effects map)
+	return utils.CopyMap(obj.effects) // returns a copy of map, so external code could work without Mutex Lock (no parallel access to original effects map)
 }
 
 func (obj *GameObject) SetEffects(effects map[string]interface{}) {

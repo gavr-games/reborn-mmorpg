@@ -40,7 +40,9 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 		additionalProps := make(map[string]interface{})
 		additionalProps["owner_id"] = charGameObj.Id()
 		initialBackpack := e.CreateGameObject("container/backpack", charGameObj.X(), charGameObj.Y(), 0.0, -1, additionalProps)
-		charGameObj.Properties()["slots"].(map[string]interface{})["back"] = initialBackpack.Id()
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
+		slots["back"] = initialBackpack.Id()
+		charGameObj.SetProperty("slots", slots)
 		// Axe
 		initialAxe := e.CreateGameObject("axe/axe", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 		initialBackpack.(entity.IContainerObject).Put(e, player, initialAxe.Id(), -1)
@@ -60,7 +62,7 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 		} else {
 			CreatePlayerVisionArea(e, player)
 			if charGameObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
-				charGameObj.Properties()["visible"] = true
+				charGameObj.SetProperty("visible", true)
 			}
 		}
 		player.Client = client
@@ -87,10 +89,10 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 				// Send character obj to another players
 				e.SendGameObjectUpdate(charGameObj, "add_object")
 				// Show lifted object
-				if liftedObjectId, ok := charGameObj.Properties()["lifted_object_id"]; ok && liftedObjectId != nil {
+				if liftedObjectId := charGameObj.GetProperty("lifted_object_id"); liftedObjectId != nil {
 					if liftedObj, liftedObjOk := e.GameObjects().Load(liftedObjectId.(string)); liftedObjOk {
 						if liftedObj != nil {
-							liftedObj.Properties()["visible"] = true
+							liftedObj.SetProperty("visible", true)
 							e.SendGameObjectUpdate(liftedObj, "add_object")
 						}
 					}

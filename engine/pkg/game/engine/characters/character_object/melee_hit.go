@@ -9,13 +9,9 @@ import (
 
 // Tries to hit target with the melee weapon
 func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
-	playerId := obj.Properties()["player_id"].(int)
+	playerId := obj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
-		targetId, ok := obj.Properties()["target_id"]
-		if !ok {
-			e.SendSystemMessage("No target to hit.", player)
-			return false
-		}
+		targetId := obj.GetProperty("target_id")
 
 		if targetId == nil {
 			e.SendSystemMessage("No target to hit.", player)
@@ -41,15 +37,15 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 
 		// Check Cooldown
 		// here we cast everything to float64, because go restores from json everything as float64
-		lastHitAt, hitted := weapon.Properties()["last_hit_at"]
-		if hitted {
-			if float64(utils.MakeTimestamp())-lastHitAt.(float64) >= weapon.Properties()["cooldown"].(float64) {
-				weapon.Properties()["last_hit_at"] = float64(utils.MakeTimestamp())
+		lastHitAt := weapon.GetProperty("last_hit_at")
+		if lastHitAt != nil {
+			if float64(utils.MakeTimestamp())-lastHitAt.(float64) >= weapon.GetProperty("cooldown").(float64) {
+				weapon.SetProperty("last_hit_at", float64(utils.MakeTimestamp()))
 			} else {
 				return false
 			}
 		} else {
-			weapon.Properties()["last_hit_at"] = float64(utils.MakeTimestamp())
+			weapon.SetProperty("last_hit_at", float64(utils.MakeTimestamp()))
 		}
 
 		// Send hit attempt to client
@@ -64,24 +60,25 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 		}
 
 		// deduct health and update object
-		targetObj.Properties()["health"] = targetObj.Properties()["health"].(float64) - weapon.Properties()["damage"].(float64)
-		if targetObj.Properties()["health"].(float64) <= 0.0 {
-			targetObj.Properties()["health"] = 0.0
+		damage := weapon.GetProperty("damage").(float64)
+		targetObj.SetProperty("health", targetObj.GetProperty("health").(float64) - damage)
+		if targetObj.GetProperty("health").(float64) <= 0.0 {
+			targetObj.SetProperty("health", 0.0)
 		}
 		// Trigger mob to aggro
-		if targetObj.Properties()["type"].(string) == "mob" {
+		if targetObj.Type() == "mob" {
 			if mob, ok := e.Mobs().Load(targetObj.Id()); ok {
 				mob.Attack(obj.Id())
 			}
 		}
 		e.SendGameObjectUpdate(targetObj, "update_object")
 
-		e.SendSystemMessage(fmt.Sprintf("You dealt %d damage to %s.", int(weapon.Properties()["damage"].(float64)), targetObj.Kind()), player)
+		e.SendSystemMessage(fmt.Sprintf("You dealt %d damage to %s.", int(damage), targetObj.Kind()), player)
 
-		// die if health < 0
-		if targetObj.Properties()["health"].(float64) == 0.0 {
+		// die if health == 0
+		if targetObj.GetProperty("health").(float64) == 0.0 {
 			obj.DeselectTarget(e)
-			if targetObj.Properties()["type"].(string) == "mob" {
+			if targetObj.Type() == "mob" {
 				e.SendSystemMessage(fmt.Sprintf("You killed %s.", targetObj.Kind()), player)
 				if mob, ok := e.Mobs().Load(targetObj.Id()); ok {
 					mob.Die()
