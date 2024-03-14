@@ -86,8 +86,10 @@ class MobObserver {
   remove () {
     GameObserver.removeRenderObserver(`mob-${this.state.id}`)
     EventBus.$off('scene-created', this.sceneCreatedCallback)
-    this.healthbar.remove()
-    this.healthbar = null
+    if (this.healthbar) {
+      this.healthbar.remove()
+      this.healthbar = null
+    }
     if (this.targetHighlight) {
       this.targetHighlight.remove()
       this.targetHighlight = null

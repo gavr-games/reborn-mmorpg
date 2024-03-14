@@ -96,6 +96,7 @@ func (e Engine) SendResponse(responseType string, responseData map[string]interf
 // Sends an update named responseType with parameters responseData to all players,
 // who can see the gameObj. In other words their vision areas collide with gameObj X,Y.
 func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
+	go func(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
 	intersectingObjects := e.Floors()[gameObj.Floor()].RetrieveIntersections(utils.Bounds{
 		X:      gameObj.X(),
 		Y:      gameObj.Y(),
@@ -126,6 +127,7 @@ func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseTy
 			}
 		}
 	}
+	}(gameObj, responseType, responseData)
 }
 
 // Send new update of the gameObj to all players who can see it

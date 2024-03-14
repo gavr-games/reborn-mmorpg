@@ -13,7 +13,7 @@ import { EventBus } from '~/plugins/game/event_bus'
 import ChatController from '~/plugins/game/chat/chat_controller'
 import GameObserver from '~/plugins/game/game_observer'
 
-const PING_INTERVAL = 5000
+const PING_INTERVAL = 20000
 
 class GameController {
   constructor () {
@@ -225,10 +225,10 @@ class GameController {
         break
     }
     if (cmd !== this.controls.lastCmd) {
-      EventBus.$emit('emulate-character-move', {
-        cmd,
-        ping: this.ping.reduce((a, b) => a + b) / this.ping.length
-      }) // this helps to predict character movement before server answer and get rid of "jumps" (ping)
+      // EventBus.$emit('emulate-character-move', {
+      //   cmd,
+      //   ping: this.ping.reduce((a, b) => a + b) / this.ping.length
+      // }) // this helps to predict character movement before server answer and get rid of "jumps" (ping)
       GameConnnection.sendCmd(cmd)
       this.controls.lastCmd = cmd
     }
