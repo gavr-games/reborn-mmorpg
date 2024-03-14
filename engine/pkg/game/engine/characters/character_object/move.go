@@ -44,7 +44,7 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 				}
 			}
 
-			updateVisibleObjects(e, player, dx, dy, visionAreaGameObj)
+			go updateVisibleObjects(e, player, dx, dy, visionAreaGameObj)
 		}
 	}
 }
