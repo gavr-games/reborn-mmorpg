@@ -15,19 +15,9 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 			e.Floors()[charGameObj.Floor()].FilteredRemove(charGameObj, func(b utils.IBounds) bool {
 				return charGameObj.Id() == b.(entity.IGameObject).Id()
 			})
-			dx := newX - charGameObj.X()
-			dy := newY - charGameObj.Y()
 			charGameObj.SetX(newX)
 			charGameObj.SetY(newY)
 			e.Floors()[charGameObj.Floor()].Insert(charGameObj)
-
-			// Update vision area game object
-			e.Floors()[visionAreaGameObj.Floor()].FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
-				return visionAreaGameObj.Id() == b.(entity.IGameObject).Id()
-			})
-			visionAreaGameObj.SetX(visionAreaGameObj.X() + dx)
-			visionAreaGameObj.SetY(visionAreaGameObj.Y() + dy)
-			e.Floors()[visionAreaGameObj.Floor()].Insert(visionAreaGameObj)
 
 			// Update lifted item
 			liftedObjectId := charGameObj.GetProperty("lifted_object_id")
@@ -44,7 +34,20 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 				}
 			}
 
-			go updateVisibleObjects(e, player, dx, dy, visionAreaGameObj)
+			// Update vision area game object
+			newVisionAreaX := charGameObj.GetVisionAreaX()
+			newVisionAreaY := charGameObj.GetVisionAreaY()
+			if visionAreaGameObj.X() != newVisionAreaX || visionAreaGameObj.Y() != newVisionAreaY {
+				e.Floors()[visionAreaGameObj.Floor()].FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
+					return visionAreaGameObj.Id() == b.(entity.IGameObject).Id()
+				})
+				visionAreaDx := newVisionAreaX - visionAreaGameObj.X()
+				visionAreaDy := newVisionAreaY - visionAreaGameObj.Y()
+				visionAreaGameObj.SetX(visionAreaGameObj.X() + visionAreaDx)
+				visionAreaGameObj.SetY(visionAreaGameObj.Y() + visionAreaDy)
+				e.Floors()[visionAreaGameObj.Floor()].Insert(visionAreaGameObj)
+				go updateVisibleObjects(e, player, visionAreaDx, visionAreaDy, visionAreaGameObj)
+			}
 		}
 	}
 }
