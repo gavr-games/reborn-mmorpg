@@ -97,36 +97,36 @@ func (e Engine) SendResponse(responseType string, responseData map[string]interf
 // who can see the gameObj. In other words their vision areas collide with gameObj X,Y.
 func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
 	go func(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
-	intersectingObjects := e.Floors()[gameObj.Floor()].RetrieveIntersections(utils.Bounds{
-		X:      gameObj.X(),
-		Y:      gameObj.Y(),
-		Width:  gameObj.Width(),
-		Height: gameObj.Height(),
-	})
-	resp := entity.EngineResponse{
-		ResponseType: responseType,
-		ResponseData: responseData,
-	}
-	message, err := json.Marshal(resp)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+		intersectingObjects := e.Floors()[gameObj.Floor()].RetrieveIntersections(utils.Bounds{
+			X:      gameObj.X(),
+			Y:      gameObj.Y(),
+			Width:  gameObj.Width(),
+			Height: gameObj.Height(),
+		})
+		resp := entity.EngineResponse{
+			ResponseType: responseType,
+			ResponseData: responseData,
+		}
+		message, err := json.Marshal(resp)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 
-	for _, obj := range intersectingObjects {
-		if obj.(entity.IGameObject).Type() == "player" && obj.(entity.IGameObject).Kind() == "player_vision_area" {
-			playerId := obj.(entity.IGameObject).GetProperty("player_id").(int)
-			if player, ok := e.Players().Load(playerId); ok {
-				if player.Client != nil {
-					select {
-					case player.Client.GetSendChannel() <- message:
-					default:
-						engine.UnregisterClient(e, player.Client)
+		for _, obj := range intersectingObjects {
+			if obj.(entity.IGameObject).Type() == "player" && obj.(entity.IGameObject).Kind() == "player_vision_area" {
+				playerId := obj.(entity.IGameObject).GetProperty("player_id").(int)
+				if player, ok := e.Players().Load(playerId); ok {
+					if player.Client != nil {
+						select {
+						case player.Client.GetSendChannel() <- message:
+						default:
+							engine.UnregisterClient(e, player.Client)
+						}
 					}
 				}
 			}
 		}
-	}
 	}(gameObj, responseType, responseData)
 }
 
