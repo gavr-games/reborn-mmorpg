@@ -1,6 +1,7 @@
 # Define variables
 DOCKER_COMPOSE = docker compose
 DOCKER = docker
+FRONTEND_RUNNER = docker compose run --rm frontend
 
 # Containers
 ENGINE_CONTAINER_NAME = $(shell docker ps | grep engine- | rev | cut -d' ' -f1 | rev)
@@ -63,6 +64,23 @@ clean: ## Stop and remove Docker containers
 .PHONY: test-engine
 test-engine: 
 	$(DOCKER_COMPOSE) run --rm engine go test ./pkg/game_test/... -v
+
+.PHONY: lint
+lint: ## Lint all files
+	$(MAKE) lint-front
+
+.PHONY: lint-front
+lint-front: ## Lint all *.js files
+	$(FRONTEND_RUNNER) yarn lint
+
+.PHONY: format
+format: ## Lint all files
+	$(MAKE) format-front
+
+.PHONY: lint-front
+format-front: ## Lint all *.js files
+	$(FRONTEND_RUNNER) yarn fix
+
 
 ##@ Other
 

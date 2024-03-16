@@ -8,34 +8,44 @@ func (obj *PickableObject) PutToContainer(e entity.IEngine, containerId string, 
 	item := obj.gameObj
 
 	//check in container
-	if (item.Properties()["container_id"] == nil) {
+	currentContainerId := item.GetProperty("container_id")
+	if currentContainerId == nil {
 		e.SendSystemMessage("Item must be in container.", player)
 		return false
 	}
 
 	// check container belongs to character
-	if (item.Properties()["container_id"] != nil) {
-		container := e.GameObjects()[item.Properties()["container_id"].(string)]
-		if !container.(entity.IContainerObject).CheckAccess(e, player) {
-			e.SendSystemMessage("You don't have access to this container", player)
+	if currentContainerId != nil {
+		if container, contOk := e.GameObjects().Load(currentContainerId.(string)); contOk {
+			if !container.(entity.IContainerObject).CheckAccess(e, player) {
+				e.SendSystemMessage("You don't have access to this container", player)
+				return false
+			}
+		} else {
 			return false
 		}
 	}
 
 	// remove from container if in container
-	if (item.Properties()["container_id"] != nil) {
-		container := e.GameObjects()[item.Properties()["container_id"].(string)]
-		if !container.(entity.IContainerObject).Remove(e, player, item.Id()) {
-			e.SendSystemMessage("Cannot remove item from container", player)
+	if currentContainerId != nil {
+		if container, contOk := e.GameObjects().Load(currentContainerId.(string)); contOk {
+			if !container.(entity.IContainerObject).Remove(e, player, item.Id()) {
+				e.SendSystemMessage("Cannot remove item from container", player)
+				return false
+			}
+		} else {
 			return false
 		}
 	}
 	
 	// put to container
-	if (item.Properties()["container_id"] == nil) {
-		containerTo := e.GameObjects()[containerId]
-		if !containerTo.(entity.IContainerObject).Put(e, player, item.Id(), pos) {
-			e.SendSystemMessage("Cannot put item to container", player)
+	if item.GetProperty("container_id") == nil {
+		if containerTo, containerToOk := e.GameObjects().Load(containerId); containerToOk {
+			if !containerTo.(entity.IContainerObject).Put(e, player, item.Id(), pos) {
+				e.SendSystemMessage("Cannot put item to container", player)
+				return false
+			}
+		} else {
 			return false
 		}
 	}

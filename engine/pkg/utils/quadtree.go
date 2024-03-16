@@ -1,5 +1,9 @@
 package utils
 
+import (
+	"sync"
+)
+
 // Quadtree - The quadtree data structure
 type Quadtree struct {
 	Bounds     Bounds
@@ -9,67 +13,7 @@ type Quadtree struct {
 	Objects    []IBounds
 	Nodes      []Quadtree
 	Total      int
-}
-
-type IBounds interface {
-	HitBox() Bounds
-	IsPoint() bool
-	Intersects(Bounds) bool
-}
-
-// Bounds - A bounding box with a x,y origin and width and height
-type Bounds struct {
-	X      float64
-	Y      float64
-	Width  float64
-	Height float64
-}
-
-func (b Bounds) HitBox() Bounds {
-	return b
-}
-
-//IsPoint - Checks if a bounds object is a point or not (has no width or height)
-func (b Bounds) IsPoint() bool {
-
-	if b.Width == 0 && b.Height == 0 {
-		return true
-	}
-
-	return false
-
-}
-
-// Intersects - Checks if a Bounds object intersects with another Bounds
-func (b Bounds) Intersects(a Bounds) bool {
-
-	aMaxX := a.X + a.Width
-	aMaxY := a.Y + a.Height
-	bMaxX := b.X + b.Width
-	bMaxY := b.Y + b.Height
-
-	// a is left of b
-	if aMaxX <= b.X {
-		return false
-	}
-
-	// a is right of b
-	if a.X >= bMaxX {
-		return false
-	}
-
-	// a is above b
-	if aMaxY <= b.Y {
-		return false
-	}
-
-	// a is below b
-	if a.Y >= bMaxY {
-		return false
-	}
-
-	// The two overlap
-	return true
+	mu         sync.RWMutex
 }
 
 // TotalNodes - Retrieve the total number of sub-Quadtrees in a Quadtree
@@ -206,6 +150,9 @@ func (qt *Quadtree) getIndex(pRect IBounds) int {
 // Insert - Insert the object into the node. If the node exceeds the capacity,
 // it will split and add all objects to their corresponding subnodes.
 func (qt *Quadtree) Insert(pRect IBounds) {
+	qt.mu.Lock()
+	defer qt.mu.Unlock()
+
 	qt.Total++
 
 	i := 0
@@ -245,6 +192,9 @@ func (qt *Quadtree) Insert(pRect IBounds) {
 
 // Find object in quadtree via filter and removes it
 func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
+	qt.mu.Lock()
+	defer qt.mu.Unlock()
+
 	index := qt.getIndex(pRect)
 
 	//if we have subnodes ...
@@ -278,6 +228,9 @@ func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
 
 // Retrieve - Return all objects that could collide with the given object
 func (qt *Quadtree) Retrieve(pRect IBounds) []IBounds {
+	qt.mu.RLock()
+	defer qt.mu.RUnlock()
+
 	index := qt.getIndex(pRect)
 	// Array with all detected objects
 	returnObjects := qt.Objects
@@ -290,7 +243,9 @@ func (qt *Quadtree) Retrieve(pRect IBounds) []IBounds {
 		} else {
 			//if pRect does not fit into a subnode, check it against all subnodes
 			for i := 0; i < len(qt.Nodes); i++ {
-				returnObjects = append(returnObjects, qt.Nodes[i].Retrieve(pRect)...)
+				if qt.Nodes[i].Bounds.Intersects(pRect.HitBox()) {
+					returnObjects = append(returnObjects, qt.Nodes[i].Retrieve(pRect)...)
+				}
 			}
 		}
 	}

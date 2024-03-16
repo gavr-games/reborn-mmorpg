@@ -6,8 +6,8 @@ import (
 )
 
 func (shovel *ShovelObject) Dig(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	playerId := charGameObj.GetProperty("player_id").(int)
+	if player, ok := e.Players().Load(playerId); ok {
 		// Check again
 		if !shovel.CheckDig(e, charGameObj) {
 			return false
@@ -23,8 +23,7 @@ func (shovel *ShovelObject) Dig(e entity.IEngine, charGameObj entity.IGameObject
 		e.Floors()[grass.Floor()].FilteredRemove(grass, func(b utils.IBounds) bool {
 			return grass.Id() == b.(entity.IGameObject).Id()
 		})
-		e.GameObjects()[grass.Id()] = nil
-		delete(e.GameObjects(), grass.Id())
+		e.GameObjects().Delete(grass.Id())
 		e.SendSystemMessage("You've created some dirt.", player)
 	} else {
 		return false

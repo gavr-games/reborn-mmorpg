@@ -24,7 +24,7 @@ func main() {
 							id := cCtx.String("game_object_id")
 							if id != "" {
 								gameObj := storage.GetClient().GetGameObject(id)
-								gameObj.Properties()["game_master"] = true
+								gameObj.SetProperty("game_master", true)
 								storage.GetClient().SaveGameObject(gameObj)
 								fmt.Println("Player with id=", id, "is now a Game Master")
 								return nil

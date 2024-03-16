@@ -7,10 +7,16 @@ import (
 )
 
 func (obj *EquipableObject) Equip(e entity.IEngine, player *entity.Player) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	item := obj.gameObj
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
-	targetSlots := item.Properties()["target_slots"].(map[string]interface{})
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
+	targetSlots := item.GetProperty("target_slots").(map[string]interface{})
 
 	if item == nil {
 		e.SendSystemMessage("Wrong item.", player)
@@ -39,14 +45,17 @@ func (obj *EquipableObject) Equip(e entity.IEngine, player *entity.Player) bool 
 	}
 
 	//check in container
-	if (item.Properties()["container_id"] == nil) {
+	containerId := item.GetProperty("container_id")
+	if (containerId == nil) {
 		e.SendSystemMessage("First pickup item to equip it.", player)
 		return false
 	}
 
 	// check container belongs to character
-	if (item.Properties()["container_id"] != nil) {
-		container := e.GameObjects()[item.Properties()["container_id"].(string)]
+	if (containerId != nil) {
+		if container, contOk = e.GameObjects().Load(containerId.(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
 			e.SendSystemMessage("You don't have access to this container", player)
 			return false
@@ -59,12 +68,13 @@ func (obj *EquipableObject) Equip(e entity.IEngine, player *entity.Player) bool 
 	
 	// Add to slot
 	slots[freeTargetSlot] = item.Id()
+	charGameObj.SetProperty("slots", slots)
 	storage.GetClient().Updates <- charGameObj.Clone()
 	
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "equip_item", map[string]interface{}{
+	e.SendResponseToVisionAreas(charGameObj, "equip_item", map[string]interface{}{
 		"slot": freeTargetSlot,
 		"character_id": player.CharacterGameObjectId,
-		"item": serializers.GetInfo(e.GameObjects(), item),
+		"item": serializers.GetInfo(e, item),
 	})
 
 	return true

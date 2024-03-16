@@ -6,7 +6,7 @@ import (
 )
 
 func (mob *MobObject) drop() {
-	if drops, ok := mob.Properties()["drop"]; ok {
+	if drops := mob.GetProperty("drop"); drops != nil {
 		for name, dropProperties := range drops.(map[string]interface{}) {
 			probability := rand.Float64()
 			if probability <= dropProperties.(map[string]interface{})["probability"].(float64) {

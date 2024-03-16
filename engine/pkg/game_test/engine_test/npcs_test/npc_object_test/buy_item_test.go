@@ -22,8 +22,9 @@ func TestBuyItem(t *testing.T) {
 	t.Run("Player does not have container", testPlayerDoesNotHaveContainer)
 
 	// Create a container for player
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 	slots["back"] = gameObjectFactory.CreateBackpackGameObject(e, charGameObj).Id()
+	charGameObj.SetProperty("slots", slots)
 
 	// Place player far from NPC
 	charGameObj.SetX(2.0)
@@ -39,7 +40,7 @@ func TestBuyItem(t *testing.T) {
 
 	// Give player enough resources
 	resourceObj := gameObjectFactory.CreateStackableResourceGameObject(e, charGameObj, resourceObjKey, buyingPrice)
-	container := e.GameObjects()[slots["back"].(string)]
+	container, _ := e.GameObjects().Load(slots["back"].(string))
 	container.(entity.IContainerObject).Put(e, player, resourceObj.Id(), -1)
 
 	t.Run("Player bought item successfully", testSuccess)

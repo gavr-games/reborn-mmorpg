@@ -6,17 +6,17 @@ import (
 )
 
 func (hatchery *HatcheryObject) CheckHatch(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	resources := hatchery.Properties()["hatching_resources"].(map[string]interface{})
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	resources := hatchery.GetProperty("hatching_resources").(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
-	playerId := charGameObj.Properties()["player_id"].(int)
-	player := e.Players()[playerId]
-	if player == nil {
+	playerId := charGameObj.GetProperty("player_id").(int)
+	player, ok := e.Players().Load(playerId)
+	if player == nil || !ok {
 		return false
 	}
 
 	// check object type
-	if hatchery.Properties()["type"].(string) != "hatchery" {
+	if hatchery.Type() != "hatchery" {
 		e.SendSystemMessage("Please choose hatchery.", player)
 		return false
 	}
@@ -46,7 +46,13 @@ func (hatchery *HatcheryObject) CheckHatch(e entity.IEngine, charGameObj entity.
 			return false
 		}
 
-		container := e.GameObjects()[slots["back"].(string)]
+		var (
+			container entity.IGameObject
+			contOk bool
+		)
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 
 		// check container has items
 		if !container.(entity.IContainerObject).HasItemsKinds(e, resources) {

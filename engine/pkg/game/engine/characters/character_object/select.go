@@ -7,17 +7,19 @@ import (
 )
 
 func (obj *CharacterObject) SelectTarget(e entity.IEngine, targetId string) bool {
-	target := e.GameObjects()[targetId]
-
-	if playerId, found := obj.Properties()["player_id"]; found {
-		playerIdInt := playerId.(int)
-		if player, ok := e.Players()[playerIdInt]; ok {
-			return selectTarget(e, obj, target, player)
+	if target, targetOk := e.GameObjects().Load(targetId); targetOk {
+		if playerId := obj.GetProperty("player_id"); playerId != nil {
+			playerIdInt := playerId.(int)
+			if player, ok := e.Players().Load(playerIdInt); ok {
+				return selectTarget(e, obj, target, player)
+			} else {
+				return false
+			}
 		} else {
-			return false
+			return selectTarget(e, obj, target, nil)
 		}
 	} else {
-		return selectTarget(e, obj, target, nil)
+		return false
 	}
 }
 
@@ -36,7 +38,7 @@ func selectTarget(e entity.IEngine, obj entity.IGameObject, target entity.IGameO
 		return false
 	}
 
-	if targetable, ok := target.Properties()["targetable"]; ok {
+	if targetable := target.GetProperty("targetable"); targetable != nil {
 		if !targetable.(bool) {
 			if player != nil {
 				e.SendSystemMessage("Cannot target this object.", player)
@@ -51,17 +53,15 @@ func selectTarget(e entity.IEngine, obj entity.IGameObject, target entity.IGameO
 	}
 
 	// deselect previous target
-	if oldTargetId, ok := obj.Properties()["target_id"]; ok {
-		if oldTargetId != nil {
-			obj.(entity.ICharacterObject).DeselectTarget(e)
-		}
+	if oldTargetId := obj.GetProperty("target_id"); oldTargetId != nil {
+		obj.(entity.ICharacterObject).DeselectTarget(e)
 	}
 
-	obj.Properties()["target_id"] = target.Id()
+	obj.SetProperty("target_id", target.Id())
 	storage.GetClient().Updates <- obj.Clone()
 
 	if player != nil {
-		e.SendResponse("select_target", serializers.GetInfo(e.GameObjects(), target), player)
+		e.SendResponse("select_target", serializers.GetInfo(e, target), player)
 	}
 
 	return true

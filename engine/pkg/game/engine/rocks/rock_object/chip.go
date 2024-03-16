@@ -7,9 +7,9 @@ import (
 )
 
 func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	playerId := charGameObj.GetProperty("player_id").(int)
+	if player, ok := e.Players().Load(playerId); ok {
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -29,22 +29,25 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 		// Create stone
 		stoneObj := e.CreateGameObject("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
-		container := e.GameObjects()[slots["back"].(string)]
-		container.(entity.IContainerObject).PutOrDrop(e, charGameObj, stoneObj.Id(), -1)
+		if container, contOk := e.GameObjects().Load(slots["back"].(string)); contOk {
+			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, stoneObj.Id(), -1)
+		} else {
+			return false
+		}
 
 		// Decrease stones stored in the rock
-		resources := rock.Properties()["resources"].(map[string]interface{})
+		resources := rock.GetProperty("resources").(map[string]interface{})
 		resources["stone"] = resources["stone"].(float64) - 1.0
+		rock.SetProperty("resources", resources)
 
 		// Remove rock if no stones inside
 		if resources["stone"].(float64) <= 0 {
 			e.SendGameObjectUpdate(rock, "remove_object")
 
-			e.Floors()[rock.Floor()].FilteredRemove(e.GameObjects()[rock.Id()], func(b utils.IBounds) bool {
+			e.Floors()[rock.Floor()].FilteredRemove(rock, func(b utils.IBounds) bool {
 				return rock.Id() == b.(entity.IGameObject).Id()
 			})
-			e.GameObjects()[rock.Id()] = nil
-			delete(e.GameObjects(), rock.Id())
+			e.GameObjects().Delete(rock.Id())
 		} else {
 			storage.GetClient().Updates <- rock.Clone()
 		}

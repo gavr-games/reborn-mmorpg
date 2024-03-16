@@ -7,7 +7,7 @@ import (
 
 func (plant *PlantObject) Grow(e entity.IEngine) bool {
 	// Create next plant
-	if growsInto, ok := plant.Properties()["grows_into"]; ok {
+	if growsInto := plant.GetProperty("grows_into"); growsInto != nil {
 		nextPlant := e.CreateGameObject(growsInto.(string), plant.X(), plant.Y(), 0.0, plant.Floor(), nil)
 		e.SendResponseToVisionAreas(nextPlant, "add_object", map[string]interface{}{
 			"object": nextPlant,
@@ -17,11 +17,10 @@ func (plant *PlantObject) Grow(e entity.IEngine) bool {
 	// Remove plant
 	e.SendGameObjectUpdate(plant, "remove_object")
 
-	e.Floors()[plant.Floor()].FilteredRemove(e.GameObjects()[plant.Id()], func(b utils.IBounds) bool {
+	e.Floors()[plant.Floor()].FilteredRemove(plant, func(b utils.IBounds) bool {
 		return plant.Id() == b.(entity.IGameObject).Id()
 	})
-	e.GameObjects()[plant.Id()] = nil
-	delete(e.GameObjects(), plant.Id())
+	e.GameObjects().Delete(plant.Id())
 
 	return true
 }

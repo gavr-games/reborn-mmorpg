@@ -10,8 +10,8 @@ const (
 )
 
 func (shovel *ShovelObject) CheckDig(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	playerId := charGameObj.GetProperty("player_id").(int)
+	if player, ok := e.Players().Load(playerId); ok {
 		// Check shovel equipped
 		if _, equipped := charGameObj.(entity.ICharacterObject).HasTypeEquipped(e, "shovel"); !equipped {
 			e.SendSystemMessage("You need to equip shovel.", player)

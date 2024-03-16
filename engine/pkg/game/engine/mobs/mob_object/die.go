@@ -12,11 +12,9 @@ func (mob *MobObject) Die() {
 	mob.Engine.Floors()[mob.Floor()].FilteredRemove(mob, func(b utils.IBounds) bool {
 			return mob.Id() == b.(entity.IGameObject).Id()
 	})
-	mob.Engine.GameObjects()[mob.Id()] = nil
-	delete(mob.Engine.GameObjects(), mob.Id())
+	mob.Engine.GameObjects().Delete(mob.Id())
 
-	mob.Engine.Mobs()[mob.Id()] = nil
-	delete(mob.Engine.Mobs(), mob.Id())
+	mob.Engine.Mobs().Delete(mob.Id())
 
 	mob.Engine.SendGameObjectUpdate(mob, "remove_object")
 }

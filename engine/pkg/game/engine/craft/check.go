@@ -15,10 +15,16 @@ const (
 )
 
 func Check(e entity.IEngine, player *entity.Player, params map[string]interface{}, checkDistanceNow bool) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	craftItemName := params["item_name"].(string)
 	craftItemConfig := GetAtlas()[craftItemName].(map[string]interface{})
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 	// Has required tools equipped
 	requiredTools := craftItemConfig["tools"].([]string)
@@ -37,7 +43,9 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			return false
 		}
 		// check container has items
-		container := e.GameObjects()[slots["back"].(string)]
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).HasItemsKinds(e, craftItemConfig["resources"].(map[string]interface{})) {
 			e.SendSystemMessage("You don't have required resources.", player)
 			return false
@@ -76,11 +84,12 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		if len(possibleCollidableObjects) > 0 {
 			for _, val := range possibleCollidableObjects {
 				gameObj := val.(entity.IGameObject)
-				if gameObj.Id() == charGameObj.Id() && tempGameObj.Properties()["collidable"].(bool) {
+				tempObjCollidable := tempGameObj.GetProperty("collidable")
+				if gameObj.Id() == charGameObj.Id() && tempObjCollidable != nil && tempObjCollidable.(bool) {
 					e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
 					return false
 				}
-				if collidable, ok := gameObj.Properties()["collidable"]; ok {
+				if collidable := gameObj.GetProperty("collidable"); collidable != nil {
 					if collidable.(bool) {
 						e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
 						return false
@@ -99,11 +108,9 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 
 		if tempGameObj.Kind() == "claim_obelisk" {
 			// check cannot create 2 claims
-			if claimId, hasClaimId := charGameObj.Properties()["claim_obelisk_id"]; hasClaimId {
-				if claimId != nil {
-					e.SendSystemMessage("Cannot build second claim.", player)
-					return false
-				}
+			if claimId := charGameObj.GetProperty("claim_obelisk_id"); claimId != nil {
+				e.SendSystemMessage("Cannot build second claim.", player)
+				return false
 			}
 			// check cannot create if there is another claim area
 			if len(possibleCollidableObjects) > 0 {

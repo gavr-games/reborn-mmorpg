@@ -3,7 +3,7 @@ export const state = () => ({
 })
 
 export const mutations = {
-  set(state, id) {
+  set (state, id) {
     state.selectedCharacterId = id
   }
 }

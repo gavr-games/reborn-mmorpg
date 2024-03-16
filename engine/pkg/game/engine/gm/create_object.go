@@ -9,14 +9,14 @@ import (
 
 // Create object
 func CreateObject(e entity.IEngine, charGameObj entity.IGameObject, params map[string]interface{}) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	player := e.Players()[playerId]
-	if player == nil {
+	playerId := charGameObj.GetProperty("player_id").(int)
+	player, ok := e.Players().Load(playerId)
+	if player == nil || !ok {
 		return false
 	}
 
 	// check character is Game Master
-	if !charGameObj.Properties()["game_master"].(bool) {
+	if !charGameObj.GetProperty("game_master").(bool) {
 		e.SendSystemMessage("You are not a Game Master, cheater!", player)
 		return false
 	}

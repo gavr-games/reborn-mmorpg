@@ -24,8 +24,9 @@ func (f *GameObjectFactory) CreateCharGameObject(e *game.Engine) entity.IGameObj
 
 func (f *GameObjectFactory) CreatePlayer(e *game.Engine, charGameObj entity.IGameObject) *entity.Player {
 	playerId := charGameObj.Properties()["player_id"].(int)
-	e.Players()[playerId] = &entity.Player{Id: playerId, CharacterGameObjectId: charGameObj.Id()}
-	return e.Players()[playerId]
+	player :=  &entity.Player{Id: playerId, CharacterGameObjectId: charGameObj.Id()}
+	e.Players().Store(playerId, player)
+	return player
 }
 
 func (f *GameObjectFactory) CreateNpcGameObject(e *game.Engine) entity.IGameObject {
@@ -51,11 +52,12 @@ func (f *GameObjectFactory) CreateStackableResourceGameObject(e *game.Engine, ch
 
 func findMaxPlayerId(e *game.Engine) int {
 	maxId := 1
-	for id := range e.Players() {
-		if id > maxId {
-			maxId = id
+	e.Players().Range(func(playerId int, player *entity.Player) bool {
+		if playerId > maxId {
+			maxId = playerId
 		}
-	}
+		return true
+	})
 
 	return maxId
 }

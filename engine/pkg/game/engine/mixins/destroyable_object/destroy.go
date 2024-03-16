@@ -6,9 +6,15 @@ import (
 )
 
 func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	item := obj.gameObj
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 	// check equipped
 	for _, slotItemId := range slots {
@@ -19,8 +25,11 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 	}
 
 	// check container belongs to character
-	if item.Properties()["container_id"] != nil {
-		container := e.GameObjects()[item.Properties()["container_id"].(string)]
+	
+	if containerId := item.GetProperty("container_id"); containerId != nil {
+		if container, contOk = e.GameObjects().Load(containerId.(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
 			e.SendSystemMessage("You don't have access to this container", player)
 			return false
@@ -32,10 +41,12 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 
 	// Destroy items inside container
 	if item.Type() == "container" {
-		itemIds := item.Properties()["items_ids"].([]interface{})
+		itemIds := item.GetProperty("items_ids").([]interface{})
 		for _, itemId := range itemIds {
 			if itemId != nil {
-				e.GameObjects()[itemId.(string)].(entity.IDestroyableObject).Destroy(e, player)
+				if itemInside, itemInsideOk := e.GameObjects().Load(itemId.(string)); itemInsideOk {
+					itemInside.(entity.IDestroyableObject).Destroy(e, player)
+				}
 			}
 		}
 	}
@@ -47,8 +58,7 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 			return item.Id() == b.(entity.IGameObject).Id()
 		})
 	}
-	e.GameObjects()[item.Id()] = nil
-	delete(e.GameObjects(), item.Id())
+	e.GameObjects().Delete(item.Id())
 	e.SendGameObjectUpdate(item, "remove_object")
 
 	return true

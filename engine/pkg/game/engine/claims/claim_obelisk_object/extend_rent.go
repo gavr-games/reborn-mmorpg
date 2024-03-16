@@ -11,16 +11,19 @@ import (
 )
 
 func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
-	charGameObj := e.GameObjects()[claimObelisk.Properties()["crafted_by_character_id"].(string)]
-	if charGameObj == nil {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
+	if charGameObj, charOk = e.GameObjects().Load(claimObelisk.GetProperty("crafted_by_character_id").(string)); !charOk {
 		return false
 	}
 
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
-	playerId := charGameObj.Properties()["player_id"].(int)
-	player := e.Players()[playerId]
-	if player == nil {
+	playerId := charGameObj.GetProperty("player_id").(int)
+	player, ok := e.Players().Load(playerId)
+	if player == nil || !ok {
 		return false
 	}
 
@@ -31,7 +34,9 @@ func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
 	}
 
 	// check container has money
-	container := e.GameObjects()[slots["back"].(string)]
+	if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+		return false
+	}
 	if !container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
 		"gold": constants.ClaimRentCost,
 	}) {
@@ -48,15 +53,15 @@ func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
 	}
 
 	// replace delayed action
-	claimObelisk.Properties()["payed_until"] = claimObelisk.Properties()["payed_until"].(float64) + constants.ClaimRentDuration
-	delayedAction := &entity.DelayedAction{
-		FuncName: "ExpireClaim",
-		Params: map[string]interface{}{
+	claimObelisk.SetProperty("payed_until", claimObelisk.GetProperty("payed_until").(float64) + constants.ClaimRentDuration)
+	delayedAction := entity.NewDelayedAction(
+		"ExpireClaim",
+		map[string]interface{}{
 			"claim_obelisk_id": claimObelisk.Id(),
 		},
-		TimeLeft: claimObelisk.Properties()["payed_until"].(float64) - float64(utils.MakeTimestamp()),
-		Status:   entity.DelayedActionReady,
-	}
+		claimObelisk.GetProperty("payed_until").(float64) - float64(utils.MakeTimestamp()),
+		entity.DelayedActionReady,
+	)
 	claimObelisk.SetCurrentAction(delayedAction)
 
 	storage.GetClient().Updates <- claimObelisk.Clone()

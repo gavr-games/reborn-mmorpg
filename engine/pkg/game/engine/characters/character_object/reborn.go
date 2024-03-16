@@ -8,20 +8,20 @@ import (
 )
 
 func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
-	charGameObj.Properties()["health"] = charGameObj.Properties()["max_health"]
+	charGameObj.SetProperty("health", charGameObj.GetProperty("max_health"))
 	charGameObj.DeselectTarget(e)
 	
 	// Cancel delayed action
 	// TODO: refactor code so we can reuse delayed_actions.Cancel
 	if charGameObj.CurrentAction() != nil {
-		delayedActionFuncName := charGameObj.CurrentAction().FuncName
+		delayedActionFuncName := charGameObj.CurrentAction().FuncName()
 
 		charGameObj.SetCurrentAction(nil)
 
 		storage.GetClient().Updates <- charGameObj.Clone()
 
 		e.SendResponseToVisionAreas(charGameObj, "cancel_delayed_action", map[string]interface{}{
-			"object": serializers.GetInfo(e.GameObjects(), charGameObj),
+			"object": serializers.GetInfo(e, charGameObj),
 			"action": delayedActionFuncName,
 		})
 	}

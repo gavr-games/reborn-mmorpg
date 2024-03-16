@@ -8,9 +8,9 @@ import (
 )
 
 func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	playerId := charGameObj.GetProperty("player_id").(int)
+	if player, ok := e.Players().Load(playerId); ok {
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -28,8 +28,14 @@ func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObje
 		}
 
 		// Create harvested resources
-		container := e.GameObjects()[slots["back"].(string)]
-		resources := plant.Properties()["resources"].(map[string]interface{})
+		var (
+			container entity.IGameObject
+			contOk bool
+		)
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
+		resources := plant.GetProperty("resources").(map[string]interface{})
 		for resourceKey, amount := range resources {
 			for i := 0; i < int(amount.(float64)); i++ {
 				resourceObj := e.CreateGameObject(fmt.Sprintf("resource/%s", resourceKey), charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
@@ -41,11 +47,10 @@ func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObje
 
 		// Remove plant
 		e.SendGameObjectUpdate(plant, "remove_object")
-		e.Floors()[plant.Floor()].FilteredRemove(e.GameObjects()[plant.Id()], func(b utils.IBounds) bool {
+		e.Floors()[plant.Floor()].FilteredRemove(plant, func(b utils.IBounds) bool {
 			return plant.Id() == b.(entity.IGameObject).Id()
 		})
-		e.GameObjects()[plant.Id()] = nil
-		delete(e.GameObjects(), plant.Id())
+		e.GameObjects().Delete(plant.Id())
 
 		e.SendSystemMessage(fmt.Sprintf("You harvested a %s.", plant.Kind()), player)
 	} else {

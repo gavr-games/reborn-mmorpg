@@ -5,13 +5,14 @@ import (
 )
 
 func (charGameObj *CharacterObject) HasTypeEquipped(e entity.IEngine, itemType string) (entity.IGameObject, bool) {
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 	
 	for _, slotItemId := range slots {
 		if slotItemId != nil {
-			slotItem := e.GameObjects()[slotItemId.(string)]
-			if slotItem.Properties()["type"].(string) == itemType {
-				return slotItem, true
+			if slotItem, slotOk := e.GameObjects().Load(slotItemId.(string)); slotOk {
+				if slotItem.Type() == itemType {
+					return slotItem, true
+				}
 			}
 		}
 	}

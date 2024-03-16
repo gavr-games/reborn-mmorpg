@@ -1,2 +1,2 @@
-const atlas = new Map();
-export default atlas;
+const atlas = new Map()
+export default atlas

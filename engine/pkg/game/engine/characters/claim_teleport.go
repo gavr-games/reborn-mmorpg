@@ -8,16 +8,18 @@ import (
 // params: playerId
 func ClaimTeleport(e entity.IEngine, params map[string]interface{}) bool {
 	playerId := int(params["playerId"].(float64))
-	if player, ok := e.Players()[playerId]; ok {
-		charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-		charGameObj.(entity.ICharacterObject).DeselectTarget(e)
-		obelisk := e.GameObjects()[charGameObj.Properties()["claim_obelisk_id"].(string)]
-		if obelisk == nil {
-			e.SendSystemMessage("You don't have a claim.", player)
-			return false
+	if player, ok := e.Players().Load(playerId); ok {
+		if charGameObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
+			charGameObj.(entity.ICharacterObject).DeselectTarget(e)
+			if obelisk, obeliskOk := e.GameObjects().Load(charGameObj.GetProperty("claim_obelisk_id").(string)); obeliskOk {
+				if obelisk == nil {
+					e.SendSystemMessage("You don't have a claim.", player)
+					return false
+				}
+				charGameObj.(entity.ICharacterObject).Move(e, obelisk.X() + 1.0, obelisk.Y() + 1.0)
+			}
+			e.SendGameObjectUpdate(charGameObj, "update_object")
 		}
-		charGameObj.(entity.ICharacterObject).Move(e, obelisk.X() + 1.0, obelisk.Y() + 1.0)
-		e.SendGameObjectUpdate(charGameObj, "update_object")
 	}
 
 	return true

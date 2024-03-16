@@ -6,14 +6,14 @@ import (
 )
 
 func (rock *RockObject) CheckChip(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	player := e.Players()[playerId]
-	if player == nil {
+	playerId := charGameObj.GetProperty("player_id").(int)
+	player, ok := e.Players().Load(playerId)
+	if player == nil || !ok {
 		return false
 	}
 
 	// check object type
-	if rock.Properties()["type"].(string) != "rock" {
+	if rock.Type() != "rock" {
 		e.SendSystemMessage("Please choose rock.", player)
 		return false
 	}

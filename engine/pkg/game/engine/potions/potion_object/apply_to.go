@@ -10,10 +10,19 @@ import (
 )
 
 func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player) bool {
-	obj := e.GameObjects()[player.CharacterGameObjectId]
+	var (
+		obj, container entity.IGameObject
+		ok, contOk bool
+	)
+	if obj, ok = e.GameObjects().Load(player.CharacterGameObjectId); !ok {
+		return false
+	}
 	
-	if (item.Properties()["container_id"] != nil) {
-		container := e.GameObjects()[item.Properties()["container_id"].(string)]
+	containerId := item.GetProperty("container_id")
+	if containerId != nil {
+		if container, contOk = e.GameObjects().Load(containerId.(string)); !contOk {
+			return false
+		}
 		// check container belongs to character
 		if !container.(entity.IContainerObject).CheckAccess(e, player) {
 			e.SendSystemMessage("You don't have access to this container", player)
@@ -21,14 +30,15 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 		}
 
 		// Remove from container
-		if (item.Properties()["container_id"] != nil) {
+		if containerId != nil {
 			if !container.(entity.IContainerObject).Remove(e, player, item.Id()) {
 				return false
 			}
 		}
 
 		// Check same group effect is already applied and remove
-		effectGroup := item.Properties()["effect"].(map[string]interface{})["group"].(string)
+		itemEffectMap := item.GetProperty("effect").(map[string]interface{})
+		effectGroup := itemEffectMap["group"].(string)
 		for effectId, effect := range obj.Effects() {
 			if effect.(map[string]interface{})["group"].(string) == effectGroup {
 				effects.Remove(e, effectId, obj)
@@ -37,15 +47,15 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 
 		// Apply effect
 		effectId := uuid.NewV4().String()
-		obj.Effects()[effectId] = utils.CopyMap(item.Properties()["effect"].(map[string]interface{}))
-		e.Effects()[effectId] = utils.CopyMap(item.Properties()["effect"].(map[string]interface{}))
-		e.Effects()[effectId]["id"] = effectId
-		e.Effects()[effectId]["target_id"] = obj.Id()
+		obj.SetEffect(effectId, utils.CopyMap(itemEffectMap))
+		effectMap := utils.CopyMap(itemEffectMap)
+		effectMap["id"] = effectId
+		effectMap["target_id"] = obj.Id()
+		e.Effects().Store(effectId, effectMap)
 		e.SendGameObjectUpdate(obj, "update_object")
 
 		// Remove item
-		e.GameObjects()[item.Id()] = nil
-		delete(e.GameObjects(), item.Id())
+		e.GameObjects().Delete(item.Id())
 		storage.GetClient().Deletes <- item.Id()
 
 		return true

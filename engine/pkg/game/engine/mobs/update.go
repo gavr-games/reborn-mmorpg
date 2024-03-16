@@ -7,7 +7,7 @@ import (
 
 // move mobs and trigger mob logic
 func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
-	for _, mob := range e.Mobs() {
+	e.Mobs().Range(func(id string, mob entity.IMobObject) bool {
 		mobObj := mob.(entity.IGameObject)
     if mobObj != nil {
 			// Trigger Mob logic
@@ -17,8 +17,8 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 			mobObj.(entity.IMovingObject).PerformMoveTo(e, tickDelta)
 
 			// Move mobs
-			speedX := mobObj.Properties()["speed_x"].(float64)
-			speedY := mobObj.Properties()["speed_y"].(float64)
+			speedX := mobObj.GetProperty("speed_x").(float64)
+			speedY := mobObj.GetProperty("speed_y").(float64)
 			if speedX != 0 || speedY != 0 {
 				dx := speedX / 1000.0 * float64(tickDelta)
 				dy := speedY / 1000.0 * float64(tickDelta)
@@ -28,7 +28,7 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 				// Stop the object
 				if dx == 0.0 && dy == 0.0 {
 					mobObj.(entity.IMovingObject).Stop(e)
-					continue
+					return true
 				}
 
 				// Update mob game object
@@ -40,5 +40,6 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 				e.Floors()[mobObj.Floor()].Insert(mobObj)
 			}
 		}
-	}
+		return true
+	})
 }

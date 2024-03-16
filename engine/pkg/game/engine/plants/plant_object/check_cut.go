@@ -6,14 +6,14 @@ import (
 )
 
 func (plant *PlantObject) CheckCut(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	player := e.Players()[playerId]
-	if player == nil {
+	playerId := charGameObj.GetProperty("player_id").(int)
+	player, ok := e.Players().Load(playerId)
+	if player == nil || !ok {
 		return false
 	}
 
 	// check object type
-	if plant.Properties()["type"].(string) != "plant" {
+	if plant.Type() != "plant" {
 		e.SendSystemMessage("Please choose plant.", player)
 		return false
 	}

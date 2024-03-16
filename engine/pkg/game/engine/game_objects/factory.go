@@ -70,6 +70,7 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 	}
 
 	gameObj := &entity.GameObject{}
+	gameObj.InitGameObject()
 	gameObj.SetProperties(utils.CopyMap(objTemplate))
 	gameObj.SetEffects(make(map[string]interface{}))
 	gameObj.SetId(id)
@@ -81,22 +82,22 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 	gameObj.SetFloor(-1)
 	gameObj.SetRotation(rotation)
 
-	if (gameObj.Properties()["type"].(string) == "container") {
-		gameObj.Properties()["items_ids"] = make([]interface{}, int(gameObj.Properties()["max_capacity"].(float64)))
+	if (gameObj.Type() == "container") {
+		gameObj.SetProperty("items_ids", make([]interface{}, int(gameObj.GetProperty("max_capacity").(float64))))
 	}
 
 	// Some templates might have actions to be created with the object
-	if currentAction, hasAction := gameObj.Properties()["current_action"]; hasAction {
+	if currentAction := gameObj.GetProperty("current_action"); currentAction != nil {
 		actionParams := currentAction.(map[string]interface{})["params"].(map[string]interface{})
 		actionParams["game_object_id"] = gameObj.Id()
 		timeLeft := currentAction.(map[string]interface{})["time_left"].(float64)
 		funcName := currentAction.(map[string]interface{})["func_name"].(string)
-		delayedAction := &entity.DelayedAction{
-			FuncName: funcName,
-			Params: actionParams,
-			TimeLeft: timeLeft,
-			Status: entity.DelayedActionReady,
-		}
+		delayedAction := entity.NewDelayedAction(
+			funcName,
+			actionParams,
+			timeLeft,
+			entity.DelayedActionReady,
+		)
 		gameObj.SetCurrentAction(delayedAction)
 	}
 

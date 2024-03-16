@@ -21,10 +21,10 @@ func (obj *MeleeWeaponObject) CanHit(attacker entity.IGameObject, target entity.
 	points[0] = WorldPoint{attacker.X(), attacker.Y()}
 
 	// Add points for 5 vectors of the sector
-	hitAngle := weapon.Properties()["hit_angle"].(float64) * (math.Pi / 180.0)
+	hitAngle := weapon.GetProperty("hit_angle").(float64) * (math.Pi / 180.0)
 	startingAngle := attacker.Rotation() - hitAngle / 2.0
 	stepAngle := hitAngle / 4.0
-	stepRadius := weapon.Properties()["hit_radius"].(float64) / 4
+	stepRadius := weapon.GetProperty("hit_radius").(float64) / 4
 
 	pointIndex := 1
 
@@ -40,13 +40,13 @@ func (obj *MeleeWeaponObject) CanHit(attacker entity.IGameObject, target entity.
 	// if at least one point is inside then the weapon can hit the target
 	for p := 0; p < len(points); p++ {
 		point := points[p]
-		if target.Properties()["shape"].(string) == "rectangle" {
+		if target.GetProperty("shape").(string) == "rectangle" {
 			if point.X >= target.X() && point.X <= target.X() + target.Width() &&
 					point.Y >= target.Y() && point.Y <= target.Y() + target.Height() {
 						return true
 					}
 		} else
-		if target.Properties()["shape"].(string) == "circle" {
+		if target.GetProperty("shape").(string) == "circle" {
 			// distance between points <= target radius
 			if math.Pow(point.X - target.X(), 2.0) + math.Pow(point.Y - target.Y(), 2.0) <= math.Pow(target.Width() / 2.0, 2.0) {
 				return true

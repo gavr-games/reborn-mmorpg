@@ -10,22 +10,28 @@ import (
 
 // position: -1 for any empty slot
 func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId string, position int) bool {
+	var (
+		item entity.IGameObject
+		itemOk bool
+	)
 	container := cont.gameObj
-	item := e.GameObjects()[itemId]
+	if item, itemOk = e.GameObjects().Load(itemId); !itemOk {
+		return false
+	}
 
 	if !cont.CheckAccess(e, player) {
 		e.SendSystemMessage("You don't have access to this container", player)
 		return false
 	}
 
-	if item.Type() == "container" && item.Properties()["max_capacity"].(float64) >= container.Properties()["max_capacity"].(float64) {
+	if item.Type() == "container" && item.GetProperty("max_capacity").(float64) >= container.GetProperty("max_capacity").(float64) {
 		e.SendSystemMessage("Container is too big to put it here.", player)
 		return false
 	}
 
 	itemStackable := false
-	if value, ok := item.Properties()["stackable"]; ok {
-		itemStackable = value.(bool)
+	if stackable := item.GetProperty("stackable"); stackable != nil {
+		itemStackable = stackable.(bool)
 	}
 
 	freePosition := position
@@ -33,22 +39,23 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 		if itemStackable {
 			existingItem := cont.GetItemKind(e, item.Kind())
 			if existingItem != nil {
-				existingItem.Properties()["amount"] = existingItem.Properties()["amount"].(float64) + item.Properties()["amount"].(float64)
+				existingItem.SetProperty("amount", existingItem.GetProperty("amount").(float64) + item.GetProperty("amount").(float64))
 				e.SendGameObjectUpdate(existingItem, "update_object")
 				return true
 			}
 		}
 
-		if container.Properties()["free_capacity"] == 0.0 {
+		if container.GetProperty("free_capacity") == 0.0 {
 			// Also search free space inside sub-containers
 			// TODO: mute messages for sub containers
-			subItemIds := container.Properties()["items_ids"].([]interface{})
+			subItemIds := container.GetProperty("items_ids").([]interface{})
 			for _, subItemId := range subItemIds {
 				if subItemId != nil {
-					subItem := e.GameObjects()[subItemId.(string)]
-					if subItem.Type() == "container" {
-						if subItem.(entity.IContainerObject).Put(e, player, itemId, position) {
-							return true
+					if subItem, subItemOk := e.GameObjects().Load(subItemId.(string)); subItemOk {
+						if subItem.Type() == "container" {
+							if subItem.(entity.IContainerObject).Put(e, player, itemId, position) {
+								return true
+							}
 						}
 					}
 				}
@@ -57,9 +64,9 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 			return false
 		}
 
-		freePosition = slices.IndexFunc(container.Properties()["items_ids"].([]interface{}), func(id interface{}) bool { return id == nil })
+		freePosition = slices.IndexFunc(container.GetProperty("items_ids").([]interface{}), func(id interface{}) bool { return id == nil })
 	} else {
-		if container.Properties()["items_ids"].([]interface{})[position] == nil {
+		if container.GetProperty("items_ids").([]interface{})[position] == nil {
 			freePosition = position
 		} else {
 			e.SendSystemMessage("This slot inside the container is already occupied.", player)
@@ -68,13 +75,15 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 	}
 
 	// Modify game objects
-	container.Properties()["items_ids"].([]interface{})[freePosition] = itemId
-	container.Properties()["free_capacity"] = container.Properties()["free_capacity"].(float64) - 1.0
-	item.Properties()["container_id"] = container.Id()
-	item.Properties()["visible"] = false
+	contItemsIds := container.GetProperty("items_ids").([]interface{})
+	contItemsIds[freePosition] = itemId
+	container.SetProperty("items_ids", contItemsIds)
+	container.SetProperty("free_capacity", container.GetProperty("free_capacity").(float64) - 1.0)
+	item.SetProperty("container_id", container.Id())
+	item.SetProperty("visible", false)
 	if item.Type() == "container" {
-		item.Properties()["owner_id"] = container.Properties()["owner_id"]
-		item.Properties()["parent_container_id"] = container.Id()
+		item.SetProperty("owner_id", container.GetProperty("owner_id"))
+		item.SetProperty("parent_container_id", container.Id())
 	}
 
 	// Save game objects updates to storage
@@ -82,11 +91,13 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 	storage.GetClient().Updates <- item.Clone()
 
 	// Send updates to players
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "put_item_to_container", map[string]interface{}{
-		"item":         serializers.GetInfo(e.GameObjects(), item),
-		"container_id": container.Id(),
-		"position":     freePosition,
-	})
+	if charGameObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
+		e.SendResponseToVisionAreas(charGameObj, "put_item_to_container", map[string]interface{}{
+			"item":         serializers.GetInfo(e, item),
+			"container_id": container.Id(),
+			"position":     freePosition,
+		})
+	}
 
 	return true
 }

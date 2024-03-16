@@ -7,4 +7,6 @@ type ICharacterObject interface {
 	Reborn(e IEngine)
 	SelectTarget(e IEngine, targetId string) bool
 	DeselectTarget(e IEngine) bool
+	GetVisionAreaX() float64
+	GetVisionAreaY() float64
 }

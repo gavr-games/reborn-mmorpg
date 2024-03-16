@@ -12,7 +12,6 @@
 - `make stop` - stop the project
 - `make restart` - restart the project
 - `make attach-engine` - view engine container output
-- `make test-engine` - run the engine tests
 
 ## Endpoints
 - [http://localhost](http://localhost)
@@ -24,6 +23,15 @@ To delete current game data and regenerate the world execute `make reset-world`.
 You need to find out your player game_object's id. You can do that by watching websocket in browser and clicking get character info in game.
 
 `make gm-set ID=<player_game_object_id>`
+
+## Tests
+- `make test-engine` - run the engine tests
+
+## Code linting
+- `make lint` - perform code linting for whole project
+- `make lint-front` - perform code linting for frontend
+- `make format` - perform code linting for whole project and try to fix errors
+- `make format-front` - perform code linting for frontend and try to fix errors
 
 ## List available commands
 - `make help`

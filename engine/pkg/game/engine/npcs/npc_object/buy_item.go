@@ -7,9 +7,9 @@ import (
 )
 
 func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) (bool, error) {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	playerId := charGameObj.GetProperty("player_id").(int)
+	if player, ok := e.Players().Load(playerId); ok {
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -22,10 +22,16 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 		}
 
 		// get required resources amounts
-		resourceKey := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
-		resourceAmount := npcObj.Properties()["sells"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
+		resourceKey := npcObj.GetProperty("sells").(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
+		resourceAmount := npcObj.GetProperty("sells").(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
 
-		container := e.GameObjects()[slots["back"].(string)]
+		var (
+			container entity.IGameObject
+			contOk bool
+		)
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false, errors.New("Player does not have container")
+		}
 		// check container has items
 		if !container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
 			(resourceKey): resourceAmount,
@@ -47,9 +53,9 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 			"visible": false,
 		})
 
-		if isStackable, ok := itemObj.Properties()["stackable"]; ok {
+		if isStackable := itemObj.GetProperty("stackable"); isStackable != nil {
 			if isStackable.(bool) {
-				itemObj.Properties()["amount"] = amount
+				itemObj.SetProperty("amount", amount)
 				return container.(entity.IContainerObject).PutOrDrop(e, charGameObj, itemObj.Id(), -1), nil
 			}
 		}

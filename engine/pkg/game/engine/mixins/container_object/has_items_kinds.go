@@ -22,20 +22,26 @@ func (cont *ContainerObject) HasItemsKinds(e entity.IEngine, items map[string]in
 }
 
 func calcItemsKinds(e entity.IEngine, container entity.IGameObject, itemsCounts map[string]float64, itemsKinds []string) bool {
-	itemIds := container.Properties()["items_ids"].([]interface{})
+	var (
+		item entity.IGameObject
+		itemOk bool
+	)
+	itemIds := container.GetProperty("items_ids").([]interface{})
 
 	for _, itemId := range itemIds {
 		if itemId != nil {
-			item := e.GameObjects()[itemId.(string)]
+			if item, itemOk = e.GameObjects().Load(itemId.(string)); !itemOk {
+				return false
+			}
 			itemKind := item.Kind()
 			itemStackable := false
-			if value, ok := item.Properties()["stackable"]; ok {
-				itemStackable = value.(bool)
+			if stackable := item.GetProperty("stackable"); stackable != nil {
+				itemStackable = stackable.(bool)
 			}
 			// If item stackable check item has enough "amount", otherwise count items as 1 per each game_object
 			if slices.Contains(itemsKinds, itemKind) {
 				if itemStackable {
-					if item.Properties()["amount"].(float64) >= itemsCounts[itemKind] {
+					if item.GetProperty("amount").(float64) >= itemsCounts[itemKind] {
 						itemsCounts[itemKind] = 0.0
 					}
 				} else {
@@ -56,7 +62,9 @@ func calcItemsKinds(e entity.IEngine, container entity.IGameObject, itemsCounts 
 	//Search inside sub containers
 	for _, itemId := range itemIds {
 		if itemId != nil {
-			item := e.GameObjects()[itemId.(string)]
+			if item, itemOk = e.GameObjects().Load(itemId.(string)); !itemOk {
+				return false
+			}
 			if item.Type() == "container" {
 				if calcItemsKinds(e, item, itemsCounts, itemsKinds) {
 					return true

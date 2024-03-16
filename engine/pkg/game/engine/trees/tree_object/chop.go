@@ -7,9 +7,9 @@ import (
 )
 
 func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	playerId := charGameObj.GetProperty("player_id").(int)
+	if player, ok := e.Players().Load(playerId); ok {
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -30,22 +30,25 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 		logObj := e.CreateGameObject("resource/log", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
 
 		// Put to container or drop to the ground
-		container := e.GameObjects()[slots["back"].(string)]
-		container.(entity.IContainerObject).PutOrDrop(e, charGameObj, logObj.Id(), -1)
+		if container, contOk := e.GameObjects().Load(slots["back"].(string)); contOk {
+			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, logObj.Id(), -1)
+		} else {
+			return false
+		}
 
 		// Decrease logs stored in the tree
-		resources := tree.Properties()["resources"].(map[string]interface{})
+		resources := tree.GetProperty("resources").(map[string]interface{})
 		resources["log"] = resources["log"].(float64) - 1.0
+		tree.SetProperty("resources", resources)
 
 		// Remove tree if no logs inside
 		if resources["log"].(float64) <= 0 {
 			e.SendGameObjectUpdate(tree, "remove_object")
 
-			e.Floors()[tree.Floor()].FilteredRemove(e.GameObjects()[tree.Id()], func(b utils.IBounds) bool {
+			e.Floors()[tree.Floor()].FilteredRemove(tree, func(b utils.IBounds) bool {
 				return tree.Id() == b.(entity.IGameObject).Id()
 			})
-			e.GameObjects()[tree.Id()] = nil
-			delete(e.GameObjects(), tree.Id())
+			e.GameObjects().Delete(tree.Id())
 		} else {
 			storage.GetClient().Updates <- tree.Clone()
 		}

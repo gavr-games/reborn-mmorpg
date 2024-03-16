@@ -7,7 +7,15 @@ import (
 // This func is called via delayed action mechanism
 // params: characterId, rockId
 func Chip(e entity.IEngine, params map[string]interface{}) bool {
-	rock := e.GameObjects()[params["rockId"].(string)].(entity.IRockObject)
-	character := e.GameObjects()[params["characterId"].(string)]
-	return rock.Chip(e, character)
+	var (
+		rock, character entity.IGameObject
+		rockOk, charOk bool
+	)
+	if rock, rockOk = e.GameObjects().Load(params["rockId"].(string)); !rockOk {
+		return false
+	}
+	if character, charOk = e.GameObjects().Load(params["characterId"].(string)); !charOk {
+		return false
+	}
+	return rock.(entity.IRockObject).Chip(e, character)
 }

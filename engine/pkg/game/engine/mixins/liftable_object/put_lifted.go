@@ -10,8 +10,8 @@ const (
 )
 
 func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameObject, x float64, y float64, rotation float64) bool {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
+	playerId := charGameObj.GetProperty("player_id").(int)
+	if player, ok := e.Players().Load(playerId); ok {
 		item := obj.gameObj
 
 		if item == nil {
@@ -19,7 +19,7 @@ func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameO
 			return false
 		}
 
-		if charGameObj.Properties()["lifted_object_id"].(string) != item.Id() {
+		if liftedObjectId := charGameObj.GetProperty("lifted_object_id"); liftedObjectId == nil || liftedObjectId.(string) != item.Id() {
 			e.SendSystemMessage("Wrong item.", player)
 			return false
 		}
@@ -47,7 +47,7 @@ func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameO
 		if len(possibleCollidableObjects) > 0 {
 			for _, val := range possibleCollidableObjects {
 				gameObj := val.(entity.IGameObject)
-				if collidable, ok := gameObj.Properties()["collidable"]; ok {
+				if collidable := gameObj.GetProperty("collidable"); collidable != nil {
 					if collidable.(bool) {
 						e.SendSystemMessage("Cannot put it here. There is something in the way.", player)
 						return false
@@ -57,9 +57,9 @@ func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameO
 		}
 
 		// Update Objects
-		charGameObj.Properties()["lifted_object_id"] = nil
-		item.Properties()["lifted_by"] = nil
-		item.Properties()["collidable"] = true
+		charGameObj.SetProperty("lifted_object_id", nil)
+		item.SetProperty("lifted_by", nil)
+		item.SetProperty("collidable", true)
 		e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
 			return item.Id() == b.(entity.IGameObject).Id()
 		})

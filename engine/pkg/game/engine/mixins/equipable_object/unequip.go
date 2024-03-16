@@ -7,9 +7,15 @@ import (
 )
 
 func (obj *EquipableObject) Unequip(e entity.IEngine, player *entity.Player) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	item := obj.gameObj
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 	if item == nil {
 		e.SendSystemMessage("Wrong item.", player)
@@ -35,8 +41,10 @@ func (obj *EquipableObject) Unequip(e entity.IEngine, player *entity.Player) boo
 	}
 
 	// put to container
-	if (item.Properties()["container_id"] == nil) {
-		container := e.GameObjects()[slots["back"].(string)]
+	if (item.GetProperty("container_id") == nil) {
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).Put(e, player, item.Id(), -1) {
 			return false
 		}
@@ -44,12 +52,13 @@ func (obj *EquipableObject) Unequip(e entity.IEngine, player *entity.Player) boo
 	
 	// Remove from slot
 	slots[itemSlotKey] = nil
+	charGameObj.SetProperty("slots", slots)
 	storage.GetClient().Updates <- charGameObj.Clone()
 	
-	e.SendResponseToVisionAreas(e.GameObjects()[player.CharacterGameObjectId], "unequip_item", map[string]interface{}{
+	e.SendResponseToVisionAreas(charGameObj, "unequip_item", map[string]interface{}{
 		"slot": itemSlotKey,
 		"character_id": player.CharacterGameObjectId,
-		"item": serializers.GetInfo(e.GameObjects(), item),
+		"item": serializers.GetInfo(e, item),
 	})
 
 	return true

@@ -7,9 +7,15 @@ import (
 )
 
 func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool {
+	var (
+		charGameObj, container entity.IGameObject
+		charOk, contOk bool
+	)
 	item := obj.gameObj
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
-	slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
+	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 	// intersects with character
 	itemBounds := utils.Bounds{
@@ -24,7 +30,8 @@ func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool 
 	}
 
 	// not in another container
-	if item.Properties()["container_id"] != nil {
+	containerId := item.GetProperty("container_id")
+	if containerId != nil {
 		e.SendSystemMessage("Item is already in another container.", player)
 		return false
 	}
@@ -36,8 +43,10 @@ func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool 
 	}
 
 	// put to container
-	if item.Properties()["container_id"] == nil {
-		container := e.GameObjects()[slots["back"].(string)]
+	if containerId == nil {
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false
+		}
 		if !container.(entity.IContainerObject).Put(e, player, item.Id(), -1) {
 			return false
 		}
@@ -47,7 +56,7 @@ func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool 
 	e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
 		return item.Id() == b.(entity.IGameObject).Id()
 	})
-	item.Properties()["visible"] = false
+	item.SetProperty("visible", false)
 
 	storage.GetClient().Updates <- item.Clone()
 

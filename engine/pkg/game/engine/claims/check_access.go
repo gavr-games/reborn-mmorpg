@@ -20,8 +20,16 @@ func CheckAccess(e entity.IEngine, charGameObj entity.IGameObject, targetObj ent
 		for _, val := range possibleCollidableObjects {
 			obj := val.(entity.IGameObject)
 			if obj.Kind() == "claim_area" {
-				obelisk := e.GameObjects()[obj.Properties()["claim_obelisk_id"].(string)]
-				owner := e.GameObjects()[obelisk.Properties()["crafted_by_character_id"].(string)]
+				var (
+					obelisk, owner entity.IGameObject
+					obeliskOk, ownerOk bool
+				)
+				if obelisk, obeliskOk = e.GameObjects().Load(obj.GetProperty("claim_obelisk_id").(string)); !obeliskOk {
+					return false
+				}
+				if owner, ownerOk = e.GameObjects().Load(obelisk.GetProperty("crafted_by_character_id").(string)); !ownerOk {
+					return false
+				}
 				return owner.Id() == charGameObj.Id()
 			}
 		}

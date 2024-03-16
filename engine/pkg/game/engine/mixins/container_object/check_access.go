@@ -9,20 +9,29 @@ import (
 // All liftable containers stand in real world (chests), not inside character inventory (bags) - for them we need to check claim access
 // All containers, that can be put inside character inventory have owner_id - so we need to check if character is owner
 func (cont *ContainerObject) CheckAccess(e entity.IEngine, player *entity.Player) bool {
+	var (
+		charGameObj, parentContainer entity.IGameObject
+		charOk, parentContOk bool
+	)
 	container := cont.gameObj
-	parentContainerId := container.Properties()["parent_container_id"]
-	charGameObj := e.GameObjects()[player.CharacterGameObjectId]
+	parentContainerId := container.GetProperty("parent_container_id")
+	if charGameObj, charOk = e.GameObjects().Load(player.CharacterGameObjectId); !charOk {
+		return false
+	}
 
 	if parentContainerId != nil {
-		return e.GameObjects()[parentContainerId.(string)].(entity.IContainerObject).CheckAccess(e, player)
+		if parentContainer, parentContOk = e.GameObjects().Load(parentContainerId.(string)); !parentContOk {
+			return false
+		}
+		return parentContainer.(entity.IContainerObject).CheckAccess(e, player)
 	} else {
-		if liftable, ok := container.Properties()["liftable"]; ok {
-			if liftedBy, ok2 := container.Properties()["lifted_by"]; ok2 && liftedBy != nil {
+		if liftable := container.GetProperty("liftable"); liftable != nil {
+			if liftedBy := container.GetProperty("lifted_by"); liftedBy != nil {
 				return liftedBy.(string) == charGameObj.Id()
 			} else if liftable.(bool) {
 				return container.IsCloseTo(charGameObj) && claims.CheckAccess(e, charGameObj, container)
 			}
 		}
-		return player.CharacterGameObjectId  == container.Properties()["owner_id"]
+		return player.CharacterGameObjectId  == container.GetProperty("owner_id")
 	}
 }

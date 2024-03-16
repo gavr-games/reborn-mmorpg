@@ -8,8 +8,11 @@ import (
 )
 
 func (claimObelisk *ClaimObeliskObject) Init(e entity.IEngine) bool {
-	charGameObj := e.GameObjects()[claimObelisk.Properties()["crafted_by_character_id"].(string)]
-	if charGameObj == nil {
+	var (
+		charGameObj entity.IGameObject
+		charOk bool
+	)
+	if charGameObj, charOk = e.GameObjects().Load(claimObelisk.GetProperty("crafted_by_character_id").(string)); !charOk {
 		return false
 	}
 
@@ -18,23 +21,23 @@ func (claimObelisk *ClaimObeliskObject) Init(e entity.IEngine) bool {
 	additionalProps["claim_obelisk_id"] = claimObelisk.Id()
 	claimArea := e.CreateGameObject("claim/claim_area", claimObelisk.X() - constants.ClaimArea / 2, claimObelisk.Y() - constants.ClaimArea / 2, 0.0, claimObelisk.Floor(), additionalProps)
 
-	claimObelisk.Properties()["claim_area_id"] = claimArea.Id()
+	claimObelisk.SetProperty("claim_area_id", claimArea.Id())
 
 	// Init rent
-	claimObelisk.Properties()["payed_until"] = float64(utils.MakeTimestamp()) + constants.ClaimRentDuration
+	claimObelisk.SetProperty("payed_until", float64(utils.MakeTimestamp()) + constants.ClaimRentDuration)
 
-	delayedAction := &entity.DelayedAction{
-		FuncName: "ExpireClaim",
-		Params: map[string]interface{}{
+	delayedAction := entity.NewDelayedAction(
+		"ExpireClaim",
+		map[string]interface{}{
 			"claim_obelisk_id": claimObelisk.Id(),
 		},
-		TimeLeft: constants.ClaimRentDuration,
-		Status: entity.DelayedActionReady,
-	}
+		constants.ClaimRentDuration,
+		entity.DelayedActionReady,
+	)
 	claimObelisk.SetCurrentAction(delayedAction)
 
 	// Set claim obelisk id for character
-	charGameObj.Properties()["claim_obelisk_id"] = claimObelisk.Id()
+	charGameObj.SetProperty("claim_obelisk_id", claimObelisk.Id())
 
 	storage.GetClient().Updates <- claimObelisk.Clone()
 	storage.GetClient().Updates <- charGameObj.Clone()

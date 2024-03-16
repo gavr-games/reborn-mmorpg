@@ -8,9 +8,9 @@ import (
 )
 
 func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObject, itemKey string, amount float64) (bool, error) {
-	playerId := charGameObj.Properties()["player_id"].(int)
-	if player, ok := e.Players()[playerId]; ok {
-		slots := charGameObj.Properties()["slots"].(map[string]interface{})
+	playerId := charGameObj.GetProperty("player_id").(int)
+	if player, ok := e.Players().Load(playerId); ok {
+		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)
@@ -22,7 +22,13 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 			return false, errors.New("Player need to be closer to NPC")
 		}
 
-		container := e.GameObjects()[slots["back"].(string)]
+		var (
+			container entity.IGameObject
+			contOk bool
+		)
+		if container, contOk = e.GameObjects().Load(slots["back"].(string)); !contOk {
+			return false, errors.New("Player does not have container")
+		}
 		itemKind := strings.Split(itemKey, "/")[1]
 
 		// check container has items
@@ -41,17 +47,17 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 			return false, errors.New("Player can not remove required resources")
 		}
 
-		resourceAmount := npcObj.Properties()["buys"].(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
-		resourceKind := npcObj.Properties()["buys"].(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
+		resourceAmount := npcObj.GetProperty("buys").(map[string]interface{})[itemKey].(map[string]interface{})["price"].(float64) * amount
+		resourceKind := npcObj.GetProperty("buys").(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
 		resourceKey := "resource/" + resourceKind
 
 		resourceObj := e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
 			"visible": false,
 		})
 
-		if isStackable, ok := resourceObj.Properties()["stackable"]; ok {
+		if isStackable := resourceObj.GetProperty("stackable"); isStackable != nil {
 			if isStackable.(bool) {
-				resourceObj.Properties()["amount"] = resourceAmount
+				resourceObj.SetProperty("amount", resourceAmount)
 				return container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1), nil
 			}
 		}

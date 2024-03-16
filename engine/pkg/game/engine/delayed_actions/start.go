@@ -9,12 +9,12 @@ func Start(e entity.IEngine, gameObj entity.IGameObject, funcName string, params
 	if timeLeft == -1.0 {
 		timeLeft = GetDelayedActionsAtlas()[funcName]["duration"].(float64)
 	}
-	delayedAction := &entity.DelayedAction{
-		FuncName: funcName,
-		Params: params,
-		TimeLeft: timeLeft,
-		Status: entity.DelayedActionReady,
-	}
+	delayedAction := entity.NewDelayedAction(
+		funcName,
+		params,
+		timeLeft,
+		entity.DelayedActionReady,
+	)
 
 	gameObj.SetCurrentAction(delayedAction)
 
