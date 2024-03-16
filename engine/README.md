@@ -3,11 +3,16 @@
 Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
+## Roadmap for Demo
+- Experiencing and leveling https://blog.jakelee.co.uk/converting-levels-into-xp-vice-versa/
+- Body armor and Robe
+- Add baby dragons and raising them
+- Add dragon breeding to get new eggs
+- Fighting with dragons in dungeons and leveling dragons
+- More buildings and furniture for houses
+
 ## TODO
 - add Transactions (Mutexes) when objects cnahge
-- add baby dragons and raising them
-- add dragon breeding to get new eggs
-- add fighting and leveling dragins
 - add leveling skills fot character and skills requirements for craft
 - add database of game objects, craft OR editor to manage atlases (move atlases to json files where possible)
 - switch from json to protobuf for server-client communication
