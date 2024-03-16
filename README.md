@@ -24,6 +24,9 @@ You need to find out your player game_object's id. You can do that by watching w
 
 `make gm-set ID=<player_game_object_id>`
 
+## Tests
+- `make test-engine` - run the engine tests
+
 ## Code linting
 - `make lint` - perform code linting for whole project
 - `make lint-front` - perform code linting for frontend

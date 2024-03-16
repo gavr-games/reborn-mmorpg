@@ -7,7 +7,6 @@ FRONTEND_RUNNER = docker compose run --rm frontend
 ENGINE_CONTAINER_NAME = $(shell docker ps | grep engine- | rev | cut -d' ' -f1 | rev)
 REDIS_CONTAINER_NAME = $(shell docker ps | grep redis | rev | cut -d' ' -f1 | rev)
 
-
 # Default target
 all: setup
 
@@ -61,6 +60,10 @@ restart: ## Restart all Docker containers
 clean: ## Stop and remove Docker containers
 	$(DOCKER_COMPOSE) down
 	$(DOCKER_COMPOSE) rm -f
+
+.PHONY: test-engine
+test-engine: 
+	$(DOCKER_COMPOSE) run --rm engine go test ./pkg/game_test/... -v
 
 .PHONY: lint
 lint: ## Lint all files

@@ -1,8 +1,8 @@
 package destroyable_object
 
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) bool {
@@ -40,7 +40,7 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 	}
 
 	// Destroy items inside container
-	if (item.Type() == "container") {
+	if item.Type() == "container" {
 		itemIds := item.GetProperty("items_ids").([]interface{})
 		for _, itemId := range itemIds {
 			if itemId != nil {
