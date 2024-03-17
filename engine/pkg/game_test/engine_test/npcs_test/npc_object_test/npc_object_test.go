@@ -4,13 +4,11 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/game"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs/npc_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game_test"
 	"github.com/stretchr/testify/assert"
 )
 
-var e *game.Engine = game.NewEngine()
 var npcObj entity.IGameObject
 var charGameObj entity.IGameObject
 var testFunction func() (bool, error)
@@ -28,7 +26,7 @@ const (
 )
 
 func TestMain(m *testing.M) {
-	e.Init()
+	game_test.Setup()
 	os.Exit(m.Run())
 }
 
@@ -74,9 +72,9 @@ func testSuccess(t *testing.T) {
 }
 
 func callBuyItem() (bool, error) {
-	return npcObj.(*npc_object.NpcObject).BuyItem(e, charGameObj, itemToBuyObjKey, amount)
+	return npcObj.(entity.INpcObject).BuyItem(game_test.GetEngine(), charGameObj, itemToBuyObjKey, amount)
 }
 
 func callSellItem() (bool, error) {
-	return npcObj.(*npc_object.NpcObject).SellItem(e, charGameObj, itemToSellObjKey, amount)
+	return npcObj.(entity.INpcObject).SellItem(game_test.GetEngine(), charGameObj, itemToSellObjKey, amount)
 }

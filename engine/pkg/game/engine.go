@@ -246,7 +246,7 @@ func NewEngine() *Engine {
 	}
 }
 
-func (e *Engine) Init() {
+func (e *Engine) Init(skipWorldGeneration bool) {
 	// Start routine to process game objects updates and save them in game storage
 	go storage.GetClient().Run()
 
@@ -263,13 +263,15 @@ func (e *Engine) Init() {
 		Objects:    make([]utils.IBounds, 0),
 		Nodes:      make([]utils.Quadtree, 0),
 	}
-	engine.LoadGameObjects(e) // Generate new worlds or read it from storage
+	if !skipWorldGeneration {
+		engine.LoadGameObjects(e) // Generate new worlds or read it from storage
+	}
 	e.tickTime = utils.MakeTimestamp()
 }
 
 // Main engine loop
 func (e *Engine) Run() {
-	e.Init()
+	e.Init(false)
 	for {
 		select {
 		case client := <-e.register:

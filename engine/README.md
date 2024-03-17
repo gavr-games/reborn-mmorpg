@@ -4,7 +4,6 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## Roadmap for Demo
-- Experiencing and leveling https://blog.jakelee.co.uk/converting-levels-into-xp-vice-versa/
 - Body armor and Robe
 - Add baby dragons and raising them
 - Add dragon breeding to get new eggs
@@ -14,6 +13,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 ## TODO
 - add Transactions (Mutexes) when objects cnahge
 - add leveling skills fot character and skills requirements for craft
+- add more complex leveling formula, which takes into account many parameters like mob lvl and etc
 - add database of game objects, craft OR editor to manage atlases (move atlases to json files where possible)
 - switch from json to protobuf for server-client communication
 - for prod - global error logging
@@ -23,3 +23,4 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - think about sending only what is changed in game object
 - FIX: login after disconect works only from second try
 - Refactor: check where we can use CreateGameObject instead of CreateFromTemplate
+- Migrate test to https://onsi.github.io/ginkgo/#getting-started

@@ -2,6 +2,7 @@ package mob_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/leveling_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/moving_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/melee_weapon_object"
 )
@@ -35,6 +36,7 @@ type MobObject struct {
 	State int
 	TargetObjectId string
 	moving_object.MovingObject
+	leveling_object.LevelingObject
 	melee_weapon_object.MeleeWeaponObject
 	entity.GameObject
 }
@@ -46,10 +48,12 @@ func NewMobObject(e entity.IEngine, gameObj entity.IGameObject) *MobObject {
 		IdleState,
 		"", // for following and attack
 		moving_object.MovingObject{},
+		leveling_object.LevelingObject{},
 		melee_weapon_object.MeleeWeaponObject{},
 		*gameObj.(*entity.GameObject),
 	}
 	mob.InitMovingObject(mob)
+	mob.InitLevelingObject(mob)
 	mob.InitMeleeWeaponObject(mob)
 
 	return mob

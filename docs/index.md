@@ -113,6 +113,8 @@ Game Objects description is stored inside so called `atlases`.
 They (atlases) are used as a templates to create instances of new game objects.
 For example, the player crafted a `stone_knife``. We go to the atlas, find `stone_knife`` template with default properties and create new instance of stone_knife, which we add to player's backpack.
 
+More information about `atlases` can be found [here](atlases.md).
+
 ### Special GO attributes
 Each GO instance has special attributes for engine based calculations.
 

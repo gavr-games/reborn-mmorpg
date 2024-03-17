@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game_test"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game_test/factories"
 	"github.com/stretchr/testify/assert"
 )
@@ -11,19 +12,19 @@ import (
 func TestBuyItem(t *testing.T) {
 	testFunction = callBuyItem
 	gameObjectFactory := factories.NewGameObjectFactory()
-	charGameObj = gameObjectFactory.CreateCharGameObject(e)
-	npcObj = gameObjectFactory.CreateNpcGameObject(e)
+	charGameObj = gameObjectFactory.CreateCharGameObject(game_test.GetEngine())
+	npcObj = gameObjectFactory.CreateNpcGameObject(game_test.GetEngine())
 
 	t.Run("Player does not exist", testPlayerDoesNotExist)
 
 	// Create a new player
-	player := gameObjectFactory.CreatePlayer(e, charGameObj)
+	player := gameObjectFactory.CreatePlayer(game_test.GetEngine(), charGameObj)
 
 	t.Run("Player does not have container", testPlayerDoesNotHaveContainer)
 
 	// Create a container for player
 	slots := charGameObj.GetProperty("slots").(map[string]interface{})
-	slots["back"] = gameObjectFactory.CreateBackpackGameObject(e, charGameObj).Id()
+	slots["back"] = gameObjectFactory.CreateBackpackGameObject(game_test.GetEngine(), charGameObj).Id()
 	charGameObj.SetProperty("slots", slots)
 
 	// Place player far from NPC
@@ -39,20 +40,20 @@ func TestBuyItem(t *testing.T) {
 	t.Run("Player does not have required resources", testPlayerDoesNotHaveRequiredResources)
 
 	// Give player enough resources
-	resourceObj := gameObjectFactory.CreateStackableResourceGameObject(e, charGameObj, resourceObjKey, buyingPrice)
-	container, _ := e.GameObjects().Load(slots["back"].(string))
-	container.(entity.IContainerObject).Put(e, player, resourceObj.Id(), -1)
+	resourceObj := gameObjectFactory.CreateStackableResourceGameObject(game_test.GetEngine(), charGameObj, resourceObjKey, buyingPrice)
+	container, _ := game_test.GetEngine().GameObjects().Load(slots["back"].(string))
+	container.(entity.IContainerObject).Put(game_test.GetEngine(), player, resourceObj.Id(), -1)
 
 	t.Run("Player bought item successfully", testSuccess)
 
 	t.Run("Player received item", func(t *testing.T) {
-		hasItem := container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
+		hasItem := container.(entity.IContainerObject).HasItemsKinds(game_test.GetEngine(), map[string]interface{}{
 			itemToBuyKind: amount,
 		})
 		assert.True(t, hasItem)
 	})
 	t.Run("Player spent resources", func(t *testing.T) {
-		hasItem := container.(entity.IContainerObject).HasItemsKinds(e, map[string]interface{}{
+		hasItem := container.(entity.IContainerObject).HasItemsKinds(game_test.GetEngine(), map[string]interface{}{
 			resourceKind: amount,
 		})
 		assert.False(t, hasItem)
