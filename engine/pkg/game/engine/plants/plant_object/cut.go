@@ -63,6 +63,8 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 			storage.GetClient().Updates <- plant.Clone()
 		}
 
+		charGameObj.(entity.ILevelingObject).AddExperience(e, "cut_plant")
+
 		e.SendSystemMessage(fmt.Sprintf("You received a %s.", resourceObj.Kind()), player)
 	} else {
 		return false

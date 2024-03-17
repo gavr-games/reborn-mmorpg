@@ -27,35 +27,35 @@
 </template>
 
 <script>
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 export default {
-  data() {
+  data () {
     return {
       showNpcTradePanel: false,
       npcInfo: {},
       sellItems: {},
       buyItems: {},
-      expandTabs: {},
+      expandTabs: {}
     }
   },
 
-  created() {
-    EventBus.$on("npc_trade_info", this.showNpcTradeInfo)
+  created () {
+    EventBus.$on('npc_trade_info', this.showNpcTradeInfo)
   },
 
-  beforeDestroy() {
-    EventBus.$off("npc_trade_info", this.showNpcTradeInfo)
+  beforeDestroy () {
+    EventBus.$off('npc_trade_info', this.showNpcTradeInfo)
   },
 
   methods: {
-    showNpcTradeInfo(data) {
+    showNpcTradeInfo (data) {
       this.showNpcTradePanel = true
       this.npcInfo = data
       this.sellItems = data.sells
       this.buyItems = data.buys
     },
-    toggleExpandTab(skillName) {
+    toggleExpandTab (skillName) {
       if (this.expandTabs[skillName]) {
         this.expandTabs[skillName] = false
       } else {
@@ -63,30 +63,29 @@ export default {
       }
       this.$forceUpdate()
     },
-    buyItem(itemName) {
-      EventBus.$emit("perform-game-action", {
-        cmd: "npc_buy_item",
+    buyItem (itemName) {
+      EventBus.$emit('perform-game-action', {
+        cmd: 'npc_buy_item',
         params: {
-          "npc_id": this.npcInfo.id,
-          "item_name": itemName,
-          "amount": 1,
+          npc_id: this.npcInfo.id,
+          item_name: itemName,
+          amount: 1
         }
-      });
+      })
     },
-    sellItem(itemName) {
-      EventBus.$emit("perform-game-action", {
-        cmd: "npc_sell_item",
+    sellItem (itemName) {
+      EventBus.$emit('perform-game-action', {
+        cmd: 'npc_sell_item',
         params: {
-          "npc_id": this.npcInfo.id,
-          "item_name": itemName,
-          "amount": 1,
+          npc_id: this.npcInfo.id,
+          item_name: itemName,
+          amount: 1
         }
-      });
+      })
     }
   }
 }
 </script>
-
 
 <style lang="scss">
 #npc_trade-panel {

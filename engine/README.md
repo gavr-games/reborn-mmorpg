@@ -24,3 +24,4 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - FIX: login after disconect works only from second try
 - Refactor: check where we can use CreateGameObject instead of CreateFromTemplate
 - Migrate test to https://onsi.github.io/ginkgo/#getting-started
+- Cover engine with tests

@@ -22,7 +22,6 @@ func GetAtlas() map[string]float64 {
 		"craft/wooden_wall":          20.0,
 		"cut_plant":                  5.0,
 		"harvest_plant":              50.0,
-		"hatch/fire_dragon":          200.0,
 		"kill_mob/bat":               50.0,
 		"kill_mob/fire_dragon":       100.0,
 	}

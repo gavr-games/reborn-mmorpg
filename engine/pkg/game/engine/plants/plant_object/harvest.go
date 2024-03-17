@@ -52,6 +52,8 @@ func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObje
 		})
 		e.GameObjects().Delete(plant.Id())
 
+		charGameObj.(entity.ILevelingObject).AddExperience(e, "harvest_plant")
+
 		e.SendSystemMessage(fmt.Sprintf("You harvested a %s.", plant.Kind()), player)
 	} else {
 		return false

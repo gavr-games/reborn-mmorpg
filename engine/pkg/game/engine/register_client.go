@@ -96,7 +96,7 @@ func initGame(e entity.IEngine, player *entity.Player, visionArea entity.IGameOb
 		// This is required to send target info on first character object rendering
 		if val.(entity.IGameObject).Id() == player.CharacterGameObjectId {
 			clone := val.(entity.IGameObject).Clone()
-			clone.SetProperties(serializers.GetInfo(e, val.(entity.IGameObject)))
+			clone.SetProperties(serializers.GetInfo(e, clone))
 			visibleObjects[key] = clone
 		}
 	}

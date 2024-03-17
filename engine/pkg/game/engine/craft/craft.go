@@ -76,6 +76,8 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, itemObj.Id(), -1)
 		}
 
+		charGameObj.(entity.ILevelingObject).AddExperience(e, fmt.Sprintf("craft/%s", craftItemName))
+
 		e.SendSystemMessage(fmt.Sprintf("You crafted %s.", craftItemName), player)
 		return true
 	} else {

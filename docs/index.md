@@ -43,6 +43,8 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 - `start_delayed_action` - used to inform frontend that some time based action has started (like craft).
 - `finish_delayed_action` - used to inform frontend that some time based action has finished (like craft).
 - `cancel_delayed_action` - used to inform frontend that some time based action was cancelled (like craft).
+- `set_exp` - set current experience value for object.
+- `set_level` - set current level for object.
 
 ## Game Object (GO) Architecture Design
 ![Interfaces Architecture](imgs/interfaces_architecture.png "Interfaces Architecture")

@@ -336,10 +336,6 @@ func (obj *GameObject) UnmarshalJSON(b []byte) error {
 }
 
 func (obj *GameObject) MarshalJSON() ([]byte, error) {
-	obj.propsMutex.RLock()
-	defer obj.propsMutex.RUnlock()
-	obj.effectsMutex.RLock()
-	defer obj.effectsMutex.RUnlock()
 	//TODO: Marshal moveToCoords
 	return json.Marshal(struct {
 		X             float64
@@ -417,10 +413,6 @@ func (a GameObject) Intersects(b utils.Bounds) bool {
 }
 
 func (obj *GameObject) Clone() *GameObject {
-	obj.propsMutex.RLock()
-	defer obj.propsMutex.RUnlock()
-	obj.effectsMutex.RLock()
-	defer obj.effectsMutex.RUnlock()
 	//TODO: Clone currentAction and moveToCoords
 	clone := &GameObject{
 		x:             atomic.NewFloat64(obj.X()),
@@ -436,8 +428,8 @@ func (obj *GameObject) Clone() *GameObject {
 		properties:    make(map[string]interface{}),
 		effects:       make(map[string]interface{}),
 	}
-	clone.SetProperties(utils.CopyMap(obj.Properties()))
-	clone.SetEffects(utils.CopyMap(obj.Effects()))
+	clone.SetProperties(obj.Properties())
+	clone.SetEffects(obj.Effects())
 	return clone
 }
 

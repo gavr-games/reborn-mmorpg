@@ -228,9 +228,6 @@ func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
 
 // Retrieve - Return all objects that could collide with the given object
 func (qt *Quadtree) Retrieve(pRect IBounds) []IBounds {
-	qt.mu.RLock()
-	defer qt.mu.RUnlock()
-
 	index := qt.getIndex(pRect)
 	// Array with all detected objects
 	returnObjects := qt.Objects
@@ -274,6 +271,9 @@ func (qt *Quadtree) RetrievePoints(find IBounds) []IBounds {
 
 // RetrieveIntersections - Bring back all the bounds in a Quadtree that intersect with a provided bounds
 func (qt *Quadtree) RetrieveIntersections(find IBounds) []IBounds {
+	qt.mu.RLock()
+	defer qt.mu.RUnlock()
+
 	var foundIntersections []IBounds
 
 	potentials := qt.Retrieve(find)

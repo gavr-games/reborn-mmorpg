@@ -53,6 +53,8 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 			storage.GetClient().Updates <- tree.Clone()
 		}
 
+		charGameObj.(entity.ILevelingObject).AddExperience(e, "chop_tree")
+
 		e.SendSystemMessage("You received a log.", player)
 	} else {
 		return false

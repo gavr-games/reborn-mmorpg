@@ -82,6 +82,7 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 				e.SendSystemMessage(fmt.Sprintf("You killed %s.", targetObj.Kind()), player)
 				if mob, ok := e.Mobs().Load(targetObj.Id()); ok {
 					mob.Die()
+					obj.AddExperience(e, fmt.Sprintf("kill_mob/%s", targetObj.Kind()))
 				}
 			} else {
 				// for characters

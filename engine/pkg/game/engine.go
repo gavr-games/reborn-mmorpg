@@ -279,7 +279,7 @@ func (e *Engine) Run() {
 		case client := <-e.unregister:
 			engine.UnregisterClient(e, client)
 		case cmd := <-e.commands:
-			engine.ProcessCommand(e, cmd.characterId, cmd.command)
+			go engine.ProcessCommand(e, cmd.characterId, cmd.command)
 		default:
 			// Run world once in TickSize
 			newTickTime := utils.MakeTimestamp()

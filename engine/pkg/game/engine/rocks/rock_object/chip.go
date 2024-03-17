@@ -52,6 +52,8 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 			storage.GetClient().Updates <- rock.Clone()
 		}
 
+		charGameObj.(entity.ILevelingObject).AddExperience(e, "chip_rock")
+
 		e.SendSystemMessage("You received a stone.", player)
 	} else {
 		return false

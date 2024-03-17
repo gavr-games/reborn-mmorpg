@@ -73,3 +73,4 @@ More information about the usage of this directory in [the documentation](https:
 - if you press move "a" and "s" you cannot press "1" to hit. Other directions work good.
 - it is very hard to position character between north_east, north_west, south_east, south_west. It depends on keyup handling.
 - fix 3D models size
+- add levelup animation
