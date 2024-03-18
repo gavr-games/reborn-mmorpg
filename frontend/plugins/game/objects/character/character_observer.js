@@ -16,12 +16,16 @@ class Character {
     this.canvas = null
     this.state = state
     this.container = null
+    this.modelName = 'base'
     this.mesh = null
     this.meshRotation = Math.PI / 2
     this.camera = null
     this.currentAnimation = null
     this.healthbar = null
     this.targetHighlight = null
+    if (state.payload.Properties.slots.body !== null) { // check if some kind of armor equipped, which changes char's look
+      this.modelName = state.payload.Properties.slots.body.kind
+    }
     this.pickupCallback = (params) => {
       if (params.character_id === this.state.id) {
         this.playAnimation('PickUp', false)
@@ -53,8 +57,8 @@ class Character {
     }
   }
 
-  create () {
-    this.container = Atlas.get('baseCharacter').instantiateModelsToScene()
+  create (addRenderObserver = true) {
+    this.container = Atlas.get(`${this.modelName}Character`).instantiateModelsToScene()
     this.playAnimation('Idle')
     this.mesh = this.container.rootNodes[0]
     freezeMaterials(this.mesh, this.scene)
@@ -70,16 +74,21 @@ class Character {
       }
     }
     // character of the logged in player
-    if (this.state.player_id === this.myCharacterId) {
+    if (this.state.player_id === this.myCharacterId && this.camera === null) {
       this.camera = new Camera(this.scene, this.canvas, this)
       this.camera.create()
     }
     this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
     this.nickname = new Nickname(this.state.name, this.scene)
-    GameObserver.addRenderObserver(`character-${this.state.id}`, this)
+    if (addRenderObserver) {
+      GameObserver.addRenderObserver(`character-${this.state.id}`, this)
+    }
   }
 
   update (renderInterval) {
+    if (this.mesh === null) {
+      return
+    }
     if (this.state.speed_x !== 0 || this.state.speed_y !== 0) {
       this.playAnimation('Walk')
       this.state.x = this.state.x + this.state.speed_x / 1000 * renderInterval
@@ -123,19 +132,37 @@ class Character {
     EventBus.$off('start_delayed_action', this.startActionCallback)
     EventBus.$off('cancel_delayed_action', this.cancelActionCallback)
     EventBus.$off('finish_delayed_action', this.cancelActionCallback)
-    this.healthbar.remove()
-    this.healthbar = null
-    this.nickname.remove()
-    this.nickname = null
+    this.state = null
+    this.removeMesh()
+  }
+
+  removeMesh () {
+    if (this.healthbar) {
+      this.healthbar.remove()
+      this.healthbar = null
+    }
+    if (this.nickname) {
+      this.nickname.remove()
+      this.nickname = null
+    }
     if (this.targetHighlight) {
       this.targetHighlight.remove()
       this.targetHighlight = null
     }
     if (this.mesh !== null) {
       this.mesh.dispose()
+      this.mesh = null
     }
-    this.mesh = null
-    this.state = null
+  }
+
+  changeModel (model) {
+    this.modelName = model
+    this.meshRotation = Math.PI / 2
+    this.removeMesh()
+    this.create(false)
+    if (this.state.player_id === this.myCharacterId && this.camera !== null) {
+      this.camera.updateLockedTarget(this.mesh)
+    }
   }
 
   selectAsTarget () {

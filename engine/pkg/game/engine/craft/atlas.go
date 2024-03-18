@@ -129,6 +129,24 @@ func GetAtlas() map[string]interface{} {
 			"width": 2.0,
 			"height": 2.0,
 		},
+		"golden_armor": map[string]interface{}{
+			"skill": "blacksmithing",
+			"resources": map[string]interface{}{
+				"gold_ingot": 4.0,
+				"animal_skin": 2.0,
+			},
+			"title": "Golden Armor",
+			"description": "Should protect you a little bit in the fight.",
+			"inputs": []string{},
+			"tools": []string{
+				"hammer",
+			},
+			"equipment": []string{
+				"anvil",
+			},
+			"place_in_real_world": false,
+			"duration": 20000.0,
+		},
 		"healing_balm": map[string]interface{}{
 			"skill": "herbalism",
 			"resources": map[string]interface{}{
@@ -142,6 +160,22 @@ func GetAtlas() map[string]interface{} {
 			},
 			"place_in_real_world": false,
 			"duration": 7000.0,
+		},
+		"leather_robe": map[string]interface{}{
+			"skill": "tailoring",
+			"resources": map[string]interface{}{
+				"rope": 2.0,
+				"animal_skin": 4.0,
+			},
+			"title": "Leather Robe",
+			"description": "Looks very warm and should have basic protection from spells.",
+			"inputs": []string{},
+			"tools": []string{
+				"knife",
+				"needle",
+			},
+			"place_in_real_world": false,
+			"duration": 20000.0,
 		},
 		"rope": map[string]interface{}{
 			"skill": "survival",

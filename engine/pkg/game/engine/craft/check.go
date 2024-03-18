@@ -35,6 +35,31 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		}
 	}
 
+	// Is standing near required equipment (like anvil)
+	if requiredEquipments, eqOk := craftItemConfig["equipment"]; eqOk {
+		possibleEquipmentObjects := e.Floors()[charGameObj.Floor()].RetrieveIntersections(utils.Bounds{
+			X:      charGameObj.X() - CraftDistance,
+			Y:      charGameObj.Y() - CraftDistance,
+			Width:  charGameObj.Width() + CraftDistance * 2,
+			Height: charGameObj.Height() + CraftDistance * 2,
+		})
+
+		for _, requiredEquipment := range requiredEquipments.([]string) {
+			foundEquipment := false
+			for _, val := range possibleEquipmentObjects {
+				gameObj := val.(entity.IGameObject)
+				if gameObj.Kind() == requiredEquipment && claims.CheckAccess(e, charGameObj, gameObj) {
+					foundEquipment = true
+					continue
+				}
+			}
+			if !foundEquipment {
+				e.SendSystemMessage(fmt.Sprintf("You need to stand near %s.", requiredEquipment), player)
+				return false
+			}
+		}
+	}
+
 	// Check has resources
 	if len(craftItemConfig["resources"].(map[string]interface{})) != 0 {
 		// check character has container

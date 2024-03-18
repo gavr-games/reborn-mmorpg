@@ -31,6 +31,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/walls/wall_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/weapons/weapon_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/armors/armor_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
@@ -174,6 +175,8 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 		return resource_object.NewResourceObject(gameObj)
 	case "melee_weapon":
 		return weapon_object.NewWeaponObject(gameObj)
+	case "armor":
+		return armor_object.NewArmorObject(gameObj)
 	case "hammer", "knife", "pickaxe", "axe", "needle", "fishing_rod", "saw":
 		return tool_object.NewToolObject(gameObj)
 	case "shovel":

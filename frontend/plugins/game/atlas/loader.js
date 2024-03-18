@@ -109,15 +109,7 @@ class Loader {
   }
 
   load () {
-    const task = this.assetsManager.addContainerTask(
-      'baseCharacter',
-      'baseCharacter',
-      '/game_assets/characters/',
-      'base_character.glb'
-    )
-    task.onSuccess = (task) => {
-      this.atlas.set('baseCharacter', task.loadedContainer)
-    }
+    this.loadCharacters()
     this.loadSurfaces()
     this.loadRocks()
     this.loadTrees()
@@ -126,6 +118,25 @@ class Loader {
     this.loadMobs()
     this.loadNpcs()
     this.assetsManager.load()
+  }
+
+  loadCharacters () {
+    const characters = [
+      'base',
+      'golden_armor',
+      'leather_robe'
+    ]
+    characters.forEach((character) => {
+      const task = this.assetsManager.addContainerTask(
+        character,
+        character,
+        '/game_assets/characters/',
+        character + '.glb'
+      )
+      task.onSuccess = (task) => {
+        this.atlas.set(character + 'Character', task.loadedContainer)
+      }
+    })
   }
 
   loadSurfaces () {
@@ -222,10 +233,12 @@ class Loader {
       'fire_dragon_hatchery',
       'gold',
       'gold_ingot',
+      'golden_armor',
       'grass',
       'healing_balm',
       'iron_ingot',
       'iron_nails',
+      'leather_robe',
       'log',
       'pickaxe',
       'rope',

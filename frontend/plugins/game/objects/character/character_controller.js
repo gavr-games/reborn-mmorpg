@@ -25,7 +25,19 @@ class CharacterController {
         this.emulateTimeout = null
       }, data.ping)
     }
+    this.performUnequipItem = (data) => {
+      if (data.character_id === this.state.id && data.slot === 'body') {
+        this.observer.changeModel('base')
+      }
+    }
+    this.performEquipItem = (data) => {
+      if (data.character_id === this.state.id && data.slot === 'body') {
+        this.observer.changeModel(data.item.kind)
+      }
+    }
     EventBus.$on('melee_hit_attempt', this.performMeleeHit)
+    EventBus.$on('unequip_item', this.performUnequipItem)
+    EventBus.$on('equip_item', this.performEquipItem)
     // Display character target
     if (this.state.player_id === this.myCharacterId && this.state.payload.Properties.target) {
       EventBus.$emit('select_target', this.state.payload.Properties.target)
@@ -43,6 +55,8 @@ class CharacterController {
   remove () {
     EventBus.$off('melee_hit_attempt', this.performMeleeHit)
     EventBus.$off('emulate-character-move', this.emulateMove)
+    EventBus.$off('unequip_item', this.performUnequipItem)
+    EventBus.$off('equip_item', this.performEquipItem)
     this.state = null
     this.observer.remove()
   }

@@ -75,7 +75,9 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 			go initGame(e, player, visionArea)
 			if charGameObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
 				// Send character obj to another players
-				e.SendGameObjectUpdate(charGameObj, "add_object")
+				charClone := charGameObj.Clone()
+				charClone.SetProperties(serializers.GetInfo(e, charClone))
+				e.SendGameObjectUpdate(charClone, "add_object")
 				// Show lifted object
 				if liftedObjectId := charGameObj.GetProperty("lifted_object_id"); liftedObjectId != nil {
 					if liftedObj, liftedObjOk := e.GameObjects().Load(liftedObjectId.(string)); liftedObjOk {

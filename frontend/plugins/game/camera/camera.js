@@ -36,6 +36,10 @@ class Camera {
     this.camera.position.y = charPosition.y + 20
     this.camera.position.z = charPosition.z - 20
   }
+
+  updateLockedTarget (newTarget) {
+    this.camera.lockedTarget = newTarget
+  }
 }
 
 export default Camera

@@ -62,6 +62,9 @@ export default {
   &.gold_ingot {
     background-position: 418px 320px;
   }
+  &.golden_armor {
+    background-position: 192px 608px;
+  }
   &.healing_balm {
     background-position: 448px 578px;
   }
@@ -70,6 +73,9 @@ export default {
   }
   &.iron_nails {
     background-position: 800px 867px;
+  }
+  &.leather_robe {
+    background-position: 224px 640px;
   }
   &.log {
     background-position: 512px 320px;

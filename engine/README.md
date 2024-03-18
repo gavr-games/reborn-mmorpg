@@ -15,6 +15,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft
 - add more complex leveling formula, which takes into account many parameters like mob lvl and etc
+- add more combat mechanics like defence, inasion, resists, etc.
 - add database of game objects, craft OR editor to manage atlases (move atlases to json files where possible)
 - switch from json to protobuf for server-client communication
 - for prod - global error logging

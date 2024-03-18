@@ -637,6 +637,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"game_master": false,
 				"slots": map[string]interface{}{
 					"back":      nil,
+					"body":      nil,
 					"left_arm":  nil,
 					"right_arm": nil,
 				},
@@ -658,6 +659,80 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"height":  constants.PlayerVisionArea,
 				"shape":   "rectangle",
 				"visible": false,
+			},
+		},
+		"armor": {
+			"golden_armor": map[string]interface{}{
+				"type":         "armor",
+				"kind":         "golden_armor",
+				"width":        1.9,
+				"height":       0.8,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"target_slots": map[string]interface{}{
+					"body":  true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd":    "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd":    "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"leather_robe": map[string]interface{}{
+				"type":         "armor",
+				"kind":         "leather_robe",
+				"width":        1.33,
+				"height":       0.58,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"target_slots": map[string]interface{}{
+					"body":  true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd":    "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd":    "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
 			},
 		},
 		"melee_weapon": {
