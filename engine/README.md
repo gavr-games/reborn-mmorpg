@@ -12,6 +12,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## TODO
 - add Transactions (Mutexes) when objects cnahge
+- change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft
 - add more complex leveling formula, which takes into account many parameters like mob lvl and etc
 - add database of game objects, craft OR editor to manage atlases (move atlases to json files where possible)
@@ -25,3 +26,4 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - Refactor: check where we can use CreateGameObject instead of CreateFromTemplate
 - Migrate test to https://onsi.github.io/ginkgo/#getting-started
 - Cover engine with tests
+- Add golang building cache to volume? speedup test and first launch

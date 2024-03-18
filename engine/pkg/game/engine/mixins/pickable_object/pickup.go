@@ -53,21 +53,23 @@ func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool 
 	}
 
 	// remove from world
-	e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
-		return item.Id() == b.(entity.IGameObject).Id()
-	})
-	item.SetProperty("visible", false)
+	if _, itemStillExists := e.GameObjects().Load(item.Id()); itemStillExists { // if item was stackable it is destroyed in Put func
+		e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
+			return item.Id() == b.(entity.IGameObject).Id()
+		})
+		item.SetProperty("visible", false)
 
-	storage.GetClient().Updates <- item.Clone()
+		storage.GetClient().Updates <- item.Clone()
+		e.SendResponseToVisionAreas(charGameObj, "remove_object", map[string]interface{}{
+			"object": map[string]interface{}{
+				"Id": item.Id(),
+			},
+		})
+	}
 
 	e.SendResponseToVisionAreas(charGameObj, "pickup_object", map[string]interface{}{
 		"character_id": charGameObj.Id(),
 		"id":           item.Id(),
-	})
-	e.SendResponseToVisionAreas(charGameObj, "remove_object", map[string]interface{}{
-		"object": map[string]interface{}{
-			"Id": item.Id(),
-		},
 	})
 
 	return true

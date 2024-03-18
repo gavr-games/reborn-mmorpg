@@ -135,6 +135,10 @@ class GameController {
     if (this.gameObjects[gameObj.Id] != null) {
       return
     }
+    // don't show not visible objects
+    if (gameObj.Properties.visible == null || !gameObj.Properties.visible) {
+      return
+    }
     switch (gameObj.Type) {
       case 'surface':
         this.gameObjects[gameObj.Id] = new SurfaceController(gameObj)

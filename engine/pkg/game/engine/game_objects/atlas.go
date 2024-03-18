@@ -703,6 +703,23 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 			},
 		},
+		"equipment": {
+			"anvil": map[string]interface{}{
+				"type":       "equipment",
+				"kind":       "anvil",
+				"width":      2.0,
+				"height":     0.56,
+				"shape":      "rectangle",
+				"collidable": true,
+				"visible":    true,
+				"actions": map[string]interface{}{
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_building",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
 		"resource": {
 			"carrot": map[string]interface{}{
 				"type":         "resource",
@@ -1032,6 +1049,56 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"iron_ingot": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "iron_ingot",
+				"width":        1.0,
+				"height":       0.15,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"gold_ingot": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "gold_ingot",
+				"width":        1.0,
+				"height":       0.15,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 		},
 		"potion": {
 			"healing_balm": map[string]interface{}{
@@ -1293,6 +1360,16 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"amount":   1.0,
 						"resource": "gold",
 						"price":    5.0,
+					},
+					"resource/iron_ingot": map[string]interface{}{
+						"amount":   1.0,
+						"resource": "gold",
+						"price":    25.0,
+					},
+					"resource/gold_ingot": map[string]interface{}{
+						"amount":   1.0,
+						"resource": "gold",
+						"price":    50.0,
 					},
 				},
 				"buys": map[string]interface{}{

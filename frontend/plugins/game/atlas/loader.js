@@ -207,6 +207,7 @@ class Loader {
 
   loadItems () {
     const items = [
+      'anvil',
       'axe',
       'animal_skin',
       'bone',
@@ -220,8 +221,10 @@ class Loader {
       'fire_dragon_egg',
       'fire_dragon_hatchery',
       'gold',
+      'gold_ingot',
       'grass',
       'healing_balm',
+      'iron_ingot',
       'iron_nails',
       'log',
       'pickaxe',

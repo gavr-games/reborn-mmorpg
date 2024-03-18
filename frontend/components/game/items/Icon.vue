@@ -1,14 +1,18 @@
 <template>
-  <i :class="`game-item-icon ${item}`" :title="item"></i>
+  <i :class="`game-item-icon ${item}`" :title="item" />
 </template>
 
 <script>
 
 export default {
-  props: ["item"],
+  props: {
+    item: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>
-
 
 <style lang="scss">
 .game-item-icon {
@@ -55,8 +59,14 @@ export default {
   &.gold {
     background-position: 192px 482px;
   }
+  &.gold_ingot {
+    background-position: 418px 320px;
+  }
   &.healing_balm {
     background-position: 448px 578px;
+  }
+  &.iron_ingot {
+    background-position: 160px 320px;
   }
   &.iron_nails {
     background-position: 800px 867px;

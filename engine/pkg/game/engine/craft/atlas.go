@@ -2,6 +2,31 @@ package craft
 
 func GetAtlas() map[string]interface{} {
 	craftAtlas:= map[string]interface{}{
+		"anvil": map[string]interface{}{
+			"skill": "blacksmithing",
+			"resources": map[string]interface{}{
+				"stone": 3.0,
+				"iron_ingot": 3.0,
+			},
+			"title": "Anvil",
+			"description": "Used to create some armor, tools and weapons from ingots.",
+			"inputs": []string{
+				"coordinates",
+				"rotation",
+			},
+			"tools": []string{
+				"hammer",
+				"pickaxe",
+			}, //tools equipped required to craft something
+			"surfaces": []string{
+				"grass",
+				"stone",
+			}, //allowed surfaces to craft this item on
+			"place_in_real_world": true, //place item in real world or put into container
+			"duration": 7000.0, // ms
+			"width": 2.0,
+			"height": 0.56,
+		},
 		"bone_needle": map[string]interface{}{
 			"skill": "survival",
 			"resources": map[string]interface{}{
