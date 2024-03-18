@@ -4,7 +4,6 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## Roadmap for Demo
-- Body armor and Robe
 - Add baby dragons and raising them
 - Add dragon breeding to get new eggs
 - Fighting with dragons in dungeons and leveling dragons
