@@ -1,74 +1,80 @@
 <template>
   <div id="character-menu" class="game-panel">
     <div class="game-panel-content">
-      <div class="menu-item hero-icon" @click="getCharacterInfo" title="Character"></div>
-      <div class="menu-item craft-icon" @click="getCraftAtlas" title="Craft"></div>
-      <div class="menu-item map-icon"  @click="showMap" title="Map"></div>
-      <div class="menu-item town-icon"  @click="townTeleport" title="Teleport to Town"></div>
-      <div class="menu-item obelisk-icon"  @click="claimTeleport" title="Teleport to Claim"></div>
-      <div class="menu-item gm-icon"  @click="showGMPanel" title="Game Master" v-if="showGMIcon"></div>
+      <div class="menu-item hero-icon" title="Character" @click="getCharacterInfo" />
+      <div class="menu-item dragons-icon" title="Dragons" @click="getDragonsInfo" />
+      <div class="menu-item craft-icon" title="Craft" @click="getCraftAtlas" />
+      <div class="menu-item map-icon" title="Map" @click="showMap" />
+      <div class="menu-item town-icon" title="Teleport to Town" @click="townTeleport" />
+      <div class="menu-item obelisk-icon" title="Teleport to Claim" @click="claimTeleport" />
+      <div class="menu-item gm-icon" title="Game Master" @click="showGMPanel" v-if="showGMIcon" />
     </div>
   </div>
 </template>
 
 <script>
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 export default {
-  data() {
+  data () {
     return {
-      showGMIcon: false,
+      showGMIcon: false
     }
   },
 
-  created() {
-    EventBus.$on("my-character-info", this.showGameMasterIcon)
+  created () {
+    EventBus.$on('my-character-info', this.showGameMasterIcon)
   },
 
-  beforeDestroy() {
-    EventBus.$off("my-character-info", this.showGameMasterIcon)
+  beforeDestroy () {
+    EventBus.$off('my-character-info', this.showGameMasterIcon)
   },
 
   methods: {
-    getCharacterInfo() {
-      EventBus.$emit("perform-game-action", {
-        cmd: "get_character_info",
+    getCharacterInfo () {
+      EventBus.$emit('perform-game-action', {
+        cmd: 'get_character_info',
         params: {}
-      });
+      })
     },
-    getCraftAtlas() {
-      EventBus.$emit("perform-game-action", {
-        cmd: "get_craft_atlas",
+    getDragonsInfo () {
+      EventBus.$emit('perform-game-action', {
+        cmd: 'get_dragons_info',
         params: {}
-      });
+      })
     },
-    showMap() {
-      EventBus.$emit("show-map", {});
-    },
-    townTeleport() {
-      EventBus.$emit("perform-game-action", {
-        cmd: "town_teleport",
+    getCraftAtlas () {
+      EventBus.$emit('perform-game-action', {
+        cmd: 'get_craft_atlas',
         params: {}
-      });
+      })
     },
-    claimTeleport() {
-      EventBus.$emit("perform-game-action", {
-        cmd: "claim_teleport",
+    showMap () {
+      EventBus.$emit('show-map', {})
+    },
+    townTeleport () {
+      EventBus.$emit('perform-game-action', {
+        cmd: 'town_teleport',
         params: {}
-      });
+      })
     },
-    showGameMasterIcon(characterData) {
-      if (characterData.Properties["game_master"] === true) {
+    claimTeleport () {
+      EventBus.$emit('perform-game-action', {
+        cmd: 'claim_teleport',
+        params: {}
+      })
+    },
+    showGameMasterIcon (characterData) {
+      if (characterData.Properties.game_master === true) {
         this.showGMIcon = true
       }
     },
-    showGMPanel() {
-      EventBus.$emit("show-gm-panel", {});
+    showGMPanel () {
+      EventBus.$emit('show-gm-panel', {})
     }
   }
 }
 </script>
-
 
 <style lang="scss">
 #character-menu {
@@ -92,6 +98,10 @@ export default {
   }
   .hero-icon {
     background-image: url("~assets/img/icons/hero.png");
+    background-repeat: no-repeat;
+  }
+  .dragons-icon {
+    background-image: url("~assets/img/icons/dragons.png");
     background-repeat: no-repeat;
   }
   .craft-icon {

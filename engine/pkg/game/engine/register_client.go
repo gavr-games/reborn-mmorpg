@@ -5,6 +5,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
 func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
@@ -77,7 +78,10 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 				// Send character obj to another players
 				charClone := charGameObj.Clone()
 				charClone.SetProperties(serializers.GetInfo(e, charClone))
-				e.SendGameObjectUpdate(charClone, "add_object")
+				e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{
+					"object": charClone,
+				})
+				storage.GetClient().Updates <- charGameObj.Clone()
 				// Show lifted object
 				if liftedObjectId := charGameObj.GetProperty("lifted_object_id"); liftedObjectId != nil {
 					if liftedObj, liftedObjOk := e.GameObjects().Load(liftedObjectId.(string)); liftedObjOk {

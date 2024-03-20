@@ -1,5 +1,25 @@
 package mob_object
 
-func (mob *MobObject) Unfollow() {
-	mob.State = StopFollowingState
+import (
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+)
+
+func (mob *MobObject) Unfollow(targetObj entity.IGameObject) {
+	if targetObj == nil {
+		mob.State = StopFollowingState
+		return
+	}
+	// Check only owner can ask mob to unfollow
+	if playerId := targetObj.GetProperty("player_id"); playerId != nil {
+		playerIdInt := playerId.(int)
+		if player, ok := mob.Engine.Players().Load(playerIdInt); ok {
+			if mob.GetProperty("owner_id") != nil && targetObj.Id() == mob.GetProperty("owner_id").(string) {
+				mob.State = StopFollowingState
+			} else {
+				mob.Engine.SendSystemMessage("You are not the owner of this creature.", player)
+			}
+		}
+	} else { // allow to follow other object for future (not only players)
+		mob.State = StopFollowingState
+	}
 }

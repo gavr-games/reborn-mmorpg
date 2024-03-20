@@ -52,7 +52,7 @@ func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
 	storage.GetClient().Updates <- item.Clone()
 
 	e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{
-		"object": item,
+		"object": item.Clone(),
 	})
 
 	return true

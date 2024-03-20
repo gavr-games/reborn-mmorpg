@@ -12,7 +12,7 @@ func GrowGrass(e entity.IEngine, params map[string]interface{}) bool {
 		// Add grass
 		grass := e.CreateGameObject("surface/grass", dirt.X(), dirt.Y(), 0.0, dirt.Floor(), nil)
 		e.SendResponseToVisionAreas(grass, "add_object", map[string]interface{}{
-			"object": grass,
+			"object": grass.Clone(),
 		})
 
 		// Remove dirt

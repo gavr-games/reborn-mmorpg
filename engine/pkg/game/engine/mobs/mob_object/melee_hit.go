@@ -24,9 +24,10 @@ func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 	}
 
 	// Send hit attempt to client
+	mobClone := mob.Clone()
 	mob.Engine.SendResponseToVisionAreas(mob, "melee_hit_attempt", map[string]interface{}{
-		"object": mob,
-		"weapon": mob, // mob has all required weapon attributes itself to act like weapon
+		"object": mobClone,
+		"weapon": mobClone, // mob has all required weapon attributes itself to act like weapon
 	})
 
 	// deduct health and update object

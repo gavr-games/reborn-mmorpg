@@ -22,7 +22,7 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 				charObj.(entity.IMovingObject).Stop(e)
 				storage.GetClient().Updates <- charObj.Clone()
 				e.SendResponseToVisionAreas(charObj, "remove_object", map[string]interface{}{
-					"object": charObj,
+					"object": charObj.Clone(),
 				})
 				// Hide lifted object
 				if liftedObjectId := charObj.GetProperty("lifted_object_id"); ok && liftedObjectId != nil {
@@ -31,7 +31,7 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 							liftedObj.SetProperty("visible", false)
 							storage.GetClient().Updates <- liftedObj.Clone()
 							e.SendResponseToVisionAreas(liftedObj, "remove_object", map[string]interface{}{
-								"object": liftedObj,
+								"object": liftedObj.Clone(),
 							})
 						}
 					}

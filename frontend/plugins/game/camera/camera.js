@@ -40,6 +40,11 @@ class Camera {
   updateLockedTarget (newTarget) {
     this.camera.lockedTarget = newTarget
   }
+
+  remove () {
+    this.camera.dispose()
+    this.scene.activeCamera = null
+  }
 }
 
 export default Camera

@@ -27,7 +27,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 
 		// List of commands, which don't interrupt current character action.
 		// Like get_character_info does not interrupt choping a tree, but any movement does
-		nonCancellingCmds := []string{"get_ping", "get_character_info", "open_container", "get_craft_atlas", "npc_trade_info", "get_item_info"}
+		nonCancellingCmds := []string{"get_ping", "get_character_info", "get_dragons_info", "open_container", "get_craft_atlas", "npc_trade_info", "get_item_info"}
 		// Cancel character delayed actions and auto moving
 		if !slices.Contains(nonCancellingCmds, cmd.(string)) {
 			delayed_actions.Cancel(e, charGameObj)
@@ -75,6 +75,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "get_craft_atlas":
 			e.SendResponse("craft_atlas", craft.GetAtlas(), player)
+		case "get_dragons_info":
+			e.SendResponse("dragons_info", charGameObj.(entity.ICharacterObject).GetDragonsInfo(e), player)
 		case "open_container":
 			if cont, contOk := e.GameObjects().Load(params.(string)); contOk {
 				container := cont.(entity.IContainerObject)
@@ -231,13 +233,13 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			mob, ok := e.Mobs().Load(mobId)
 			if ok {
 				//TODO: Check commands  can be executed only close enough to the mob
-				mob.Follow(charGameObj.Id())
+				mob.Follow(charGameObj)
 			}
 		case "unfollow":
 			mobId := params.(string)
 			if mob, mobOk := e.Mobs().Load(mobId); mobOk {
 				//TODO: Check commands  can be executed only close enough to the mob
-				mob.Unfollow()
+				mob.Unfollow(charGameObj)
 			}
 		case "select_target":
 			targetId := params.(string)
@@ -249,6 +251,14 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "pay_rent":
 			if claim, claimOk := e.GameObjects().Load(params.(string)); claimOk {
 				claim.(entity.IClaimObeliskObject).ExtendRent(e)
+			}
+		case "teleport_dragon_to_owner":
+			if dragon, dragonOk := e.GameObjects().Load(params.(string)); dragonOk {
+				dragon.(entity.IDragonObject).TeleportToOwner(charGameObj)
+			}
+		case "release_dragon":
+			if dragon, dragonOk := e.GameObjects().Load(params.(string)); dragonOk {
+				dragon.(entity.IDragonObject).Release(charGameObj)
 			}
 		case "gm_create_object":
 			gm.CreateObject(e, charGameObj, params.(map[string]interface{}))

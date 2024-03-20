@@ -25,7 +25,10 @@ func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 			"action": delayedActionFuncName,
 		})
 	}
-
-	charGameObj.Move(e, constants.InitialPlayerX, constants.InitialPlayerY)
+	charGameObjClone := charGameObj.Clone()
+	e.SendResponseToVisionAreas(charGameObjClone, "remove_object", map[string]interface{}{
+		"object": charGameObjClone,
+	})
+	charGameObj.Move(e, constants.InitialPlayerX, constants.InitialPlayerY, 0)
 	e.SendGameObjectUpdate(charGameObj, "update_object")
 }

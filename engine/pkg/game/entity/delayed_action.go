@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"go.uber.org/atomic"
 	"sync"
+
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 const (
@@ -40,7 +42,7 @@ func (da *DelayedAction) SetFuncName(funcName string) {
 func (da *DelayedAction) Params() map[string]interface{} {
 	da.mu.RLock()
 	defer da.mu.RUnlock()
-	return da.params
+	return utils.CopyMap(da.params)
 }
 
 func (da *DelayedAction) SetParams(params map[string]interface{}) {

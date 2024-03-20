@@ -8,19 +8,17 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - Add dragon breeding to get new eggs
   - breeding cave, select dragons for breeding
 - Fighting with dragons in dungeons and leveling dragons
-  - Tie dragons to account, hatched on claim
-  - Maximum dragons amount per level. Develop formula something like dragons = sqrt(charlvl*10)
-  - Release dragons
-  - teleport to me
   - reborn = dragonlvl * 25 gold + altar
-  - generate dungeons
+  - generate dungeons (introduce more floors, chars move to another floor take into account on frontend)
   - select dragons for dungeon (1 per 10 lvls, max 3)
   - select dungeon lvl, increase dungeon lvl
   - get exp for dungeons
 - More buildings and furniture for houses
 
 ## TODO
+- BUG: hatchery is not removed on hatch after engine reload
 - add Transactions (Mutexes) when objects cnahge
+- ADD separate go routine to send vision area updates in the right order
 - change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft
 - add more complex leveling formula, which takes into account many parameters like mob lvl and etc

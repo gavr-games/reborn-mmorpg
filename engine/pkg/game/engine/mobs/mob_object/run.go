@@ -27,12 +27,12 @@ func (mob *MobObject) Run(newTickTime int64) {
 	// Perform following
 	if mob.State == FollowingState {
 		if (newTickTime - mob.TickTime) >= FollowingTime {
-			mob.Unfollow()
+			mob.Unfollow(nil)
 		} else { // Perform actual following
 			if targetObj, ok := mob.Engine.GameObjects().Load(mob.TargetObjectId); ok {
 				mob.performFollowing(targetObj, FollowingDirectionChangeTime)
 			} else {
-				mob.Unfollow()
+				mob.Unfollow(nil)
 			}
 		}
 	} else

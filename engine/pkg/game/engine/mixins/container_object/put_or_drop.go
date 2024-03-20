@@ -15,7 +15,7 @@ func (cont *ContainerObject) PutOrDrop(e entity.IEngine, charGameObj entity.IGam
 				e.Floors()[item.Floor()].Insert(item)
 				e.SendGameObjectUpdate(item, "add_object")
 				e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{
-					"object": item,
+					"object": item.Clone(),
 				})
 			}
 		} else {

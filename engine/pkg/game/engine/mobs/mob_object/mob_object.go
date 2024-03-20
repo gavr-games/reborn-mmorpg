@@ -30,6 +30,7 @@ const (
 	AttackingDirectionChangeTime = 500.0 // change direction only once per this time
 )
 
+// TODO: refactor to thread safe
 type MobObject struct {
 	Engine entity.IEngine
 	TickTime int64

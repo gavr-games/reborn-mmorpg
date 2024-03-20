@@ -62,7 +62,7 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			storage.GetClient().Updates <- itemObj.Clone()
 
 			e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{
-				"object": itemObj,
+				"object": itemObj.Clone(),
 			})
 		} else {
 			itemObj, err := game_objects.CreateFromTemplate(e, craftItemName, charGameObj.X(), charGameObj.Y(), 0.0)

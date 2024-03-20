@@ -132,6 +132,10 @@ class Character {
     EventBus.$off('start_delayed_action', this.startActionCallback)
     EventBus.$off('cancel_delayed_action', this.cancelActionCallback)
     EventBus.$off('finish_delayed_action', this.cancelActionCallback)
+    if (this.state.player_id === this.myCharacterId && this.camera !== null) {
+      this.camera.remove()
+      this.camera = null
+    }
     this.state = null
     this.removeMesh()
   }

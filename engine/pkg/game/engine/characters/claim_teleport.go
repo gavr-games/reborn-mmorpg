@@ -16,7 +16,12 @@ func ClaimTeleport(e entity.IEngine, params map[string]interface{}) bool {
 					e.SendSystemMessage("You don't have a claim.", player)
 					return false
 				}
-				charGameObj.(entity.ICharacterObject).Move(e, obelisk.X() + 1.0, obelisk.Y() + 1.0)
+				// Send remove to all players who see character
+				charGameObjClone := charGameObj.Clone()
+				e.SendResponseToVisionAreas(charGameObjClone, "remove_object", map[string]interface{}{
+					"object": charGameObjClone,
+				})
+				charGameObj.(entity.ICharacterObject).Move(e, obelisk.X() + 1.0, obelisk.Y() + 1.0, obelisk.Floor())
 			}
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		}

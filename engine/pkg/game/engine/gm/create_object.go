@@ -37,7 +37,7 @@ func CreateObject(e entity.IEngine, charGameObj entity.IGameObject, params map[s
 	gameObj := e.CreateGameObject(objPath, charGameObj.X() + offsetX, charGameObj.Y() + offsetY, 0.0, charGameObj.Floor(), additionalProps.(map[string]interface{}))
 
 	e.SendResponseToVisionAreas(gameObj, "add_object", map[string]interface{}{
-		"object": gameObj,
+		"object": gameObj.Clone(),
 	})
 
 	e.SendSystemMessage(fmt.Sprintf("You've created %s.", objPath), player)

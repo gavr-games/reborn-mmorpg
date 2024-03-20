@@ -632,6 +632,9 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"max_health":  100.0,
 				"level":       0.0,
 				"experience":  0.0,
+				"claim_obelisk_id": nil,
+				"dragons_ids": []interface{}{},
+				"max_dragons": 1.0,
 				"visible":     true,
 				"targetable":  true,
 				"game_master": false,
@@ -1281,6 +1284,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"collidable":  true,
 				"visible":     true,
 				"payed_until": nil,
+				"claim_area_id": nil,
 				"current_action": map[string]interface{}{
 					"func_name": "InitClaim",
 					"params": map[string]interface{}{
@@ -1309,6 +1313,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"width":      constants.ClaimArea,
 				"height":     constants.ClaimArea,
 				"shape":      "rectangle",
+				"claim_obelisk_id": nil,
 				"collidable": false,
 				"visible":    true,
 			},
@@ -1335,6 +1340,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"cooldown":    2000.0, //ms
 				"hit_radius":  2.0,    // maximum distance to target
 				"hit_angle":   120.0,  // degrees
+				"owner_id":    nil,
 				"drop": map[string]interface{}{
 					"resource/gold": map[string]interface{}{
 						"probability": 1.0,

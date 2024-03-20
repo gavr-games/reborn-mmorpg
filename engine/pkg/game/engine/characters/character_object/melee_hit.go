@@ -50,8 +50,8 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 
 		// Send hit attempt to client
 		e.SendResponseToVisionAreas(obj, "melee_hit_attempt", map[string]interface{}{
-			"object": obj,
-			"weapon": weapon,
+			"object": obj.Clone(),
+			"weapon": weapon.Clone(),
 		})
 
 		// check collision with target

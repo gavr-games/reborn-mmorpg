@@ -9,6 +9,7 @@
     <GameCharacterMenu />
     <GameExperienceBar />
     <GamePanelCraft />
+    <GamePanelDragons />
     <GamePanelNpcTrade />
     <GamePanelItemInfo />
     <GamePanelCharacter />

@@ -17,6 +17,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/bag_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/chest_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/dragons/dragon_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries/hatchery_object"
@@ -182,7 +183,11 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 	case "shovel":
 		return shovel_object.NewShovelObject(gameObj)
 	case "mob":
-		return mob_object.NewMobObject(e, gameObj)
+		if strings.Contains(gameObj.Kind(), "_dragon") {
+			return dragon_object.NewDragonObject(e, gameObj)
+		} else {
+			return mob_object.NewMobObject(e, gameObj)
+		}
 	case "player":
 		if gameObj.Kind() == "player" {
 			return character_object.NewCharacterObject(gameObj)
@@ -282,7 +287,10 @@ func (e *Engine) Run() {
 		case client := <-e.unregister:
 			engine.UnregisterClient(e, client)
 		case cmd := <-e.commands:
-			go engine.ProcessCommand(e, cmd.characterId, cmd.command)
+			// TODO: refactor to "go engine.ProcessCommand(e, cmd.characterId, cmd.command)"
+			// it requires to figure out how to deal with slices and maps in game objects properties
+			// there could be cases when 2 routines override a slice. 2 players put item at the same position in container.
+			engine.ProcessCommand(e, cmd.characterId, cmd.command)
 		default:
 			// Run world once in TickSize
 			newTickTime := utils.MakeTimestamp()

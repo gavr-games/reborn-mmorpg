@@ -12,6 +12,7 @@ import (
 const (
 	EXP_AMOUNT_DIVIDER = 0.05
 	EXP_INCREASE_POWER = 2.0
+	MAX_DRAGONS_MULTIPLIER = 10
 )
 
 func (obj *LevelingObject) AddExperience(e entity.IEngine, action string) (bool, error) {
@@ -51,6 +52,7 @@ func (obj *LevelingObject) updateExpAndLevel(e entity.IEngine, amount float64) (
 	} else {
 		gameObj.SetProperty("level", currentLevel + 1)
 		gameObj.SetProperty("experience", 0.0)
+		gameObj.SetProperty("max_dragons", math.Ceil(math.Sqrt((currentLevel + 1) * MAX_DRAGONS_MULTIPLIER)))
 		storage.GetClient().Updates <- gameObj.Clone()
 		e.SendResponseToVisionAreas(gameObj, "set_level", map[string]interface{}{
 			"level": currentLevel + 1,

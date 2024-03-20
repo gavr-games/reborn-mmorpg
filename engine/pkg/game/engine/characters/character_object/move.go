@@ -8,7 +8,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 )
 
-func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY float64) {
+func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY float64, floor int) {
 	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
 		if visionAreaGameObj, visionAreaOk := e.GameObjects().Load(player.VisionAreaGameObjectId); visionAreaOk {
@@ -17,7 +17,8 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 			})
 			charGameObj.SetX(newX)
 			charGameObj.SetY(newY)
-			e.Floors()[charGameObj.Floor()].Insert(charGameObj)
+			charGameObj.SetFloor(floor)
+			e.Floors()[floor].Insert(charGameObj)
 
 			// Update lifted item
 			liftedObjectId := charGameObj.GetProperty("lifted_object_id")
@@ -29,7 +30,8 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 						})
 						liftedObj.SetX(charGameObj.X())
 						liftedObj.SetY(charGameObj.Y())
-						e.Floors()[liftedObj.Floor()].Insert(liftedObj)
+						liftedObj.SetFloor(floor)
+						e.Floors()[floor].Insert(liftedObj)
 					}
 				}
 			}

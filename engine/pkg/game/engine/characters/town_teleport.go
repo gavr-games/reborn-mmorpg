@@ -12,7 +12,11 @@ func TownTeleport(e entity.IEngine, params map[string]interface{}) bool {
 	if player, ok := e.Players().Load(playerId); ok {
 		if charGameObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
 			charGameObj.(entity.ICharacterObject).DeselectTarget(e)
-			charGameObj.(entity.ICharacterObject).Move(e, constants.InitialPlayerX, constants.InitialPlayerY)
+			charGameObjClone := charGameObj.Clone()
+			e.SendResponseToVisionAreas(charGameObjClone, "remove_object", map[string]interface{}{
+				"object": charGameObjClone,
+			})
+			charGameObj.(entity.ICharacterObject).Move(e, constants.InitialPlayerX, constants.InitialPlayerY, 0)
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		}
 	}
