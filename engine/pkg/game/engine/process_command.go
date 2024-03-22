@@ -260,6 +260,10 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			if dragon, dragonOk := e.GameObjects().Load(params.(string)); dragonOk {
 				dragon.(entity.IDragonObject).Release(charGameObj)
 			}
+		case "resurrect_dragon":
+			if dragon, dragonOk := e.GameObjects().Load(params.(string)); dragonOk {
+				dragon.(entity.IDragonObject).Resurrect(charGameObj)
+			}
 		case "gm_create_object":
 			gm.CreateObject(e, charGameObj, params.(map[string]interface{}))
 		}

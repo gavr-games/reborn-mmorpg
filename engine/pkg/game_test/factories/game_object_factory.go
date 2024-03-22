@@ -15,6 +15,7 @@ const (
 	playerObjKey   = "player/player"
 	npcObjKey      = "npc/town_keeper"
 	backpackObjKey = "container/backpack"
+	claimObjKey    = "claim/claim_obelisk"
 )
 
 func (f *GameObjectFactory) CreateCharGameObject(e *game.Engine) entity.IGameObject {
@@ -48,6 +49,16 @@ func (f *GameObjectFactory) CreateStackableResourceGameObject(e *game.Engine, ch
 		"visible": false,
 		"amount":  amount,
 	})
+}
+
+func (f *GameObjectFactory) CreateClaimObeliskObject(e *game.Engine, charGameObj entity.IGameObject) entity.IGameObject {
+	return e.CreateGameObject(claimObjKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+		"crafted_by_character_id": charGameObj.Id(),
+	})
+}
+
+func (f *GameObjectFactory) CreateObjectKeyXYFloor(e *game.Engine, key string, x float64, y float64, floor int) entity.IGameObject {
+	return e.CreateGameObject(key, x, y, 0.0, floor, nil)
 }
 
 func findMaxPlayerId(e *game.Engine) int {

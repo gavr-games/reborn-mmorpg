@@ -797,6 +797,21 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"dragon_altar": map[string]interface{}{
+				"type":       "equipment",
+				"kind":       "dragon_altar",
+				"width":      1.0,
+				"height":     1.0,
+				"shape":      "circle",
+				"collidable": false,
+				"visible":    true,
+				"actions": map[string]interface{}{
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_building",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 		},
 		"resource": {
 			"carrot": map[string]interface{}{
@@ -1335,6 +1350,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"collidable":  false,
 				"visible":     true,
 				"targetable":  true,
+				"alive":       true,
 				"attack_type": "melee",
 				"damage":      10.0,
 				"cooldown":    2000.0, //ms

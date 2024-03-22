@@ -229,6 +229,7 @@ class Loader {
       'claim_stone',
       'claim_obelisk',
       'cactus_slice',
+      'dragon_altar',
       'fire_dragon_egg',
       'fire_dragon_hatchery',
       'gold',

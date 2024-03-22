@@ -11,12 +11,15 @@ func (dragon *DragonObject) TeleportToOwner(charGameObj entity.IGameObject) {
 		playerIdInt := playerId.(int)
 		if player, ok := dragon.Engine.Players().Load(playerIdInt); ok {
 			if dragon.GetProperty("owner_id") != nil && charGameObj.Id() == dragon.GetProperty("owner_id").(string) {
-				// TODO: Check dragon is dead
-				dragon.StopEverything()
+				if alive := dragon.GetProperty("alive"); alive == nil || !alive.(bool) {
+					dragon.Engine.SendSystemMessage("The dragon is dead, ressurect it first.", player)
+					return
+				}
 				dragonClone := dragon.Clone()
 				dragon.Engine.SendResponseToVisionAreas(dragonClone, "remove_object", map[string]interface{}{
 					"object": dragonClone,
 				})
+				dragon.StopEverything()
 				dragon.Engine.Floors()[dragon.Floor()].FilteredRemove(dragon, func(b utils.IBounds) bool {
 					return dragon.Id() == b.(entity.IGameObject).Id()
 				})

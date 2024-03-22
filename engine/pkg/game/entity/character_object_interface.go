@@ -10,4 +10,5 @@ type ICharacterObject interface {
 	GetVisionAreaX() float64
 	GetVisionAreaY() float64
 	GetDragonsInfo(e IEngine) map[string]interface{}
+	SubstractGold(e IEngine, amount float64) (bool, error)
 }

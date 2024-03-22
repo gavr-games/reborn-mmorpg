@@ -17,8 +17,11 @@
               <p class="dragon-description">
                 Alive | Exp. {{ dragon.experience }} / {{ expNextLevel(dragon.level) }}
               </p>
-              <button type="button" class="rpgui-button" @click="teleportDragon(dragon)">
+              <button v-if="dragon.alive" type="button" class="rpgui-button" @click="teleportDragon(dragon)">
                 <p>Teleport to me</p>
+              </button>
+              <button v-if="!dragon.alive" type="button" class="rpgui-button" @click="resurrectDragon(dragon)">
+                <p>Resurrect ({{ 25 * (dragon.level + 1) }})</p>
               </button>
               <button type="button" class="rpgui-button" @click="releaseDragon(dragon)">
                 <p>Release</p>
@@ -76,6 +79,14 @@ export default {
       if (confirm('Are you sure you want to release this dragon?') === true) {
         EventBus.$emit('perform-game-action', {
           cmd: 'release_dragon',
+          params: dragon.id
+        })
+      }
+    },
+    resurrectDragon (dragon) {
+      if (confirm('Are you sure you want to resurrect this dragon?') === true) {
+        EventBus.$emit('perform-game-action', {
+          cmd: 'resurrect_dragon',
           params: dragon.id
         })
       }

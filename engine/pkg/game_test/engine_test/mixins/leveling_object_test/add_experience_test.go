@@ -29,7 +29,7 @@ func TestAddExperience(t *testing.T) {
 		assert.Equal(t, 0.0, level)
 	})
 
-	action = "hatch/fire_dragon"
+	action = "craft/golden_armor"
 	t.Run("Add experience", testSuccess)
 	t.Run("Add experience", testSuccess)
 	t.Run("Level has changed", func(t *testing.T) {

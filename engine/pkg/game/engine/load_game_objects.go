@@ -39,8 +39,8 @@ func LoadGameObjects(e entity.IEngine) {
 			}
 			gameObjStruct := e.CreateGameObjectStruct(gameObj)
 			e.GameObjects().Store(gameObj.Id(), gameObjStruct)
-			// init mob
-			if gameObj.Type() == "mob" {
+			// init mob if it is alive (dead dragons are waiting for ressurection)
+			if gameObj.Type() == "mob" && gameObj.GetProperty("alive") != nil && gameObj.GetProperty("alive").(bool) {
 				e.Mobs().Store(gameObj.Id(), gameObjStruct.(entity.IMobObject))
 			}
 		}(gameObj)

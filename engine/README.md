@@ -5,13 +5,14 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## Roadmap for Demo
 - Add baby dragons and raising them
+  - more crops and food to raise dragons
 - Add dragon breeding to get new eggs
   - breeding cave, select dragons for breeding
 - Fighting with dragons in dungeons and leveling dragons
-  - reborn = dragonlvl * 25 gold + altar
   - generate dungeons (introduce more floors, chars move to another floor take into account on frontend)
   - select dragons for dungeon (1 per 10 lvls, max 3)
   - select dungeon lvl, increase dungeon lvl
+  - add aggro mobs
   - get exp for dungeons
 - More buildings and furniture for houses
 

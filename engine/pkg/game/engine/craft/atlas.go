@@ -102,6 +102,31 @@ func GetAtlas() map[string]interface{} {
 			"width": 1.0,
 			"height": 1.0,
 		},
+		"dragon_altar": map[string]interface{}{
+			"skill": "taming",
+			"resources": map[string]interface{}{
+				"stone": 2.0,
+				"iron_ingot": 2.0,
+			},
+			"title": "Dragon Altar",
+			"description": "Used to resurrect dead dragons after the fight.",
+			"inputs": []string{
+				"coordinates",
+				"rotation",
+			},
+			"tools": []string{
+				"hammer",
+				"pickaxe",
+			}, //tools equipped required to craft something
+			"surfaces": []string{
+				"grass",
+				"stone",
+			}, //allowed surfaces to craft this item on
+			"place_in_real_world": true, //place item in real world or put into container
+			"duration": 7000.0, // ms
+			"width": 1.0,
+			"height": 1.0,
+		},
 		"fire_dragon_hatchery": map[string]interface{}{
 			"skill": "taming",
 			"resources": map[string]interface{}{
