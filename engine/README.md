@@ -11,9 +11,11 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - Fighting with dragons in dungeons and leveling dragons
   - generate dungeons (introduce more floors, chars move to another floor take into account on frontend)
   - select dragons for dungeon (1 per 10 lvls, max 3)
-  - select dungeon lvl, increase dungeon lvl
+  - select dungeon lvl, increase allowed dungeon lvl
   - add aggro mobs
   - get exp for dungeons
+  - chest with reward
+  - exit teleport
 - More buildings and furniture for houses
 
 ## TODO
