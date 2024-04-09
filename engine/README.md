@@ -21,7 +21,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 ## TODO
 - BUG: hatchery is not removed on hatch after engine reload
 - add Transactions (Mutexes) when objects cnahge
-- ADD separate go routine to send vision area updates in the right order
 - change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft
 - add more complex leveling formula, which takes into account many parameters like mob lvl and etc

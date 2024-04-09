@@ -35,6 +35,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/armors/armor_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/vision_area_updater"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
@@ -98,38 +99,11 @@ func (e Engine) SendResponse(responseType string, responseData map[string]interf
 // Sends an update named responseType with parameters responseData to all players,
 // who can see the gameObj. In other words their vision areas collide with gameObj X,Y.
 func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
-	go func(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
-		intersectingObjects := e.Floors()[gameObj.Floor()].RetrieveIntersections(utils.Bounds{
-			X:      gameObj.X(),
-			Y:      gameObj.Y(),
-			Width:  gameObj.Width(),
-			Height: gameObj.Height(),
-		})
-		resp := entity.EngineResponse{
-			ResponseType: responseType,
-			ResponseData: responseData,
-		}
-		message, err := json.Marshal(resp)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-
-		for _, obj := range intersectingObjects {
-			if obj.(entity.IGameObject).Type() == "player" && obj.(entity.IGameObject).Kind() == "player_vision_area" {
-				playerId := obj.(entity.IGameObject).GetProperty("player_id").(int)
-				if player, ok := e.Players().Load(playerId); ok {
-					if player.Client != nil {
-						select {
-						case player.Client.GetSendChannel() <- message:
-						default:
-							engine.UnregisterClient(e, player.Client)
-						}
-					}
-				}
-			}
-		}
-	}(gameObj, responseType, responseData)
+	vision_area_updater.GetUpdater(e).Updates <- &vision_area_updater.VisionAreaUpdate{
+		GameObj:      gameObj,
+		ResponseType: responseType,
+		ResponseData: responseData,
+	}
 }
 
 // Send new update of the gameObj to all players who can see it
@@ -255,8 +229,10 @@ func NewEngine() *Engine {
 }
 
 func (e *Engine) Init(skipWorldGeneration bool) {
-	// Start routine to process game objects updates and save them in game storage
-	go storage.GetClient().Run()
+	// Start routines to process game objects updates and save them in game storage
+	storage.GetClient().Run()
+	// Start routine, which updates players about changes in their vision area
+	vision_area_updater.GetUpdater(e).Run()
 
 	e.floors[0] = &utils.Quadtree{
 		Bounds: utils.Bounds{
