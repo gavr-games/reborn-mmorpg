@@ -6,6 +6,5 @@ type IMobObject interface {
 	Unfollow(targetObj IGameObject)
 	Die()
 	Attack(targetObjId string)
-	StopAttacking()
 	StopEverything()
 }

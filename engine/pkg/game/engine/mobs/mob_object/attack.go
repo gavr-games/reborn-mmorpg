@@ -1,10 +1,10 @@
 package mob_object
 
+import (
+	"context"
+)
+
 func (mob *MobObject) Attack(targetObjId string) {
-	if mob.State == AttackingState {
-		mob.State = RenewAttackingState
-	} else {
-		mob.State = StartAttackingState
-		mob.TargetObjectId = targetObjId
-	}
+	ctx := context.WithValue(context.Background(), "targetObjId", targetObjId)
+	mob.FSM.Event(ctx, "attack")
 }

@@ -1403,6 +1403,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"collidable":  false,
 				"visible":     true,
 				"targetable":  true,
+				"alive":       true,
 				"attack_type": "melee",
 				"damage":      5.0,
 				"cooldown":    1000.0, //ms

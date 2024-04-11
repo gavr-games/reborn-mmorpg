@@ -45,7 +45,7 @@ func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 
 	// die if health < 0
 	if targetObj.GetProperty("health").(float64) == 0.0 {
-		mob.StopAttacking()
+		mob.StopEverything()
 		if targetObj.Type() == "mob" {
 			if targetMob, ok := mob.Engine.Mobs().Load(targetObj.Id()); ok {
 				targetMob.Die()

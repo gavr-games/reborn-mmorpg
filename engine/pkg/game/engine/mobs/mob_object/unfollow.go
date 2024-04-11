@@ -5,21 +5,17 @@ import (
 )
 
 func (mob *MobObject) Unfollow(targetObj entity.IGameObject) {
-	if targetObj == nil {
-		mob.State = StopFollowingState
-		return
-	}
 	// Check only owner can ask mob to unfollow
 	if playerId := targetObj.GetProperty("player_id"); playerId != nil {
 		playerIdInt := playerId.(int)
 		if player, ok := mob.Engine.Players().Load(playerIdInt); ok {
 			if mob.GetProperty("owner_id") != nil && targetObj.Id() == mob.GetProperty("owner_id").(string) {
-				mob.State = StopFollowingState
+				mob.StopEverything()
 			} else {
 				mob.Engine.SendSystemMessage("You are not the owner of this creature.", player)
 			}
 		}
 	} else { // allow to follow other object for future (not only players)
-		mob.State = StopFollowingState
+		mob.StopEverything()
 	}
 }

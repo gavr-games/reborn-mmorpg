@@ -1,22 +1,14 @@
 package mob_object
 
 import (
+	"context"
+
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/leveling_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/moving_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/melee_weapon_object"
-)
 
-const (
-	IdleState = 0
-	MovingState = 1
-	StartFollowState = 2
-	FollowingState = 3
-	StopFollowingState = 4
-	StartAttackingState = 5
-	AttackingState = 6
-	StopAttackingingState = 7
-	RenewAttackingState = 8
+	"github.com/looplab/fsm"
 )
 
 const (
@@ -34,20 +26,36 @@ const (
 type MobObject struct {
 	Engine entity.IEngine
 	TickTime int64
-	State int
 	TargetObjectId string
+	FSM *fsm.FSM
 	moving_object.MovingObject
 	leveling_object.LevelingObject
 	melee_weapon_object.MeleeWeaponObject
 	entity.GameObject
 }
 
+func (mob *MobObject) GetTickTime() int64 {
+	return mob.TickTime
+}
+
+func (mob *MobObject) SetTickTime(newTickTime int64) {
+	mob.TickTime = newTickTime
+}
+
+func (mob *MobObject) GetTargetObjectId() string {
+	return mob.TargetObjectId
+}
+
+func (mob *MobObject) SetTargetObjectId(targetObjectId string) {
+	mob.TargetObjectId = targetObjectId
+}
+
 func NewMobObject(e entity.IEngine, gameObj entity.IGameObject) *MobObject {
 	mob := &MobObject{
 		e,
 		e.CurrentTickTime(),
-		IdleState,
 		"", // for following and attack
+		nil,
 		moving_object.MovingObject{},
 		leveling_object.LevelingObject{},
 		melee_weapon_object.MeleeWeaponObject{},
@@ -57,5 +65,51 @@ func NewMobObject(e entity.IEngine, gameObj entity.IGameObject) *MobObject {
 	mob.InitLevelingObject(mob)
 	mob.InitMeleeWeaponObject(mob)
 
+	mob.SetupFSM()
+
 	return mob
+}
+
+func (mob *MobObject) SetupFSM() {
+	mob.FSM = fsm.NewFSM(
+		"idle",
+		fsm.Events{
+			{Name: "move", Src: []string{"idle"}, Dst: "moving"},
+			{Name: "follow", Src: []string{"idle", "moving", "following", "attacking"}, Dst: "following"},
+			{Name: "attack", Src: []string{"idle", "moving", "following", "attacking"}, Dst: "attacking"},
+			{Name: "stop", Src: []string{"idle", "moving", "following", "attacking"}, Dst: "idle"},
+			// {Name: "die", Src: []string{"idle", "moving", "following", "attacking"}, Dst: "dead"},
+			// {Name: "resurrect", Src: []string{"dead"}, Dst: "idle"},
+		},
+		fsm.Callbacks{
+			"move": func(_ context.Context, e *fsm.Event) {
+				mob.moveInRandomDirection()
+				mob.SetTickTime(mob.Engine.CurrentTickTime())
+			},
+			"stop": func(_ context.Context, e *fsm.Event) {
+				mob.Stop(mob.Engine)
+				mob.SetTickTime(mob.Engine.CurrentTickTime())
+			},
+			"follow": func(ctx context.Context, e *fsm.Event) {
+				mob.SetTargetObjectId(ctx.Value("targetObjId").(string))
+				mob.SetTickTime(mob.Engine.CurrentTickTime())
+				mob.setMoveTo(FollowingDirectionChangeTime)
+			},
+			"leave_following": func(_ context.Context, e *fsm.Event) {
+				mob.SetTargetObjectId("")
+			},
+			"attack": func(ctx context.Context, e *fsm.Event) {
+				mob.SetTargetObjectId(ctx.Value("targetObjId").(string))
+				mob.SetTickTime(mob.Engine.CurrentTickTime())
+				mob.setMoveTo(AttackingDirectionChangeTime)
+			},
+			"enter_attacking": func(ctx context.Context, e *fsm.Event) {
+				mob.SetProperty("speed", mob.GetProperty("speed").(float64) * AttackSpeedUp)
+			},
+			"leave_attacking": func(ctx context.Context, e *fsm.Event) {
+				mob.SetTargetObjectId("")
+				mob.SetProperty("speed", mob.GetProperty("speed").(float64) / AttackSpeedUp)
+			},
+		},
+	)
 }

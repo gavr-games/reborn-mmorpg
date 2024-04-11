@@ -52,32 +52,32 @@ type Engine struct {
 	unregister  chan *Client                                 // Unregister requests from clients.
 }
 
-func (e Engine) Floors() []*utils.Quadtree {
+func (e *Engine) Floors() []*utils.Quadtree {
 	return e.floors
 }
 
-func (e Engine) GameObjects() *xsync.MapOf[string, entity.IGameObject] {
+func (e *Engine) GameObjects() *xsync.MapOf[string, entity.IGameObject] {
 	return e.gameObjects
 }
 
-func (e Engine) Mobs() *xsync.MapOf[string, entity.IMobObject] {
+func (e *Engine) Mobs() *xsync.MapOf[string, entity.IMobObject] {
 	return e.mobs
 }
 
-func (e Engine) Players() *xsync.MapOf[int, *entity.Player] {
+func (e *Engine) Players() *xsync.MapOf[int, *entity.Player] {
 	return e.players
 }
 
-func (e Engine) Effects() *xsync.MapOf[string, map[string]interface{}] {
+func (e *Engine) Effects() *xsync.MapOf[string, map[string]interface{}] {
 	return e.effects
 }
 
-func (e Engine) CurrentTickTime() int64 {
+func (e *Engine) CurrentTickTime() int64 {
 	return e.tickTime
 }
 
 // Sends an update named responseType with parameters responseData to specific player (ONLY ONE).
-func (e Engine) SendResponse(responseType string, responseData map[string]interface{}, player *entity.Player) {
+func (e *Engine) SendResponse(responseType string, responseData map[string]interface{}, player *entity.Player) {
 	resp := entity.EngineResponse{
 		ResponseType: responseType,
 		ResponseData: responseData,
@@ -98,7 +98,7 @@ func (e Engine) SendResponse(responseType string, responseData map[string]interf
 
 // Sends an update named responseType with parameters responseData to all players,
 // who can see the gameObj. In other words their vision areas collide with gameObj X,Y.
-func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
+func (e *Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseType string, responseData map[string]interface{}) {
 	vision_area_updater.GetUpdater(e).Updates <- &vision_area_updater.VisionAreaUpdate{
 		GameObj:      gameObj,
 		ResponseType: responseType,
@@ -108,10 +108,10 @@ func (e Engine) SendResponseToVisionAreas(gameObj entity.IGameObject, responseTy
 
 // Send new update of the gameObj to all players who can see it
 // IMPORTANT: this function also updates/delets gameObj in storage
-func (e Engine) SendGameObjectUpdate(gameObj entity.IGameObject, updateType string) {
+func (e *Engine) SendGameObjectUpdate(gameObj entity.IGameObject, updateType string) {
 	clone := gameObj.Clone() // clone is required to prevent access to objects map from different routines
 	e.SendResponseToVisionAreas(gameObj, updateType, map[string]interface{}{
-		"object": gameObj,
+		"object": clone,
 	})
 	if updateType == "remove_object" {
 		storage.GetClient().Deletes <- clone.Id()
@@ -121,7 +121,7 @@ func (e Engine) SendGameObjectUpdate(gameObj entity.IGameObject, updateType stri
 }
 
 // Sends errors and other system response messages to specific player
-func (e Engine) SendSystemMessage(message string, player *entity.Player) {
+func (e *Engine) SendSystemMessage(message string, player *entity.Player) {
 	e.SendResponse("add_message", map[string]interface{}{
 		"type":    "system",
 		"message": message,
@@ -130,7 +130,7 @@ func (e Engine) SendSystemMessage(message string, player *entity.Player) {
 
 // Creates specific struct depending on object type and kind
 // For example TreeObject for tree, RockObject for rock, etc.
-func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameObject {
+func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameObject {
 	switch gameObj.Type() {
 	case "tree":
 		return &tree_object.TreeObject{*gameObj.(*entity.GameObject)}
@@ -185,7 +185,7 @@ func (e Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameO
 }
 
 // Creates new GameObject and returns it
-func (e Engine) CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) entity.IGameObject {
+func (e *Engine) CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) entity.IGameObject {
 	gameObj, err := game_objects.CreateFromTemplate(e, objPath, x, y, rotation)
 	if err != nil {
 		//TODO: handle error
@@ -234,6 +234,8 @@ func (e *Engine) Init(skipWorldGeneration bool) {
 	// Start routine, which updates players about changes in their vision area
 	vision_area_updater.GetUpdater(e).Run()
 
+	e.tickTime = utils.MakeTimestamp()
+
 	e.floors[0] = &utils.Quadtree{
 		Bounds: utils.Bounds{
 			X:      0,
@@ -250,7 +252,6 @@ func (e *Engine) Init(skipWorldGeneration bool) {
 	if !skipWorldGeneration {
 		engine.LoadGameObjects(e) // Generate new worlds or read it from storage
 	}
-	e.tickTime = utils.MakeTimestamp()
 }
 
 // Main engine loop

@@ -1,71 +1,41 @@
 package mob_object
 
+import (
+	"context"
+)
+
+// Mob logic processing goes here
 func (mob *MobObject) Run(newTickTime int64) {
-	// Mob logic processing goes here:
 	// Stop moving.
-	if mob.State == MovingState && (newTickTime - mob.TickTime) >= MovingTime {
-		mob.stop()
-		mob.TickTime = newTickTime
+	if mob.FSM.Current() == "moving" && (newTickTime - mob.GetTickTime()) >= MovingTime {
+		mob.FSM.Event(context.Background(), "stop")
 	} else
 	// Start random moving.
-	if mob.State == IdleState && (newTickTime - mob.TickTime) >= IdleTime {
-		mob.moveInRandomDirection()
-		mob.TickTime = newTickTime
-	} else
-	// Stop following
-	if mob.State == StopFollowingState {
-		mob.TargetObjectId = ""
-		mob.stop()
-		mob.TickTime = newTickTime
-	} else 
-	// Start Following
-	if mob.State == StartFollowState {
-		mob.State = FollowingState
-		mob.TickTime = newTickTime
-		mob.setMoveTo(FollowingDirectionChangeTime)
+	if mob.FSM.Current() == "idle" && (newTickTime - mob.GetTickTime()) >= IdleTime {
+		mob.FSM.Event(context.Background(), "move")
 	} else
 	// Perform following
-	if mob.State == FollowingState {
-		if (newTickTime - mob.TickTime) >= FollowingTime {
-			mob.Unfollow(nil)
+	if mob.FSM.Current() == "following" {
+		if (newTickTime - mob.GetTickTime()) >= FollowingTime {
+			mob.FSM.Event(context.Background(), "stop")
 		} else { // Perform actual following
-			if targetObj, ok := mob.Engine.GameObjects().Load(mob.TargetObjectId); ok {
+			if targetObj, ok := mob.Engine.GameObjects().Load(mob.GetTargetObjectId()); ok {
 				mob.performFollowing(targetObj, FollowingDirectionChangeTime)
 			} else {
-				mob.Unfollow(nil)
+				mob.FSM.Event(context.Background(), "stop")
 			}
 		}
 	} else
-	// Start Attacking
-	if mob.State == StartAttackingState {
-		mob.State = AttackingState
-		mob.TickTime = newTickTime
-		mob.setMoveTo(AttackingDirectionChangeTime)
-		mob.SetProperty("speed", mob.GetProperty("speed").(float64) * AttackSpeedUp)
-	} else
-	// Renew Attacking
-	if mob.State == RenewAttackingState {
-		mob.State = AttackingState
-		mob.TickTime = newTickTime
-		mob.setMoveTo(AttackingDirectionChangeTime)
-	} else
-	// Stop attacking
-	if mob.State == StopAttackingingState {
-		mob.TargetObjectId = ""
-		mob.SetProperty("speed", mob.GetProperty("speed").(float64) / AttackSpeedUp)
-		mob.stop()
-		mob.TickTime = newTickTime
-	} else
 	// Perform attacking
-	if mob.State == AttackingState {
-		if (newTickTime - mob.TickTime) >= AttackingTime {
-			mob.StopAttacking()
+	if mob.FSM.Current() == "attacking" {
+		if (newTickTime - mob.GetTickTime()) >= AttackingTime {
+			mob.FSM.Event(context.Background(), "stop")
 		} else { // Perform actual following before hit
-			if targetObj, ok := mob.Engine.GameObjects().Load(mob.TargetObjectId); ok {
+			if targetObj, ok := mob.Engine.GameObjects().Load(mob.GetTargetObjectId()); ok {
 				mob.performFollowing(targetObj, AttackingDirectionChangeTime)
 				mob.MeleeHit(targetObj)
 			} else {
-				mob.StopAttacking()
+				mob.FSM.Event(context.Background(), "stop")
 			}
 		}
 	} 

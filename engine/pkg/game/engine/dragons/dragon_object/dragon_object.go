@@ -18,5 +18,7 @@ func NewDragonObject(e entity.IEngine, gameObj entity.IGameObject) *DragonObject
 		*mob_object.NewMobObject(e, gameObj),
 	}
 
+	dragon.SetupFSM() // we need to call this again, so FSM callbacks get updated pointer to dragon
+
 	return dragon
 }

@@ -28,4 +28,3 @@ func UpdateAll(e entity.IEngine, tickDelta int64) {
 		return true
 	})
 }
-
