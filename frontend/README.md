@@ -74,3 +74,5 @@ More information about the usage of this directory in [the documentation](https:
 - it is very hard to position character between north_east, north_west, south_east, south_west. It depends on keyup handling.
 - fix 3D models size
 - add levelup animation
+- add die/hit animations
+- migrate babylon 7

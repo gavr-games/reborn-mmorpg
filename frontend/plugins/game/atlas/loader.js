@@ -269,8 +269,9 @@ class Loader {
 
   loadMobs () {
     const mobs = [
+      'bat',
       'fire_dragon',
-      'bat'
+      'zombie'
     ]
     mobs.forEach((item) => {
       const task = this.assetsManager.addContainerTask(

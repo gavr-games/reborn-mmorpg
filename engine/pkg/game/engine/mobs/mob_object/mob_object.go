@@ -2,6 +2,7 @@ package mob_object
 
 import (
 	"context"
+	"sync"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/leveling_object"
@@ -20,33 +21,44 @@ const (
 	AttackSpeedUp = 1.5 // increases the mob speed during attack
 	AttackingTime = 20000.0 // during this time the mob attacks until it calms down if not hitted back
 	AttackingDirectionChangeTime = 500.0 // change direction only once per this time
+	RecentlyKilledTime = 2000.0 // stop attacking if target was recently killed
+	AgressiveCheckProbability = 0.05 // allows not to check agressive every game cycle
 )
 
 // TODO: refactor to thread safe
 type MobObject struct {
-	Engine entity.IEngine
-	TickTime int64
+	Engine         entity.IEngine
+	TickTime       int64
 	TargetObjectId string
-	FSM *fsm.FSM
+	FSM            *fsm.FSM
 	moving_object.MovingObject
 	leveling_object.LevelingObject
 	melee_weapon_object.MeleeWeaponObject
 	entity.GameObject
+	propsMutex     sync.RWMutex
 }
 
 func (mob *MobObject) GetTickTime() int64 {
+	mob.propsMutex.RLock()
+	defer mob.propsMutex.RUnlock()
 	return mob.TickTime
 }
 
 func (mob *MobObject) SetTickTime(newTickTime int64) {
+	mob.propsMutex.Lock()
+	defer mob.propsMutex.Unlock()
 	mob.TickTime = newTickTime
 }
 
 func (mob *MobObject) GetTargetObjectId() string {
+	mob.propsMutex.RLock()
+	defer mob.propsMutex.RUnlock()
 	return mob.TargetObjectId
 }
 
 func (mob *MobObject) SetTargetObjectId(targetObjectId string) {
+	mob.propsMutex.Lock()
+	defer mob.propsMutex.Unlock()
 	mob.TargetObjectId = targetObjectId
 }
 
@@ -60,6 +72,7 @@ func NewMobObject(e entity.IEngine, gameObj entity.IGameObject) *MobObject {
 		leveling_object.LevelingObject{},
 		melee_weapon_object.MeleeWeaponObject{},
 		*gameObj.(*entity.GameObject),
+		*new(sync.RWMutex),
 	}
 	mob.InitMovingObject(mob)
 	mob.InitLevelingObject(mob)

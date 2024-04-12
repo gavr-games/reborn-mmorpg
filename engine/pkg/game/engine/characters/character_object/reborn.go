@@ -9,6 +9,7 @@ import (
 
 func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 	charGameObj.SetProperty("health", charGameObj.GetProperty("max_health"))
+	charGameObj.SetProperty("last_death", float64(e.CurrentTickTime()))
 	charGameObj.DeselectTarget(e)
 	
 	// Cancel delayed action

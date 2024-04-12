@@ -1433,6 +1433,52 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"zombie": map[string]interface{}{
+				"type":        "mob",
+				"kind":        "zombie",
+				"width":       1.0,
+				"height":      1.0,
+				"shape":       "circle",
+				"speed":       2.0,
+				"speed_x":     0.0,
+				"speed_y":     0.0,
+				"health":      60.0,
+				"max_health":  60.0,
+				"collidable":  false,
+				"visible":     true,
+				"targetable":  true,
+				"alive":       true,
+				"agressive":   true,
+				"attack_type": "melee",
+				"damage":      6.0,
+				"cooldown":    2000.0, //ms
+				"hit_radius":  1.7,    // maximum distance to target
+				"hit_angle":   80.0,   // degrees
+				"agro_radius":  5.0,    // if player is closer, mob attacks them
+				"drop": map[string]interface{}{
+					"resource/gold": map[string]interface{}{
+						"probability": 1.0,
+						"min":         10.0,
+						"max":         60.0,
+					},
+					"resource/bone": map[string]interface{}{
+						"probability": 0.8,
+					},
+					"resource/animal_skin": map[string]interface{}{
+						"probability": 0.3,
+					},
+				},
+				"actions": map[string]interface{}{
+					"select as target": map[string]interface{}{
+						"cmd":    "select_target",
+						"params": "self",
+					},
+					"deselect target": map[string]interface{}{
+						"cmd":    "deselect_target",
+						"params": "self",
+					},
+				},
+			},
 		},
 		"npc": {
 			"town_keeper": map[string]interface{}{

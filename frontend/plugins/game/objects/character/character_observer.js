@@ -187,6 +187,9 @@ class Character {
   }
 
   meleeHit (weapon) {
+    if (!this.mesh) {
+      return
+    }
     return new MeleeHitArea(
       weapon.Properties.hit_radius,
       weapon.Properties.hit_angle,
@@ -199,8 +202,11 @@ class Character {
 
   playAnimation (name, loop = true) {
     if (this.container && this.currentAnimation !== name) {
+      if (!this.container.animationGroups.some(ag => ag.name.includes(` ${name}`))) {
+        return
+      }
       this.container.animationGroups.forEach((ag) => {
-        if (ag.name.includes(name)) {
+        if (ag.name.includes(` ${name}`)) {
           ag.start(loop)
           this.currentAnimation = name
           if (!loop) {

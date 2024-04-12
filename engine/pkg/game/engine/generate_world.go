@@ -20,6 +20,7 @@ const (
 	TreeProbability = 0.02
 	RockProbability = 0.02
 	BatProbability = 0.02
+	ZombieProbability = 0.01
 	EggProbability = 0.02
 	GrassProbability = 0.02
 	CactusProbability = 0.1
@@ -65,7 +66,10 @@ func GenerateWorld(e entity.IEngine) {
 								"visible": true,
 							}, GrassProbability)
 						case p >= 0.8 && p < 1.0:
-							createWithProbability(e, "mob/bat", x, y, 0, nil, TreeProbability)
+							bat := createWithProbability(e, "mob/bat", x, y, 0, nil, BatProbability)
+							if bat == nil {
+								createWithProbability(e, "mob/zombie", x, y, 0, nil, ZombieProbability)
+							}
 						}
 					}
 				}

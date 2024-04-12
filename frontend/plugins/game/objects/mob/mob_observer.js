@@ -60,7 +60,7 @@ class MobObserver {
 
   update (renderInterval) {
     if (this.state.speed_x !== 0 || this.state.speed_y !== 0) {
-      // this.playAnimation("Walk");
+      this.playAnimation('Walk')
       this.state.x = this.state.x + this.state.speed_x / 1000 * renderInterval
       this.state.y = this.state.y + this.state.speed_y / 1000 * renderInterval
       const rotationAngle = Math.atan2(
@@ -119,6 +119,9 @@ class MobObserver {
   }
 
   meleeHit (weapon) {
+    if (!this.mesh) {
+      return
+    }
     return new MeleeHitArea(
       weapon.Properties.hit_radius,
       weapon.Properties.hit_angle,
@@ -131,8 +134,11 @@ class MobObserver {
 
   playAnimation (name, loop = true) {
     if (this.container && this.currentAnimation !== name) {
+      if (!this.container.animationGroups.some(ag => ag.name.includes(` ${name}`))) {
+        return
+      }
       this.container.animationGroups.forEach((ag) => {
-        if (ag.name.includes(name)) {
+        if (ag.name.includes(` ${name}`)) {
           ag.start(loop)
           this.currentAnimation = name
           if (!loop) {

@@ -7,4 +7,5 @@ type IMobObject interface {
 	Die()
 	Attack(targetObjId string)
 	StopEverything()
+	CheckAgro()
 }
