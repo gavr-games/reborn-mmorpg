@@ -8,7 +8,11 @@ import (
 // Get claim for the specified gameObj if any
 func GetClaimObelisk(e entity.IEngine, gameObj entity.IGameObject) entity.IGameObject {
 	// Check not intersecting with claim areas
-	possibleCollidableObjects := e.Floors()[gameObj.Floor()].RetrieveIntersections(utils.Bounds{
+	gameArea, gaOk := e.GameAreas().Load(gameObj.GameAreaId())
+	if !gaOk {
+		return nil
+	}
+	possibleCollidableObjects := gameArea.RetrieveIntersections(utils.Bounds{
 		X:      gameObj.X(),
 		Y:      gameObj.Y(),
 		Width:  gameObj.Width(),

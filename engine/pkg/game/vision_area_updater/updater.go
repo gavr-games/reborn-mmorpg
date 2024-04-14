@@ -44,7 +44,11 @@ func (vau *VisionAreaUpdater) updatesWorker(updatesChan <-chan *VisionAreaUpdate
 	for visionAreaUpdate := range updatesChan {
 		e := vau.e
 		gameObj := visionAreaUpdate.GameObj
-		intersectingObjects := e.Floors()[gameObj.Floor()].RetrieveIntersections(utils.Bounds{
+		gameArea, gaOk := e.GameAreas().Load(gameObj.GameAreaId())
+		if !gaOk {
+			continue
+		}
+		intersectingObjects := gameArea.RetrieveIntersections(utils.Bounds{
 			X:      gameObj.X(),
 			Y:      gameObj.Y(),
 			Width:  gameObj.Width(),

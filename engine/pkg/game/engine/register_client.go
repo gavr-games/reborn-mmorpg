@@ -20,7 +20,8 @@ func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
 	additionalProps["name"] = character.Name
-	gameObj := e.CreateGameObject("player/player", constants.InitialPlayerX, constants.InitialPlayerY, 0.0, 0, additionalProps)
+	surfaceArea := e.GetGameAreaByKey("surface")
+	gameObj := e.CreateGameObject("player/player", constants.InitialPlayerX, constants.InitialPlayerY, 0.0, surfaceArea.Id(), additionalProps)
 	player.CharacterGameObjectId = gameObj.Id()
 	CreatePlayerItems(e, player)
 	return player
@@ -30,7 +31,7 @@ func CreatePlayerVisionArea(e entity.IEngine, player *entity.Player) {
 	if charGameObj, ok := e.GameObjects().Load(player.CharacterGameObjectId); ok {
 		additionalProps := make(map[string]interface{})
 		additionalProps["player_id"] = player.Id
-		gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.(entity.ICharacterObject).GetVisionAreaX(), charGameObj.(entity.ICharacterObject).GetVisionAreaY(), 0.0, charGameObj.Floor(), additionalProps)
+		gameObj := e.CreateGameObject("player/player_vision_area", charGameObj.(entity.ICharacterObject).GetVisionAreaX(), charGameObj.(entity.ICharacterObject).GetVisionAreaY(), 0.0, charGameObj.GameAreaId(), additionalProps)
 		player.VisionAreaGameObjectId = gameObj.Id()
 	}
 }
@@ -40,15 +41,15 @@ func CreatePlayerItems(e entity.IEngine, player *entity.Player) {
 		// Backpack
 		additionalProps := make(map[string]interface{})
 		additionalProps["owner_id"] = charGameObj.Id()
-		initialBackpack := e.CreateGameObject("container/backpack", charGameObj.X(), charGameObj.Y(), 0.0, -1, additionalProps)
+		initialBackpack := e.CreateGameObject("container/backpack", charGameObj.X(), charGameObj.Y(), 0.0, "", additionalProps)
 		slots := charGameObj.GetProperty("slots").(map[string]interface{})
 		slots["back"] = initialBackpack.Id()
 		charGameObj.SetProperty("slots", slots)
 		// Axe
-		initialAxe := e.CreateGameObject("axe/axe", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+		initialAxe := e.CreateGameObject("axe/axe", charGameObj.X(), charGameObj.Y(), 0.0, "", nil)
 		initialBackpack.(entity.IContainerObject).Put(e, player, initialAxe.Id(), -1)
 		// Pickaxe
-		initialPickaxe := e.CreateGameObject("pickaxe/pickaxe", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+		initialPickaxe := e.CreateGameObject("pickaxe/pickaxe", charGameObj.X(), charGameObj.Y(), 0.0, "", nil)
 		initialBackpack.(entity.IContainerObject).Put(e, player, initialPickaxe.Id(), -1)
 	}
 }
@@ -97,7 +98,7 @@ func RegisterClient(e entity.IEngine, client entity.IClient) {
 }
 
 func initGame(e entity.IEngine, player *entity.Player, visionArea entity.IGameObject) {
-	visibleObjects := game_objects.GetVisibleObjects(e, visionArea.Floor(), visionArea.HitBox())
+	visibleObjects := game_objects.GetVisibleObjects(e, visionArea.GameAreaId(), visionArea.HitBox())
 	for key, val := range visibleObjects {
 		clone := val.(entity.IGameObject).Clone()
 		// This is required to send target info on first character object rendering

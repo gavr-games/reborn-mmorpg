@@ -19,7 +19,11 @@ func (shovel *ShovelObject) CheckDig(e entity.IEngine, charGameObj entity.IGameO
 		}
 
 		// Check char is on the grass
-		possibleCollidableObjects := e.Floors()[charGameObj.Floor()].RetrieveIntersections(utils.Bounds{
+		gameArea, gaOk := e.GameAreas().Load(charGameObj.GameAreaId())
+		if !gaOk {
+			return false
+		}
+		possibleCollidableObjects := gameArea.RetrieveIntersections(utils.Bounds{
 			X:      charGameObj.X() + charGameObj.Width()/2,
 			Y:      charGameObj.Y() + charGameObj.Height()/2,
 			Width:  SmallSize, // small size is used to determine the exact surface char is standing on

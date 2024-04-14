@@ -1,7 +1,6 @@
 package building_object
 
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 )
@@ -27,13 +26,9 @@ func (building *BuildingObject) Destroy(e entity.IEngine, player *entity.Player)
 		e.SendSystemMessage("You need to be closer to the item.", player)
 		return false
 	}
-	e.SendGameObjectUpdate(buildingObj, "remove_object")
-	e.Floors()[buildingObj.Floor()].FilteredRemove(buildingObj, func(b utils.IBounds) bool {
-		return buildingObj.Id() == b.(entity.IGameObject).Id()
-	})
 
 	// Destroy building
-	e.GameObjects().Delete(buildingObj.Id())
+	e.RemoveGameObject(buildingObj)
 
 	return true
 }

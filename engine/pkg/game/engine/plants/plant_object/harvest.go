@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObject) bool {
@@ -38,7 +37,7 @@ func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObje
 		resources := plant.GetProperty("resources").(map[string]interface{})
 		for resourceKey, amount := range resources {
 			for i := 0; i < int(amount.(float64)); i++ {
-				resourceObj := e.CreateGameObject(fmt.Sprintf("resource/%s", resourceKey), charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+				resourceObj := e.CreateGameObject(fmt.Sprintf("resource/%s", resourceKey), charGameObj.X(), charGameObj.Y(), 0.0, "", nil)
 				// put resource to container or drop it to the ground
 				container.(entity.IContainerObject).PutOrDrop(e, charGameObj, resourceObj.Id(), -1)
 				e.SendSystemMessage(fmt.Sprintf("You received a %s.", resourceObj.Kind()), player)
@@ -46,11 +45,7 @@ func (plant *PlantObject) Harvest(e entity.IEngine, charGameObj entity.IGameObje
 		}
 
 		// Remove plant
-		e.SendGameObjectUpdate(plant, "remove_object")
-		e.Floors()[plant.Floor()].FilteredRemove(plant, func(b utils.IBounds) bool {
-			return plant.Id() == b.(entity.IGameObject).Id()
-		})
-		e.GameObjects().Delete(plant.Id())
+		e.RemoveGameObject(plant)
 
 		charGameObj.(entity.ILevelingObject).AddExperience(e, "harvest_plant")
 

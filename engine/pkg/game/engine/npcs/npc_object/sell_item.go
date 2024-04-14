@@ -51,7 +51,7 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 		resourceKind := npcObj.GetProperty("buys").(map[string]interface{})[itemKey].(map[string]interface{})["resource"].(string)
 		resourceKey := "resource/" + resourceKind
 
-		resourceObj := e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+		resourceObj := e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.GameAreaId(), map[string]interface{}{
 			"visible": false,
 		})
 
@@ -70,7 +70,7 @@ func (npcObj *NpcObject) SellItem(e entity.IEngine, charGameObj entity.IGameObje
 				break
 			}
 
-			resourceObj = e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+			resourceObj = e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.GameAreaId(), map[string]interface{}{
 				"visible": false,
 			})
 		}

@@ -16,14 +16,11 @@ func (shovel *ShovelObject) Dig(e entity.IEngine, charGameObj entity.IGameObject
 		grass := findGrass(e, charGameObj)
 
 		// Add dirt
-		e.CreateGameObject("surface/dirt", grass.X(), grass.Y(), 0.0, grass.Floor(), nil)
+		e.CreateGameObject("surface/dirt", grass.X(), grass.Y(), 0.0, grass.GameAreaId(), nil)
 
 		// Remove grass
-		e.SendGameObjectUpdate(grass, "remove_object")
-		e.Floors()[grass.Floor()].FilteredRemove(grass, func(b utils.IBounds) bool {
-			return grass.Id() == b.(entity.IGameObject).Id()
-		})
-		e.GameObjects().Delete(grass.Id())
+		e.RemoveGameObject(grass)
+
 		e.SendSystemMessage("You've created some dirt.", player)
 	} else {
 		return false
@@ -33,7 +30,11 @@ func (shovel *ShovelObject) Dig(e entity.IEngine, charGameObj entity.IGameObject
 }
 
 func findGrass(e entity.IEngine, charGameObj entity.IGameObject) entity.IGameObject {
-	possibleCollidableObjects := e.Floors()[charGameObj.Floor()].RetrieveIntersections(utils.Bounds{
+	gameArea, gaOk := e.GameAreas().Load(charGameObj.GameAreaId())
+	if !gaOk {
+		return nil
+	}
+	possibleCollidableObjects := gameArea.RetrieveIntersections(utils.Bounds{
 		X:      charGameObj.X() + charGameObj.Width()/2,
 		Y:      charGameObj.Y() + charGameObj.Height()/2,
 		Width:  SmallSize, // small size is used to determine the exact surface char is standing on

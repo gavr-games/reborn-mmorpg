@@ -15,7 +15,11 @@ func (mob *MobObject) CheckAgro() {
 		// check potential attack objects in agro_raius
 		e := mob.Engine
 		targetObjId := ""
-		possibleAttackObjects := e.Floors()[mob.Floor()].RetrieveIntersections(utils.Bounds{
+		gameArea, gaOk := e.GameAreas().Load(mob.GameAreaId())
+		if !gaOk {
+			return
+		}
+		possibleAttackObjects := gameArea.RetrieveIntersections(utils.Bounds{
 			X:      mob.X() - agroRadius / 2 + mob.Width() / 2,
 			Y:      mob.Y() - agroRadius / 2 + mob.Height() / 2,
 			Width:  agroRadius * 2,

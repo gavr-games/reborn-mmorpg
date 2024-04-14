@@ -8,7 +8,7 @@ The project consist of the following main services (you can see them in [docker-
 - `db` - [PostgreSQL](https://www.postgresql.org/) database to store users. Used by `api`.
 - `redis` - [Redis](https://redis.io/) is used to store game objects, so they could survive `engine` restart.
 - `chat` - used to implement simple chat between players. Communicates with `frontend` via web sockets.
-- `engine_api` - used to provide HTTP API for `engine` in RARE cases it is needed (display image with floor map).
+- `engine_api` - used to provide HTTP API for `engine` in RARE cases it is needed (display image with game area map).
 - `caddy` - web gateway.
 
 ## Game mechanics
@@ -129,17 +129,17 @@ For example:
 There are at least 2 important things you need to keep in mind when creating/removing/ updating GOs.
 
 1. Make sure you update GO in the Redis storage via `storage.GetClient().Updates <- item.Clone()` or `storage.GetClient().Deletes <- gameObj.Id`
-2. Add or remove the GO from a Floor via `Insert` or `FilteredRemove`.
+2. Add or remove the GO from a GameArea via `Insert` or `FilteredRemove`.
 
-## Floor Architecture design
-You can think of Floor as some square or rectangle area, where characters can move. It could be an island, a dungeoun, a cave, etc.
+## GameArea Architecture design
+You can think of GameArea as some square or rectangle area, where characters can move. It could be an island, a dungeoun, a cave, etc.
 
 Here are the key points:
-- Engine stores an array of Floors (maybe later a map will be used).
-- Each Game Object (GO) is placed inside one of the Floors.
-- Floors are usually covered with surface GO of 1x1 size (grass, sand, water, etc).
-- Floors are used to optimize collision detection calculations. For example: a character cannot move trhough the wall or tree. *PS: collisions are calculated only for GO, which have `collidable` attribute*
-- Floors use special structure to store GOs called [QuadTree](https://jimkang.com/quadtreevis/). This allows to minimize the ammount of objects to detec collision with.
+- Engine stores an array of GameAreas (maybe later a map will be used).
+- Each Game Object (GO) is placed inside one of the GameAreas.
+- GameAreas are usually covered with surface GO of 1x1 size (grass, sand, water, etc).
+- GameAreas are used to optimize collision detection calculations. For example: a character cannot move trhough the wall or tree. *PS: collisions are calculated only for GO, which have `collidable` attribute*
+- GameAreas use special structure to store GOs called [QuadTree](https://jimkang.com/quadtreevis/). This allows to minimize the ammount of objects to detec collision with.
 - Quadtree is also extensively used to detect, what a character can see by finding collisions between player vision area GO and other GOs.
 
 ## Player

@@ -18,7 +18,7 @@ func TestResurrect(t *testing.T) {
 	slots := charGameObj.GetProperty("slots").(map[string]interface{})
 	slots["back"] = gameObjectFactory.CreateBackpackGameObject(game_test.GetEngine(), charGameObj).Id()
 	charGameObj.SetProperty("slots", slots)
-	dragonObj = gameObjectFactory.CreateObjectKeyXYFloor(game_test.GetEngine(), dragonKey, charGameObj.X(), charGameObj.Y(), charGameObj.Floor())
+	dragonObj = gameObjectFactory.CreateObjectKeyXYArea(game_test.GetEngine(), dragonKey, charGameObj.X(), charGameObj.Y(), charGameObj.GameAreaId())
 
 	t.Run("Not dragon owner", testNotOwner)
 
@@ -44,7 +44,7 @@ func TestResurrect(t *testing.T) {
 	t.Run("PLayer has no dragon altar", testDragonAltarNotExists)
 	
 	// Create dragon altar
-	altarObj := gameObjectFactory.CreateObjectKeyXYFloor(game_test.GetEngine(), altarKey, claimObeliskObj.X() + nearCoord, claimObeliskObj.Y(), claimObeliskObj.Floor())
+	altarObj := gameObjectFactory.CreateObjectKeyXYArea(game_test.GetEngine(), altarKey, claimObeliskObj.X() + nearCoord, claimObeliskObj.Y(), claimObeliskObj.GameAreaId())
 	
 	t.Run("Resurrected dragon", testSuccess)
 	t.Run("Resurrected dragon on altar", func(t *testing.T) {
@@ -52,6 +52,6 @@ func TestResurrect(t *testing.T) {
 		assert.Equal(t, dragonObj.GetProperty("max_health"), dragonObj.GetProperty("health"))
 		assert.Equal(t, dragonObj.X(), altarObj.X())
 		assert.Equal(t, dragonObj.Y(), altarObj.Y())
-		assert.Equal(t, dragonObj.Floor(), altarObj.Floor())
+		assert.Equal(t, dragonObj.GameAreaId(), altarObj.GameAreaId())
 	})
 }

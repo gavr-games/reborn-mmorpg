@@ -16,9 +16,10 @@ const (
 
 // declaration defined type
 type StorageClient struct {
-	redisClient *redis.Client
-	Updates     chan entity.IGameObject
-	Deletes     chan string
+	redisClient      *redis.Client
+	Updates          chan entity.IGameObject
+	GameAreasUpdates chan *entity.GameArea
+	Deletes          chan string
 }
 
 var instance *StorageClient = nil
@@ -36,20 +37,17 @@ func GetClient() *StorageClient {
 			panic(err)
 		}
 		rdb := redis.NewClient(opt)
-		instance = &StorageClient{
-			redisClient: rdb,
-			Updates:     make(chan entity.IGameObject, ChanelCapacity),
-			Deletes:     make(chan string, ChanelCapacity),
-		}
+		SetClient(rdb)
 	})
 	return instance
 }
 
 func SetClient(rdb *redis.Client) {
 	instance = &StorageClient{
-		redisClient: rdb,
-		Updates:     make(chan entity.IGameObject, ChanelCapacity),
-		Deletes:     make(chan string, ChanelCapacity),
+		redisClient:      rdb,
+		Updates:          make(chan entity.IGameObject, ChanelCapacity),
+		GameAreasUpdates: make(chan *entity.GameArea, ChanelCapacity),
+		Deletes:          make(chan string, ChanelCapacity),
 	}
 }
 
@@ -89,8 +87,10 @@ func (sc *StorageClient) ReadAllGameObjects(process func(entity.IGameObject)) in
 	iter := sc.redisClient.Scan(ctx, 0, "*", 0).Iterator()
 	for iter.Next(ctx) {
 		obj := sc.GetGameObject(iter.Val())
-		process(obj)
-		i++
+		if obj.Type() != "" { // exclude GameArea and other objects stored in Redis
+			process(obj)
+			i++
+		}
 	}
 	if err := iter.Err(); err != nil {
 		panic(err)
@@ -98,9 +98,40 @@ func (sc *StorageClient) ReadAllGameObjects(process func(entity.IGameObject)) in
 	return i
 }
 
+func (sc *StorageClient) GetGameArea(id string) *entity.GameArea {
+	val, redisErr := sc.redisClient.Get(ctx, id).Result()
+	var ga *entity.GameArea
+	if redisErr != nil {
+		panic(redisErr)
+	}
+	err := json.Unmarshal([]byte(val), &ga)
+	if err != nil {
+		panic(err)
+	}
+	return ga
+}
+
+func (sc *StorageClient) SaveGameArea(obj *entity.GameArea) {
+	message, err := json.Marshal(obj)
+	if err != nil {
+		panic(err)
+	}
+
+	setErr := sc.redisClient.Set(ctx, obj.Id(), message, 0).Err()
+	if setErr != nil {
+		panic(setErr)
+	}
+}
+
 func (sc *StorageClient) updatesWorker(updatesChan <-chan entity.IGameObject) {
 	for obj := range updatesChan {
 		sc.SaveGameObject(obj)
+	}
+}
+
+func (sc *StorageClient) gameAreasUpdatesWorker(updatesChan <-chan *entity.GameArea) {
+	for ga := range updatesChan {
+		sc.SaveGameArea(ga)
 	}
 }
 
@@ -112,5 +143,6 @@ func (sc *StorageClient) deletesWorker(deletesChan <-chan string) {
 
 func (sc *StorageClient) Run() {
 	go sc.updatesWorker(sc.Updates)
+	go sc.gameAreasUpdatesWorker(sc.GameAreasUpdates)
 	go sc.deletesWorker(sc.Deletes)
 }

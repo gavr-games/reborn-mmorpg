@@ -10,9 +10,11 @@ func (cont *ContainerObject) PutOrDrop(e entity.IEngine, charGameObj entity.IGam
 		container := cont.gameObj
 		if item, itemOk := e.GameObjects().Load(itemId); itemOk {
 			if !container.(entity.IContainerObject).Put(e, player, itemId, position) {
-				item.SetFloor(charGameObj.Floor())
+				item.SetGameAreaId(charGameObj.GameAreaId())
 				item.SetProperty("visible", true)
-				e.Floors()[item.Floor()].Insert(item)
+				if gameArea, gaOk := e.GameAreas().Load(item.GameAreaId()); gaOk {
+					gameArea.Insert(item)
+				}
 				e.SendGameObjectUpdate(item, "add_object")
 				e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{
 					"object": item.Clone(),

@@ -43,11 +43,13 @@ func (obj *PickableObject) Drop(e entity.IEngine, player *entity.Player) bool {
 	}
 
 	// Drop into the world
-	item.SetFloor(charGameObj.Floor())
+	item.SetGameAreaId(charGameObj.GameAreaId())
 	item.SetProperty("visible", true)
 	item.SetX(charGameObj.X())
 	item.SetY(charGameObj.Y())
-	e.Floors()[item.Floor()].Insert(item)
+	if gameArea, gaOk := e.GameAreas().Load(item.GameAreaId()); gaOk {
+		gameArea.Insert(item)
+	}
 
 	storage.GetClient().Updates <- item.Clone()
 

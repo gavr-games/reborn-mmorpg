@@ -47,8 +47,10 @@ func (dragon *DragonObject) Resurrect(charGameObj entity.IGameObject) (bool, err
 				dragon.SetProperty("health", dragon.GetProperty("max_health"))
 				dragon.SetX(altar.X())
 				dragon.SetY(altar.Y())
-				dragon.SetFloor(altar.Floor())
-				e.Floors()[dragon.Floor()].Insert(dragon)
+				dragon.SetGameAreaId(altar.GameAreaId())
+				if gameArea, gaOk := e.GameAreas().Load(dragon.GameAreaId()); gaOk {
+					gameArea.Insert(dragon)
+				}
 				e.Mobs().Store(dragon.Id(), dragon)
 				e.SendGameObjectUpdate(dragon, "add_object")
 				dragon.Engine.SendResponse("dragons_info", charGameObj.(entity.ICharacterObject).GetDragonsInfo(dragon.Engine), player)

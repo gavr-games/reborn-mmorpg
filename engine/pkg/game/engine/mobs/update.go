@@ -32,12 +32,15 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 				}
 
 				// Update mob game object
-				e.Floors()[mobObj.Floor()].FilteredRemove(mobObj, func(b utils.IBounds) bool {
-					return mobObj.Id() == b.(entity.IGameObject).Id()
-				})
+				gameArea, gaOk := e.GameAreas().Load(mobObj.GameAreaId())
+				if gaOk {
+					gameArea.FilteredRemove(mobObj, func(b utils.IBounds) bool {
+						return mobObj.Id() == b.(entity.IGameObject).Id()
+					})
+				}
 				mobObj.SetX(mobObj.X() + dx)
 				mobObj.SetY(mobObj.Y() + dy)
-				e.Floors()[mobObj.Floor()].Insert(mobObj)
+				gameArea.Insert(mobObj)
 			}
 		}
 		return true

@@ -3,7 +3,6 @@ package tree_object
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) bool {
@@ -27,7 +26,7 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 		}
 
 		// Create log
-		logObj := e.CreateGameObject("resource/log", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+		logObj := e.CreateGameObject("resource/log", charGameObj.X(), charGameObj.Y(), 0.0, "", nil)
 
 		// Put to container or drop to the ground
 		if container, contOk := e.GameObjects().Load(slots["back"].(string)); contOk {
@@ -43,12 +42,7 @@ func (tree *TreeObject) Chop(e entity.IEngine, charGameObj entity.IGameObject) b
 
 		// Remove tree if no logs inside
 		if resources["log"].(float64) <= 0 {
-			e.SendGameObjectUpdate(tree, "remove_object")
-
-			e.Floors()[tree.Floor()].FilteredRemove(tree, func(b utils.IBounds) bool {
-				return tree.Id() == b.(entity.IGameObject).Id()
-			})
-			e.GameObjects().Delete(tree.Id())
+			e.RemoveGameObject(tree)
 		} else {
 			storage.GetClient().Updates <- tree.Clone()
 		}

@@ -34,7 +34,7 @@ func Update(e entity.IEngine, tickDelta int64) {
 				}
 
 				// Update player character game object
-				charGameObj.(entity.ICharacterObject).Move(e, charGameObj.X() + dx, charGameObj.Y() + dy, charGameObj.Floor())
+				charGameObj.(entity.ICharacterObject).Move(e, charGameObj.X() + dx, charGameObj.Y() + dy, charGameObj.GameAreaId())
 			}
 		}
 		return true

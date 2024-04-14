@@ -15,8 +15,15 @@ func LoadGameObjects(e entity.IEngine) {
 		wg.Add(1)
 		go func (gameObj entity.IGameObject) {
 			defer wg.Done()
-			if (gameObj.Floor() >= 0) {
-				e.Floors()[gameObj.Floor()].Insert(gameObj)
+			gameAreaId := gameObj.GameAreaId()
+			if (gameAreaId != "") {
+				if gameArea, gameAreaOk := e.GameAreas().Load(gameAreaId); gameAreaOk {
+					gameArea.Insert(gameObj)
+				} else {
+					gameArea = storage.GetClient().GetGameArea(gameAreaId)
+					e.GameAreas().Store(gameArea.Id(), gameArea)
+					gameArea.Insert(gameObj)
+				}
 			}
 			// init player
 			if gameObj.Kind() == "player" {

@@ -30,8 +30,8 @@ type IGameObject interface {
 	Kind() string
 	Type() string
 	SetType(t string)
-	Floor() int
-	SetFloor(floor int)
+	GameAreaId() string
+	SetGameAreaId(gameAreaId string)
 	Rotation() float64
 	SetRotation(rotation float64)
 	CurrentAction() *DelayedAction
@@ -73,7 +73,7 @@ type GameObject struct {
 	// game params
 	id            *atomic.String
 	objType       *atomic.String
-	floor         *atomic.Int64           // -1 for does not belong to any floor
+	gameAreaId    *atomic.String          // "" - does not belong to any area
 	currentAction *atomic.Pointer[DelayedAction]
 	rotation      *atomic.Float64         // from 0 to math.Pi * 2
 	properties    map[string]interface{}  //TODO: Refactor to thread safe access
@@ -90,7 +90,7 @@ func (obj *GameObject) InitGameObject() {
 	obj.height = atomic.NewFloat64(0.0)
 	obj.id = atomic.NewString("")
 	obj.objType = atomic.NewString("")
-	obj.floor = atomic.NewInt64(int64(-1))
+	obj.gameAreaId = atomic.NewString("")
 	obj.currentAction = atomic.NewPointer[DelayedAction](nil)
 	obj.moveToCoords = atomic.NewPointer[MoveToCoords](nil)
 	obj.rotation = atomic.NewFloat64(0.0)
@@ -170,12 +170,12 @@ func (obj *GameObject) SetType(t string) {
 	obj.properties["type"] = t
 }
 
-func (obj *GameObject) Floor() int {
-	return int(obj.floor.Load())
+func (obj *GameObject) GameAreaId() string {
+	return obj.gameAreaId.Load()
 }
 
-func (obj *GameObject) SetFloor(floor int) {
-	obj.floor.Store(int64(floor))
+func (obj *GameObject) SetGameAreaId(gameAreaId string) {
+	obj.gameAreaId.Store(gameAreaId)
 }
 
 func (obj *GameObject) Rotation() float64 {
@@ -310,7 +310,7 @@ func (obj *GameObject) UnmarshalJSON(b []byte) error {
 		Height        float64
 		Id            string
 		Type          string
-		Floor         int
+		GameAreaId    string
 		CurrentAction *DelayedAction
 		Rotation      float64
 		Properties    map[string]interface{}
@@ -327,7 +327,7 @@ func (obj *GameObject) UnmarshalJSON(b []byte) error {
 	obj.SetHeight(tmp.Height)
 	obj.SetId(tmp.Id)
 	obj.SetType(tmp.Type)
-	obj.SetFloor(tmp.Floor)
+	obj.SetGameAreaId(tmp.GameAreaId)
 	obj.SetCurrentAction(tmp.CurrentAction)
 	obj.SetRotation(tmp.Rotation)
 	obj.SetProperties(tmp.Properties)
@@ -344,7 +344,7 @@ func (obj *GameObject) MarshalJSON() ([]byte, error) {
 		Height        float64
 		Id            string
 		Type          string
-		Floor         int
+		GameAreaId    string
 		CurrentAction *DelayedAction
 		Rotation      float64
 		Properties    map[string]interface{}
@@ -356,7 +356,7 @@ func (obj *GameObject) MarshalJSON() ([]byte, error) {
 		Height:        obj.Height(),
 		Id:            obj.Id(),
 		Type:          obj.Type(),
-		Floor:         obj.Floor(),
+		GameAreaId:    obj.GameAreaId(),
 		CurrentAction: obj.CurrentAction(),
 		Rotation:      obj.Rotation(),
 		Properties:    obj.Properties(),
@@ -421,7 +421,7 @@ func (obj *GameObject) Clone() *GameObject {
 		height:        atomic.NewFloat64(obj.Height()),
 		id:            atomic.NewString(obj.Id()),
 		objType:       atomic.NewString(obj.Type()),
-		floor:         atomic.NewInt64(int64(obj.Floor())),
+		gameAreaId:    atomic.NewString(obj.GameAreaId()),
 		rotation:      atomic.NewFloat64(obj.Rotation()),
 		currentAction: atomic.NewPointer[DelayedAction](nil),
 		moveToCoords:  atomic.NewPointer[MoveToCoords](nil),
@@ -470,7 +470,7 @@ func (a GameObject) GetDistanceToXY(x float64, y float64) float64 {
 
 // Determines if 2 objects are close enough to each other
 func (a GameObject) IsCloseTo(b IGameObject) bool {
-	if a.Floor() != b.Floor() {
+	if a.GameAreaId() != b.GameAreaId() {
 		return false
 	}
 	return a.GetDistance(b) < MaxDistance

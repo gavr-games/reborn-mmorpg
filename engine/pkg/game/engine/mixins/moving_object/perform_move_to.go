@@ -38,7 +38,7 @@ func (mObj *MovingObject) needToStop() bool {
 		tempGameObj.SetY(moveTo.Bounds.Y)
 		tempGameObj.SetWidth(moveTo.Bounds.Width)
 		tempGameObj.SetHeight(moveTo.Bounds.Height)
-		tempGameObj.SetFloor(obj.Floor())
+		tempGameObj.SetGameAreaId(obj.GameAreaId())
 		return obj.IsCloseTo(tempGameObj)
 	}
 	return false

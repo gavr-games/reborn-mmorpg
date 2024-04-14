@@ -49,7 +49,7 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 		}
 
 		// Create items
-		itemObj := e.CreateGameObject(itemKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+		itemObj := e.CreateGameObject(itemKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.GameAreaId(), map[string]interface{}{
 			"visible": false,
 		})
 
@@ -68,7 +68,7 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 				break
 			}
 
-			itemObj = e.CreateGameObject(itemKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+			itemObj = e.CreateGameObject(itemKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.GameAreaId(), map[string]interface{}{
 				"visible": false,
 			})
 		}

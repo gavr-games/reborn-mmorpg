@@ -51,12 +51,17 @@ func (obj *LiftableObject) Lift(e entity.IEngine, charGameObj entity.IGameObject
 		charGameObj.SetProperty("lifted_object_id", item.Id())
 		item.SetProperty("lifted_by", charGameObj.Id())
 		item.SetProperty("collidable", false)
-		e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
-			return item.Id() == b.(entity.IGameObject).Id()
-		})
+		gameArea, gaOk := e.GameAreas().Load(item.GameAreaId())
+		if gaOk {
+			gameArea.FilteredRemove(item, func(b utils.IBounds) bool {
+				return item.Id() == b.(entity.IGameObject).Id()
+			})
+		}
 		item.SetX(charGameObj.X())
 		item.SetY(charGameObj.Y())
-		e.Floors()[item.Floor()].Insert(item)
+		if gaOk {
+			gameArea.Insert(item)
+		}
 
 		e.SendGameObjectUpdate(charGameObj, "update_object")
 		e.SendGameObjectUpdate(item, "update_object")

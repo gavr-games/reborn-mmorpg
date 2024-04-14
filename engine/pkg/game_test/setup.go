@@ -5,12 +5,15 @@ import (
 
 	"github.com/alicebob/miniredis/v2"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/redis/go-redis/v9"
 )
 
 var once sync.Once
 var e *game.Engine
+var surfaceArea *entity.GameArea
 
 func Setup() {
 	once.Do(func() {
@@ -21,9 +24,15 @@ func Setup() {
 		storage.SetClient(rdb)
 		e = game.NewEngine()
 		e.Init(true)
+		surfaceArea = entity.NewGameArea("surface", 0, 0, constants.SurfaceSize, constants.SurfaceSize)
+		e.GameAreas().Store(surfaceArea.Id(), surfaceArea)
 	})
 }
 
 func GetEngine() *game.Engine {
 	return e
+}
+
+func GetSurfaceArea() *entity.GameArea {
+	return surfaceArea
 }

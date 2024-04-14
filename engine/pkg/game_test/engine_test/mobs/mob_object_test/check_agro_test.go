@@ -12,7 +12,7 @@ import (
 func TestResurrect(t *testing.T) {
 	gameObjectFactory := factories.NewGameObjectFactory()
 	targetObj = gameObjectFactory.CreateCharGameObject(game_test.GetEngine())
-	mob = gameObjectFactory.CreateObjectKeyXYFloor(game_test.GetEngine(), mobKey, targetObj.X() + noAgroDistance, targetObj.Y(), targetObj.Floor()).(*mob_object.MobObject)
+	mob = gameObjectFactory.CreateObjectKeyXYArea(game_test.GetEngine(), mobKey, targetObj.X() + noAgroDistance, targetObj.Y(), targetObj.GameAreaId()).(*mob_object.MobObject)
 
 	t.Run("No target to agro", testNoCheckAgroTarget)
 

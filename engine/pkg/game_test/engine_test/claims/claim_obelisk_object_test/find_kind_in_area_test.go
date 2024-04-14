@@ -23,11 +23,11 @@ func TestFindKindInArea(t *testing.T) {
 	t.Run("Test object with kind not found", testObjectNotFound)
 
 	// Create object far away
-	gameObjectFactory.CreateObjectKeyXYFloor(game_test.GetEngine(), objectKey, claimObeliskObj.X() + awayCoord, claimObeliskObj.Y(), claimObeliskObj.Floor())
+	gameObjectFactory.CreateObjectKeyXYArea(game_test.GetEngine(), objectKey, claimObeliskObj.X() + awayCoord, claimObeliskObj.Y(), claimObeliskObj.GameAreaId())
 	t.Run("Test object with kind not found", testObjectNotFound)
 
 	// Create object in claim area
-	findObj := gameObjectFactory.CreateObjectKeyXYFloor(game_test.GetEngine(), objectKey, claimObeliskObj.X() + nearCoord, claimObeliskObj.Y(), claimObeliskObj.Floor())
+	findObj := gameObjectFactory.CreateObjectKeyXYArea(game_test.GetEngine(), objectKey, claimObeliskObj.X() + nearCoord, claimObeliskObj.Y(), claimObeliskObj.GameAreaId())
 	t.Run("Found object with kind", testSuccess)
 	t.Run("Found right object with kind", func(t *testing.T) {
 		assert.Equal(t, findObj.Id(), res.(entity.IGameObject).Id())

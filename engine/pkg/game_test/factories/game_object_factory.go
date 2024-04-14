@@ -20,7 +20,7 @@ const (
 
 func (f *GameObjectFactory) CreateCharGameObject(e *game.Engine) entity.IGameObject {
 	maxId := findMaxPlayerId(e)
-	return e.CreateGameObject(playerObjKey, 0.0, 0.0, 0, 0, map[string]interface{}{"player_id": maxId + 1})
+	return e.CreateGameObject(playerObjKey, 0.0, 0.0, 0, e.GetGameAreaByKey("surface").Id(), map[string]interface{}{"player_id": maxId + 1})
 }
 
 func (f *GameObjectFactory) CreatePlayer(e *game.Engine, charGameObj entity.IGameObject) *entity.Player {
@@ -31,34 +31,34 @@ func (f *GameObjectFactory) CreatePlayer(e *game.Engine, charGameObj entity.IGam
 }
 
 func (f *GameObjectFactory) CreateNpcGameObject(e *game.Engine) entity.IGameObject {
-	return e.CreateGameObject(npcObjKey, 0, 0, 0, 0, nil)
+	return e.CreateGameObject(npcObjKey, 0, 0, 0, e.GetGameAreaByKey("surface").Id(), nil)
 }
 
 func (f *GameObjectFactory) CreateBackpackGameObject(e *game.Engine, charGameObj entity.IGameObject) entity.IGameObject {
-	return e.CreateGameObject(backpackObjKey, charGameObj.X(), charGameObj.Y(), 0.0, -1, map[string]interface{}{"owner_id": charGameObj.Id()})
+	return e.CreateGameObject(backpackObjKey, charGameObj.X(), charGameObj.Y(), 0.0, "", map[string]interface{}{"owner_id": charGameObj.Id()})
 }
 
 func (f *GameObjectFactory) CreateResourceGameObject(e *game.Engine, charGameObj entity.IGameObject, resourceKey string) entity.IGameObject {
-	return e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+	return e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.GameAreaId(), map[string]interface{}{
 		"visible": false,
 	})
 }
 
 func (f *GameObjectFactory) CreateStackableResourceGameObject(e *game.Engine, charGameObj entity.IGameObject, resourceKey string, amount float64) entity.IGameObject {
-	return e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+	return e.CreateGameObject(resourceKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.GameAreaId(), map[string]interface{}{
 		"visible": false,
 		"amount":  amount,
 	})
 }
 
 func (f *GameObjectFactory) CreateClaimObeliskObject(e *game.Engine, charGameObj entity.IGameObject) entity.IGameObject {
-	return e.CreateGameObject(claimObjKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.Floor(), map[string]interface{}{
+	return e.CreateGameObject(claimObjKey, charGameObj.X(), charGameObj.Y(), 0.0, charGameObj.GameAreaId(), map[string]interface{}{
 		"crafted_by_character_id": charGameObj.Id(),
 	})
 }
 
-func (f *GameObjectFactory) CreateObjectKeyXYFloor(e *game.Engine, key string, x float64, y float64, floor int) entity.IGameObject {
-	return e.CreateGameObject(key, x, y, 0.0, floor, nil)
+func (f *GameObjectFactory) CreateObjectKeyXYArea(e *game.Engine, key string, x float64, y float64, gameAreaId string) entity.IGameObject {
+	return e.CreateGameObject(key, x, y, 0.0, gameAreaId, nil)
 }
 
 func findMaxPlayerId(e *game.Engine) int {

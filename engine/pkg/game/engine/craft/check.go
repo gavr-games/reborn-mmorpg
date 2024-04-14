@@ -25,6 +25,10 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		return false
 	}
 	slots := charGameObj.GetProperty("slots").(map[string]interface{})
+	gameArea, gaOk := e.GameAreas().Load(charGameObj.GameAreaId())
+	if !gaOk {
+		return false
+	}
 
 	// Has required tools equipped
 	requiredTools := craftItemConfig["tools"].([]string)
@@ -37,7 +41,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 
 	// Is standing near required equipment (like anvil)
 	if requiredEquipments, eqOk := craftItemConfig["equipment"]; eqOk {
-		possibleEquipmentObjects := e.Floors()[charGameObj.Floor()].RetrieveIntersections(utils.Bounds{
+		possibleEquipmentObjects := gameArea.RetrieveIntersections(utils.Bounds{
 			X:      charGameObj.X() - CraftDistance,
 			Y:      charGameObj.Y() - CraftDistance,
 			Width:  charGameObj.Width() + CraftDistance * 2,
@@ -89,7 +93,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 			e.SendSystemMessage(err.Error(), player)
 			return false
 		}
-		tempGameObj.SetFloor(charGameObj.Floor())
+		tempGameObj.SetGameAreaId(charGameObj.GameAreaId())
 		tempGameObj.Rotate(rotation)
 
 		// Check claim access
@@ -99,7 +103,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		}
 
 		// Check not intersecting with another objects
-		possibleCollidableObjects := e.Floors()[charGameObj.Floor()].RetrieveIntersections(utils.Bounds{
+		possibleCollidableObjects := gameArea.RetrieveIntersections(utils.Bounds{
 			X:      tempGameObj.X(),
 			Y:      tempGameObj.Y(),
 			Width:  tempGameObj.Width(),

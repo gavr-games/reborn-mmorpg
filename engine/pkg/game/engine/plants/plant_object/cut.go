@@ -5,7 +5,6 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) bool {
@@ -35,7 +34,7 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 			resourceKey = k
 			break
 		}
-		resourceObj := e.CreateGameObject(fmt.Sprintf("resource/%s", resourceKey), charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+		resourceObj := e.CreateGameObject(fmt.Sprintf("resource/%s", resourceKey), charGameObj.X(), charGameObj.Y(), 0.0, "", nil)
 
 		// put resource to container or drop it to the ground
 		var (
@@ -53,12 +52,7 @@ func (plant *PlantObject) Cut(e entity.IEngine, charGameObj entity.IGameObject) 
 
 		// Remove plant if no resource inside
 		if resources[resourceKey].(float64) <= 0 {
-			e.SendGameObjectUpdate(plant, "remove_object")
-
-			e.Floors()[plant.Floor()].FilteredRemove(plant, func(b utils.IBounds) bool {
-				return plant.Id() == b.(entity.IGameObject).Id()
-			})
-			e.GameObjects().Delete(plant.Id())
+			e.RemoveGameObject(plant)
 		} else {
 			storage.GetClient().Updates <- plant.Clone()
 		}

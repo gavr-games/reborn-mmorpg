@@ -1,8 +1,7 @@
 package constants
 
 const (
-	FloorSize = 200.0
-	FloorCount = 4
+	SurfaceSize = 200.0 // size of initial GameArea
 	TownSize = 9.0
 	TickSize = 10 // Game tick size in ms
 	InitialPlayerX = 100.0

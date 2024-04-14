@@ -4,12 +4,11 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (hatchery *HatcheryObject) Hatch(e entity.IEngine, mobPath string) bool {
 	// Create dragon
-	dragon := e.CreateGameObject(mobPath, hatchery.X(), hatchery.Y(), 0.0, hatchery.Floor(), nil)
+	dragon := e.CreateGameObject(mobPath, hatchery.X(), hatchery.Y(), 0.0, hatchery.GameAreaId(), nil)
 
 	// Check hatchery is on claim and player has free dragon capacity
 	if obelisk := claims.GetClaimObelisk(e, hatchery); obelisk != nil {
@@ -26,11 +25,7 @@ func (hatchery *HatcheryObject) Hatch(e entity.IEngine, mobPath string) bool {
 	e.SendGameObjectUpdate(dragon, "add_object")
 
 	// Remove hatchery
-	e.Floors()[hatchery.Floor()].FilteredRemove(hatchery, func(b utils.IBounds) bool {
-		return hatchery.Id() == b.(entity.IGameObject).Id()
-	})
-	e.GameObjects().Delete(hatchery.Id())
-	e.SendGameObjectUpdate(hatchery, "remove_object")
+	e.RemoveGameObject(hatchery)
 
 	return true
 }

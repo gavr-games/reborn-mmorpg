@@ -42,7 +42,7 @@ import (
 // Engine runs the game
 type Engine struct {
 	tickTime    int64                                        //last tick time in milliseconds
-	floors      []*utils.Quadtree                            // slice of global game areas, underground, etc
+	gameAreas   *xsync.MapOf[string, *entity.GameArea]       // map of ALL game areas, underground, etc
 	players     *xsync.MapOf[int, *entity.Player]            // map of all players
 	gameObjects *xsync.MapOf[string, entity.IGameObject]     // map of ALL objects in the game
 	mobs        *xsync.MapOf[string, entity.IMobObject]      // map of ALL mobs in the game
@@ -52,8 +52,8 @@ type Engine struct {
 	unregister  chan *Client                                 // Unregister requests from clients.
 }
 
-func (e *Engine) Floors() []*utils.Quadtree {
-	return e.floors
+func (e *Engine) GameAreas() *xsync.MapOf[string, *entity.GameArea] {
+	return e.gameAreas
 }
 
 func (e *Engine) GameObjects() *xsync.MapOf[string, entity.IGameObject] {
@@ -74,6 +74,18 @@ func (e *Engine) Effects() *xsync.MapOf[string, map[string]interface{}] {
 
 func (e *Engine) CurrentTickTime() int64 {
 	return e.tickTime
+}
+
+func (e *Engine) GetGameAreaByKey(key string) *entity.GameArea {
+	var gameArea *entity.GameArea
+	e.GameAreas().Range(func(id string, ga *entity.GameArea) bool {
+		if ga.Key() == key {
+			gameArea = ga
+			return false // stop iteration
+		}
+		return true
+	})
+	return gameArea
 }
 
 // Sends an update named responseType with parameters responseData to specific player (ONLY ONE).
@@ -185,7 +197,7 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 }
 
 // Creates new GameObject and returns it
-func (e *Engine) CreateGameObject(objPath string, x float64, y float64, rotation float64, floor int, additionalProps map[string]interface{}) entity.IGameObject {
+func (e *Engine) CreateGameObject(objPath string, x, y, rotation float64, gameAreaId string, additionalProps map[string]interface{}) entity.IGameObject {
 	gameObj, err := game_objects.CreateFromTemplate(e, objPath, x, y, rotation)
 	if err != nil {
 		//TODO: handle error
@@ -196,9 +208,11 @@ func (e *Engine) CreateGameObject(objPath string, x float64, y float64, rotation
 		}
 	}
 
-	gameObj.SetFloor(floor)
-	if floor != -1 {
-		e.Floors()[gameObj.Floor()].Insert(gameObj)
+	gameObj.SetGameAreaId(gameAreaId)
+	if gameAreaId != "" {
+		if gameArea, gameAreaOk := e.GameAreas().Load(gameAreaId); gameAreaOk {
+			gameArea.Insert(gameObj)
+		}
 	}
 
 	e.GameObjects().Store(gameObj.Id(), gameObj)
@@ -214,6 +228,19 @@ func (e *Engine) CreateGameObject(objPath string, x float64, y float64, rotation
 	return gameObj
 }
 
+func (e *Engine) RemoveGameObject(gameObj entity.IGameObject) {
+	if gameArea, gaOk := e.GameAreas().Load(gameObj.GameAreaId()); gaOk {
+		gameArea.FilteredRemove(gameObj, func(b utils.IBounds) bool {
+			return gameObj.Id() == b.(entity.IGameObject).Id()
+		})
+	}
+	if gameObj.Type() == "mob" {
+		e.Mobs().Delete(gameObj.Id())
+	}
+	e.GameObjects().Delete(gameObj.Id())
+	e.SendGameObjectUpdate(gameObj, "remove_object")
+}
+
 func NewEngine() *Engine {
 	return &Engine{
 		tickTime:    0,
@@ -221,7 +248,7 @@ func NewEngine() *Engine {
 		gameObjects: xsync.NewMapOf[string, entity.IGameObject](),
 		mobs:        xsync.NewMapOf[string, entity.IMobObject](),
 		effects:     xsync.NewMapOf[string, map[string]interface{}](),
-		floors:      make([]*utils.Quadtree, constants.FloorCount),
+		gameAreas:   xsync.NewMapOf[string, *entity.GameArea](),
 		commands:    make(chan *ClientCommand),
 		register:    make(chan *Client),
 		unregister:  make(chan *Client),
@@ -236,19 +263,6 @@ func (e *Engine) Init(skipWorldGeneration bool) {
 
 	e.tickTime = utils.MakeTimestamp()
 
-	e.floors[0] = &utils.Quadtree{
-		Bounds: utils.Bounds{
-			X:      0,
-			Y:      0,
-			Width:  constants.FloorSize,
-			Height: constants.FloorSize,
-		},
-		MaxObjects: constants.FloorSize,
-		MaxLevels:  10,
-		Level:      0,
-		Objects:    make([]utils.IBounds, 0),
-		Nodes:      make([]utils.Quadtree, 0),
-	}
 	if !skipWorldGeneration {
 		engine.LoadGameObjects(e) // Generate new worlds or read it from storage
 	}

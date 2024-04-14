@@ -18,7 +18,11 @@ func (claimObelisk *ClaimObeliskObject) FindKindInArea(e entity.IEngine, kind st
 		return nil, errors.New("Claim area does not exist")
 	}
 
-	possibleObjects := e.Floors()[claimAreaObj.Floor()].RetrieveIntersections(utils.Bounds{
+	gameArea, gaOk := e.GameAreas().Load(claimAreaObj.GameAreaId())
+	if !gaOk {
+		return nil, errors.New("GameArea does not exist")
+	}
+	possibleObjects := gameArea.RetrieveIntersections(utils.Bounds{
 		X:      claimAreaObj.X(),
 		Y:      claimAreaObj.Y(),
 		Width:  claimAreaObj.Width(),

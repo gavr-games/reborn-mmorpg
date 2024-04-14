@@ -6,7 +6,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 // position: -1 for any empty slot
@@ -42,11 +41,7 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 			if existingItem != nil {
 				existingItem.SetProperty("amount", existingItem.GetProperty("amount").(float64) + item.GetProperty("amount").(float64))
 				e.SendGameObjectUpdate(existingItem, "update_object")
-				e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
-					return item.Id() == b.(entity.IGameObject).Id()
-				})
-				e.GameObjects().Delete(item.Id())
-				e.SendGameObjectUpdate(item, "remove_object")
+				e.RemoveGameObject(item)
 				return true
 			}
 		}

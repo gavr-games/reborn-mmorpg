@@ -30,6 +30,6 @@ func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 	e.SendResponseToVisionAreas(charGameObjClone, "remove_object", map[string]interface{}{
 		"object": charGameObjClone,
 	})
-	charGameObj.Move(e, constants.InitialPlayerX, constants.InitialPlayerY, 0)
+	charGameObj.Move(e, constants.InitialPlayerX, constants.InitialPlayerY, e.GetGameAreaByKey("surface").Id())
 	e.SendGameObjectUpdate(charGameObj, "update_object")
 }

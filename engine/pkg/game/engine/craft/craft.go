@@ -56,9 +56,11 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			}
 			itemObj.SetProperty("crafted_by_character_id", charGameObj.Id())
 			itemObj.Rotate(rotation)
-			itemObj.SetFloor(charGameObj.Floor())
+			itemObj.SetGameAreaId(charGameObj.GameAreaId())
 			e.GameObjects().Store(itemObj.Id(), itemObj)
-			e.Floors()[itemObj.Floor()].Insert(itemObj)
+			if gameArea, gaOk := e.GameAreas().Load(itemObj.GameAreaId()); gaOk {
+				gameArea.Insert(itemObj)
+			}
 			storage.GetClient().Updates <- itemObj.Clone()
 
 			e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{

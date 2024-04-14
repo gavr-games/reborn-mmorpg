@@ -2,54 +2,57 @@
   <GameDraggablePanel :panelId="'map'">
     <div :class="`game-panel ${showMapPanel ? '' : 'hide-map'}`">
       <div class="game-panel-content">
-        <div class="pin" :style="{ left: left + 'px', top: top + 'px' }"></div>
-        <img src="/engine_api/maps/floor_0_map.jpg" alt="Floor map" id="floor-map" /> <br />
-        <button type="button" class="rpgui-button" @click="showMapPanel = false"><p>Close</p></button>
+        <div class="pin" :style="{ left: left + 'px', top: top + 'px' }" />
+        <img v-if="areaId != ''" id="area-map" :src="`/engine_api/maps/area_${areaId}_map.jpg`" alt="Area map"> <br>
+        <button type="button" class="rpgui-button" @click="showMapPanel = false">
+          <p>Close</p>
+        </button>
       </div>
     </div>
   </GameDraggablePanel>
 </template>
 
 <script>
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 export default {
-  data() {
+  data () {
     return {
       showMapPanel: false,
       left: 0,
       top: 0,
+      areaId: ''
     }
   },
 
-  created() {
-    EventBus.$on("show-map", this.showMap)
-    EventBus.$on("update_object", this.updateObject)
-    EventBus.$on("add_object", this.updateObject)
+  created () {
+    EventBus.$on('show-map', this.showMap)
+    EventBus.$on('update_object', this.updateObject)
+    EventBus.$on('add_object', this.updateObject)
   },
 
-  beforeDestroy() {
-    EventBus.$off("show-map", this.showMap)
-    EventBus.$off("update_object", this.updateObject)
-    EventBus.$off("add_object", this.updateObject)
+  beforeDestroy () {
+    EventBus.$off('show-map', this.showMap)
+    EventBus.$off('update_object', this.updateObject)
+    EventBus.$off('add_object', this.updateObject)
   },
 
   methods: {
-    showMap() {
+    showMap () {
       this.showMapPanel = true
     },
-    updateObject(obj) {
-      if (obj.Properties["player_id"] === this.$store.state.characters.selectedCharacterId) {
-        if (document.getElementById("floor-map")) {
-          this.left = obj.X + 8
-          this.top = document.getElementById("floor-map").height - obj.Y - 10
+    updateObject (obj) {
+      if (obj.Properties.player_id === this.$store.state.characters.selectedCharacterId) {
+        this.left = obj.X + 8
+        this.areaId = obj.GameAreaId
+        if (document.getElementById('area-map')) {
+          this.top = document.getElementById('area-map').height - obj.Y - 10
         }
       }
-    },
+    }
   }
 }
 </script>
-
 
 <style lang="scss">
 .hide-map {

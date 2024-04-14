@@ -21,7 +21,7 @@ func ClaimTeleport(e entity.IEngine, params map[string]interface{}) bool {
 				e.SendResponseToVisionAreas(charGameObjClone, "remove_object", map[string]interface{}{
 					"object": charGameObjClone,
 				})
-				charGameObj.(entity.ICharacterObject).Move(e, obelisk.X() + 1.0, obelisk.Y() + 1.0, obelisk.Floor())
+				charGameObj.(entity.ICharacterObject).Move(e, obelisk.X() + 1.0, obelisk.Y() + 1.0, obelisk.GameAreaId())
 			}
 			e.SendGameObjectUpdate(charGameObj, "update_object")
 		}

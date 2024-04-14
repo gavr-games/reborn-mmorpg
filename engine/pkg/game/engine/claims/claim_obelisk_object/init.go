@@ -19,7 +19,7 @@ func (claimObelisk *ClaimObeliskObject) Init(e entity.IEngine) bool {
 	// Create claim area
 	additionalProps := make(map[string]interface{})
 	additionalProps["claim_obelisk_id"] = claimObelisk.Id()
-	claimArea := e.CreateGameObject("claim/claim_area", claimObelisk.X() - constants.ClaimArea / 2, claimObelisk.Y() - constants.ClaimArea / 2, 0.0, claimObelisk.Floor(), additionalProps)
+	claimArea := e.CreateGameObject("claim/claim_area", claimObelisk.X() - constants.ClaimArea / 2, claimObelisk.Y() - constants.ClaimArea / 2, 0.0, claimObelisk.GameAreaId(), additionalProps)
 
 	claimObelisk.SetProperty("claim_area_id", claimArea.Id())
 

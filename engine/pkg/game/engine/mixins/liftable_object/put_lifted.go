@@ -37,7 +37,11 @@ func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameO
 		}
 
 		// Check not intersecting with another objects
-		possibleCollidableObjects := e.Floors()[charGameObj.Floor()].RetrieveIntersections(utils.Bounds{
+		charGameArea, cgaOk := e.GameAreas().Load(charGameObj.GameAreaId())
+		if !cgaOk {
+			return false
+		}
+		possibleCollidableObjects := charGameArea.RetrieveIntersections(utils.Bounds{
 			X:      x,
 			Y:      y,
 			Width:  clone.Width(),
@@ -60,13 +64,18 @@ func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameO
 		charGameObj.SetProperty("lifted_object_id", nil)
 		item.SetProperty("lifted_by", nil)
 		item.SetProperty("collidable", true)
-		e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
-			return item.Id() == b.(entity.IGameObject).Id()
-		})
+		gameArea, gaOk := e.GameAreas().Load(item.GameAreaId())
+		if gaOk {
+			gameArea.FilteredRemove(item, func(b utils.IBounds) bool {
+				return item.Id() == b.(entity.IGameObject).Id()
+			})
+		}
 		item.SetX(x)
 		item.SetY(y)
 		item.Rotate(rotation)
-		e.Floors()[item.Floor()].Insert(item)
+		if gaOk {
+			gameArea.Insert(item)
+		}
 
 		e.SendGameObjectUpdate(charGameObj, "update_object")
 		e.SendGameObjectUpdate(item, "update_object")

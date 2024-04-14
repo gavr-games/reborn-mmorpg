@@ -3,7 +3,6 @@ package rock_object
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) bool {
@@ -27,7 +26,7 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 		}
 
 		// Create stone
-		stoneObj := e.CreateGameObject("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0, -1, nil)
+		stoneObj := e.CreateGameObject("resource/stone", charGameObj.X(), charGameObj.Y(), 0.0, "", nil)
 
 		if container, contOk := e.GameObjects().Load(slots["back"].(string)); contOk {
 			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, stoneObj.Id(), -1)
@@ -42,12 +41,7 @@ func (rock *RockObject) Chip(e entity.IEngine, charGameObj entity.IGameObject) b
 
 		// Remove rock if no stones inside
 		if resources["stone"].(float64) <= 0 {
-			e.SendGameObjectUpdate(rock, "remove_object")
-
-			e.Floors()[rock.Floor()].FilteredRemove(rock, func(b utils.IBounds) bool {
-				return rock.Id() == b.(entity.IGameObject).Id()
-			})
-			e.GameObjects().Delete(rock.Id())
+			e.RemoveGameObject(rock)
 		} else {
 			storage.GetClient().Updates <- rock.Clone()
 		}

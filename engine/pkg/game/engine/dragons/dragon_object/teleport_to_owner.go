@@ -20,13 +20,17 @@ func (dragon *DragonObject) TeleportToOwner(charGameObj entity.IGameObject) {
 					"object": dragonClone,
 				})
 				dragon.StopEverything()
-				dragon.Engine.Floors()[dragon.Floor()].FilteredRemove(dragon, func(b utils.IBounds) bool {
-					return dragon.Id() == b.(entity.IGameObject).Id()
-				})
+				if gameArea, gaOk := dragon.Engine.GameAreas().Load(dragon.GameAreaId()); gaOk {
+					gameArea.FilteredRemove(dragon, func(b utils.IBounds) bool {
+						return dragon.Id() == b.(entity.IGameObject).Id()
+					})
+				}
 				dragon.SetX(charGameObj.X())
 				dragon.SetY(charGameObj.Y())
-				dragon.SetFloor(charGameObj.Floor())
-				dragon.Engine.Floors()[charGameObj.Floor()].Insert(dragon)
+				dragon.SetGameAreaId(charGameObj.GameAreaId())
+				if gameArea, gaOk := dragon.Engine.GameAreas().Load(charGameObj.GameAreaId()); gaOk {
+					gameArea.Insert(dragon)
+				}
 				dragon.Engine.SendGameObjectUpdate(dragon, "update_object")
 			} else {
 				dragon.Engine.SendSystemMessage("You are not the owner of this creature.", player)

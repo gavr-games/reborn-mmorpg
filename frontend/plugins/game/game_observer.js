@@ -171,7 +171,7 @@ class GameObserver {
     this.grid = new Grid(this.scene)
     // this.grid.create();
 
-    // Create plane to pick coords - replace 1000 with floor width
+    // Create plane to pick coords - replace 1000 with area width
     this.pickCoordsPlane = BABYLON.MeshBuilder.CreatePlane('xy-coords-plane', { height: 1000, width: 1000 }, this.scene)
     this.pickCoordsPlane.position.x = 0
     this.pickCoordsPlane.position.z = 0

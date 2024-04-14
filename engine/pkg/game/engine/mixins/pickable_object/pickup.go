@@ -54,9 +54,11 @@ func (obj *PickableObject) Pickup(e entity.IEngine, player *entity.Player) bool 
 
 	// remove from world
 	if _, itemStillExists := e.GameObjects().Load(item.Id()); itemStillExists { // if item was stackable it is destroyed in Put func
-		e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
-			return item.Id() == b.(entity.IGameObject).Id()
-		})
+		if gameArea, gaOk := e.GameAreas().Load(item.GameAreaId()); gaOk {
+			gameArea.FilteredRemove(item, func(b utils.IBounds) bool {
+				return item.Id() == b.(entity.IGameObject).Id()
+			})
+		}
 		item.SetProperty("visible", false)
 
 		storage.GetClient().Updates <- item.Clone()

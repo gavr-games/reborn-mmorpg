@@ -79,7 +79,7 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 	gameObj.SetWidth(width)
 	gameObj.SetHeight(height)
 	gameObj.SetType(objTemplate["type"].(string))
-	gameObj.SetFloor(-1)
+	gameObj.SetGameAreaId("")
 	gameObj.SetRotation(rotation)
 
 	if (gameObj.Type() == "container") {

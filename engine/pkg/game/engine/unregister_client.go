@@ -13,9 +13,11 @@ func UnregisterClient(e entity.IEngine, client entity.IClient) {
 			//TODO: handle issue this gives panic when closing closed channel
 			//close(client.GetSendChannel())
 			player.Client = nil
-			e.Floors()[visionAreaGameObj.Floor()].FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
-				return player.VisionAreaGameObjectId == b.(entity.IGameObject).Id()
-			})
+			if gameArea, gaOk := e.GameAreas().Load(visionAreaGameObj.GameAreaId()); gaOk {
+				gameArea.FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
+					return player.VisionAreaGameObjectId == b.(entity.IGameObject).Id()
+				})
+			}
 			e.GameObjects().Delete(player.VisionAreaGameObjectId)
 			if charObj, charOk := e.GameObjects().Load(player.CharacterGameObjectId); charOk {
 				charObj.SetProperty("visible", false)

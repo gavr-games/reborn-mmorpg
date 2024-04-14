@@ -2,7 +2,6 @@ package destroyable_object
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) bool {
@@ -52,14 +51,7 @@ func (obj *DestroyableObject) Destroy(e entity.IEngine, player *entity.Player) b
 	}
 
 	// Destroy item
-	// TODO: refactor to RemoveObject func in engine
-	if item.Floor() != -1 {
-		e.Floors()[item.Floor()].FilteredRemove(item, func(b utils.IBounds) bool {
-			return item.Id() == b.(entity.IGameObject).Id()
-		})
-	}
-	e.GameObjects().Delete(item.Id())
-	e.SendGameObjectUpdate(item, "remove_object")
+	e.RemoveGameObject(item)
 
 	return true
 }
