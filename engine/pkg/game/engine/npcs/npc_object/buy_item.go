@@ -10,6 +10,12 @@ func (npcObj *NpcObject) BuyItem(e entity.IEngine, charGameObj entity.IGameObjec
 	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
 		slots := charGameObj.GetProperty("slots").(map[string]interface{})
+		actions := npcObj.GetProperty("actions")
+
+		if actions == nil || actions.(map[string]interface{})["trade"] == nil {
+			e.SendSystemMessage("You can't trade with this NPC", player)
+			return false, errors.New("NPC cannot trade")
+		}
 
 		if slots["back"] == nil {
 			e.SendSystemMessage("You don't have container", player)

@@ -9,12 +9,14 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - Add dragon breeding to get new eggs
   - breeding cave, select dragons for breeding
 - Fighting with dragons in dungeons and leveling dragons
+  - NPC to enter dungeon (save dungeon area id in cahr obj, save char id in exit teleport)
   - generate dungeons (introduce more areas, chars move to another area take into account on frontend) https://www.roguebasin.com/index.php/Basic_BSP_Dungeon_generation
   - select dragons for dungeon (1 per 10 lvls, max 3)
   - select dungeon lvl, increase allowed dungeon lvl
   - get exp for dungeons
-  - chest with reward
-  - exit teleport
+  - chest with reward and key for exit
+  - zombies in rooms
+  - exit teleport with key required
 - More buildings and furniture for houses
 
 ## TODO

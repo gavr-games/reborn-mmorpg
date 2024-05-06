@@ -635,6 +635,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"claim_obelisk_id": nil,
 				"dragons_ids": []interface{}{},
 				"max_dragons": 1.0,
+				"max_dungeon_lvl": 1.0,
+				"current_dungeon_id": nil,
 				"visible":     true,
 				"targetable":  true,
 				"game_master": false,
@@ -1535,7 +1537,22 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 				"actions": map[string]interface{}{
 					"trade": map[string]interface{}{
-						"cmd":    "npc_trade_info",
+						"cmd":    "get_npc_trade_info",
+						"params": "self",
+					},
+				},
+			},
+			"dungeon_keeper": map[string]interface{}{
+				"type":       "npc",
+				"kind":       "dungeon_keeper",
+				"width":      1.0,
+				"height":     1.0,
+				"shape":      "circle",
+				"collidable": false,
+				"visible":    true,
+				"actions": map[string]interface{}{
+					"dungeons": map[string]interface{}{
+						"cmd":    "get_npc_dungeons_info",
 						"params": "self",
 					},
 				},

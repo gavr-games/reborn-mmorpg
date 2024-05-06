@@ -13,9 +13,9 @@
             <div class="dragon-title" @click="toggleExpandDragon(dragon.id)">
               {{ dragon.kind }} Lvl. {{ dragon.level }}
             </div>
-            <div v-if="expandDragons[dragon.id]" class="dragon">
+            <div v-if="expandDragons[dragon.id]">
               <p class="dragon-description">
-                Alive | Exp. {{ dragon.experience }} / {{ expNextLevel(dragon.level) }}
+                {{ dragon.alive ? 'Alive' : 'Dead' }} | Exp. {{ dragon.experience }} / {{ expNextLevel(dragon.level) }}
               </p>
               <button v-if="dragon.alive" type="button" class="rpgui-button" @click="teleportDragon(dragon)">
                 <p>Teleport to me</p>
@@ -120,17 +120,15 @@ export default {
         text-decoration: underline;
       }
     }
-    .dragon {
-      border: 1px solid white;
-      padding: 5px;
-      .dragon-description {
-        color: grey;
-        margin: 0px;
-        font-size: 10px;
-      }
-      .actions {
-        display: flex;
-      }
+    border: 1px solid white;
+    padding: 5px;
+    .dragon-description {
+      color: grey;
+      margin: 0px;
+      font-size: 10px;
+    }
+    .actions {
+      display: flex;
     }
   }
 }

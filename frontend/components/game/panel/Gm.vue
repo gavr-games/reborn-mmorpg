@@ -1,18 +1,18 @@
 <template>
   <GameDraggablePanel :panelId="'gm'">
-    <div class="game-panel" v-if="showPanel">
+    <div v-if="showPanel" class="game-panel">
       <div class="game-panel-content">
         <h4>Game Master</h4>
         <h6>Create Game Object</h6>
         <div id="add-object-cont">
           <label>Game object path:</label>
-          <input type="text" v-model="objectPath" placeholder="resource/gold">
+          <input v-model="objectPath" type="text" placeholder="resource/gold">
           <label>Offset X:</label>
-          <input type="number" v-model="offsetX" step="0.1" placeholder="0.0">
+          <input v-model="offsetX" type="number" step="0.1" placeholder="0.0">
           <label>Offset Y:</label>
-          <input type="number" v-model="offsetY" step="0.1" placeholder="0.0">
+          <input v-model="offsetY" type="number" step="0.1" placeholder="0.0">
           <label>Additional properties:</label>
-          <textarea placeholder='{"amount":100.0}' v-model="additionalProps"></textarea>
+          <textarea v-model="additionalProps" placeholder='{"amount":100.0}'/>
           <button type="button" class="rpgui-button gold" @click="createGameObject"><p>Create</p></button>
         </div>
         <button type="button" class="rpgui-button" @click="showPanel = false"><p>Close</p></button>

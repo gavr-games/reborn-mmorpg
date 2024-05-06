@@ -46,6 +46,7 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 - `set_exp` - set current experience value for object.
 - `set_level` - set current level for object.
 - `dragons_info` - info about dragons, owned by character.
+- `dungeons_info` - information about dungeons of character.
 
 ## Game Object (GO) Architecture Design
 ![Interfaces Architecture](imgs/interfaces_architecture.png "Interfaces Architecture")

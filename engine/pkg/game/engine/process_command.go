@@ -27,7 +27,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 
 		// List of commands, which don't interrupt current character action.
 		// Like get_character_info does not interrupt choping a tree, but any movement does
-		nonCancellingCmds := []string{"get_ping", "get_character_info", "get_dragons_info", "open_container", "get_craft_atlas", "npc_trade_info", "get_item_info"}
+		nonCancellingCmds := []string{"get_ping", "get_character_info", "get_dragons_info", "get_npc_dungeons_info", "open_container", "get_craft_atlas", "get_npc_trade_info", "get_item_info"}
 		// Cancel character delayed actions and auto moving
 		if !slices.Contains(nonCancellingCmds, cmd.(string)) {
 			delayed_actions.Cancel(e, charGameObj)
@@ -57,9 +57,15 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			if item, itemOk := e.GameObjects().Load(itemId); itemOk {
 				e.SendResponse("item_info", serializers.GetInfo(e, item), player)
 			}
-		case "npc_trade_info":
+		case "get_npc_trade_info":
 			if npcObj, npcOk := e.GameObjects().Load(params.(string)); npcOk {
 				e.SendResponse("npc_trade_info", serializers.GetInfo(e, npcObj), player)
+			}
+		case "get_npc_dungeons_info":
+			if npcObj, npcOk := e.GameObjects().Load(params.(string)); npcOk {
+				if dungeonsInfo, diErr := npcObj.(entity.INpcObject).GetDungeonsInfo(e, charGameObj); diErr == nil {
+					e.SendResponse("dungeons_info", dungeonsInfo, player)
+				}
 			}
 		case "npc_buy_item":
 			if npcObj, npcOk := e.GameObjects().Load(params.(map[string]interface{})["npc_id"].(string)); npcOk {

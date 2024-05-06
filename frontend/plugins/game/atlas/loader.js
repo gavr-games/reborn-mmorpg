@@ -288,7 +288,8 @@ class Loader {
 
   loadNpcs () {
     const npcs = [
-      'town_keeper'
+      'town_keeper',
+      'dungeon_keeper'
     ]
     npcs.forEach((item) => {
       const task = this.assetsManager.addContainerTask(
