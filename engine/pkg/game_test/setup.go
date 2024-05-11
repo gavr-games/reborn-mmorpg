@@ -24,6 +24,7 @@ func Setup() {
 		storage.SetClient(rdb)
 		e = game.NewEngine()
 		e.Init(true)
+		e.EnableTestingMode()
 		surfaceArea = entity.NewGameArea("surface", 0, 0, constants.SurfaceSize, constants.SurfaceSize)
 		e.GameAreas().Store(surfaceArea.Id(), surfaceArea)
 	})

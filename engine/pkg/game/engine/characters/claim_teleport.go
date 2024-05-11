@@ -16,6 +16,10 @@ func ClaimTeleport(e entity.IEngine, params map[string]interface{}) bool {
 					e.SendSystemMessage("You don't have a claim.", player)
 					return false
 				}
+				if charGameObj.GetProperty("current_dungeon_id") != nil {
+					e.SendSystemMessage("You can't teleport in dungeon.", player)
+					return false
+				}
 				// Send remove to all players who see character
 				charGameObjClone := charGameObj.Clone()
 				e.SendResponseToVisionAreas(charGameObjClone, "remove_object", map[string]interface{}{

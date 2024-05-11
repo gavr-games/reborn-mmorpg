@@ -50,6 +50,9 @@ export default {
   &.claim_stone {
     background-position: 512px 514px;
   }
+  &.dungeon_key {
+    background-position: 224px 514px;
+  }
   &.fire_dragon_egg {
     background-position: 320px 386px;
   }

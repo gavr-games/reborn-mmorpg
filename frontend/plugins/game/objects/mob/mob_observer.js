@@ -94,11 +94,15 @@ class MobObserver {
       this.targetHighlight.remove()
       this.targetHighlight = null
     }
+    if (this.container !== null) {
+      this.container.dispose()
+    }
     if (this.mesh !== null) {
       this.mesh.dispose()
     }
     this.mesh = null
     this.state = null
+    this.container = null
   }
 
   selectAsTarget () {

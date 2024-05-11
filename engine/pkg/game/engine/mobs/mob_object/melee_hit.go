@@ -1,6 +1,8 @@
 package mob_object
 
 import (
+	"fmt"
+
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
@@ -49,6 +51,7 @@ func (mob *MobObject) MeleeHit(targetObj entity.IGameObject) bool {
 		if targetObj.Type() == "mob" {
 			if targetMob, ok := mob.Engine.Mobs().Load(targetObj.Id()); ok {
 				targetMob.Die()
+				mob.AddExperience(mob.Engine, fmt.Sprintf("kill_mob/%s", targetMob.(entity.IGameObject).Kind()))
 			}
 		} else {
 			// for characters

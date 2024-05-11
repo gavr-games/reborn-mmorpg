@@ -71,10 +71,12 @@ export default {
 
   created () {
     EventBus.$on('dungeons_info', this.showDungeonsInfo)
+    EventBus.$on('remove_all_objects', this.hidePanel)
   },
 
   beforeDestroy () {
     EventBus.$off('dungeons_info', this.showDungeonsInfo)
+    EventBus.$off('remove_all_objects', this.hidePanel)
   },
 
   methods: {
@@ -83,6 +85,10 @@ export default {
       this.maxDungeonLevel = data.max_dungeon_lvl
       this.currentDungeonId = data.current_dungeon_id
       this.dragons = data.dragons
+      this.dungeonLevel = data.max_dungeon_lvl
+    },
+    hidePanel () {
+      this.showDungeonsPanel = false
     },
     toggleExpandDragon (dragonId) {
       if (this.expandDragons[dragonId]) {
@@ -112,8 +118,8 @@ export default {
       EventBus.$emit('perform-game-action', {
         cmd: 'go_to_dungeon',
         params: {
-          level: this.dungeonLevel,
-          dragons: this.selectedDragons
+          level: parseFloat(this.dungeonLevel),
+          dragonIds: this.selectedDragons
         }
       })
     }

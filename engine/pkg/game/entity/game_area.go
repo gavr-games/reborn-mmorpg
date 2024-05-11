@@ -102,6 +102,15 @@ func (ga *GameArea) InitQuadtree() {
 	}
 }
 
+func (ga *GameArea) GetAllGameObjects() []utils.IBounds  {
+	return ga.RetrieveIntersections(utils.Bounds{
+		X:      ga.X(),
+		Y:      ga.Y(),
+		Width:  ga.Width(),
+		Height: ga.Height(),
+	})
+}
+
 func (ga *GameArea) UnmarshalJSON(b []byte) error {
 	var tmp struct {
 		Id     string

@@ -14,7 +14,7 @@ func (obj *PickableObject) PutToContainer(e entity.IEngine, containerId string, 
 		return false
 	}
 
-	// check container belongs to character
+	// check containers belongs to character
 	if currentContainerId != nil {
 		if container, contOk := e.GameObjects().Load(currentContainerId.(string)); contOk {
 			if !container.(entity.IContainerObject).CheckAccess(e, player) {
@@ -24,6 +24,14 @@ func (obj *PickableObject) PutToContainer(e entity.IEngine, containerId string, 
 		} else {
 			return false
 		}
+	}
+	if containerTo, containerToOk := e.GameObjects().Load(containerId); containerToOk {
+		if !containerTo.(entity.IContainerObject).CheckAccess(e, player) {
+			e.SendSystemMessage("You don't have access to this container", player)
+			return false
+		}
+	} else {
+		return false
 	}
 
 	// remove from container if in container

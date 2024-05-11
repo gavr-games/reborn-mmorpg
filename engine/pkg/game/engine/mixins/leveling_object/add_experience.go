@@ -16,13 +16,26 @@ const (
 )
 
 func (obj *LevelingObject) AddExperience(e entity.IEngine, action string) (bool, error) {
-	gameObj := obj.gameObj
 	amount, ok := GetAtlas()[action]
-
 	if !ok {
 		return false, errors.New("Action not found")
 	}
 
+	return obj.addExpAmount(e, amount)
+}
+
+func (obj *LevelingObject) AddDungeonExperience(e entity.IEngine, level float64) (bool, error) {
+	amount, ok := GetAtlas()["finish_dungeon"]
+	if !ok {
+		return false, errors.New("Action not found")
+	}
+	amount = amount * level
+
+	return obj.addExpAmount(e, amount)
+}
+
+func (obj *LevelingObject) addExpAmount(e entity.IEngine, amount float64) (bool, error) {
+	gameObj := obj.gameObj
 	// Send exp message if player found
 	if playerId := gameObj.GetProperty("player_id"); playerId != nil {
 		if player, pOk := e.Players().Load(playerId.(int)); pOk {

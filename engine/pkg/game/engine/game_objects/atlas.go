@@ -57,6 +57,14 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape":      "rectangle",
 				"visible":    true,
 			},
+			"dungeon_floor": map[string]interface{}{
+				"type":    "surface",
+				"kind":    "dungeon_floor",
+				"width":   1.0,
+				"height":  1.0,
+				"shape":   "rectangle",
+				"visible": true,
+			},
 		},
 		"tree": {
 			"tree_5": map[string]interface{}{
@@ -594,7 +602,6 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"size":                8.0,
 				"parent_container_id": nil,
 				"owner_id":            nil,
-				"equipable":           true,
 				"visible":             true,
 				"collidable":          true,
 				"liftable":            true,
@@ -613,6 +620,27 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"dungeon_chest": map[string]interface{}{
+				"type":                "container",
+				"kind":                "dungeon_chest",
+				"width":               2.0,
+				"height":              1.66,
+				"shape":               "rectangle",
+				"max_capacity":        32.0,
+				"free_capacity":       32.0,
+				"size":                8.0,
+				"parent_container_id": nil,
+				"owner_id":            nil,
+				"visible":             true,
+				"collidable":          true,
+				"liftable":            false,
+				"actions": map[string]interface{}{
+					"open": map[string]interface{}{
+						"cmd":    "open_container",
 						"params": "self", // self - id of current object
 					},
 				},
@@ -1194,6 +1222,31 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"dungeon_key": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "dungeon_key",
+				"width":        0.23,
+				"height":       0.5,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self",
+					},
+				},
+			},
 		},
 		"potion": {
 			"healing_balm": map[string]interface{}{
@@ -1263,6 +1316,23 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_building",
 						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"dungeon_exit": map[string]interface{}{
+				"type":         "wall",
+				"kind":         "dungeon_exit",
+				"width":        2.0,
+				"height":       0.27,
+				"shape":        "rectangle",
+				"level":        nil,
+				"character_id": nil,
+				"collidable":   true,
+				"visible":      true,
+				"actions": map[string]interface{}{
+					"exit": map[string]interface{}{
+						"cmd":    "exit_dungeon",
+						"params": "self",
 					},
 				},
 			},

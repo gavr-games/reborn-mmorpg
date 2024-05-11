@@ -84,6 +84,15 @@ class GameController {
         EventBus.$emit('remove_object', gameObj)
       })
     }
+    this.removeAllObjectsHandler = () => {
+      for (const key in this.gameObjects) {
+        if (this.gameObjects[key] != null) {
+          this.gameObjects[key].remove()
+        }
+        this.gameObjects[key] = null
+        delete this.gameObjects[key]
+      }
+    }
     this.setPingHandler = (data) => {
       this.ping[this.pingIndex] = data.server_time - data.start_time
       this.pingIndex++
@@ -105,6 +114,7 @@ class GameController {
     EventBus.$on('deselect_target', this.deselectTargetHandler)
     EventBus.$on('add_objects', this.addObjectsHandler)
     EventBus.$on('remove_objects', this.removeObjectsHandler)
+    EventBus.$on('remove_all_objects', this.removeAllObjectsHandler)
     EventBus.$on('ping_info', this.setPingHandler)
   }
 
@@ -251,6 +261,7 @@ class GameController {
     EventBus.$off('deselect_target', this.deselectTargetHandler)
     EventBus.$off('add_objects', this.addObjectsHandler)
     EventBus.$off('remove_objects', this.removeObjectsHandler)
+    EventBus.$off('remove_all_objects', this.removeAllObjectsHandler)
     EventBus.$off('ping_info', this.setPingHandler)
   }
 }

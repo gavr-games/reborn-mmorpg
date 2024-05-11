@@ -30,6 +30,22 @@ func (f *GameObjectFactory) CreatePlayer(e *game.Engine, charGameObj entity.IGam
 	return player
 }
 
+func (f *GameObjectFactory) CreateVisionArea(e *game.Engine, charGameObj entity.IGameObject) entity.IGameObject {
+	playerId := charGameObj.Properties()["player_id"].(int)
+	player, _ := e.Players().Load(playerId)
+	visionArea := e.CreateGameObject(
+		"player/player_vision_area",
+		charGameObj.(entity.ICharacterObject).GetVisionAreaX(),
+		charGameObj.(entity.ICharacterObject).GetVisionAreaY(),
+		0.0, charGameObj.GameAreaId(),
+		map[string]interface{}{
+			"player_id": playerId,
+		},
+	)
+	player.VisionAreaGameObjectId = visionArea.Id()
+	return visionArea
+}
+
 func (f *GameObjectFactory) CreateNpcGameObject(e *game.Engine) entity.IGameObject {
 	return e.CreateGameObject(npcObjKey, 0, 0, 0, e.GetGameAreaByKey("surface").Id(), nil)
 }

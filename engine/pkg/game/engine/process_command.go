@@ -5,6 +5,7 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/dungeons"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/gm"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -13,6 +14,7 @@ import (
 
 // Process commands from players
 // TODO: move commands processing to funcs
+// TODO: add incoming params validation
 func ProcessCommand(e entity.IEngine, characterId int, command map[string]interface{}) bool {
 	if player, ok := e.Players().Load(characterId); ok {
 		var (
@@ -272,6 +274,14 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "gm_create_object":
 			gm.CreateObject(e, charGameObj, params.(map[string]interface{}))
+		case "go_to_dungeon":
+			level := params.(map[string]interface{})["level"].(float64)
+			dragonIds := params.(map[string]interface{})["dragonIds"].([]interface{})
+			go dungeons.GoToDungeon(e, charGameObj, level, dragonIds)
+		case "exit_dungeon":
+			if dungeonExit, deOk := e.GameObjects().Load(params.(string)); deOk {
+				dungeons.Exit(e, charGameObj, dungeonExit)
+			}
 		}
 	}
 

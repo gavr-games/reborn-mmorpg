@@ -32,6 +32,13 @@ func (cont *ContainerObject) CheckAccess(e entity.IEngine, player *entity.Player
 				return container.IsCloseTo(charGameObj) && claims.CheckAccess(e, charGameObj, container)
 			}
 		}
-		return player.CharacterGameObjectId  == container.GetProperty("owner_id")
+		// is in real world
+		if visible := container.GetProperty("visible"); visible != nil {
+			if visible.(bool) {
+				return container.IsCloseTo(charGameObj) && claims.CheckAccess(e, charGameObj, container)
+			}
+		}
+		ownerId := container.GetProperty("owner_id")
+		return ownerId == nil || player.CharacterGameObjectId  == ownerId
 	}
 }

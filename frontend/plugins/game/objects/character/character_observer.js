@@ -137,6 +137,10 @@ class Character {
       this.camera = null
     }
     this.state = null
+    if (this.container !== null) {
+      this.container.dispose()
+    }
+    this.container = null
     this.removeMesh()
   }
 

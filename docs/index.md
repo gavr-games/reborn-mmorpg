@@ -26,6 +26,7 @@ See [engine/pkg/game/engine/process_command.go](../engine/pkg/game/engine/proces
 - `add_objects` - same as above, but for multiple objects. Used for better performance in case we need to add many objects.
 - `remove_object` - instructs frontend to remove game object.
 - `remove_objects` - same as above, but for multiple objects. Used for better performance in case we need to remove many objects.
+- `remove_all_objects` - remove all objects from the world.
 - `update_object` - instructs frontend to update game object (health, location, etc).
 - `add_message` - adds message to chat window. Used to send text explanations of events and errors.
 - `character_info` - information about character (equipped items).

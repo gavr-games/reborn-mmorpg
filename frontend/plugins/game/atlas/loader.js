@@ -143,6 +143,7 @@ class Loader {
     const surfaces = [
       'grass',
       'dirt',
+      'dungeon_floor',
       'water',
       'sand',
       'stone'
@@ -230,6 +231,9 @@ class Loader {
       'claim_obelisk',
       'cactus_slice',
       'dragon_altar',
+      'dungeon_chest',
+      'dungeon_exit',
+      'dungeon_key',
       'fire_dragon_egg',
       'fire_dragon_hatchery',
       'gold',

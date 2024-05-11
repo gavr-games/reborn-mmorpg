@@ -4,6 +4,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/dungeons"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
@@ -32,4 +33,7 @@ func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 	})
 	charGameObj.Move(e, constants.InitialPlayerX, constants.InitialPlayerY, e.GetGameAreaByKey("surface").Id())
 	e.SendGameObjectUpdate(charGameObj, "update_object")
+	
+	// Destroy the dungeon if char died in dungeon
+	go dungeons.Destroy(e, charGameObj)
 }

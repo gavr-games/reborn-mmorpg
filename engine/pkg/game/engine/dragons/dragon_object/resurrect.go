@@ -12,7 +12,8 @@ func (dragon *DragonObject) Resurrect(charGameObj entity.IGameObject) (bool, err
 	if playerId := charGameObj.GetProperty("player_id"); playerId != nil {
 		playerIdInt := playerId.(int)
 		if player, ok := e.Players().Load(playerIdInt); ok {
-			if dragon.GetProperty("owner_id") != nil && charGameObj.Id() == dragon.GetProperty("owner_id").(string) {
+			ownerId := dragon.GetProperty("owner_id")
+			if ownerId != nil && charGameObj.Id() == ownerId.(string) {
 				if alive := dragon.GetProperty("alive"); alive != nil && alive.(bool) {
 					e.SendSystemMessage("The dragon is already alive.", player)
 					return false, errors.New("The dragon is already alive")

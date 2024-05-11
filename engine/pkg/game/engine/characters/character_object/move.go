@@ -6,6 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY float64, gameAreaId string) {
@@ -47,7 +48,8 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 			// Update vision area game object
 			newVisionAreaX := charGameObj.GetVisionAreaX()
 			newVisionAreaY := charGameObj.GetVisionAreaY()
-			if visionAreaGameObj.X() != newVisionAreaX || visionAreaGameObj.Y() != newVisionAreaY {
+			oldGameAreaId := visionAreaGameObj.GameAreaId()
+			if visionAreaGameObj.X() != newVisionAreaX || visionAreaGameObj.Y() != newVisionAreaY || oldGameAreaId != gameAreaId {
 				if visionAreaGameArea, gaOk := e.GameAreas().Load(visionAreaGameObj.GameAreaId()); gaOk {
 					visionAreaGameArea.FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
 						return visionAreaGameObj.Id() == b.(entity.IGameObject).Id()
@@ -55,13 +57,42 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 				}
 				visionAreaDx := newVisionAreaX - visionAreaGameObj.X()
 				visionAreaDy := newVisionAreaY - visionAreaGameObj.Y()
-				visionAreaGameObj.SetX(visionAreaGameObj.X() + visionAreaDx)
-				visionAreaGameObj.SetY(visionAreaGameObj.Y() + visionAreaDy)
-				gameArea.Insert(visionAreaGameObj)
-				go updateVisibleObjects(e, player, visionAreaDx, visionAreaDy, visionAreaGameObj)
+				// Teleported to another area or far away
+				// Need to remove all objects and refetch them
+				if oldGameAreaId != gameAreaId || visionAreaDx > visionAreaGameObj.Width() || visionAreaDy > visionAreaGameObj.Height() {
+					visionAreaGameObj.SetX(newVisionAreaX)
+					visionAreaGameObj.SetY(newVisionAreaY)
+					visionAreaGameObj.SetGameAreaId(gameAreaId)
+					gameArea.Insert(visionAreaGameObj)
+					go reinitVisibleObjects(e, player, visionAreaGameObj)
+				} else { // Moved a little
+					visionAreaGameObj.SetX(visionAreaGameObj.X() + visionAreaDx)
+					visionAreaGameObj.SetY(visionAreaGameObj.Y() + visionAreaDy)
+					visionAreaGameObj.SetGameAreaId(gameAreaId)
+					gameArea.Insert(visionAreaGameObj)
+					go updateVisibleObjects(e, player, visionAreaDx, visionAreaDy, visionAreaGameObj)
+				}
 			}
 		}
 	}
+}
+
+// Remove all objects on frontend
+// And reinit with new list
+func reinitVisibleObjects(e entity.IEngine, player *entity.Player, visionArea entity.IGameObject) {
+	e.SendResponse("remove_all_objects", map[string]interface{}{}, player)
+	visibleObjects := game_objects.GetVisibleObjects(e, visionArea.GameAreaId(), visionArea.HitBox())
+	for key, val := range visibleObjects {
+		clone := val.(entity.IGameObject).Clone()
+		// This is required to send target info on first character object rendering
+		if val.(entity.IGameObject).Id() == player.CharacterGameObjectId {
+			clone.SetProperties(serializers.GetInfo(e, clone))
+		}
+		visibleObjects[key] = clone
+	}
+	e.SendResponse("add_objects", map[string]interface{}{
+		"objects": visibleObjects,
+	}, player)
 }
 
 // Determine new and old visible objects, send updates to client

@@ -26,6 +26,7 @@ You need to find out your player game_object's id. You can do that by watching w
 
 ## Tests
 - `make test-engine` - run the engine tests
+- to run tests multiple times it is better to login to engine container `docker compose run --rm engine /bin/sh` and manually run `go test ./pkg/game_test/... -v`
 
 ## Code linting
 - `make lint` - perform code linting for whole project

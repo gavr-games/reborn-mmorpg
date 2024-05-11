@@ -54,7 +54,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 				gameObj := val.(entity.IGameObject)
 				if gameObj.Kind() == requiredEquipment && claims.CheckAccess(e, charGameObj, gameObj) {
 					foundEquipment = true
-					continue
+					break
 				}
 			}
 			if !foundEquipment {

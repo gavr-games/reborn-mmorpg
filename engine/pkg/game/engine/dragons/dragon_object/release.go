@@ -12,7 +12,8 @@ func (dragon *DragonObject) Release(charGameObj entity.IGameObject) {
 	if playerId := charGameObj.GetProperty("player_id"); playerId != nil {
 		playerIdInt := playerId.(int)
 		if player, ok := dragon.Engine.Players().Load(playerIdInt); ok {
-			if dragon.GetProperty("owner_id") != nil && charGameObj.Id() == dragon.GetProperty("owner_id").(string) {
+			ownerId := dragon.GetProperty("owner_id")
+			if ownerId != nil && charGameObj.Id() == ownerId.(string) {
 				// Check dragon is dead and remove completely
 				if alive := dragon.GetProperty("alive"); alive == nil || !alive.(bool) {
 					dragon.Engine.GameObjects().Delete(dragon.Id())

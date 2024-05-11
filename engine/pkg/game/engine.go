@@ -50,6 +50,8 @@ type Engine struct {
 	commands    chan *ClientCommand                          // Inbound messages from the clients.
 	register    chan *Client                                 // Register requests from the clients.
 	unregister  chan *Client                                 // Unregister requests from clients.
+	tasks       chan entity.Task                             // Messages from other routines to execute code in main engine loop
+	testingMode bool		                                     // tasks are performed immediately, not sent to channel
 }
 
 func (e *Engine) GameAreas() *xsync.MapOf[string, *entity.GameArea] {
@@ -74,6 +76,20 @@ func (e *Engine) Effects() *xsync.MapOf[string, map[string]interface{}] {
 
 func (e *Engine) CurrentTickTime() int64 {
 	return e.tickTime
+}
+
+// This func is used to send code to main engine loop from other goroutines
+// This is required for critical object updates to be performed sequentially by engine
+func (e *Engine) PerformTask(f func()) {
+	if e.testingMode {
+		f()
+	} else {
+		e.tasks <- f
+	}
+}
+
+func (e *Engine) EnableTestingMode() {
+	e.testingMode = true
 }
 
 func (e *Engine) GetGameAreaByKey(key string) *entity.GameArea {
@@ -252,6 +268,8 @@ func NewEngine() *Engine {
 		commands:    make(chan *ClientCommand),
 		register:    make(chan *Client),
 		unregister:  make(chan *Client),
+		tasks:       make(chan entity.Task),
+		testingMode: false,
 	}
 }
 
@@ -273,6 +291,8 @@ func (e *Engine) Run() {
 	e.Init(false)
 	for {
 		select {
+		case f := <- e.tasks: // we execute code from other routines, which has to be executed in main engine loop
+			f()
 		case client := <-e.register:
 			engine.RegisterClient(e, client)
 		case client := <-e.unregister:
