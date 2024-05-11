@@ -2090,37 +2090,37 @@ babel-plugin-polyfill-regenerator@^0.2.2:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.2.2"
 
-babylonjs-gltf2interface@^6.19.1:
-  version "6.19.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-6.19.1.tgz#62583561cbc2415792469813c90ec644ede4222b"
-  integrity sha512-torFwrA9o/HQ7Vyh8ABO2XwPm7ATccjbN88hHKUGOsFcw7iKe2AFRLAf78PSfuYB/QrCThj9PgppNmv08sFHhw==
+babylonjs-gltf2interface@^7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-gltf2interface/-/babylonjs-gltf2interface-7.6.0.tgz#2ed22bf5a7f9b4054d2aee586842e99337d54d81"
+  integrity sha512-dE/Npkvwzj+NRnnJKoAKGxziFkHkvbwoRRrStdF6RXB0mu0ht5jZ+3KSr9Bi36i7s/S0iOIUkLznTuet4ySQTQ==
 
-babylonjs-gui@6.19.1:
-  version "6.19.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-gui/-/babylonjs-gui-6.19.1.tgz#b8dcab88c0e1873ea372b4c811d63abeb359d78b"
-  integrity sha512-PjdjISVgoflnOPozwWUa+CVL3nkQuxG4mtL33EvQ0EaAlFs9IRfQD4IbmM4f1tR79CauCWvzlM2/wMhOslCAag==
+babylonjs-gui@7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-gui/-/babylonjs-gui-7.6.0.tgz#e2424490abbd926b7ab8e0302def4d57f27e9ecc"
+  integrity sha512-sYXlSS0vleHB3zYflBQA3sUfEcyEWo0z2smNPuSTPWEfWc0jK2z36tWP4t602UM4kfQhqQcWPvuyD2kBcbzqCA==
   dependencies:
-    babylonjs "^6.19.1"
+    babylonjs "^7.6.0"
 
-babylonjs-loaders@6.19.1:
-  version "6.19.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-6.19.1.tgz#d55e4ece46ec186b071b097640a663414861d159"
-  integrity sha512-OOjE2qjGE7ww+xqUylGrnEvj3qdmWAi00xFVLZJRShhV739kdYbynf5F2Khcp/JYKYVil9G9mUFB7/cQK42dwg==
+babylonjs-loaders@7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-loaders/-/babylonjs-loaders-7.6.0.tgz#0d25d2800fb1894d5744a4f2dd0a84df08b8b635"
+  integrity sha512-z9bU89i5De6MizEfvKKghcu7iEyrynjiIVXCPrqzjpLfvPKIXpRWHRZOlK+OfNMUDjzTXthTVKLQz/dsVpEL3g==
   dependencies:
-    babylonjs "^6.19.1"
-    babylonjs-gltf2interface "^6.19.1"
+    babylonjs "^7.6.0"
+    babylonjs-gltf2interface "^7.6.0"
 
-babylonjs-materials@6.19.1:
-  version "6.19.1"
-  resolved "https://registry.yarnpkg.com/babylonjs-materials/-/babylonjs-materials-6.19.1.tgz#1ebfdaea531c4a65597f118375b54342fd457a57"
-  integrity sha512-nNgzeBv6nGrCRQZUd8pNfGFUi0/wLcJ4ABREoFjt7ubo35D8y4vpEDSh6nJDj87RtBcykSD5zO8oJ0h/7MmcAA==
+babylonjs-materials@7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/babylonjs-materials/-/babylonjs-materials-7.6.0.tgz#370faba75cbfde21f613bc6b482fdc185886bfa7"
+  integrity sha512-P6MSvRYVY9qIjDRNru9v/kmtRaKN/8qBmb/Bf5gD1SaEwdGmdNkHRz8vm7DEwWx6xdnKUhrprUhQPw6uAFXdkQ==
   dependencies:
-    babylonjs "^6.19.1"
+    babylonjs "^7.6.0"
 
-babylonjs@6.19.1, babylonjs@^6.19.1:
-  version "6.19.1"
-  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-6.19.1.tgz#0a2f570c4cc7fbb1af24c38c417035fc8eb0437e"
-  integrity sha512-9tp8E+FpfY2GU02hOQuw2zIUgpa7vZr7GyAxwdfd++hBuXbiea7mDU/6KXQzYnPH8FOcS9hdg/1yTvzv1aHUBQ==
+babylonjs@7.6.0, babylonjs@^7.6.0:
+  version "7.6.0"
+  resolved "https://registry.yarnpkg.com/babylonjs/-/babylonjs-7.6.0.tgz#bc25001b95c55434adeb389061095d92b445f2ae"
+  integrity sha512-vfeIlxxtv8n3sTeP6QvBZo8crKTKHoRyHTrcE9W/dqixWLzYoUspCXnH/nQNyoXYfsRlsQ9JgbIZqCFivGYVlA==
 
 balanced-match@^1.0.0:
   version "1.0.2"

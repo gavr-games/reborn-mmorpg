@@ -75,4 +75,3 @@ More information about the usage of this directory in [the documentation](https:
 - fix 3D models size
 - add levelup animation
 - add die/hit animations
-- migrate babylon 7
