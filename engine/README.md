@@ -5,12 +5,11 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## Roadmap for Demo
 - Add baby dragons and raising them
-  - more crops and food to raise dragons
+- More crops and food to raise dragons
 - Add dragon breeding to get new eggs
   - breeding cave, select dragons for breeding
-- Fighting with dragons in dungeons and leveling dragons
-  - generate dungeons https://www.roguebasin.com/index.php/Basic_BSP_Dungeon_generation with zombies
-  - dragon commands (attack target, protect me, follow me)
+- Dragon commands (attack target, protect me, follow me)
+  - select dragons from list, calc distance.
 - More buildings and furniture for houses
 
 ## TODO

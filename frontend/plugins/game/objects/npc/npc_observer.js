@@ -51,6 +51,10 @@ class NpcObserver {
 
   remove () {
     EventBus.$off('scene-created', this.sceneCreatedCallback)
+    if (this.container !== null) {
+      this.container.dispose()
+    }
+    this.container = null
     if (this.mesh !== null) {
       this.mesh.dispose()
     }

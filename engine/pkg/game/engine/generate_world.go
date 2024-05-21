@@ -110,5 +110,5 @@ func generateTown(e entity.IEngine, gameAreaId string) {
 	
 	// npc
 	e.CreateGameObject("npc/town_keeper", townCenter - townHalfSize + 2.0, townCenter + townHalfSize - 2.0, math.Pi * 2 - math.Pi / 4, gameAreaId, nil)
-	e.CreateGameObject("npc/dungeon_keeper", townCenter - townHalfSize + 3.0, townCenter + townHalfSize - 1.0, math.Pi * 2 - math.Pi / 4, gameAreaId, nil)
+	e.CreateGameObject("npc/dungeon_keeper", townCenter - townHalfSize + 4.0, townCenter + townHalfSize - 2.0, math.Pi * 2 - math.Pi / 4, gameAreaId, nil)
 }

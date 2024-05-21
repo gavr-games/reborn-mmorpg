@@ -1,5 +1,5 @@
 import * as BABYLON from 'babylonjs'
-const ALPHA = 0.5
+const ALPHA = 0.2
 
 export default function addAlpha (mesh, scene, alpha = ALPHA) {
   if (mesh.material && mesh.material.alpha !== alpha) {

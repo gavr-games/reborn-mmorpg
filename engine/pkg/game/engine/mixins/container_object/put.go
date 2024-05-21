@@ -6,6 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 // position: -1 for any empty slot
@@ -82,6 +83,14 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 	container.SetProperty("free_capacity", container.GetProperty("free_capacity").(float64) - 1.0)
 	item.SetProperty("container_id", container.Id())
 	item.SetProperty("visible", false)
+	itemGameArea, igaOk := e.GameAreas().Load(item.GameAreaId())
+	if !igaOk {
+		return false
+	}
+	itemGameArea.FilteredRemove(item, func(b utils.IBounds) bool {
+		return item.Id() == b.(entity.IGameObject).Id()
+	})
+	item.SetGameAreaId(container.GameAreaId())
 	if item.Type() == "container" {
 		item.SetProperty("owner_id", container.GetProperty("owner_id"))
 		item.SetProperty("parent_container_id", container.Id())

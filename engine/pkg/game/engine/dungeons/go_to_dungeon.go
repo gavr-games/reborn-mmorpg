@@ -85,7 +85,7 @@ func GoToDungeon(e entity.IEngine, charGameObj entity.IGameObject, level float64
 
 func generateAndTeleport(e entity.IEngine, charGameObj entity.IGameObject, level float64, dragonIds []interface{}) {
 	// Generate dungeon
-	dungeon := generate(e, charGameObj, level, dragonIds)
+	dungeon, charX, charY := generate(e, charGameObj, level, dragonIds)
 	
 	e.PerformTask(func() { // send this code to engine main loop
 		// Teleport to dungeon
@@ -94,7 +94,7 @@ func generateAndTeleport(e entity.IEngine, charGameObj entity.IGameObject, level
 		e.SendResponseToVisionAreas(charGameObjClone, "remove_object", map[string]interface{}{
 			"object": charGameObjClone,
 		})
-		charGameObj.(entity.ICharacterObject).Move(e, 1.0, 1.0, dungeon.Id())
+		charGameObj.(entity.ICharacterObject).Move(e, charX, charY, dungeon.Id())
 
 		// Teleport dragons to dungeon
 		for _, id := range dragonIds {

@@ -1336,6 +1336,24 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"dungeon_wall": map[string]interface{}{
+				"type":         "wall",
+				"kind":         "dungeon_wall",
+				"width":        2.0,
+				"height":       0.4,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+			},
+			"dungeon_column": map[string]interface{}{
+				"type":         "wall",
+				"kind":         "dungeon_column",
+				"width":        0.5,
+				"height":       0.5,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+			},
 		},
 		"hatchery": {
 			"fire_dragon_hatchery": map[string]interface{}{
