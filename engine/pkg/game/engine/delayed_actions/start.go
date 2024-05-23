@@ -17,6 +17,7 @@ func Start(e entity.IEngine, gameObj entity.IGameObject, funcName string, params
 	)
 
 	gameObj.SetCurrentAction(delayedAction)
+	e.DelayedActions().Store(gameObj.Id(), gameObj)
 
 	storage.GetClient().Updates <- gameObj.Clone()
 

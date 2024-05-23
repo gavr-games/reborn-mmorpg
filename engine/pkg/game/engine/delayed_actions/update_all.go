@@ -6,7 +6,7 @@ import (
 )
 
 func UpdateAll(e entity.IEngine, tickDelta int64) {
-	e.GameObjects().Range(func(objId string, gameObj entity.IGameObject) bool {
+	e.DelayedActions().Range(func(objId string, gameObj entity.IGameObject) bool {
 		delayedAction := gameObj.CurrentAction()
 		if gameObj != nil && delayedAction != nil {
 			// Moving to coords has higher priority, then action. For example: first move to coords, then build a wall there.

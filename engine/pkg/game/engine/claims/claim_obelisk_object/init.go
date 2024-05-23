@@ -35,6 +35,7 @@ func (claimObelisk *ClaimObeliskObject) Init(e entity.IEngine) bool {
 		entity.DelayedActionReady,
 	)
 	claimObelisk.SetCurrentAction(delayedAction)
+	e.DelayedActions().Store(claimObelisk.Id(), claimObelisk)
 
 	// Set claim obelisk id for character
 	charGameObj.SetProperty("claim_obelisk_id", claimObelisk.Id())

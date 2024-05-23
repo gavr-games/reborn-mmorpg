@@ -19,6 +19,7 @@ func (charGameObj *CharacterObject) Reborn(e entity.IEngine) {
 		delayedActionFuncName := charGameObj.CurrentAction().FuncName()
 
 		charGameObj.SetCurrentAction(nil)
+		e.DelayedActions().Delete(charGameObj.Id())
 
 		storage.GetClient().Updates <- charGameObj.Clone()
 

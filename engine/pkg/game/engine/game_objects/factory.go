@@ -99,6 +99,7 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 			entity.DelayedActionReady,
 		)
 		gameObj.SetCurrentAction(delayedAction)
+		e.DelayedActions().Store(gameObj.Id(), gameObj)
 	}
 
 	return e.CreateGameObjectStruct(gameObj), nil

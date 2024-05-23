@@ -5,7 +5,6 @@ import (
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 )
 
@@ -55,8 +54,7 @@ func (item *PotionObject) ApplyToPlayer(e entity.IEngine, player *entity.Player)
 		e.SendGameObjectUpdate(obj, "update_object")
 
 		// Remove item
-		e.GameObjects().Delete(item.Id())
-		storage.GetClient().Deletes <- item.Id()
+		e.RemoveGameObject(item)
 
 		return true
 	} else {

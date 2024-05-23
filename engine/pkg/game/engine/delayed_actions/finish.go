@@ -19,6 +19,7 @@ func Finish(e entity.IEngine, gameObj entity.IGameObject) bool {
 	delayedFunc(e, gameObj.CurrentAction().Params())
 
 	gameObj.SetCurrentAction(nil)
+	e.DelayedActions().Delete(gameObj.Id())
 
 	storage.GetClient().Updates <- gameObj.Clone()
 

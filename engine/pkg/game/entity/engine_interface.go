@@ -10,6 +10,7 @@ type IEngine interface {
 	GameAreas() *xsync.MapOf[string, *GameArea]
 	Players() *xsync.MapOf[int, *Player]
 	GameObjects() *xsync.MapOf[string, IGameObject]
+	DelayedActions() *xsync.MapOf[string, IGameObject]
 	Mobs() *xsync.MapOf[string, IMobObject]
 	Effects() *xsync.MapOf[string, map[string]interface{}]
 	CurrentTickTime() int64

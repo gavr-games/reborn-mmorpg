@@ -1,3 +1,4 @@
 .env
 out/server
 __debug*
+*.prof

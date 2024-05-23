@@ -14,6 +14,7 @@ func Cancel(e entity.IEngine, gameObj entity.IGameObject) bool {
 	delayedActionFuncName := gameObj.CurrentAction().FuncName()
 
 	gameObj.SetCurrentAction(nil)
+	e.DelayedActions().Delete(gameObj.Id())
 
 	storage.GetClient().Updates <- gameObj.Clone()
 

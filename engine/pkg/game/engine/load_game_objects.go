@@ -50,6 +50,10 @@ func LoadGameObjects(e entity.IEngine) {
 			if gameObj.Type() == "mob" && gameObj.GetProperty("alive") != nil && gameObj.GetProperty("alive").(bool) {
 				e.Mobs().Store(gameObj.Id(), gameObjStruct.(entity.IMobObject))
 			}
+			// Init Delayed Action
+			if gameObj.CurrentAction() != nil {
+				e.DelayedActions().Store(gameObj.Id(), gameObjStruct)
+			}
 		}(gameObj)
 	})
 

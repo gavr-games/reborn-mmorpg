@@ -41,17 +41,18 @@ import (
 
 // Engine runs the game
 type Engine struct {
-	tickTime    int64                                        //last tick time in milliseconds
-	gameAreas   *xsync.MapOf[string, *entity.GameArea]       // map of ALL game areas, underground, etc
-	players     *xsync.MapOf[int, *entity.Player]            // map of all players
-	gameObjects *xsync.MapOf[string, entity.IGameObject]     // map of ALL objects in the game
-	mobs        *xsync.MapOf[string, entity.IMobObject]      // map of ALL mobs in the game
-	effects     *xsync.MapOf[string, map[string]interface{}] // all active effects in the game
-	commands    chan *ClientCommand                          // Inbound messages from the clients.
-	register    chan *Client                                 // Register requests from the clients.
-	unregister  chan *Client                                 // Unregister requests from clients.
-	tasks       chan entity.Task                             // Messages from other routines to execute code in main engine loop
-	testingMode bool		                                     // tasks are performed immediately, not sent to channel
+	tickTime       int64                                        //last tick time in milliseconds
+	gameAreas      *xsync.MapOf[string, *entity.GameArea]       // map of ALL game areas, underground, etc
+	players        *xsync.MapOf[int, *entity.Player]            // map of all players
+	gameObjects    *xsync.MapOf[string, entity.IGameObject]     // map of ALL objects in the game
+	delayedActions *xsync.MapOf[string, entity.IGameObject]     // map of objects with delayed actions
+	mobs           *xsync.MapOf[string, entity.IMobObject]      // map of ALL mobs in the game
+	effects        *xsync.MapOf[string, map[string]interface{}] // all active effects in the game
+	commands       chan *ClientCommand                          // Inbound messages from the clients.
+	register       chan *Client                                 // Register requests from the clients.
+	unregister     chan *Client                                 // Unregister requests from clients.
+	tasks          chan entity.Task                             // Messages from other routines to execute code in main engine loop
+	testingMode    bool		                                     // tasks are performed immediately, not sent to channel
 }
 
 func (e *Engine) GameAreas() *xsync.MapOf[string, *entity.GameArea] {
@@ -60,6 +61,10 @@ func (e *Engine) GameAreas() *xsync.MapOf[string, *entity.GameArea] {
 
 func (e *Engine) GameObjects() *xsync.MapOf[string, entity.IGameObject] {
 	return e.gameObjects
+}
+
+func (e *Engine) DelayedActions() *xsync.MapOf[string, entity.IGameObject] {
+	return e.delayedActions
 }
 
 func (e *Engine) Mobs() *xsync.MapOf[string, entity.IMobObject] {
@@ -254,22 +259,24 @@ func (e *Engine) RemoveGameObject(gameObj entity.IGameObject) {
 		e.Mobs().Delete(gameObj.Id())
 	}
 	e.GameObjects().Delete(gameObj.Id())
+	e.DelayedActions().Delete(gameObj.Id())
 	e.SendGameObjectUpdate(gameObj, "remove_object")
 }
 
 func NewEngine() *Engine {
 	return &Engine{
-		tickTime:    0,
-		players:     xsync.NewMapOf[int, *entity.Player](),
-		gameObjects: xsync.NewMapOf[string, entity.IGameObject](),
-		mobs:        xsync.NewMapOf[string, entity.IMobObject](),
-		effects:     xsync.NewMapOf[string, map[string]interface{}](),
-		gameAreas:   xsync.NewMapOf[string, *entity.GameArea](),
-		commands:    make(chan *ClientCommand),
-		register:    make(chan *Client),
-		unregister:  make(chan *Client),
-		tasks:       make(chan entity.Task),
-		testingMode: false,
+		tickTime:       0,
+		players:        xsync.NewMapOf[int, *entity.Player](),
+		gameObjects:    xsync.NewMapOf[string, entity.IGameObject](),
+		delayedActions: xsync.NewMapOf[string, entity.IGameObject](),
+		mobs:           xsync.NewMapOf[string, entity.IMobObject](),
+		effects:        xsync.NewMapOf[string, map[string]interface{}](),
+		gameAreas:      xsync.NewMapOf[string, *entity.GameArea](),
+		commands:       make(chan *ClientCommand),
+		register:       make(chan *Client),
+		unregister:     make(chan *Client),
+		tasks:          make(chan entity.Task),
+		testingMode:    false,
 	}
 }
 

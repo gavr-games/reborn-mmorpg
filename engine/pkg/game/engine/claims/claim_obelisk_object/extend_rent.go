@@ -63,6 +63,7 @@ func (claimObelisk *ClaimObeliskObject) ExtendRent(e entity.IEngine) bool {
 		entity.DelayedActionReady,
 	)
 	claimObelisk.SetCurrentAction(delayedAction)
+	e.DelayedActions().Store(claimObelisk.Id(), claimObelisk)
 
 	storage.GetClient().Updates <- claimObelisk.Clone()
 	e.SendSystemMessage("You have payed the rent.", player)
