@@ -251,8 +251,9 @@ func (e *Engine) CreateGameObject(objPath string, x, y, rotation float64, gameAr
 
 func (e *Engine) RemoveGameObject(gameObj entity.IGameObject) {
 	if gameArea, gaOk := e.GameAreas().Load(gameObj.GameAreaId()); gaOk {
+		gameObjId := gameObj.Id()
 		gameArea.FilteredRemove(gameObj, func(b utils.IBounds) bool {
-			return gameObj.Id() == b.(entity.IGameObject).Id()
+			return gameObjId == b.(entity.IGameObject).Id()
 		})
 	}
 	if gameObj.Type() == "mob" {

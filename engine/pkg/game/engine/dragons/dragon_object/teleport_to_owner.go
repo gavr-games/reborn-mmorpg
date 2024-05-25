@@ -28,8 +28,9 @@ func (dragon *DragonObject) TeleportToOwner(charGameObj entity.IGameObject) (boo
 				})
 				dragon.StopEverything()
 				if gameArea, gaOk := dragon.Engine.GameAreas().Load(dragon.GameAreaId()); gaOk {
+					dragonId := dragon.Id()
 					gameArea.FilteredRemove(dragon, func(b utils.IBounds) bool {
-						return dragon.Id() == b.(entity.IGameObject).Id()
+						return dragonId == b.(entity.IGameObject).Id()
 					})
 				}
 				dragon.SetX(charGameObj.X())

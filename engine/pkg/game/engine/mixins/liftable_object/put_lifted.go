@@ -13,13 +13,14 @@ func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameO
 	playerId := charGameObj.GetProperty("player_id").(int)
 	if player, ok := e.Players().Load(playerId); ok {
 		item := obj.gameObj
+		itemId := item.Id()
 
 		if item == nil {
 			e.SendSystemMessage("Wrong item.", player)
 			return false
 		}
 
-		if liftedObjectId := charGameObj.GetProperty("lifted_object_id"); liftedObjectId == nil || liftedObjectId.(string) != item.Id() {
+		if liftedObjectId := charGameObj.GetProperty("lifted_object_id"); liftedObjectId == nil || liftedObjectId.(string) != itemId {
 			e.SendSystemMessage("Wrong item.", player)
 			return false
 		}
@@ -67,7 +68,7 @@ func (obj *LiftableObject) PutLifted(e entity.IEngine, charGameObj entity.IGameO
 		gameArea, gaOk := e.GameAreas().Load(item.GameAreaId())
 		if gaOk {
 			gameArea.FilteredRemove(item, func(b utils.IBounds) bool {
-				return item.Id() == b.(entity.IGameObject).Id()
+				return itemId == b.(entity.IGameObject).Id()
 			})
 		}
 		item.SetX(x)

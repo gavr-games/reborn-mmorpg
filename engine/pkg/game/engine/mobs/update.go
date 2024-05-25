@@ -33,14 +33,20 @@ func Update(e entity.IEngine, tickDelta int64, newTickTime int64) {
 
 				// Update mob game object
 				gameArea, gaOk := e.GameAreas().Load(mobObj.GameAreaId())
+				newX := mobObj.X() + dx
+				newY := mobObj.Y() + dy
+				reInsert := false
 				if gaOk {
-					gameArea.FilteredRemove(mobObj, func(b utils.IBounds) bool {
-						return mobObj.Id() == b.(entity.IGameObject).Id()
+					mobObjId := mobObj.Id()
+					reInsert = !gameArea.FilteredMove(mobObj, newX, newY, func(b utils.IBounds) bool {
+						return mobObjId == b.(entity.IGameObject).Id()
 					})
 				}
-				mobObj.SetX(mobObj.X() + dx)
-				mobObj.SetY(mobObj.Y() + dy)
-				gameArea.Insert(mobObj)
+				mobObj.SetX(newX)
+				mobObj.SetY(newY)
+				if reInsert {
+					gameArea.Insert(mobObj)
+				}
 			}
 		}
 		return true

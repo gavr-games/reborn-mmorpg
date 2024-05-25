@@ -190,7 +190,7 @@ func (qt *Quadtree) Insert(pRect IBounds) {
 	}
 }
 
-// Find object in quadtree via filter and removes it
+// Find object in quadtree via filter and remove it
 func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
 	qt.mu.Lock()
 	defer qt.mu.Unlock()
@@ -210,6 +210,7 @@ func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
 					qt.Objects[i] = qt.Objects[len(qt.Objects) - 1] // Copy last element to index i.
 					qt.Objects[len(qt.Objects) - 1] = nil // Erase last element (write zero value).
 					qt.Objects = qt.Objects[:len(qt.Objects) - 1] // Truncate slice.
+					break
 				}
 			}
 		}
@@ -221,9 +222,65 @@ func (qt *Quadtree) FilteredRemove(pRect IBounds, filter func(IBounds) bool) {
 				qt.Objects[i] = qt.Objects[len(qt.Objects) - 1] // Copy last element to index i.
 				qt.Objects[len(qt.Objects) - 1] = nil // Erase last element (write zero value).
 				qt.Objects = qt.Objects[:len(qt.Objects) - 1] // Truncate slice.
+				break
 			}
 		}
 	}
+}
+
+// Find object in quadtree via filter and move it if possible
+// returns false if pRect was removed and needs to be reinserted
+func (qt *Quadtree) FilteredMove(pRect IBounds, newX, newY float64, filter func(IBounds) bool) bool {
+	qt.mu.Lock()
+	defer qt.mu.Unlock()
+
+	index := qt.getIndex(pRect)
+
+	//if we have subnodes ...
+	if len(qt.Nodes) > 0 {
+		//if pRect fits into a subnode ..
+		if index != -1 {
+			return qt.Nodes[index].FilteredMove(pRect, newX, newY, filter)
+		} else {
+			// Find and remove item in current tree
+			for i := 0; i < len(qt.Objects); i++ {
+				result := filter(qt.Objects[i]) // check filtering condition
+				if result {
+					maxX := qt.Bounds.X + qt.Bounds.Width
+					maxY := qt.Bounds.Y + qt.Bounds.Height
+					rect := pRect.HitBox()
+					// pRect is out of this quad tree node
+					if newX + rect.Width > maxX || newX < qt.Bounds.X || newY + rect.Height > maxY || newY < qt.Bounds.Y {
+						qt.Objects[i] = qt.Objects[len(qt.Objects) - 1] // Copy last element to index i.
+						qt.Objects[len(qt.Objects) - 1] = nil // Erase last element (write zero value).
+						qt.Objects = qt.Objects[:len(qt.Objects) - 1] // Truncate slice.
+						return false
+					}
+					break
+				}
+			}
+		}
+	} else {
+		// Find and remove item in current tree
+		for i := 0; i < len(qt.Objects); i++ {
+			result := filter(qt.Objects[i]) // check filtering condition
+			if result {
+				maxX := qt.Bounds.X + qt.Bounds.Width
+				maxY := qt.Bounds.Y + qt.Bounds.Height
+				rect := pRect.HitBox()
+				// pRect is out of this quad tree node
+				if newX + rect.Width > maxX || newX < qt.Bounds.X || newY + rect.Height > maxY || newY < qt.Bounds.Y {
+					qt.Objects[i] = qt.Objects[len(qt.Objects) - 1] // Copy last element to index i.
+					qt.Objects[len(qt.Objects) - 1] = nil // Erase last element (write zero value).
+					qt.Objects = qt.Objects[:len(qt.Objects) - 1] // Truncate slice.
+					return false
+				}
+				break
+			}
+		}
+	}
+
+	return true
 }
 
 // Retrieve - Return all objects that could collide with the given object

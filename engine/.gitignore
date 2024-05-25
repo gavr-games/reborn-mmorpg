@@ -2,3 +2,4 @@
 out/server
 __debug*
 *.prof
+trace.out

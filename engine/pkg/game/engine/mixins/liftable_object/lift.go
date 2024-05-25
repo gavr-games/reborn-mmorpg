@@ -48,13 +48,14 @@ func (obj *LiftableObject) Lift(e entity.IEngine, charGameObj entity.IGameObject
 		}
 
 		// Update lifted_by and lifted_object_id
-		charGameObj.SetProperty("lifted_object_id", item.Id())
+		itemId := item.Id()
+		charGameObj.SetProperty("lifted_object_id", itemId)
 		item.SetProperty("lifted_by", charGameObj.Id())
 		item.SetProperty("collidable", false)
 		gameArea, gaOk := e.GameAreas().Load(item.GameAreaId())
 		if gaOk {
 			gameArea.FilteredRemove(item, func(b utils.IBounds) bool {
-				return item.Id() == b.(entity.IGameObject).Id()
+				return itemId == b.(entity.IGameObject).Id()
 			})
 		}
 		item.SetX(charGameObj.X())
@@ -68,7 +69,7 @@ func (obj *LiftableObject) Lift(e entity.IEngine, charGameObj entity.IGameObject
 
 		e.SendResponseToVisionAreas(charGameObj, "pickup_object", map[string]interface{}{
 			"character_id": charGameObj.Id(),
-			"id":           item.Id(),
+			"id":           itemId,
 		})
 	} else {
 		return false

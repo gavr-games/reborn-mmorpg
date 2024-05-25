@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	DefaultMaxObjects = 200
-	DefaultMaxLevels = 10
+	DefaultMaxObjects = 50
+	DefaultMaxLevels = 20
 )
 
 // Struct to hold different areas/territories of th game: dungeoun, surface, underground...

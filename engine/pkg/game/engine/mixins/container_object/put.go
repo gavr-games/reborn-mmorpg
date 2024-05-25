@@ -88,7 +88,7 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 		return false
 	}
 	itemGameArea.FilteredRemove(item, func(b utils.IBounds) bool {
-		return item.Id() == b.(entity.IGameObject).Id()
+		return itemId == b.(entity.IGameObject).Id()
 	})
 	item.SetGameAreaId(container.GameAreaId())
 	if item.Type() == "container" {

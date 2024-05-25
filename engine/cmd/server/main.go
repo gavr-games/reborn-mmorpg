@@ -6,6 +6,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game"
 	//"os"
   //"runtime/pprof"
+	//"runtime/trace"
 )
 
 var addr = flag.String("addr", ":8080", "http service address")
@@ -22,7 +23,18 @@ func main() {
 	if err := pprof.StartCPUProfile(f); err != nil {
 			panic(err)
 	}
-	defer pprof.StopCPUProfile()*/
+	defer pprof.StopCPUProfile()
+	// Start tracing
+	traceFile, err := os.Create("trace.out")
+	if err != nil {
+			panic(err)
+	}
+	defer traceFile.Close()
+
+	if err := trace.Start(traceFile); err != nil {
+			panic(err)
+	}
+	defer trace.Stop()*/
 
 	flag.Parse()
 	engine := game.NewEngine()
