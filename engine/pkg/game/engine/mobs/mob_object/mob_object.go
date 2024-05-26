@@ -2,6 +2,7 @@ package mob_object
 
 import (
 	"context"
+	"math/rand"
 	"sync"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -65,7 +66,7 @@ func (mob *MobObject) SetTargetObjectId(targetObjectId string) {
 func NewMobObject(e entity.IEngine, gameObj entity.IGameObject) *MobObject {
 	mob := &MobObject{
 		e,
-		e.CurrentTickTime(),
+		e.CurrentTickTime() + rand.Int63n(IdleTime),
 		"", // for following and attack
 		nil,
 		moving_object.MovingObject{},

@@ -12,7 +12,11 @@ func GetVisibleObjects(e entity.IEngine, gameAreaId string, bounds utils.Bounds)
 		// Filter visible objects
 		n := 0
 		for _, val := range visibleObjects {
-			if visible := val.(entity.IGameObject).GetProperty("visible"); visible != nil {
+			gameObj := val.(entity.IGameObject)
+			if gameObj.Kind() == "grass" { // skip grass objects for optimization, frontend will render default grass
+				continue
+			}
+			if visible := gameObj.GetProperty("visible"); visible != nil {
 				if visible.(bool) {
 					visibleObjects[n] = val
 					n++
