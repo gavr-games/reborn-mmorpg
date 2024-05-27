@@ -55,10 +55,14 @@ class MobObserver {
     mesh.doNotSyncBoundingInfo = true
     this.mesh = mesh
     this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
+    this.updatePosition()
     GameObserver.addRenderObserver(`mob-${this.state.id}`, this)
   }
 
   update (renderInterval) {
+    if (this.mesh === null) {
+      return
+    }
     if (this.state.speed_x !== 0 || this.state.speed_y !== 0) {
       this.playAnimation('Walk')
       this.state.x = this.state.x + this.state.speed_x / 1000 * renderInterval
@@ -72,8 +76,15 @@ class MobObserver {
         this.meshRotation = rotationAngle
         this.mesh.rotate(BABYLON.Axis.Y, rotationDelta)
       }
+      this.updatePosition()
     } else {
       this.playAnimation('Idle')
+    }
+  }
+
+  updatePosition () {
+    if (this.mesh === null) {
+      return
     }
     this.mesh.position.x = this.state.x
     this.mesh.position.z = this.state.y

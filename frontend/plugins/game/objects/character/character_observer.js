@@ -80,6 +80,7 @@ class Character {
     }
     this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
     this.nickname = new Nickname(this.state.name, this.scene)
+    this.updatePosition()
     if (addRenderObserver) {
       GameObserver.addRenderObserver(`character-${this.state.id}`, this)
     }
@@ -102,8 +103,15 @@ class Character {
         this.meshRotation = rotationAngle
         this.mesh.rotate(BABYLON.Axis.Y, rotationDelta)
       }
+      this.updatePosition()
     } else if (this.currentAnimation !== 'PickUp' && this.currentAnimation !== 'Punch') {
       this.playAnimation('Idle')
+    }
+  }
+
+  updatePosition () {
+    if (this.mesh === null) {
+      return
     }
     this.mesh.position.x = this.state.x
     this.mesh.position.z = this.state.y

@@ -16,6 +16,7 @@ class MobController {
 
   update (gameObject) {
     this.state.update(gameObject)
+    this.observer.updatePosition()
   }
 
   remove () {
