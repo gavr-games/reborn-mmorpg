@@ -1,7 +1,7 @@
 package utils
 
 import (
-	"math/rand"
+	"pgregory.net/rand"
 )
 
 func CopyMap(m map[string]interface{}) map[string]interface{} {

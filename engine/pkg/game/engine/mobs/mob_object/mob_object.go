@@ -2,7 +2,7 @@ package mob_object
 
 import (
 	"context"
-	"math/rand"
+	"pgregory.net/rand"
 	"sync"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"

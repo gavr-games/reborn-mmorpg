@@ -2,7 +2,7 @@ package mob_object
 
 import (
 	"context"
-	"math/rand"
+	"pgregory.net/rand"
 )
 
 // Mob logic processing goes here

@@ -2,7 +2,7 @@ package mob_object
 
 import (
 	"math"
-	"math/rand"
+	"pgregory.net/rand"
 )
 
 func (mob *MobObject) drop() {

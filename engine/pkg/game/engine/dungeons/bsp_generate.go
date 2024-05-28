@@ -1,7 +1,7 @@
 package dungeons
 
 import (
-	"math/rand"
+	"pgregory.net/rand"
 )
 
 const (

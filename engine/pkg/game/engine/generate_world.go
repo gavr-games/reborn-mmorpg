@@ -2,11 +2,11 @@ package engine
 
 import (
 	"math"
-	"math/rand"
 	"log"
 
 	"github.com/KEINOS/go-noise"
-
+	"pgregory.net/rand"
+	
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"

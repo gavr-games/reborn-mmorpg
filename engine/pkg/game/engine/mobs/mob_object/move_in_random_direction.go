@@ -1,7 +1,7 @@
 package mob_object
 
 import (
-	"math/rand"
+	"pgregory.net/rand"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 )

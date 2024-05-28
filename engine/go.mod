@@ -30,4 +30,5 @@ require (
 	github.com/yuin/gopher-lua v1.1.0 // indirect
 	gonum.org/v1/gonum v0.15.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	pgregory.net/rand v1.0.2 // indirect
 )
