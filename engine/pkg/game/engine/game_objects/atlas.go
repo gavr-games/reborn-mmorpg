@@ -851,6 +851,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"height":       0.88,
 				"shape":        "rectangle",
 				"container_id": nil,
+				"fullness":     10.0,
 				"pickable":     true,
 				"droppable":    true,
 				"visible":      false,
@@ -1364,6 +1365,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape":      "circle",
 				"collidable": true,
 				"visible":    true,
+				"hatch_mob": "mob/baby_fire_dragon",
 				"hatching_resources": map[string]interface{}{
 					"log": 2.0,
 				},
@@ -1424,6 +1426,89 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 			},
 		},
 		"mob": {
+			"baby_fire_dragon": map[string]interface{}{
+				"type":        "mob",
+				"kind":        "baby_fire_dragon",
+				"width":       1.0,
+				"height":      1.0,
+				"shape":       "circle",
+				"speed":       1.5,
+				"speed_x":     0.0,
+				"speed_y":     0.0,
+				"health":      50.0,
+				"max_health":  50.0,
+				"level":       0.0,
+				"experience":  0.0,
+				"fullness":       0.0,
+				"max_fullness":   50.0,
+				"food_to_evolve": 60.0,
+				"feedable":    true,
+				"collidable":  false,
+				"visible":     true,
+				"targetable":  true,
+				"alive":       true,
+				"attack_type": "melee",
+				"damage":      4.0,
+				"cooldown":    3000.0, //ms
+				"hit_radius":  1.5,    // maximum distance to target
+				"hit_angle":   80.0,  // degrees
+				"owner_id":    nil,
+				"evolve_to":   "fire_dragon",
+				"effects": map[string]interface{}{
+					"hunger": map[string]interface{}{
+						"type":             "periodic", // periodic (once per cooldown) or constant (constant value for the defined total_time)
+						"attribute":        "fullness",
+						"value":            -1.0,
+						"cooldown":         6000.0,
+						"current_cooldown": 0.0,
+						"number":           -1.0, // infinite repeat
+						"group":            "hunger", // this is used to prevent multiple effects from one group
+					},
+				},
+				"drop": map[string]interface{}{
+					"resource/gold": map[string]interface{}{
+						"probability": 1.0,
+						"min":         5.0,
+						"max":         50.0,
+					},
+					"resource/bone": map[string]interface{}{
+						"probability": 0.4,
+					},
+					"resource/animal_skin": map[string]interface{}{
+						"probability": 0.4,
+					},
+				},
+				"actions": map[string]interface{}{
+					"select as target": map[string]interface{}{
+						"cmd":    "select_target",
+						"params": "self",
+					},
+					"deselect target": map[string]interface{}{
+						"cmd":    "deselect_target",
+						"params": "self",
+					},
+					"follow": map[string]interface{}{
+						"cmd":    "follow",
+						"params": "self",
+					},
+					"unfollow": map[string]interface{}{
+						"cmd":    "unfollow",
+						"params": "self",
+					},
+					"evolve": map[string]interface{}{
+						"cmd":    "evolve",
+						"params": "self",
+					},
+					"feed": map[string]interface{}{
+						"cmd":    "feed",
+						"params": "self,food_id",
+					},
+					"info": map[string]interface{}{
+						"cmd":    "info",
+						"params": "self",
+					},
+				},
+			},
 			"fire_dragon": map[string]interface{}{
 				"type":        "mob",
 				"kind":        "fire_dragon",
@@ -1475,6 +1560,10 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 					"unfollow": map[string]interface{}{
 						"cmd":    "unfollow",
+						"params": "self",
+					},
+					"info": map[string]interface{}{
+						"cmd":    "info",
 						"params": "self",
 					},
 				},

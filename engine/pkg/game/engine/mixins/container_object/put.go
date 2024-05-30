@@ -84,12 +84,11 @@ func (cont *ContainerObject) Put(e entity.IEngine, player *entity.Player, itemId
 	item.SetProperty("container_id", container.Id())
 	item.SetProperty("visible", false)
 	itemGameArea, igaOk := e.GameAreas().Load(item.GameAreaId())
-	if !igaOk {
-		return false
+	if igaOk {
+		itemGameArea.FilteredRemove(item, func(b utils.IBounds) bool {
+			return itemId == b.(entity.IGameObject).Id()
+		})
 	}
-	itemGameArea.FilteredRemove(item, func(b utils.IBounds) bool {
-		return itemId == b.(entity.IGameObject).Id()
-	})
 	item.SetGameAreaId(container.GameAreaId())
 	if item.Type() == "container" {
 		item.SetProperty("owner_id", container.GetProperty("owner_id"))

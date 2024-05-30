@@ -25,7 +25,7 @@ func Update(e entity.IEngine, tickDelta int64) {
 					"value": 5.0,
 					"cooldown": 2000.0,
 					"current_cooldown": 0.0,
-					"number": 10.0,
+					"number": 10.0, // -1 for infinite
 					"group": "potion_healing",
 				},
 		*/
@@ -33,9 +33,16 @@ func Update(e entity.IEngine, tickDelta int64) {
 			effect["current_cooldown"] = effect["current_cooldown"].(float64) + float64(tickDelta)
 			if effect["current_cooldown"].(float64) >= effect["cooldown"].(float64) {
 				effect["current_cooldown"] = 0.0
-				obj.SetProperty(effect["attribute"].(string), obj.GetProperty(effect["attribute"].(string)).(float64) + effect["value"].(float64))
-				effect["number"] = effect["number"].(float64) - 1.0
-				if effect["number"].(float64) <= 0.0 {
+				newAttrValue := obj.GetProperty(effect["attribute"].(string)).(float64) + effect["value"].(float64)
+				// Fulness cannot be less than zero
+				if effect["attribute"].(string) == "fullness" && newAttrValue < 0.0 {
+					newAttrValue = 0.0
+				}
+				obj.SetProperty(effect["attribute"].(string), newAttrValue)
+				if effect["number"].(float64) > 0.0 {
+					effect["number"] = effect["number"].(float64) - 1.0
+				}
+				if effect["number"].(float64) == 0.0 {
 					Remove(e, effectId, obj)
 				} else {
 					e.SendGameObjectUpdate(obj, "update_object")

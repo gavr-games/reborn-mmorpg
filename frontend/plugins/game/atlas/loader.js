@@ -276,6 +276,7 @@ class Loader {
   loadMobs () {
     const mobs = [
       'bat',
+      'baby_fire_dragon',
       'fire_dragon',
       'zombie'
     ]

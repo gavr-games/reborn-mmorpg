@@ -17,24 +17,24 @@
 </template>
 
 <script>
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 export default {
-  props: ["container"],
-  data() {
+  props: ['container'],
+  data () {
     return {
       showContainerPanel: true,
     }
   },
 
-  created() {
-    EventBus.$on("put_item_to_container", this.addItem)
-    EventBus.$on("remove_item_from_container", this.removeItem)
-    EventBus.$on("update-item-in-container", this.updateItem)
+  created () {
+    EventBus.$on('put_item_to_container', this.addItem)
+    EventBus.$on('remove_item_from_container', this.removeItem)
+    EventBus.$on('update-item-in-container', this.updateItem)
   },
 
-  mounted() {
-    let openedContainers = localStorage.getItem("opened_containers")
+  mounted () {
+    let openedContainers = localStorage.getItem('opened_containers')
     if (openedContainers) {
       openedContainers = JSON.parse(openedContainers)
     } else {
@@ -42,30 +42,30 @@ export default {
     }
     if (!openedContainers.includes(this.container.id)) {
       openedContainers.push(this.container.id)
-      localStorage.setItem("opened_containers", JSON.stringify(openedContainers))
+      localStorage.setItem('opened_containers', JSON.stringify(openedContainers))
     }
   },
 
-  beforeDestroy() {
-    EventBus.$off("put_item_to_container", this.addItem)
-    EventBus.$off("remove_item_from_container", this.removeItem)
-    EventBus.$off("update-item-in-container", this.updateItem)
+  beforeDestroy () {
+    EventBus.$off('put_item_to_container', this.addItem)
+    EventBus.$off('remove_item_from_container', this.removeItem)
+    EventBus.$off('update-item-in-container', this.updateItem)
   },
 
   methods: {
-    addItem(data) {
+    addItem (data) {
       if (data.container_id === this.container.id) {
         this.container.items[data.position] = data.item
         this.$forceUpdate()
       }
     },
-    removeItem(data) {
+    removeItem (data) {
       if (data.container_id === this.container.id) {
         this.container.items[data.position] = null
         this.$forceUpdate()
       }
     },
-    updateItem(data) {
+    updateItem (data) {
       if (data.container_id === this.container.id) {
         this.container.items.forEach((item, index) => {
           if (item && item.id === data.item.Id) {
@@ -76,7 +76,7 @@ export default {
         })
       }
     },
-    startDrag(evt, item) {
+    startDrag (evt, item) {
       if (item !== null) {
         evt.dataTransfer.dropEffect = 'move'
         evt.dataTransfer.effectAllowed = 'move'
@@ -84,40 +84,39 @@ export default {
         evt.stopPropagation()
       }
     },
-    endDrag(evt, item) {
+    endDrag (evt, item) {
       evt.stopPropagation()
     },
-    onDrop(evt, pos) {
+    onDrop (evt, pos) {
       evt.stopPropagation()
       const itemID = evt.dataTransfer.getData('item_id')
-      EventBus.$emit("perform-game-action", {
-        cmd: "put_to_container",
+      EventBus.$emit('perform-game-action', {
+        cmd: 'put_to_container',
         params: {
-          "container_id": this.container.id,
-          "position": pos,
-          "item_id": itemID,
+          container_id: this.container.id,
+          position: pos,
+          item_id: itemID
         }
       })
     },
-    allowDrag(evt) {
+    allowDrag (evt) {
       evt.preventDefault()
     },
-    close() {
+    close () {
       this.showContainerPanel = false
-      let openedContainers = localStorage.getItem("opened_containers")
+      let openedContainers = localStorage.getItem('opened_containers')
       if (openedContainers) {
         openedContainers = JSON.parse(openedContainers)
-        const index = openedContainers.indexOf(this.container.id);
+        const index = openedContainers.indexOf(this.container.id)
         if (index !== -1) {
-          openedContainers.splice(index, 1);
-          localStorage.setItem("opened_containers", JSON.stringify(openedContainers))
+          openedContainers.splice(index, 1)
+          localStorage.setItem('opened_containers', JSON.stringify(openedContainers))
         }
       }
     }
   }
 }
 </script>
-
 
 <style lang="scss">
 .game-container {

@@ -1,48 +1,51 @@
 <template>
   <GameDraggablePanel :panelId="'item_info'">
-    <div id="item_info-panel" class="game-panel" v-if="showItemInfoPanel">
+    <div v-if="showItemInfoPanel" id="item_info-panel" class="game-panel">
       <div class="game-panel-content">
-        <h4 class="heading">{{ itemInfo["kind"] }}</h4>
+        <h4 class="heading">
+          {{ itemInfo["kind"] }}
+        </h4>
         <div v-if="itemInfo['crafted_by']">
           Crafted by: {{ itemInfo["crafted_by"]["name"] }}
         </div>
         <div v-if="itemInfo['payed_until']">
           Payed until: {{ new Date(itemInfo["payed_until"]) }}
         </div>
-        <button type="button" class="rpgui-button" @click="showItemInfoPanel = false"><p>Close</p></button>
+        <button type="button" class="rpgui-button" @click="showItemInfoPanel = false">
+          <p>Close</p>
+        </button>
       </div>
     </div>
   </GameDraggablePanel>
 </template>
 
 <script>
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 export default {
-  data() {
+  data () {
     return {
       showItemInfoPanel: false,
-      itemInfo: {},
+      itemInfo: {}
     }
   },
 
-  created() {
-    EventBus.$on("item_info", this.showItemInfo)
+  created () {
+    EventBus.$on('item_info', this.showItemInfo)
   },
 
-  beforeDestroy() {
-    EventBus.$off("item_info", this.showItemInfo)
+  beforeDestroy () {
+    EventBus.$off('item_info', this.showItemInfo)
   },
 
   methods: {
-    showItemInfo(data) {
+    showItemInfo (data) {
       this.showItemInfoPanel = true
       this.itemInfo = data
-    },
+    }
   }
 }
 </script>
-
 
 <style lang="scss">
 #item_info-panel {

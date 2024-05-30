@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/puzpuzpuz/xsync/v3"
+	"github.com/satori/go.uuid"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
@@ -227,6 +228,17 @@ func (e *Engine) CreateGameObject(objPath string, x, y, rotation float64, gameAr
 		for k, v := range additionalProps {
 			gameObj.SetProperty(k, v)
 		}
+	}
+
+	// Init effects
+	for effectId, effect := range gameObj.Effects() {
+		newEffectId := uuid.NewV4().String()
+		effectMap := utils.CopyMap(effect.(map[string]interface{}))
+		effectMap["id"] = effectId
+		effectMap["target_id"] = gameObj.Id()
+		e.Effects().Store(newEffectId, effectMap)
+		gameObj.RemoveEffect(effectId)
+		gameObj.SetEffect(newEffectId, effect)
 	}
 
 	gameObj.SetGameAreaId(gameAreaId)

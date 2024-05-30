@@ -99,7 +99,14 @@ func CreateFromTemplate(e entity.IEngine, objPath string, x float64, y float64, 
 			entity.DelayedActionReady,
 		)
 		gameObj.SetCurrentAction(delayedAction)
+		gameObj.SetProperty("current_action", nil)
 		e.DelayedActions().Store(gameObj.Id(), gameObj)
+	}
+
+	// Some templates might have effects to be created with the object
+	if effects := gameObj.GetProperty("effects"); effects != nil {
+		gameObj.SetEffects(utils.CopyMap(effects.(map[string]interface{})))
+		gameObj.SetProperty("effects", nil)
 	}
 
 	return e.CreateGameObjectStruct(gameObj), nil

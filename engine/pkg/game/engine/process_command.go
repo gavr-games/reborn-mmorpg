@@ -224,7 +224,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				if hatchery.(entity.IHatcheryObject).CheckHatch(e, charGameObj) {
 					delayed_actions.Start(e, hatchery, "Hatch", map[string]interface{}{
 						"hatcheryId": hatchery.Id(),
-						"mobPath":    "mob/fire_dragon",
+						"mobPath":    hatchery.GetProperty("hatch_mob"),
 					}, -1.0)
 				}
 			}
@@ -271,6 +271,16 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "resurrect_dragon":
 			if dragon, dragonOk := e.GameObjects().Load(params.(string)); dragonOk {
 				dragon.(entity.IDragonObject).Resurrect(charGameObj)
+			}
+		case "evolve":
+			if obj, objOk := e.GameObjects().Load(params.(string)); objOk {
+				obj.(entity.IEvolvableObject).Evolve(e, player)
+			}
+		case "feed":
+			id := params.(map[string]interface{})["id"].(string)
+			foodId := params.(map[string]interface{})["food_id"].(string)
+			if obj, objOk := e.GameObjects().Load(id); objOk {
+				obj.(entity.IFeedableObject).Feed(e, foodId, player)
 			}
 		case "gm_create_object":
 			gm.CreateObject(e, charGameObj, params.(map[string]interface{}))
