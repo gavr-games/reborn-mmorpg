@@ -8,6 +8,7 @@
     </div>
     <GameCharacterMenu />
     <GameExperienceBar />
+    <GameDragonsControl />
     <GamePanelCraft />
     <GamePanelDragons />
     <GamePanelFeed />

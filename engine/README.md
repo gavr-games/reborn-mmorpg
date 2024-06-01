@@ -7,18 +7,16 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - More crops and food to raise dragons
 - Add dragon breeding to get new eggs
   - breeding cave, select dragons for breeding
-- Dragon commands (attack target, protect me, follow me)
-  - select dragons from list, calc distance.
 - More buildings and furniture for houses
 
 ## TODO
-- BUG: hatchery is not removed on hatch after engine reload
 - add Transactions (Mutexes) when objects cnahge
 - change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft
 - add more complex leveling formula, which takes into account many parameters like mob lvl and etc
 - add more combat mechanics like defence, inasion, resists, etc.
 - dragons get special abilities for feeding and vitamins to grow
+- add path finding for mobs
 - add database of game objects, craft OR editor to manage atlases (move atlases to json files where possible)
 - switch from json to protobuf for server-client communication
 - for prod - global error logging

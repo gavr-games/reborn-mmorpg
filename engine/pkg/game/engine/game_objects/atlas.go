@@ -1491,8 +1491,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"cmd":    "follow",
 						"params": "self",
 					},
-					"unfollow": map[string]interface{}{
-						"cmd":    "unfollow",
+					"stop": map[string]interface{}{
+						"cmd":    "order_to_stop",
 						"params": "self",
 					},
 					"evolve": map[string]interface{}{
@@ -1558,8 +1558,8 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"cmd":    "follow",
 						"params": "self",
 					},
-					"unfollow": map[string]interface{}{
-						"cmd":    "unfollow",
+					"stop": map[string]interface{}{
+						"cmd":    "order_to_stop",
 						"params": "self",
 					},
 					"info": map[string]interface{}{

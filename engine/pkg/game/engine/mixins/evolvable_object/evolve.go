@@ -3,9 +3,12 @@ package evolvable_object
 import (
 	"errors"
 	"fmt"
+	"slices"
+	"strings"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
 func (obj *EvolvableObject) Evolve(e entity.IEngine, player *entity.Player) (bool, error) {
@@ -45,13 +48,22 @@ func (obj *EvolvableObject) Evolve(e entity.IEngine, player *entity.Player) (boo
 
 	// Evolve
 	if evolveTo := gameObj.GetProperty("evolve_to"); evolveTo != nil {
+		ownerId := gameObj.GetProperty("owner_id")
 		evolveGameObj := e.CreateGameObject(
 			evolveTo.(string), gameObj.X(), gameObj.Y(), 0.0, gameObj.GameAreaId(), 
 			map[string]interface{}{
-				"owner_id": gameObj.GetProperty("owner_id"),
+				"owner_id": ownerId,
 				"level": gameObj.GetProperty("level"),
 				"experience": gameObj.GetProperty("experience"),
 			})
+		// Update dragons list for character
+		if strings.Contains(gameObj.Kind(), "_dragon") && ownerId != nil && ownerId.(string) == charGameObj.Id() {
+			dragonIds := charGameObj.GetProperty("dragons_ids").([]interface{})
+			index := slices.IndexFunc(dragonIds, func(id interface{}) bool { return id != nil && id.(string) == gameObj.Id() })
+			dragonIds[index] = evolveGameObj.Id()
+			charGameObj.SetProperty("dragons_ids", dragonIds) 
+			storage.GetClient().Updates <- charGameObj.Clone()
+		}
 		e.SendResponseToVisionAreas(evolveGameObj, "add_object", map[string]interface{}{
 			"object": evolveGameObj.Clone(),
 		})

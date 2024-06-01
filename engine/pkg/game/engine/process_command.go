@@ -240,14 +240,17 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			mobId := params.(string)
 			mob, ok := e.Mobs().Load(mobId)
 			if ok {
-				//TODO: Check commands  can be executed only close enough to the mob
-				mob.Follow(charGameObj)
+				mob.OrderToFollow(charGameObj)
 			}
-		case "unfollow":
+		case "attack_my_target":
 			mobId := params.(string)
 			if mob, mobOk := e.Mobs().Load(mobId); mobOk {
-				//TODO: Check commands  can be executed only close enough to the mob
-				mob.Unfollow(charGameObj)
+				mob.OrderToAttack(charGameObj)
+			}
+		case "order_to_stop":
+			mobId := params.(string)
+			if mob, mobOk := e.Mobs().Load(mobId); mobOk {
+				mob.OrderToStop(charGameObj)
 			}
 		case "select_target":
 			targetId := params.(string)

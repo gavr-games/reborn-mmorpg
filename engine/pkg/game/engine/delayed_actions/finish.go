@@ -16,12 +16,13 @@ func Finish(e entity.IEngine, gameObj entity.IGameObject) bool {
 	// Call delayed function
 	// all delayed fucntions must be func(entity.IEngine, map[string]interface{}) bool
 	delayedFunc := GetDelayedActionsAtlas()[delayedActionFuncName]["func"].(func(entity.IEngine, map[string]interface{}) bool)
-	delayedFunc(e, gameObj.CurrentAction().Params())
 
 	gameObj.SetCurrentAction(nil)
 	e.DelayedActions().Delete(gameObj.Id())
 
 	storage.GetClient().Updates <- gameObj.Clone()
+
+	delayedFunc(e, gameObj.CurrentAction().Params())
 
 	e.SendResponseToVisionAreas(gameObj, "finish_delayed_action", map[string]interface{}{
 		"object": serializers.GetInfo(e, gameObj),

@@ -76,20 +76,16 @@ export default {
       this.$forceUpdate()
     },
     releaseDragon (dragon) {
-      if (confirm('Are you sure you want to release this dragon?') === true) {
-        EventBus.$emit('perform-game-action', {
-          cmd: 'release_dragon',
-          params: dragon.id
-        })
-      }
+      EventBus.$emit('perform-game-action', {
+        cmd: 'release_dragon',
+        params: dragon.id
+      })
     },
     resurrectDragon (dragon) {
-      if (confirm('Are you sure you want to resurrect this dragon?') === true) {
-        EventBus.$emit('perform-game-action', {
-          cmd: 'resurrect_dragon',
-          params: dragon.id
-        })
-      }
+      EventBus.$emit('perform-game-action', {
+        cmd: 'resurrect_dragon',
+        params: dragon.id
+      })
     },
     teleportDragon (dragon) {
       EventBus.$emit('perform-game-action', {

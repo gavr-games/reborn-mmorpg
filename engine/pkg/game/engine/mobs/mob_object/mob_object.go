@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	IdleTime = 40000.0 // stays idle during this time
+	IdleTime = 80000.0 // stays idle during this time
 	MovingTime = 5000.0 // randomly moves during this time
 	FollowingTime = 40000.0 // stops following after this time
 	FollowingDistance = 0.2 // stops when in range of the target
@@ -24,6 +24,7 @@ const (
 	AttackingDirectionChangeTime = 500.0 // change direction only once per this time
 	RecentlyKilledTime = 2000.0 // stop attacking if target was recently killed
 	AgressiveCheckProbability = 0.05 // allows not to check agressive every game cycle
+	ControlRange = 20.0 // the distance to control your mob
 )
 
 // TODO: refactor to thread safe

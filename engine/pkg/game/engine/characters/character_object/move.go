@@ -72,9 +72,9 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 			oldGameAreaId := visionAreaGameObj.GameAreaId()
 			if visionAreaGameObj.X() != newVisionAreaX || visionAreaGameObj.Y() != newVisionAreaY || oldGameAreaId != gameAreaId {
 				reInsert = false
-				if visionAreaGameArea, gaOk := e.GameAreas().Load(visionAreaGameObj.GameAreaId()); gaOk {
-					visionAreaGameObjId := visionAreaGameArea.Id()
-					if oldGameAreaId != gameArea.Id() {
+				if visionAreaGameArea, gaOk := e.GameAreas().Load(oldGameAreaId); gaOk {
+					visionAreaGameObjId := visionAreaGameObj.Id()
+					if oldGameAreaId != gameAreaId {
 						visionAreaGameArea.FilteredRemove(visionAreaGameObj, func(b utils.IBounds) bool {
 							return visionAreaGameObjId == b.(entity.IGameObject).Id()
 						})
@@ -91,7 +91,7 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 				if oldGameAreaId != gameAreaId || visionAreaDx > visionAreaGameObj.Width() || visionAreaDy > visionAreaGameObj.Height() {
 					visionAreaGameObj.SetX(newVisionAreaX)
 					visionAreaGameObj.SetY(newVisionAreaY)
-					if reInsert || oldGameAreaId != gameArea.Id() {
+					if reInsert || oldGameAreaId != gameAreaId {
 						visionAreaGameObj.SetGameAreaId(gameAreaId)
 						gameArea.Insert(visionAreaGameObj)
 					}
