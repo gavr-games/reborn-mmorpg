@@ -5,9 +5,21 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## Roadmap for Demo
 - More crops and food to raise dragons
+  - fishing
+  - fire
+  - cook fish
 - Add dragon breeding to get new eggs
-  - breeding cave, select dragons for breeding
-- More buildings and furniture for houses
+  - breeding cave
+  - teleport dragons for breeding to cave
+  - DNA mutation system based on vitamins and food
+- improve ALL visuals
+  - refactor UI
+  - add animations and effects
+  - replace ugly models
+  - More buildings and furniture for houses
+    - doors
+    - table
+    - normal walls
 
 ## TODO
 - add Transactions (Mutexes) when objects cnahge

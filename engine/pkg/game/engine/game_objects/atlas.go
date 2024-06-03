@@ -1504,7 +1504,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"params": "self,food_id",
 					},
 					"info": map[string]interface{}{
-						"cmd":    "info",
+						"cmd":    "get_item_info",
 						"params": "self",
 					},
 				},
@@ -1563,7 +1563,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"params": "self",
 					},
 					"info": map[string]interface{}{
-						"cmd":    "info",
+						"cmd":    "get_item_info",
 						"params": "self",
 					},
 				},
