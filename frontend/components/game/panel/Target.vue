@@ -12,45 +12,44 @@
 </template>
 
 <script>
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 export default {
-  data() {
+  data () {
     return {
       showTargetInfoPanel: false,
-      targetInfo: null,
+      targetInfo: null
     }
   },
 
-  created() {
-    EventBus.$on("select_target", this.selectTarget)
-    EventBus.$on("deselect_target", this.deselectTarget)
+  created () {
+    EventBus.$on('select_target', this.selectTarget)
+    EventBus.$on('deselect_target', this.deselectTarget)
   },
 
-  beforeDestroy() {
-    EventBus.$off("select_target", this.selectTarget)
-    EventBus.$off("deselect_target", this.deselectTarget)
+  beforeDestroy () {
+    EventBus.$off('select_target', this.selectTarget)
+    EventBus.$off('deselect_target', this.deselectTarget)
   },
 
   methods: {
-    selectTarget(data) {
+    selectTarget (data) {
       this.showTargetInfoPanel = true
       this.targetInfo = data
     },
-    deselectTarget() {
+    deselectTarget () {
       this.showTargetInfoPanel = false
       this.targetInfo = null
     },
-    triggerDeselect() {
-      EventBus.$emit("perform-game-action", {
-        cmd: "deselect_target",
-        params: this.targetInfo["Id"],
-      });
-    },
+    triggerDeselect () {
+      EventBus.$emit('perform-game-action', {
+        cmd: 'deselect_target',
+        params: this.targetInfo.Id
+      })
+    }
   }
 }
 </script>
-
 
 <style lang="scss">
 #target-info-panel {

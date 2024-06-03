@@ -71,7 +71,6 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 				mob.Attack(obj.Id())
 			}
 		}
-		e.SendGameObjectUpdate(targetObj, "update_object")
 
 		e.SendSystemMessage(fmt.Sprintf("You dealt %d damage to %s.", int(damage), targetObj.Kind()), player)
 
@@ -88,6 +87,8 @@ func (obj *CharacterObject) MeleeHit(e entity.IEngine) bool {
 				// for characters
 				targetObj.(entity.ICharacterObject).Reborn(e)
 			}
+		} else {
+			e.SendGameObjectUpdate(targetObj, "update_object")
 		}
 	} else {
 		return false

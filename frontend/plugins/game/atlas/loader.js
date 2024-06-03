@@ -256,6 +256,9 @@ class Loader {
       'stone_knife',
       'stone_wall',
       'wooden_chest',
+      'wooden_door',
+      'wooden_door_closed',
+      'wooden_door_opened',
       'wooden_fishing_rod',
       'wooden_shovel',
       'wooden_wall'

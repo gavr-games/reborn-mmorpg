@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/puzpuzpuz/xsync/v3"
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/plants/plant_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/armors/armor_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters/character_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims/claim_obelisk_object"
@@ -18,6 +18,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/bag_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/containers/chest_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/delayed_actions"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/doors/door_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/dragons/dragon_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
@@ -25,6 +26,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs/mob_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/npcs/npc_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/plants/plant_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/potions/potion_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/resources/resource_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
@@ -33,7 +35,6 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/walls/wall_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/weapons/weapon_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/armors/armor_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/vision_area_updater"
@@ -166,39 +167,11 @@ func (e *Engine) SendSystemMessage(message string, player *entity.Player) {
 // For example TreeObject for tree, RockObject for rock, etc.
 func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGameObject {
 	switch gameObj.Type() {
-	case "tree":
-		return &tree_object.TreeObject{*gameObj.(*entity.GameObject)}
-	case "rock":
-		return &rock_object.RockObject{*gameObj.(*entity.GameObject)}
-	case "potion":
-		return potion_object.NewPotionObject(gameObj)
-	case "plant":
-		return &plant_object.PlantObject{*gameObj.(*entity.GameObject)}
-	case "hatchery":
-		return hatchery_object.NewHatcheryObject(gameObj)
-	case "wall":
-		return wall_object.NewWallObject(gameObj)
-	case "npc":
-		return &npc_object.NpcObject{*gameObj.(*entity.GameObject)}
-	case "resource":
-		return resource_object.NewResourceObject(gameObj)
-	case "melee_weapon":
-		return weapon_object.NewWeaponObject(gameObj)
 	case "armor":
 		return armor_object.NewArmorObject(gameObj)
-	case "hammer", "knife", "pickaxe", "axe", "needle", "fishing_rod", "saw":
-		return tool_object.NewToolObject(gameObj)
-	case "shovel":
-		return shovel_object.NewShovelObject(gameObj)
-	case "mob":
-		if strings.Contains(gameObj.Kind(), "_dragon") {
-			return dragon_object.NewDragonObject(e, gameObj)
-		} else {
-			return mob_object.NewMobObject(e, gameObj)
-		}
-	case "player":
-		if gameObj.Kind() == "player" {
-			return character_object.NewCharacterObject(gameObj)
+	case "claim":
+		if gameObj.Kind() == "claim_obelisk" {
+			return &claim_obelisk_object.ClaimObeliskObject{*gameObj.(*entity.GameObject)}
 		}
 	case "container":
 		if strings.Contains(gameObj.Kind(), "bag") {
@@ -208,10 +181,40 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 		} else {
 			return backpack_object.NewBackpackObject(gameObj)
 		}
-	case "claim":
-		if gameObj.Kind() == "claim_obelisk" {
-			return &claim_obelisk_object.ClaimObeliskObject{*gameObj.(*entity.GameObject)}
+	case "door":
+		return door_object.NewDoorObject(gameObj)
+	case "hammer", "knife", "pickaxe", "axe", "needle", "fishing_rod", "saw":
+		return tool_object.NewToolObject(gameObj)
+	case "hatchery":
+		return hatchery_object.NewHatcheryObject(gameObj)
+	case "npc":
+		return &npc_object.NpcObject{*gameObj.(*entity.GameObject)}
+	case "melee_weapon":
+		return weapon_object.NewWeaponObject(gameObj)
+	case "mob":
+		if strings.Contains(gameObj.Kind(), "_dragon") {
+			return dragon_object.NewDragonObject(e, gameObj)
+		} else {
+			return mob_object.NewMobObject(e, gameObj)
 		}
+	case "potion":
+		return potion_object.NewPotionObject(gameObj)
+	case "plant":
+		return &plant_object.PlantObject{*gameObj.(*entity.GameObject)}
+	case "player":
+		if gameObj.Kind() == "player" {
+			return character_object.NewCharacterObject(gameObj)
+		}
+	case "resource":
+		return resource_object.NewResourceObject(gameObj)
+	case "rock":
+		return &rock_object.RockObject{*gameObj.(*entity.GameObject)}
+	case "shovel":
+		return shovel_object.NewShovelObject(gameObj)
+	case "tree":
+		return &tree_object.TreeObject{*gameObj.(*entity.GameObject)}
+	case "wall":
+		return wall_object.NewWallObject(gameObj)
 	default:
 		return gameObj
 	}
@@ -267,6 +270,9 @@ func (e *Engine) RemoveGameObject(gameObj entity.IGameObject) {
 	}
 	e.DelayedActions().Delete(gameObj.Id())
 	e.GameObjects().Delete(gameObj.Id())
+	for effectId := range gameObj.Effects() {
+		e.Effects().Delete(effectId)
+	}
 	if gameArea, gaOk := e.GameAreas().Load(gameObj.GameAreaId()); gaOk {
 		gameObjId := gameObj.Id()
 		gameArea.FilteredRemove(gameObj, func(b utils.IBounds) bool {

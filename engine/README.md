@@ -12,6 +12,9 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
   - breeding cave
   - teleport dragons for breeding to cave
   - DNA mutation system based on vitamins and food
+- Game Master
+  - add building
+  - modify object JSON
 - improve ALL visuals
   - refactor UI
   - add animations and effects
@@ -22,6 +25,8 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
     - normal walls
 
 ## TODO
+- BUG: dungeon keeper not available after back  from dungeon
+- BUG: deselect target, when killed by dragons
 - add Transactions (Mutexes) when objects cnahge
 - change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft

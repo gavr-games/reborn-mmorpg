@@ -374,6 +374,29 @@ func GetAtlas() map[string]interface{} {
 			"width": 0.3,
 			"height": 3.0,
 		},
+		"wooden_door": map[string]interface{}{
+			"skill": "lumberjacking",
+			"resources": map[string]interface{}{
+				"log": 3.0,
+			},
+			"title": "Wooden Door",
+			"description": "Protects from strangers and but you can open and close it.",
+			"inputs": []string{
+				"coordinates",
+				"rotation",
+			},
+			"tools": []string{
+				"hammer", "axe",
+			}, //tools equipped required to craft something
+			"surfaces": []string{
+				"grass",
+				"stone",
+			}, //allowed surfaces to craft this item on
+			"place_in_real_world": true, //place item in real world or put into container
+			"duration": 6000.0, // ms
+			"width": 2.0,
+			"height": 0.3,
+		},
 	}
 
 	return craftAtlas

@@ -8,8 +8,13 @@ class ItemController {
   }
 
   update (gameObject) {
+    const oldItemState = this.state.state
     this.state.update(gameObject)
     this.observer.updateLifted()
+    // Change item model (open/close door, burn/shut fireplace)
+    if (oldItemState !== this.state.state) {
+      this.observer.changeModel()
+    }
   }
 
   remove () {

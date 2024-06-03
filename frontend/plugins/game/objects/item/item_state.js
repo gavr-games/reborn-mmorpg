@@ -13,6 +13,7 @@ class ItemState {
     this.rotation = gameObject.Rotation
     this.id = gameObject.Id
     this.kind = gameObject.Properties.kind
+    this.state = gameObject.Properties.state
     this.liftedBy = gameObject.Properties.lifted_by
     this.payload = gameObject
   }

@@ -25,7 +25,8 @@ class ItemObserver {
   }
 
   create () {
-    const mesh = Atlas.get(this.state.kind + 'Item').clone('item-' + this.state.id)
+    const itemState = this.state.state !== undefined ? `_${this.state.state}` : ''
+    const mesh = Atlas.get(this.state.kind + itemState + 'Item').clone('item-' + this.state.id)
     mesh.setParent(null)
     freezeMaterials(mesh, this.scene)
     mesh.name = 'item-' + this.state.id
@@ -70,13 +71,23 @@ class ItemObserver {
     }
   }
 
+  changeModel () {
+    this.meshRotation = 0
+    this.removeMesh()
+    this.create()
+  }
+
   remove () {
     EventBus.$off('scene-created', this.sceneCreatedCallback)
+    this.removeMesh()
+    this.state = null
+  }
+
+  removeMesh () {
     if (this.mesh !== null) {
       this.mesh.dispose()
     }
     this.mesh = null
-    this.state = null
   }
 }
 

@@ -15,6 +15,7 @@ import (
 // Process commands from players
 // TODO: move commands processing to funcs
 // TODO: add incoming params validation
+// TODO: reorder alphabetically
 func ProcessCommand(e entity.IEngine, characterId int, command map[string]interface{}) bool {
 	if player, ok := e.Players().Load(characterId); ok {
 		var (
@@ -121,6 +122,14 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "destroy_claim":
 			if claim, claimOk := e.GameObjects().Load(params.(string)); claimOk {
 				claim.(entity.IClaimObeliskObject).Destroy(e, player)
+			}
+		case "close_door":
+			if door, doorOk := e.GameObjects().Load(params.(string)); doorOk {
+				door.(entity.IDoorObject).Close(e, player)
+			}
+		case "open_door":
+			if door, doorOk := e.GameObjects().Load(params.(string)); doorOk {
+				door.(entity.IDoorObject).Open(e, player)
 			}
 		case "put_to_container":
 			if item, itemOk := e.GameObjects().Load(params.(map[string]interface{})["item_id"].(string)); itemOk {

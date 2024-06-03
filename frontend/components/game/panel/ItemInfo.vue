@@ -11,6 +11,12 @@
         <div v-if="itemInfo['payed_until']">
           Payed until: {{ new Date(itemInfo["payed_until"]) }}
         </div>
+        <div v-if="itemInfo['fullness']">
+          Fullness: {{ itemInfo["fullness"] }}/{{ itemInfo["max_fullness"] }}
+        </div>
+        <div v-if="itemInfo['health']">
+          Health: {{ itemInfo["health"] }}/{{ itemInfo["max_health"] }}
+        </div>
         <button type="button" class="rpgui-button" @click="showItemInfoPanel = false">
           <p>Close</p>
         </button>

@@ -1,17 +1,18 @@
 package delayed_actions
 
 import (
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
 )
 
 func Finish(e entity.IEngine, gameObj entity.IGameObject) bool {
-	if gameObj.CurrentAction() == nil {
+	currentAction := gameObj.CurrentAction()
+	if currentAction == nil {
 		return true
 	}
 
-	delayedActionFuncName := gameObj.CurrentAction().FuncName()
+	delayedActionFuncName := currentAction.FuncName()
 
 	// Call delayed function
 	// all delayed fucntions must be func(entity.IEngine, map[string]interface{}) bool
@@ -22,7 +23,7 @@ func Finish(e entity.IEngine, gameObj entity.IGameObject) bool {
 
 	storage.GetClient().Updates <- gameObj.Clone()
 
-	delayedFunc(e, gameObj.CurrentAction().Params())
+	delayedFunc(e, currentAction.Params())
 
 	e.SendResponseToVisionAreas(gameObj, "finish_delayed_action", map[string]interface{}{
 		"object": serializers.GetInfo(e, gameObj),

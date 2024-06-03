@@ -692,6 +692,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"height":  constants.PlayerVisionArea,
 				"shape":   "rectangle",
 				"visible": false,
+				"craft_collidable": false,
 			},
 		},
 		"armor": {
@@ -1356,6 +1357,32 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"visible":      true,
 			},
 		},
+		"door": {
+			"wooden_door": map[string]interface{}{
+				"type":       "door",
+				"kind":       "wooden_door",
+				"width":      2.0,
+				"height":     0.3,
+				"shape":      "rectangle",
+				"state":      "closed", // opened or closed
+				"collidable": true,
+				"visible":    true,
+				"actions": map[string]interface{}{
+					"open": map[string]interface{}{
+						"cmd":    "open_door",
+						"params": "self",
+					},
+					"close": map[string]interface{}{
+						"cmd":    "close_door",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_building",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
 		"hatchery": {
 			"fire_dragon_hatchery": map[string]interface{}{
 				"type":       "hatchery",
@@ -1422,6 +1449,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape":      "rectangle",
 				"claim_obelisk_id": nil,
 				"collidable": false,
+				"craft_collidable": false,
 				"visible":    true,
 			},
 		},

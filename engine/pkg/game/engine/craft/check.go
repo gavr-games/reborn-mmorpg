@@ -113,21 +113,25 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 		if len(possibleCollidableObjects) > 0 {
 			for _, val := range possibleCollidableObjects {
 				gameObj := val.(entity.IGameObject)
+				gameObjType := gameObj.Type()
+
+				// Allow character to craft plants while standing on them (plants are not collidable)
 				tempObjCollidable := tempGameObj.GetProperty("collidable")
 				if gameObj.Id() == charGameObj.Id() && tempObjCollidable != nil && tempObjCollidable.(bool) {
 					e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
 					return false
 				}
-				if collidable := gameObj.GetProperty("collidable"); collidable != nil {
-					if collidable.(bool) {
-						e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
-						return false
-					}
+
+				// By default any object intersection except surface is not allowed.
+				// Exceptions: Game Objects with craft_collidable == false, like claim_area
+				craftCollidable := gameObj.GetProperty("craft_collidable")
+				if gameObj.Id() != charGameObj.Id() && gameObjType != "surface" && (craftCollidable == nil || craftCollidable.(bool)){
+					e.SendSystemMessage("Cannot build it here. There is something in the way.", player)
+					return false
 				}
 				// Check can build only on allowed surfaces
 				if gameObj.Type() == "surface" {
 					if !slices.Contains(craftItemConfig["surfaces"].([]string), gameObj.Kind()) {
-
 						e.SendSystemMessage(fmt.Sprintf("Cannot build it on %s.", gameObj.Kind()), player)
 						return false
 					}

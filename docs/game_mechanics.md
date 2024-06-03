@@ -17,3 +17,8 @@ Two Claim Areas cannot intersect.
 ## Containers
 
 Containers have different size. You can put smaller containers inside bigger ones.
+
+## Collision
+
+Each Game Object is either `collidable` or not. If so it means moving characters cannot go through it. For example: character cannot go through the wall, but can go through a mob.
+In addition to that there is a `craft_collidable` property. If set to true, players will be able to craft something in real world, even if the crafted object collides with `"craft_collidable": false` object. For example: players can craft building on claim area.
