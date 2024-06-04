@@ -123,6 +123,15 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			if claim, claimOk := e.GameObjects().Load(params.(string)); claimOk {
 				claim.(entity.IClaimObeliskObject).Destroy(e, player)
 			}
+		case "catch_fish":
+			if rod, rodOk := e.GameObjects().Load(params.(string)); rodOk {
+				if ok, _ := rod.(entity.IFishingRodObject).CheckCatch(e, charGameObj); ok {
+					delayed_actions.Start(e, charGameObj, "CatchFish", map[string]interface{}{
+						"characterId": charGameObj.Id(),
+						"rodId":    rod.Id(),
+					}, -1.0)
+				}
+			}
 		case "close_door":
 			if door, doorOk := e.GameObjects().Load(params.(string)); doorOk {
 				door.(entity.IDoorObject).Close(e, player)

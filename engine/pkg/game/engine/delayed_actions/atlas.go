@@ -1,21 +1,27 @@
 package delayed_actions
+
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/plants"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/craft"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/fishing"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/liftable_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/plants"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/shovels"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/surfaces"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/liftable_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees"
 )
 
 
 func GetDelayedActionsAtlas() map[string]map[string]interface{} {
 	delayedActionsAtlas:= map[string]map[string]interface{}{
+		"CatchFish": map[string]interface{}{
+			"func": fishing.Catch,
+			"duration": 5000.0, // ms
+		},
 		"Chip": map[string]interface{}{
 			"func": rocks.Chip,
 			"duration": 3000.0, // ms

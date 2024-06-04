@@ -238,6 +238,7 @@ class Loader {
       'dungeon_wall',
       'fire_dragon_egg',
       'fire_dragon_hatchery',
+      'fish',
       'gold',
       'gold_ingot',
       'golden_armor',

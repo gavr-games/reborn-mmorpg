@@ -56,6 +56,9 @@ export default {
   &.fire_dragon_egg {
     background-position: 320px 386px;
   }
+  &.fish {
+    background-position: 418px 352px;
+  }
   &.grass {
     background-position: 32px 514px;
   }

@@ -21,6 +21,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/doors/door_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/dragons/dragon_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/effects"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/fishing/fishing_rod_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/hatcheries/hatchery_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mobs"
@@ -183,8 +184,10 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 		}
 	case "door":
 		return door_object.NewDoorObject(gameObj)
-	case "hammer", "knife", "pickaxe", "axe", "needle", "fishing_rod", "saw":
+	case "hammer", "knife", "pickaxe", "axe", "needle", "saw":
 		return tool_object.NewToolObject(gameObj)
+	case "fishing_rod":
+		return fishing_rod_object.NewFishingRodObject(gameObj)
 	case "hatchery":
 		return hatchery_object.NewHatcheryObject(gameObj)
 	case "npc":

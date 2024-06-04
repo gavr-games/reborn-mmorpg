@@ -11,6 +11,12 @@
         <div v-if="itemInfo['payed_until']">
           Payed until: {{ new Date(itemInfo["payed_until"]) }}
         </div>
+        <div v-if="itemInfo['level']">
+          Level: {{ itemInfo["level"] }}
+        </div>
+        <div v-if="itemInfo['experience']">
+          Experience: {{ itemInfo["experience"] }}
+        </div>
         <div v-if="itemInfo['fullness']">
           Fullness: {{ itemInfo["fullness"] }}/{{ itemInfo["max_fullness"] }}
         </div>

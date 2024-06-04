@@ -5,8 +5,8 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 
 ## Roadmap for Demo
 - More crops and food to raise dragons
-  - fishing
   - fire
+  - fuelable
   - cook fish
 - Add dragon breeding to get new eggs
   - breeding cave

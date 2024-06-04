@@ -897,6 +897,33 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"fish": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "fish",
+				"width":        1.0,
+				"height":       0.3,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"fullness":     5.0,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"eatable":      true,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 			"stone": map[string]interface{}{
 				"type":         "resource",
 				"kind":         "stone",
