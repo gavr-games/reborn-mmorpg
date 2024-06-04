@@ -20,6 +20,9 @@
         <div v-if="itemInfo['fullness']">
           Fullness: {{ itemInfo["fullness"] }}/{{ itemInfo["max_fullness"] }}
         </div>
+        <div v-if="itemInfo['fuel']">
+          Fuel: {{ itemInfo["fuel"] }}/{{ itemInfo["max_fuel"] }}
+        </div>
         <div v-if="itemInfo['health']">
           Health: {{ itemInfo["health"] }}/{{ itemInfo["max_health"] }}
         </div>

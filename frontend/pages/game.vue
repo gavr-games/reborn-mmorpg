@@ -12,6 +12,7 @@
     <GamePanelCraft />
     <GamePanelDragons />
     <GamePanelFeed />
+    <GamePanelFuel />
     <GamePanelDungeons />
     <GamePanelNpcTrade />
     <GamePanelItemInfo />

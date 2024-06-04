@@ -27,6 +27,31 @@ func GetAtlas() map[string]interface{} {
 			"width": 2.0,
 			"height": 0.56,
 		},
+		"bonfire": map[string]interface{}{
+			"skill": "survival",
+			"resources": map[string]interface{}{
+				"stone": 2.0,
+				"log": 2.0,
+			},
+			"title": "Bonfire",
+			"description": "Used to cook food like fish.",
+			"inputs": []string{
+				"coordinates",
+				"rotation",
+			},
+			"tools": []string{
+				"axe",
+				"pickaxe",
+			}, //tools equipped required to craft something
+			"surfaces": []string{
+				"grass",
+				"stone",
+			}, //allowed surfaces to craft this item on
+			"place_in_real_world": true, //place item in real world or put into container
+			"duration": 7000.0, // ms
+			"width": 1.0,
+			"height": 1.0,
+		},
 		"bone_needle": map[string]interface{}{
 			"skill": "survival",
 			"resources": map[string]interface{}{

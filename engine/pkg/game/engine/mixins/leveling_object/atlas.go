@@ -5,6 +5,7 @@ func GetAtlas() map[string]float64 {
 		"chip_rock":                  5.0,
 		"chop_tree":                  5.0,
 		"craft/anvil":                60.0,
+		"craft/bonfire":              40.0,
 		"craft/bone_needle":          10.0,
 		"craft/bone_saw":             15.0,
 		"craft/carrot_sprout":        20.0,

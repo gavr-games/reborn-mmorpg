@@ -11,6 +11,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/armors/armor_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/bonfires/bonfire_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/characters/character_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims/claim_obelisk_object"
@@ -170,6 +171,8 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 	switch gameObj.Type() {
 	case "armor":
 		return armor_object.NewArmorObject(gameObj)
+	case "bonfire":
+		return bonfire_object.NewBonfireObject(gameObj)
 	case "claim":
 		if gameObj.Kind() == "claim_obelisk" {
 			return &claim_obelisk_object.ClaimObeliskObject{*gameObj.(*entity.GameObject)}

@@ -26,6 +26,9 @@ func Update(e entity.IEngine, tickDelta int64) {
 					"cooldown": 2000.0,
 					"current_cooldown": 0.0,
 					"number": 10.0, // -1 for infinite
+					"remove_on_zero":   true,
+					"cant_go_negative": true,
+					"finish_state":     "extinguished", // change obj state on finish
 					"group": "potion_healing",
 				},
 		*/
@@ -34,15 +37,18 @@ func Update(e entity.IEngine, tickDelta int64) {
 			if effect["current_cooldown"].(float64) >= effect["cooldown"].(float64) {
 				effect["current_cooldown"] = 0.0
 				newAttrValue := obj.GetProperty(effect["attribute"].(string)).(float64) + effect["value"].(float64)
-				// Fulness cannot be less than zero
-				if effect["attribute"].(string) == "fullness" && newAttrValue < 0.0 {
+				// Fulness or fuel cannot be less than zero
+				if effect["cant_go_negative"] != nil && effect["cant_go_negative"].(bool) && newAttrValue < 0.0 {
 					newAttrValue = 0.0
 				}
 				obj.SetProperty(effect["attribute"].(string), newAttrValue)
 				if effect["number"].(float64) > 0.0 {
 					effect["number"] = effect["number"].(float64) - 1.0
 				}
-				if effect["number"].(float64) == 0.0 {
+				if effect["number"].(float64) == 0.0 || (effect["remove_on_zero"] != nil && effect["remove_on_zero"].(bool) && newAttrValue == 0.0) {
+					if effect["finish_state"] != nil {
+						obj.SetProperty("state", effect["finish_state"])
+					}
 					Remove(e, effectId, obj)
 				} else {
 					e.SendGameObjectUpdate(obj, "update_object")

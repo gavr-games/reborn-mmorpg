@@ -83,6 +83,19 @@ export default {
             })
           }
         })
+      } else if (params.includes('fuel_id')) {
+        EventBus.$emit('select-fuel-id', {
+          item: this.item,
+          callback: (fuelId) => {
+            EventBus.$emit('perform-game-action', {
+              cmd: this.item.Properties.actions[actionKey].cmd,
+              params: {
+                id: this.item.Properties.id,
+                fuel_id: fuelId
+              }
+            })
+          }
+        })
       } else {
         EventBus.$emit('perform-game-action', {
           cmd: this.item.Properties.actions[actionKey].cmd,

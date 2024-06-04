@@ -303,6 +303,20 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			if obj, objOk := e.GameObjects().Load(id); objOk {
 				obj.(entity.IFeedableObject).Feed(e, foodId, player)
 			}
+		case "add_fuel":
+			id := params.(map[string]interface{})["id"].(string)
+			fuelId := params.(map[string]interface{})["fuel_id"].(string)
+			if obj, objOk := e.GameObjects().Load(id); objOk {
+				obj.(entity.IBurningObject).AddFuel(e, fuelId, player)
+			}
+		case "burn":
+			if burningObj, bOk := e.GameObjects().Load(params.(string)); bOk {
+				burningObj.(entity.IBurningObject).Burn(e, player)
+			}
+		case "extinguish":
+			if burningObj, bOk := e.GameObjects().Load(params.(string)); bOk {
+				burningObj.(entity.IBurningObject).Extinguish(e, player)
+			}
 		case "gm_create_object":
 			gm.CreateObject(e, charGameObj, params.(map[string]interface{}))
 		case "go_to_dungeon":

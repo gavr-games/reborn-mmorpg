@@ -535,6 +535,41 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 			},
 		},
+		"bonfire": {
+			"bonfire": map[string]interface{}{
+				"type":       "bonfire",
+				"kind":       "bonfire",
+				"width":      1.0,
+				"height":     1.0,
+				"shape":      "rectangle",
+				"state":      "extinguished", // extinguished/burning
+				"fuel":       0.0,
+				"max_fuel":   300000.0, // 5 minutes
+				"collidable": true,
+				"visible":    true,
+				"allowed_fuels": map[string]interface{}{
+					"log": 20000.0, // how many seconds burns on fuel
+				},
+				"actions": map[string]interface{}{
+					"burn": map[string]interface{}{
+						"cmd":    "burn",
+						"params": "self", // self - id of current object
+					},
+					"extinguish": map[string]interface{}{
+						"cmd":    "extinguish",
+						"params": "self", // self - id of current object
+					},
+					"add fuel": map[string]interface{}{
+						"cmd":    "add_fuel",
+						"params": "self,fuel_id", // self - id of current object
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_building",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
 		"container": {
 			"backpack": map[string]interface{}{
 				"type":                "container",
@@ -1295,6 +1330,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"cooldown":         2000.0,
 					"current_cooldown": 0.0,
 					"number":           10.0,
+					"cant_go_negative": true,
 					"group":            "potion_healing", // this is used to prevent multiple effects from one group
 				},
 				"actions": map[string]interface{}{
