@@ -535,6 +535,46 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 			},
 		},
+		"frying_pan": {
+			"iron_frying_pan": map[string]interface{}{
+				"type":         "frying_pan",
+				"kind":         "iron_frying_pan",
+				"width":        1.0,
+				"height":       1.6,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"equipable":    true,
+				"visible":      false,
+				"target_slots": map[string]interface{}{
+					"left_arm":  true,
+					"right_arm": true,
+				},
+				"actions": map[string]interface{}{
+					"equip": map[string]interface{}{
+						"cmd":    "equip_item",
+						"params": "self", // self - id of current object
+					},
+					"unequip": map[string]interface{}{
+						"cmd":    "unequip_item",
+						"params": "self",
+					},
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
 		"bonfire": {
 			"bonfire": map[string]interface{}{
 				"type":       "bonfire",
@@ -940,6 +980,33 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape":        "rectangle",
 				"container_id": nil,
 				"fullness":     5.0,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"eatable":      true,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"fried_fish": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "fried_fish",
+				"width":        1.0,
+				"height":       0.3,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"fullness":     30.0,
 				"pickable":     true,
 				"droppable":    true,
 				"visible":      false,

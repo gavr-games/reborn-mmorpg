@@ -3,6 +3,7 @@ package craft
 import (
 	"fmt"
 	"slices"
+	"strings"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/claims"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
@@ -50,15 +51,24 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 
 		for _, requiredEquipment := range requiredEquipments.([]string) {
 			foundEquipment := false
+			equipmentState := ""
+			if strings.Contains(requiredEquipment, ":") { // we need equipment ot have certain state. For example: to cook fish you need bonfire to have burning state
+				splitRes := strings.Split(requiredEquipment, ":")
+				requiredEquipment = splitRes[0]
+				equipmentState = splitRes[1]
+			}
 			for _, val := range possibleEquipmentObjects {
 				gameObj := val.(entity.IGameObject)
 				if gameObj.Kind() == requiredEquipment && claims.CheckAccess(e, charGameObj, gameObj) {
-					foundEquipment = true
-					break
+					gameObjState := gameObj.GetProperty("state")
+					if equipmentState == "" || (gameObjState != nil && gameObjState.(string) == equipmentState) {
+						foundEquipment = true
+						break
+					}
 				}
 			}
 			if !foundEquipment {
-				e.SendSystemMessage(fmt.Sprintf("You need to stand near %s.", requiredEquipment), player)
+				e.SendSystemMessage(fmt.Sprintf("You need to stand near %s %s.", equipmentState, requiredEquipment), player)
 				return false
 			}
 		}

@@ -171,6 +171,8 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 	switch gameObj.Type() {
 	case "armor":
 		return armor_object.NewArmorObject(gameObj)
+	case "axe", "frying_pan", "hammer", "knife", "needle", "pickaxe", "saw":
+		return tool_object.NewToolObject(gameObj)
 	case "bonfire":
 		return bonfire_object.NewBonfireObject(gameObj)
 	case "claim":
@@ -187,8 +189,6 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 		}
 	case "door":
 		return door_object.NewDoorObject(gameObj)
-	case "hammer", "knife", "pickaxe", "axe", "needle", "saw":
-		return tool_object.NewToolObject(gameObj)
 	case "fishing_rod":
 		return fishing_rod_object.NewFishingRodObject(gameObj)
 	case "hatchery":

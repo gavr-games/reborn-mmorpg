@@ -4,10 +4,7 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## Roadmap for Demo
-- More crops and food to raise dragons
-  - fire
-  - fuelable
-  - cook fish
+- More crops to raise dragons
 - Add dragon breeding to get new eggs
   - breeding cave
   - teleport dragons for breeding to cave

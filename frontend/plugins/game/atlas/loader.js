@@ -242,6 +242,8 @@ class Loader {
       'fire_dragon_egg',
       'fire_dragon_hatchery',
       'fish',
+      'fried_fish',
+      'iron_frying_pan',
       'gold',
       'gold_ingot',
       'golden_armor',

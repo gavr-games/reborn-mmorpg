@@ -59,6 +59,12 @@ export default {
   &.fish {
     background-position: 418px 352px;
   }
+  &.fried_fish {
+    background-position: 386px 352px;
+  }
+  &.iron_frying_pan {
+    background-position: 704px 739px;
+  }
   &.grass {
     background-position: 32px 514px;
   }

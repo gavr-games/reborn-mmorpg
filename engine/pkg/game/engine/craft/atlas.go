@@ -179,6 +179,41 @@ func GetAtlas() map[string]interface{} {
 			"width": 2.0,
 			"height": 2.0,
 		},
+		"fried_fish": map[string]interface{}{
+			"skill": "cooking",
+			"resources": map[string]interface{}{
+				"fish": 1.0,
+			},
+			"title": "Fried fish",
+			"description": "Tasty. Dragons love it.",
+			"inputs": []string{},
+			"tools": []string{
+				"frying_pan",
+			},
+			"equipment": []string{
+				"bonfire:burning", // using ":" we can require that equipment object is in a certain state
+			},
+			"place_in_real_world": false,
+			"duration": 8000.0,
+		},
+		"iron_frying_pan": map[string]interface{}{
+			"skill": "blacksmithing",
+			"resources": map[string]interface{}{
+				"iron_ingot": 2.0,
+				"log": 1.0,
+			},
+			"title": "Iron frying pan",
+			"description": "Great to cook food like fish.",
+			"inputs": []string{},
+			"tools": []string{
+				"hammer", "saw",
+			},
+			"equipment": []string{
+				"anvil",
+			},
+			"place_in_real_world": false,
+			"duration": 20000.0,
+		},
 		"golden_armor": map[string]interface{}{
 			"skill": "blacksmithing",
 			"resources": map[string]interface{}{

@@ -13,6 +13,8 @@ func GetAtlas() map[string]float64 {
 		"craft/dragon_altar":         90.0,
 		"craft/leather_robe":         200.0,
 		"craft/fire_dragon_hatchery": 50.0,
+		"craft/fried_fish":           80.0,
+		"craft/iron_frying_pan":      60.0,
 		"craft/golden_armor":         200.0,
 		"craft/healing_balm":         30.0,
 		"craft/rope":                 30.0,
