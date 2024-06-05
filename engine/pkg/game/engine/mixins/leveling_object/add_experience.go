@@ -49,7 +49,10 @@ func (obj *LevelingObject) addExpAmount(e entity.IEngine, amount float64) (bool,
 func (obj *LevelingObject) updateExpAndLevel(e entity.IEngine, amount float64) (bool, error) {
 	gameObj := obj.gameObj
 
-	currentExp := gameObj.GetProperty("experience").(float64)
+	currentExp := 0.0
+	if gameObj.GetProperty("experience") != nil {
+		currentExp = gameObj.GetProperty("experience").(float64)
+	}
 	newExp := amount + currentExp
 	currentLevel := gameObj.GetProperty("level").(float64)
 	nextLevelExp := getExpForNextLevel(currentLevel)
