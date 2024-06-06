@@ -202,7 +202,9 @@ class Loader {
       'cactus',
       'grass_plant',
       'carrot_sprout',
-      'carrot_ripe'
+      'carrot_ripe',
+      'tomato_sprout',
+      'tomato_ripe'
     ]
     plants.forEach((plant) => {
       const task = this.assetsManager.addContainerTask(
@@ -261,6 +263,8 @@ class Loader {
       'stone_spear',
       'stone_knife',
       'stone_wall',
+      'tomato',
+      'tomato_seed',
       'wooden_chest',
       'wooden_door',
       'wooden_door_closed',

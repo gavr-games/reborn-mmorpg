@@ -1,8 +1,8 @@
 package delayed_actions
 
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
 
 func UpdateAll(e entity.IEngine, tickDelta int64) {
@@ -19,8 +19,9 @@ func UpdateAll(e entity.IEngine, tickDelta int64) {
 						"action": delayedAction.FuncName(),
 					})
 				}
-				delayedAction.SetTimeLeft(delayedAction.TimeLeft() - float64(tickDelta))
-				if (delayedAction.TimeLeft() <= 0.0) {
+				newTimeLeft := delayedAction.TimeLeft() - float64(tickDelta)
+				delayedAction.SetTimeLeft(newTimeLeft)
+				if (newTimeLeft <= 0.0) {
 					Finish(e, gameObj)
 				}
 			}

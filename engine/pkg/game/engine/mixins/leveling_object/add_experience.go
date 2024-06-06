@@ -54,7 +54,10 @@ func (obj *LevelingObject) updateExpAndLevel(e entity.IEngine, amount float64) (
 		currentExp = gameObj.GetProperty("experience").(float64)
 	}
 	newExp := amount + currentExp
-	currentLevel := gameObj.GetProperty("level").(float64)
+	currentLevel := 1.0
+	if gameObj.GetProperty("level") != nil {
+		currentLevel = gameObj.GetProperty("level").(float64)
+	}
 	nextLevelExp := getExpForNextLevel(currentLevel)
 
 	if newExp < nextLevelExp {

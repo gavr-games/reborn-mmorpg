@@ -4,7 +4,6 @@ Start investigation of the code from `pkg/game/engine.go` the `Run()` func.
 Later proceed to `pkg/game/engine/process_command.go` for possible actions in the game.
 
 ## Roadmap for Demo
-- More crops to raise dragons
 - Add dragon breeding to get new eggs
   - breeding cave
   - teleport dragons for breeding to cave
@@ -12,7 +11,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - Game Master
   - add building
   - modify object JSON
-- improve ALL visuals
+- improve ALL visuals (https://store.steampowered.com/app/1726130/Pathless_Woods/)
   - refactor UI
   - add animations and effects
   - replace ugly models
@@ -22,8 +21,10 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
     - normal walls
 
 ## TODO
-- BUG: dungeon keeper not available after back  from dungeon
+- BUG: dungeon keeper not available after coming back from dungeon
 - BUG: deselect target, when killed by dragons
+- BUG: monster ghosts stay after death
+- BUG: don't remvoe dirt if it has plant on it
 - add Transactions (Mutexes) when objects cnahge
 - change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft

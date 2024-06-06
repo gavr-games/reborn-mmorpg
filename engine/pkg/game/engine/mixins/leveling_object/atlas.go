@@ -31,7 +31,7 @@ func GetAtlas() map[string]float64 {
 		"cut_plant":                  5.0,
 		"finish_dungeon":             100.0,
 		"fishing":                    10.0,
-		"harvest_plant":              50.0,
+		"harvest_plant":              20.0,
 		"kill_mob/baby_fire_dragon":  20.0,
 		"kill_mob/bat":               50.0,
 		"kill_mob/fire_dragon":       100.0,

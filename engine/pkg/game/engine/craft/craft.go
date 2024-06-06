@@ -3,9 +3,7 @@ package craft
 import (
 	"fmt"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
 // This func is trigerred by delayed action mechanism
@@ -49,30 +47,15 @@ func Craft(e entity.IEngine, params map[string]interface{}) bool {
 			x := coords["x"].(float64)
 			y := coords["y"].(float64)
 			rotation := params["inputs"].(map[string]interface{})["rotation"].(float64)
-			itemObj, err := game_objects.CreateFromTemplate(e, craftItemName, x, y, 0.0)
-			if err != nil {
-				e.SendSystemMessage(err.Error(), player)
-				return false
-			}
-			itemObj.SetProperty("crafted_by_character_id", charGameObj.Id())
-			itemObj.Rotate(rotation)
-			itemObj.SetGameAreaId(charGameObj.GameAreaId())
-			e.GameObjects().Store(itemObj.Id(), itemObj)
-			if gameArea, gaOk := e.GameAreas().Load(itemObj.GameAreaId()); gaOk {
-				gameArea.Insert(itemObj)
-			}
-			storage.GetClient().Updates <- itemObj.Clone()
+			itemObj := e.CreateGameObject(craftItemName, x, y, rotation, charGameObj.GameAreaId(), map[string]interface{}{
+				"crafted_by_character_id": charGameObj.Id(),
+			})
 
 			e.SendResponseToVisionAreas(charGameObj, "add_object", map[string]interface{}{
 				"object": itemObj.Clone(),
 			})
 		} else {
-			itemObj, err := game_objects.CreateFromTemplate(e, craftItemName, charGameObj.X(), charGameObj.Y(), 0.0)
-			if err != nil {
-				e.SendSystemMessage(err.Error(), player)
-				return false
-			}
-			e.GameObjects().Store(itemObj.Id(), itemObj)
+			itemObj := e.CreateGameObject(craftItemName, charGameObj.X(), charGameObj.Y(), 0.0, "", nil) 
 
 			// put item to container or drop it to the ground
 			container.(entity.IContainerObject).PutOrDrop(e, charGameObj, itemObj.Id(), -1)

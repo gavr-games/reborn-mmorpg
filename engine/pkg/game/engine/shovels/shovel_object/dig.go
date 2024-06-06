@@ -16,7 +16,8 @@ func (shovel *ShovelObject) Dig(e entity.IEngine, charGameObj entity.IGameObject
 		grass := findGrass(e, charGameObj)
 
 		// Add dirt
-		e.CreateGameObject("surface/dirt", grass.X(), grass.Y(), 0.0, grass.GameAreaId(), nil)
+		dirt := e.CreateGameObject("surface/dirt", grass.X(), grass.Y(), 0.0, grass.GameAreaId(), nil)
+		e.SendGameObjectUpdate(dirt, "add_object")
 
 		// Remove grass
 		e.RemoveGameObject(grass)

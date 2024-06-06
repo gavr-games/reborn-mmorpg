@@ -113,6 +113,12 @@ export default {
   &.stone_knife {
     background-position: 800px 707px;
   }
+  &.tomato {
+    background-position: 224px 418px;
+  }
+  &.tomato_seed {
+    background-position: 416px 482px;
+  }
   &.wooden_fishing_rod {
     background-position: 512px 352px;
   }

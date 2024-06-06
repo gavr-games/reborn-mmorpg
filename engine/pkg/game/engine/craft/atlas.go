@@ -103,6 +103,28 @@ func GetAtlas() map[string]interface{} {
 			"width": 1.0,
 			"height": 1.0,
 		},
+		"tomato_sprout": map[string]interface{}{
+			"skill": "farming",
+			"resources": map[string]interface{}{
+				"tomato_seed": 1.0,
+			},
+			"title": "Tomato Sprout",
+			"description": "Grows into a ripe tomato ready to harvest.",
+			"inputs": []string{
+				"coordinates",
+				"rotation",
+			},
+			"tools": []string{
+				"shovel",
+			}, //tools equipped required to craft something
+			"surfaces": []string{
+				"dirt",
+			}, //allowed surfaces to craft this item on
+			"place_in_real_world": true, //place item in real world or put into container
+			"duration": 500.0, // ms
+			"width": 1.0,
+			"height": 1.0,
+		},
 		"claim_obelisk": map[string]interface{}{
 			"skill": "householding",
 			"resources": map[string]interface{}{

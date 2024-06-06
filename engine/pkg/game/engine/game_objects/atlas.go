@@ -214,6 +214,59 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"tomato_sprout": map[string]interface{}{
+				"type":       "plant",
+				"kind":       "tomato_sprout",
+				"width":      1.0,
+				"height":     1.0,
+				"shape":      "circle",
+				"collidable": false,
+				"visible":    true,
+				"grows_into": "plant/tomato_ripe",
+				"resources": map[string]interface{}{
+					"tomato_seed": 1.0,
+				},
+				"current_action": map[string]interface{}{
+					"func_name": "GrowPlant",
+					"params": map[string]interface{}{
+						"game_object_id": nil,
+					},
+					"time_left": 100000.0,
+				},
+				"actions": map[string]interface{}{
+					"harvest": map[string]interface{}{
+						"cmd":    "harvest_plant",
+						"params": "self", // self - id of current object
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"tomato_ripe": map[string]interface{}{
+				"type":       "plant",
+				"kind":       "tomato_ripe",
+				"width":      1.0,
+				"height":     1.0,
+				"shape":      "circle",
+				"collidable": false,
+				"visible":    true,
+				"resources": map[string]interface{}{
+					"tomato_seed": 2.0,
+					"tomato": 1.0,
+				},
+				"actions": map[string]interface{}{
+					"harvest": map[string]interface{}{
+						"cmd":    "harvest_plant",
+						"params": "self", // self - id of current object
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 		},
 		"axe": { // there might be tools from different materials later
 			"axe": map[string]interface{}{
@@ -953,6 +1006,58 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"width":        0.75,
 				"height":       0.5,
 				"shape":        "rectangle",
+				"container_id": nil,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"tomato": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "tomato",
+				"width":        0.3,
+				"height":       0.3,
+				"shape":        "rectangle",
+				"container_id": nil,
+				"fullness":     15.0,
+				"pickable":     true,
+				"droppable":    true,
+				"visible":      false,
+				"eatable":      true,
+				"actions": map[string]interface{}{
+					"drop": map[string]interface{}{
+						"cmd":    "drop_item",
+						"params": "self",
+					},
+					"pickup": map[string]interface{}{
+						"cmd":    "pickup_item",
+						"params": "self",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"tomato_seed": map[string]interface{}{
+				"type":         "resource",
+				"kind":         "tomato_seed",
+				"width":        0.6,
+				"height":       0.6,
+				"shape":        "circle",
 				"container_id": nil,
 				"pickable":     true,
 				"droppable":    true,
@@ -1836,6 +1941,11 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"amount":   1.0,
 						"resource": "gold",
 						"price":    3.0,
+					},
+					"resource/tomato_seed": map[string]interface{}{
+						"amount":   1.0,
+						"resource": "gold",
+						"price":    6.0,
 					},
 					"resource/iron_nails": map[string]interface{}{
 						"amount":   1.0,

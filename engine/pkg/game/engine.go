@@ -239,6 +239,23 @@ func (e *Engine) CreateGameObject(objPath string, x, y, rotation float64, gameAr
 		}
 	}
 
+	// Some templates might have actions to be created with the object
+	if currentAction := gameObj.GetProperty("current_action"); currentAction != nil {
+		actionParams := currentAction.(map[string]interface{})["params"].(map[string]interface{})
+		actionParams["game_object_id"] = gameObj.Id()
+		timeLeft := currentAction.(map[string]interface{})["time_left"].(float64)
+		funcName := currentAction.(map[string]interface{})["func_name"].(string)
+		delayedAction := entity.NewDelayedAction(
+			funcName,
+			actionParams,
+			timeLeft,
+			entity.DelayedActionReady,
+		)
+		gameObj.SetCurrentAction(delayedAction)
+		gameObj.SetProperty("current_action", nil)
+		e.DelayedActions().Store(gameObj.Id(), gameObj)
+	}
+
 	// Init effects
 	for effectId, effect := range gameObj.Effects() {
 		newEffectId := uuid.NewV4().String()
@@ -307,7 +324,7 @@ func NewEngine() *Engine {
 
 func (e *Engine) Init(skipWorldGeneration bool) {
 	// Start routines to process game objects updates and save them in game storage
-	storage.GetClient().Run()
+	go storage.GetClient().Run()
 	// Start routine, which updates players about changes in their vision area
 	vision_area_updater.GetUpdater(e).Run()
 

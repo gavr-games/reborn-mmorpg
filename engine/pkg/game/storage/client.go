@@ -123,26 +123,15 @@ func (sc *StorageClient) SaveGameArea(obj *entity.GameArea) {
 	}
 }
 
-func (sc *StorageClient) updatesWorker(updatesChan <-chan entity.IGameObject) {
-	for obj := range updatesChan {
-		sc.SaveGameObject(obj)
-	}
-}
-
-func (sc *StorageClient) gameAreasUpdatesWorker(updatesChan <-chan *entity.GameArea) {
-	for ga := range updatesChan {
-		sc.SaveGameArea(ga)
-	}
-}
-
-func (sc *StorageClient) deletesWorker(deletesChan <-chan string) {
-	for objId := range deletesChan {
-		sc.RemoveGameObject(objId)
-	}
-}
-
 func (sc *StorageClient) Run() {
-	go sc.updatesWorker(sc.Updates)
-	go sc.gameAreasUpdatesWorker(sc.GameAreasUpdates)
-	go sc.deletesWorker(sc.Deletes)
+	for {
+		select {
+		case obj := <- sc.Updates:
+			sc.SaveGameObject(obj)
+		case ga := <- sc.GameAreasUpdates:
+			sc.SaveGameArea(ga)
+		case objId := <- sc.Deletes:
+			sc.RemoveGameObject(objId)
+		}
+	}
 }
