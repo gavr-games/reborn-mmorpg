@@ -9,6 +9,9 @@
       >
         {{ actionKey }}
       </div>
+      <div class="action-item" @click="showProperties">
+        show properties
+      </div>
       <div class="action-item" @click="showActionsMenu = false">
         close
       </div>
@@ -27,16 +30,19 @@ export default {
       },
       x: 0,
       y: 0,
-      showActionsMenu: false
+      showActionsMenu: false,
+      isGameMaster: false
     }
   },
 
   created () {
     EventBus.$on('game-object-clicked', this.showActions)
+    EventBus.$on('my-character-info', this.setGameMaster)
   },
 
   beforeDestroy () {
     EventBus.$off('game-object-clicked', this.showActions)
+    EventBus.$off('my-character-info', this.setGameMaster)
   },
 
   methods: {
@@ -47,6 +53,10 @@ export default {
         this.x = data.x
         this.y = data.y
       }
+    },
+    showProperties () {
+      this.showActionsMenu = false
+      console.log(this.item)
     },
     handleAction (actionKey) {
       this.showActionsMenu = false
@@ -101,6 +111,11 @@ export default {
           cmd: this.item.Properties.actions[actionKey].cmd,
           params: this.item.Properties.actions[actionKey].params.replace('self', this.item.Properties.id)
         })
+      }
+    },
+    setGameMaster (characterData) {
+      if (characterData.Properties.game_master === true) {
+        this.isGameMaster = true
       }
     }
   }

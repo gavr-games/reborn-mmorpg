@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"time"
 	"os"
+	"time"
 
-	"github.com/gorilla/websocket"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
+	"github.com/gorilla/websocket"
 )
 
 const (
@@ -23,7 +23,7 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	maxMessageSize = 2048
 )
 
 var (

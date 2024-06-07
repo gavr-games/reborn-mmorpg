@@ -8,9 +8,14 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
   - breeding cave
   - teleport dragons for breeding to cave
   - DNA mutation system based on vitamins and food
-- Game Master
-  - add building
-  - modify object JSON
+    - each type of dragons requires BASIC set of vitamins just to make breeding possible
+    - each pair of dragons can produce set of dragon eggs with probability once in a period of time
+    - you can increase probability by feeding dragons the right way
+    - you need a set of vitamins to increase probability breeding certain egg
+    - you can feed dragons more, so they get more vitamins and increase probability X times per set
+    - all probabilities are combined and you get weights
+    - deduct vitamins for breeding.
+- Dragon special abilities
 - improve ALL visuals (https://store.steampowered.com/app/1726130/Pathless_Woods/)
   - refactor UI
   - add animations and effects

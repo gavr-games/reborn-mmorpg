@@ -319,6 +319,8 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "gm_create_object":
 			gm.CreateObject(e, charGameObj, params.(map[string]interface{}))
+		case "gm_update_properties":
+			gm.UpdateProperties(e, charGameObj, params.(map[string]interface{}))
 		case "go_to_dungeon":
 			level := params.(map[string]interface{})["level"].(float64)
 			dragonIds := params.(map[string]interface{})["dragonIds"].([]interface{})
