@@ -254,6 +254,10 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			delayed_actions.Start(e, charGameObj, "ClaimTeleport", map[string]interface{}{
 				"playerId": float64(player.Id),
 			}, -1.0)
+		case "teleport_to":
+			if teleport, teleportOk := e.GameObjects().Load(params.(string)); teleportOk {
+				teleport.(entity.ITeleportObject).TeleportTo(e, charGameObj)
+			}
 		case "follow":
 			mobId := params.(string)
 			mob, ok := e.Mobs().Load(mobId)

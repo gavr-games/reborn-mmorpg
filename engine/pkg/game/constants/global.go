@@ -2,10 +2,10 @@ package constants
 
 const (
 	SurfaceSize = 200.0 // size of initial GameArea
-	TownSize = 9.0
 	TickSize = 10 // Game tick size in ms
-	InitialPlayerX = 100.0
-	InitialPlayerY = 100.0
+	InitialPlayerArea = "town"
+	InitialPlayerX = 25.0
+	InitialPlayerY = 25.0
 	PlayerVisionArea = 60.0
 	PlayerSpeed = 3.0
 	ClaimArea = 20.0

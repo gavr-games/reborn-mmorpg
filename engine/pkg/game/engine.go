@@ -33,6 +33,7 @@ import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/resources/resource_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/rocks/rock_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/shovels/shovel_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/teleports/teleport_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/tools/tool_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/trees/tree_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/walls/wall_object"
@@ -177,7 +178,7 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 		return bonfire_object.NewBonfireObject(gameObj)
 	case "claim":
 		if gameObj.Kind() == "claim_obelisk" {
-			return &claim_obelisk_object.ClaimObeliskObject{*gameObj.(*entity.GameObject)}
+			return &claim_obelisk_object.ClaimObeliskObject{GameObject: *gameObj.(*entity.GameObject)}
 		}
 	case "container":
 		if strings.Contains(gameObj.Kind(), "bag") {
@@ -194,7 +195,7 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 	case "hatchery":
 		return hatchery_object.NewHatcheryObject(gameObj)
 	case "npc":
-		return &npc_object.NpcObject{*gameObj.(*entity.GameObject)}
+		return &npc_object.NpcObject{GameObject: *gameObj.(*entity.GameObject)}
 	case "melee_weapon":
 		return weapon_object.NewWeaponObject(gameObj)
 	case "mob":
@@ -206,7 +207,7 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 	case "potion":
 		return potion_object.NewPotionObject(gameObj)
 	case "plant":
-		return &plant_object.PlantObject{*gameObj.(*entity.GameObject)}
+		return &plant_object.PlantObject{GameObject: *gameObj.(*entity.GameObject)}
 	case "player":
 		if gameObj.Kind() == "player" {
 			return character_object.NewCharacterObject(gameObj)
@@ -214,11 +215,13 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 	case "resource":
 		return resource_object.NewResourceObject(gameObj)
 	case "rock":
-		return &rock_object.RockObject{*gameObj.(*entity.GameObject)}
+		return &rock_object.RockObject{GameObject: *gameObj.(*entity.GameObject)}
 	case "shovel":
 		return shovel_object.NewShovelObject(gameObj)
+	case "teleport":
+		return teleport_object.NewTeleportObject(gameObj)
 	case "tree":
-		return &tree_object.TreeObject{*gameObj.(*entity.GameObject)}
+		return &tree_object.TreeObject{GameObject: *gameObj.(*entity.GameObject)}
 	case "wall":
 		return wall_object.NewWallObject(gameObj)
 	default:

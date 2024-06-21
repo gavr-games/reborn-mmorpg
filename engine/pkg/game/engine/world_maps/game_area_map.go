@@ -1,12 +1,12 @@
 package world_maps
 
 import (
-	"os"
 	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
 	"image/jpeg"
+	"os"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 )
@@ -16,10 +16,13 @@ const (
 )
 
 var surfaceColors = map[string]color.RGBA{
+	"surface/dirt": color.RGBA{165, 42, 42, 255},
 	"surface/grass": color.RGBA{0, 255, 0, 255},
 	"surface/sand": color.RGBA{255, 255, 0, 255},
-	"surface/water": color.RGBA{0, 0, 255, 255},
 	"surface/stone": color.RGBA{128, 128, 128, 255},
+	"surface/stone_road": color.RGBA{100, 100, 100, 255},
+	"surface/town_floor": color.RGBA{128, 128, 128, 255},
+	"surface/water": color.RGBA{0, 0, 255, 255},
 }
 
 type WorldCell struct {

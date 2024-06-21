@@ -2,9 +2,9 @@ package engine
 
 import (
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/game_objects/serializers"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
 )
 
@@ -20,8 +20,8 @@ func CreatePlayer(e entity.IEngine, client entity.IClient) *entity.Player {
 	additionalProps := make(map[string]interface{})
 	additionalProps["player_id"] = player.Id
 	additionalProps["name"] = character.Name
-	surfaceArea := e.GetGameAreaByKey("surface")
-	gameObj := e.CreateGameObject("player/player", constants.InitialPlayerX, constants.InitialPlayerY, 0.0, surfaceArea.Id(), additionalProps)
+	initialArea := e.GetGameAreaByKey(constants.InitialPlayerArea)
+	gameObj := e.CreateGameObject("player/player", constants.InitialPlayerX, constants.InitialPlayerY, 0.0, initialArea.Id(), additionalProps)
 	player.CharacterGameObjectId = gameObj.Id()
 	CreatePlayerItems(e, player)
 	return player

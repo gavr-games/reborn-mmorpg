@@ -16,6 +16,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
     - all probabilities are combined and you get weights
     - deduct vitamins for breeding.
 - Dragon special abilities
+- add healer NPC
 - improve ALL visuals (https://store.steampowered.com/app/1726130/Pathless_Woods/)
   - refactor UI
   - add animations and effects
@@ -30,6 +31,8 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - BUG: deselect target, when killed by dragons
 - BUG: monster ghosts stay after death
 - BUG: don't remvoe dirt if it has plant on it
+- BUG: chest in dungeon can block corridor in certain situations
+- BUG: zombie in dungeon stopped attacking
 - add Transactions (Mutexes) when objects cnahge
 - change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft

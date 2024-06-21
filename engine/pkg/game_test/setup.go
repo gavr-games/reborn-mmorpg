@@ -27,6 +27,8 @@ func Setup() {
 		e.EnableTestingMode()
 		surfaceArea = entity.NewGameArea("surface", 0, 0, constants.SurfaceSize, constants.SurfaceSize)
 		e.GameAreas().Store(surfaceArea.Id(), surfaceArea)
+		townArea := entity.NewGameArea("town", 0, 0, 50.0, 50.0)
+		e.GameAreas().Store(townArea.Id(), townArea)
 	})
 }
 

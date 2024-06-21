@@ -3,9 +3,10 @@ package engine
 import (
 	"sync"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/generate_world"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/storage"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func LoadGameObjects(e entity.IEngine) {
@@ -61,6 +62,6 @@ func LoadGameObjects(e entity.IEngine) {
 
 	// init dump world if no game objects in storage
 	if (loadedObjectsCount == 0) {
-		GenerateWorld(e)
+		generate_world.GenerateWorld(e)
 	}
 }

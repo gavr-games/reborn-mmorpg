@@ -8,14 +8,6 @@ import (
 func GetObjectsAtlas() map[string]map[string]interface{} {
 	gameObjectsAtlas := map[string]map[string]interface{}{
 		"surface": {
-			"grass": map[string]interface{}{
-				"type":    "surface",
-				"kind":    "grass",
-				"width":   1.0,
-				"height":  1.0,
-				"shape":   "rectangle",
-				"visible": true,
-			},
 			"dirt": map[string]interface{}{
 				"type":    "surface",
 				"kind":    "dirt",
@@ -31,6 +23,22 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"time_left": 60000.0,
 				},
 			},
+			"dungeon_floor": map[string]interface{}{
+				"type":    "surface",
+				"kind":    "dungeon_floor",
+				"width":   1.0,
+				"height":  1.0,
+				"shape":   "rectangle",
+				"visible": true,
+			},
+			"grass": map[string]interface{}{
+				"type":    "surface",
+				"kind":    "grass",
+				"width":   1.0,
+				"height":  1.0,
+				"shape":   "rectangle",
+				"visible": true,
+			},
 			"sand": map[string]interface{}{
 				"type":    "surface",
 				"kind":    "sand",
@@ -39,14 +47,13 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape":   "rectangle",
 				"visible": true,
 			},
-			"water": map[string]interface{}{
-				"type":       "surface",
-				"kind":       "water",
-				"width":      1.0,
-				"height":     1.0,
-				"collidable": true,
-				"shape":      "rectangle",
-				"visible":    true,
+			"town_floor": map[string]interface{}{
+				"type":    "surface",
+				"kind":    "town_floor",
+				"width":   1.0,
+				"height":  1.0,
+				"shape":   "rectangle",
+				"visible": true,
 			},
 			"stone": map[string]interface{}{
 				"type":       "surface",
@@ -57,13 +64,23 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape":      "rectangle",
 				"visible":    true,
 			},
-			"dungeon_floor": map[string]interface{}{
-				"type":    "surface",
-				"kind":    "dungeon_floor",
-				"width":   1.0,
-				"height":  1.0,
-				"shape":   "rectangle",
-				"visible": true,
+			"stone_road": map[string]interface{}{
+				"type":       "surface",
+				"kind":       "stone_road",
+				"width":      1.0,
+				"height":     1.0,
+				"collidable": false,
+				"shape":      "rectangle",
+				"visible":    true,
+			},
+			"water": map[string]interface{}{
+				"type":       "surface",
+				"kind":       "water",
+				"width":      1.0,
+				"height":     1.0,
+				"collidable": true,
+				"shape":      "rectangle",
+				"visible":    true,
 			},
 		},
 		"tree": {
@@ -77,6 +94,24 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"visible":    true,
 				"resources": map[string]interface{}{
 					"log": 3.0,
+				},
+				"actions": map[string]interface{}{
+					"chop": map[string]interface{}{
+						"cmd":    "chop_tree",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"palm_3": map[string]interface{}{
+				"type":       "tree",
+				"kind":       "palm_3",
+				"width":      1.0,
+				"height":     1.0,
+				"shape":      "circle",
+				"collidable": true,
+				"visible":    true,
+				"resources": map[string]interface{}{
+					"log": 2.0,
 				},
 				"actions": map[string]interface{}{
 					"chop": map[string]interface{}{
@@ -687,6 +722,31 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					},
 				},
 			},
+			"market_stand": map[string]interface{}{
+				"type":                "container",
+				"kind":                "market_stand",
+				"width":               3.0,
+				"height":              3.0,
+				"shape":               "rectangle",
+				"max_capacity":        32.0,
+				"free_capacity":       32.0,
+				"size":                8.0,
+				"parent_container_id": nil,
+				"owner_id":            nil,
+				"visible":             true,
+				"collidable":          true,
+				"liftable":            false,
+				"actions": map[string]interface{}{
+					"open": map[string]interface{}{
+						"cmd":    "open_container",
+						"params": "self", // self - id of current object
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
 			"small_bag": map[string]interface{}{
 				"type":                "container",
 				"kind":                "small_bag",
@@ -728,6 +788,39 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"max_capacity":        32.0,
 				"free_capacity":       32.0,
 				"size":                8.0,
+				"parent_container_id": nil,
+				"owner_id":            nil,
+				"visible":             true,
+				"collidable":          true,
+				"liftable":            true,
+				"actions": map[string]interface{}{
+					"open": map[string]interface{}{
+						"cmd":    "open_container",
+						"params": "self", // self - id of current object
+					},
+					"lift": map[string]interface{}{
+						"cmd":    "lift",
+						"params": "self",
+					},
+					"put": map[string]interface{}{
+						"cmd":    "put_lifted",
+						"params": "self,coordinates,rotation",
+					},
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_item",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"wooden_table": map[string]interface{}{
+				"type":                "container",
+				"kind":                "wooden_table",
+				"width":               1.5,
+				"height":              3.0,
+				"shape":               "rectangle",
+				"max_capacity":        16.0,
+				"free_capacity":       16.0,
+				"size":                4.0,
 				"parent_container_id": nil,
 				"owner_id":            nil,
 				"visible":             true,
@@ -1525,6 +1618,23 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				},
 			},
 		},
+		"sit": {
+			"wooden_bench": map[string]interface{}{
+				"type":       "sit",
+				"kind":       "wooden_bench",
+				"width":      3.0,
+				"height":     1.0,
+				"shape":      "rectangle",
+				"collidable": true,
+				"visible":    true,
+				"actions": map[string]interface{}{
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_building",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+		},
 		"wall": {
 			"stone_wall": map[string]interface{}{
 				"type":       "wall",
@@ -1555,6 +1665,39 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"params": "self", // self - id of current object
 					},
 				},
+			},
+			"wooden_fence": map[string]interface{}{
+				"type":       "wall",
+				"kind":       "wooden_fence",
+				"width":      2.0,
+				"height":     0.06,
+				"shape":      "rectangle",
+				"collidable": true,
+				"visible":    true,
+				"actions": map[string]interface{}{
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_building",
+						"params": "self", // self - id of current object
+					},
+				},
+			},
+			"brick_column": map[string]interface{}{
+				"type":         "wall",
+				"kind":         "brick_column",
+				"width":        0.5,
+				"height":       0.5,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+			},
+			"brick_wall": map[string]interface{}{
+				"type":         "wall",
+				"kind":         "brick_wall",
+				"width":        2.0,
+				"height":       0.4,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
 			},
 			"dungeon_exit": map[string]interface{}{
 				"type":         "wall",
@@ -1590,6 +1733,23 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 				"shape":        "rectangle",
 				"collidable":   true,
 				"visible":      true,
+			},
+		},
+		"well": {
+			"well": map[string]interface{}{
+				"type":       "well",
+				"kind":       "well",
+				"width":      1.3,
+				"height":     2.0,
+				"shape":      "rectangle",
+				"collidable": true,
+				"visible":    true,
+				"actions": map[string]interface{}{
+					"destroy": map[string]interface{}{
+						"cmd":    "destroy_building",
+						"params": "self", // self - id of current object
+					},
+				},
 			},
 		},
 		"door": {
@@ -2001,6 +2161,94 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 						"params": "self",
 					},
 				},
+			},
+		},
+		"teleport": {
+			"town_gate": map[string]interface{}{
+				"type":         "teleport",
+				"kind":         "town_gate",
+				"width":        2.0,
+				"height":       0.27,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+				"teleport_to":  map[string]interface{}{
+					"area": "surface",
+					//"x": 1.0,
+					//"y": 1.0,
+					"random_coords": true,
+				},
+				"actions": map[string]interface{}{
+					"exit": map[string]interface{}{
+						"cmd":    "teleport_to",
+						"params": "self",
+					},
+				},
+			},
+		},
+		"town": {
+			"bell_tower": map[string]interface{}{
+				"type":         "town",
+				"kind":         "bell_tower",
+				"width":        6.0,
+				"height":       7.0,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+			},
+			"blacksmith": map[string]interface{}{
+				"type":         "town",
+				"kind":         "blacksmith",
+				"width":        10.0,
+				"height":       8.0,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+			},
+			"inn": map[string]interface{}{
+				"type":         "town",
+				"kind":         "inn",
+				"width":        12.0,
+				"height":       12.0,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+			},
+			"house": map[string]interface{}{
+				"type":         "town",
+				"kind":         "house",
+				"width":        6.0,
+				"height":       7.0,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+			},
+			"sawmill": map[string]interface{}{
+				"type":         "town",
+				"kind":         "sawmill",
+				"width":        12.0,
+				"height":       8.0,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
+			},
+			"trapdoor": map[string]interface{}{
+				"type":         "town",
+				"kind":         "trapdoor",
+				"width":        1.7,
+				"height":       1.5,
+				"shape":        "rectangle",
+				"collidable":   false,
+				"visible":      true,
+			},
+			"windmill": map[string]interface{}{
+				"type":         "town",
+				"kind":         "windmill",
+				"width":        9.0,
+				"height":       7.0,
+				"shape":        "rectangle",
+				"collidable":   true,
+				"visible":      true,
 			},
 		},
 	}

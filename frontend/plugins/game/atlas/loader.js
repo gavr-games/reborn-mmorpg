@@ -146,7 +146,9 @@ class Loader {
       'dungeon_floor',
       'water',
       'sand',
-      'stone'
+      'stone',
+      'stone_road',
+      'town_floor'
     ]
     surfaces.forEach((surface) => {
       const task = this.assetsManager.addContainerTask(
@@ -181,8 +183,9 @@ class Loader {
 
   loadTrees () {
     const trees = [
-      'tree_5',
-      'pine_5'
+      'palm_3',
+      'pine_5',
+      'tree_5'
     ]
     trees.forEach((tree) => {
       const task = this.assetsManager.addContainerTask(
@@ -224,12 +227,16 @@ class Loader {
       'anvil',
       'axe',
       'animal_skin',
+      'bell_tower',
+      'blacksmith',
       'bone',
       'bone_needle',
       'bone_saw',
       'bonfire',
       'bonfire_burning',
       'bonfire_extinguished',
+      'brick_column',
+      'brick_wall',
       'carrot',
       'carrot_seed',
       'claim_stone',
@@ -251,12 +258,16 @@ class Loader {
       'golden_armor',
       'grass',
       'healing_balm',
+      'house',
+      'inn',
       'iron_ingot',
       'iron_nails',
       'leather_robe',
       'log',
+      'market_stand',
       'pickaxe',
       'rope',
+      'sawmill',
       'small_bag',
       'stone',
       'stone_hammer',
@@ -265,12 +276,19 @@ class Loader {
       'stone_wall',
       'tomato',
       'tomato_seed',
+      'town_gate',
+      'trapdoor',
+      'well',
+      'windmill',
+      'wooden_bench',
       'wooden_chest',
       'wooden_door',
       'wooden_door_closed',
       'wooden_door_opened',
+      'wooden_fence',
       'wooden_fishing_rod',
       'wooden_shovel',
+      'wooden_table',
       'wooden_wall'
     ]
     items.forEach((item) => {

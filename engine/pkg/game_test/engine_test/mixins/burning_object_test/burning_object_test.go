@@ -14,7 +14,7 @@ const (
 	BurningObjectKey = "bonfire/bonfire"
 	FuelObjectKey = "resource/log"
 	NotFuelObjectKey = "resource/carrot"
-	FuelValue = 10000.0
+	FuelValue = 20000.0
 )
 
 var player *entity.Player
