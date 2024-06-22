@@ -3,6 +3,7 @@ package dungeons
 import (
 	"fmt"
 	"math"
+
 	"pgregory.net/rand"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
@@ -25,7 +26,7 @@ const (
 	ExitMargin = 2.0
 	WallMargin = 0.2
 	DoorMargin = 0.6
-	ChestMargin = 2.0
+	ChestMargin = 2.5
 	ColumnMargin = 0.2
 )
 
@@ -234,7 +235,7 @@ func generateFloorAndWalls(e entity.IEngine, cont *Container, dungeonId string, 
 
 func generateChest(e entity.IEngine, room *Container, dungeonId string) {
 	x := room.X + ChestMargin
-	y := room.Y + room.Height - ChestMargin
+	y := room.Y + room.Height - ChestMargin - 2.0
 	chest := e.CreateGameObject("container/dungeon_chest", x, y, 0.0, dungeonId, nil)
 	key := e.CreateGameObject("resource/dungeon_key", x, y, 0.0, dungeonId, nil)
 

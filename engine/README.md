@@ -30,8 +30,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - BUG: dungeon keeper not available after coming back from dungeon
 - BUG: deselect target, when killed by dragons
 - BUG: monster ghosts stay after death
-- BUG: don't remvoe dirt if it has plant on it
-- BUG: chest in dungeon can block corridor in certain situations
 - add Transactions (Mutexes) when objects cnahge
 - change game atlas from type/kind to tags
 - add leveling skills fot character and skills requirements for craft

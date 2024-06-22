@@ -207,7 +207,7 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 	case "potion":
 		return potion_object.NewPotionObject(gameObj)
 	case "plant":
-		return &plant_object.PlantObject{GameObject: *gameObj.(*entity.GameObject)}
+		return plant_object.NewPlantObject(gameObj)
 	case "player":
 		if gameObj.Kind() == "player" {
 			return character_object.NewCharacterObject(gameObj)
@@ -222,7 +222,7 @@ func (e *Engine) CreateGameObjectStruct(gameObj entity.IGameObject) entity.IGame
 		return teleport_object.NewTeleportObject(gameObj)
 	case "tree":
 		return &tree_object.TreeObject{GameObject: *gameObj.(*entity.GameObject)}
-	case "wall":
+	case "wall", "well", "equipment", "sit":
 		return wall_object.NewWallObject(gameObj)
 	default:
 		return gameObj
