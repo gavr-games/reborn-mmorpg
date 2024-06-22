@@ -2,13 +2,14 @@ package mob_object
 
 import (
 	"context"
+
 	"pgregory.net/rand"
 )
 
 // Mob logic processing goes here
 func (mob *MobObject) Run(newTickTime int64) {
 	// Check agressive
-	if agressive := mob.GetProperty("agressive"); agressive != nil && agressive.(bool) && mob.FSM.Current() == "idle" {
+	if agressive := mob.GetProperty("agressive"); agressive != nil && agressive.(bool) && mob.FSM.Current() == "idle" && (newTickTime - mob.GetLastAgroTime()) >= NextAgroDelay {
 		probability := rand.Float64()
 		if probability <= AgressiveCheckProbability { // this is needed not to calculate agro on each game tick and improve performance
 			go mob.CheckAgro()

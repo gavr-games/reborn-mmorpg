@@ -21,7 +21,7 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 			charGameArea, gaOk := e.GameAreas().Load(charGameObj.GameAreaId())
 			if gaOk {
 				charGameObjId := charGameObj.Id()
-				if charGameArea.Id() != gameArea.Id() {
+				if charGameArea.Id() != gameAreaId {
 					charGameArea.FilteredRemove(charGameObj, func(b utils.IBounds) bool {
 						return charGameObjId == b.(entity.IGameObject).Id()
 					})
@@ -33,7 +33,7 @@ func (charGameObj *CharacterObject) Move(e entity.IEngine, newX float64, newY fl
 			}
 			charGameObj.SetX(newX)
 			charGameObj.SetY(newY)
-			if reInsert || charGameArea.Id() != gameArea.Id() {
+			if reInsert || charGameArea.Id() != gameAreaId {
 				charGameObj.SetGameAreaId(gameAreaId)
 				gameArea.Insert(charGameObj)
 			}

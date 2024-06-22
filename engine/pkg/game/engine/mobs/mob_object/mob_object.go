@@ -2,13 +2,14 @@ package mob_object
 
 import (
 	"context"
-	"pgregory.net/rand"
 	"sync"
 
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"pgregory.net/rand"
+
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/leveling_object"
-	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/moving_object"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/melee_weapon_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/engine/mixins/moving_object"
+	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
 
 	"github.com/looplab/fsm"
 )
@@ -25,12 +26,14 @@ const (
 	RecentlyKilledTime = 2000.0 // stop attacking if target was recently killed
 	AgressiveCheckProbability = 0.05 // allows not to check agressive every game cycle
 	ControlRange = 20.0 // the distance to control your mob
+	NextAgroDelay = 5000
 )
 
 // TODO: refactor to thread safe
 type MobObject struct {
 	Engine         entity.IEngine
 	TickTime       int64
+	LastAgroTime   int64 // Last time mob was agro. To prevent instant reagro
 	TargetObjectId string
 	FSM            *fsm.FSM
 	moving_object.MovingObject
@@ -64,10 +67,23 @@ func (mob *MobObject) SetTargetObjectId(targetObjectId string) {
 	mob.TargetObjectId = targetObjectId
 }
 
+func (mob *MobObject) GetLastAgroTime() int64 {
+	mob.propsMutex.RLock()
+	defer mob.propsMutex.RUnlock()
+	return mob.LastAgroTime
+}
+
+func (mob *MobObject) SetLastAgroTime(lastAgroTime int64) {
+	mob.propsMutex.Lock()
+	defer mob.propsMutex.Unlock()
+	mob.LastAgroTime = lastAgroTime
+}
+
 func NewMobObject(e entity.IEngine, gameObj entity.IGameObject) *MobObject {
 	mob := &MobObject{
 		e,
 		e.CurrentTickTime() + rand.Int63n(IdleTime),
+		e.CurrentTickTime(),
 		"", // for following and attack
 		nil,
 		moving_object.MovingObject{},
@@ -124,6 +140,7 @@ func (mob *MobObject) SetupFSM() {
 			"leave_attacking": func(ctx context.Context, e *fsm.Event) {
 				mob.SetTargetObjectId("")
 				mob.SetProperty("speed", mob.GetProperty("speed").(float64) / AttackSpeedUp)
+				mob.SetLastAgroTime(mob.Engine.CurrentTickTime())
 			},
 		},
 	)

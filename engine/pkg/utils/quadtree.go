@@ -249,8 +249,14 @@ func (qt *Quadtree) FilteredMove(pRect IBounds, newX, newY float64, filter func(
 					maxX := qt.Bounds.X + qt.Bounds.Width
 					maxY := qt.Bounds.Y + qt.Bounds.Height
 					rect := pRect.HitBox()
+					nexIndex := qt.getIndex(Bounds{ // Maybe moved to another subnode inside this node
+						X:      newX,
+						Y:      newY,
+						Width:  rect.Width,
+						Height: rect.Height,
+					})
 					// pRect is out of this quad tree node
-					if newX + rect.Width > maxX || newX < qt.Bounds.X || newY + rect.Height > maxY || newY < qt.Bounds.Y {
+					if index != nexIndex || newX + rect.Width > maxX || newX < qt.Bounds.X || newY + rect.Height > maxY || newY < qt.Bounds.Y {
 						qt.Objects[i] = qt.Objects[len(qt.Objects) - 1] // Copy last element to index i.
 						qt.Objects[len(qt.Objects) - 1] = nil // Erase last element (write zero value).
 						qt.Objects = qt.Objects[:len(qt.Objects) - 1] // Truncate slice.
