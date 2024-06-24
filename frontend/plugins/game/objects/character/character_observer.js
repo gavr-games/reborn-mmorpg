@@ -9,6 +9,9 @@ import HighlightShape from '~/plugins/game/components/highlight_shape'
 import freezeMaterials from '~/plugins/game/utils/freeze_materials'
 import { EventBus } from '~/plugins/game/event_bus'
 
+const POSITION_FIX_TRESHOLD = 1.0 // if we have difference like this between engine and client we need to urgently fix it
+const ALLOWED_POSITION_DELTA = 0.1 // sync stoped object position between engine and client with this accuracy
+
 class Character {
   constructor (state, myCharacterId) {
     this.myCharacterId = myCharacterId
@@ -23,6 +26,7 @@ class Character {
     this.currentAnimation = null
     this.healthbar = null
     this.targetHighlight = null
+    this.dst = null
     if (state.payload.Properties.slots.body !== null) { // check if some kind of armor equipped, which changes char's look
       this.modelName = state.payload.Properties.slots.body.kind
     }
@@ -80,7 +84,7 @@ class Character {
     }
     this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
     this.nickname = new Nickname(this.state.name, this.scene)
-    this.updatePosition()
+    this.updateAdditionalObjects()
     if (addRenderObserver) {
       GameObserver.addRenderObserver(`character-${this.state.id}`, this)
     }
@@ -92,8 +96,8 @@ class Character {
     }
     if (this.state.speed_x !== 0 || this.state.speed_y !== 0) {
       this.playAnimation('Walk')
-      this.state.x = this.state.x + this.state.speed_x / 1000 * renderInterval
-      this.state.y = this.state.y + this.state.speed_y / 1000 * renderInterval
+      this.mesh.position.x = this.mesh.position.x + this.state.speed_x / 1000 * renderInterval
+      this.mesh.position.z = this.mesh.position.z + this.state.speed_y / 1000 * renderInterval
       const rotationAngle = Math.atan2(
         this.state.speed_y,
         this.state.speed_x
@@ -103,23 +107,37 @@ class Character {
         this.meshRotation = rotationAngle
         this.mesh.rotate(BABYLON.Axis.Y, rotationDelta)
       }
-      this.updatePosition()
+      this.updateAdditionalObjects()
     } else if (this.currentAnimation !== 'PickUp' && this.currentAnimation !== 'Punch') {
-      this.playAnimation('Idle')
+      if (this.dst === null) {
+        this.playAnimation('Idle')
+      } else {
+        // we need to correct difference between client and engine after object stopped moving
+        // move object to the correct coord
+        if (Math.abs(this.mesh.position.x - this.state.x) < ALLOWED_POSITION_DELTA && Math.abs(this.mesh.position.z - this.state.y) < ALLOWED_POSITION_DELTA) {
+          this.dst = null
+        }
+        const dx = this.dst.x - this.mesh.position.x
+        const dy = this.dst.y - this.mesh.position.z
+        const angle = Math.atan2(dy, dx)
+        const speedX = this.state.speed * Math.cos(angle)
+        const speedY = this.state.speed * Math.sin(angle)
+        this.mesh.position.x = this.mesh.position.x + speedX / 1000 * renderInterval
+        this.mesh.position.z = this.mesh.position.z + speedY / 1000 * renderInterval
+        this.updateAdditionalObjects()
+      }
     }
   }
 
-  updatePosition () {
+  updateAdditionalObjects () {
     if (this.mesh === null) {
       return
     }
-    this.mesh.position.x = this.state.x
-    this.mesh.position.z = this.state.y
     if (this.state.liftedObjectId !== undefined && this.state.liftedObjectId !== null) {
       const liftedMesh = this.scene.getNodeByName(`item-${this.state.liftedObjectId}`)
       if (liftedMesh !== null) {
-        liftedMesh.position.x = this.state.x
-        liftedMesh.position.z = this.state.y
+        liftedMesh.position.x = this.mesh.position.x
+        liftedMesh.position.z = this.mesh.position.y
       }
     }
     this.healthbar.update(this.state.health, this.state.max_health, this.mesh.position)
@@ -130,6 +148,18 @@ class Character {
     // character of the logged in player
     if (this.state.player_id === this.myCharacterId) {
       this.camera.update(this.mesh.position)
+    }
+  }
+
+  updateFromEngine () {
+    this.dst = null
+    // Character stopped, but we have difference in positions between engine and client
+    if (this.state.speed_x === 0 && this.state.speed_y === 0 && (this.mesh.position.x !== this.state.x || this.mesh.position.y !== this.state.y)) {
+      this.dst = { x: this.state.x, y: this.state.y }
+    } else if (Math.abs(this.mesh.position.x - this.state.x) > POSITION_FIX_TRESHOLD || Math.abs(this.mesh.position.z - this.state.y) > POSITION_FIX_TRESHOLD) {
+      // the difference between client and engine positions for moving object is too big, teleport object
+      this.mesh.position.x = this.state.x
+      this.mesh.position.z = this.state.y
     }
   }
 

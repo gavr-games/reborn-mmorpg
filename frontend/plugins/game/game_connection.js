@@ -14,11 +14,11 @@ class GameConnnection {
       }
       this.conn.onmessage = function (evt) {
         const messages = evt.data.split('\n')
-        if (GameObserver.loaded) {
-          GameObserver.scene.blockfreeActiveMeshesAndRenderingGroups = true
-        }
         messages.forEach((message) => {
           const data = JSON.parse(message)
+          if (GameObserver.loaded && data.ResponseType === 'remove_objects') {
+            GameObserver.scene.blockfreeActiveMeshesAndRenderingGroups = true
+          }
           switch (data.ResponseType) {
             case 'update_object':
               EventBus.$emit(data.ResponseType, data.ResponseData.object)

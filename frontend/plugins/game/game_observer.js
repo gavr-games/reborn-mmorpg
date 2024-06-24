@@ -193,8 +193,9 @@ class GameObserver {
         this.scene.render()
       }
       const ms = Date.now()
+      const tickDelta = ms - this.lastTick
       this.renderObservers.forEach((observer) => {
-        observer.obj.update(ms - this.lastTick)
+        observer.obj.update(tickDelta)
       })
       this.lastTick = ms
       if (this.fpsEl) {

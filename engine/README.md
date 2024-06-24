@@ -21,6 +21,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
   - refactor UI
   - add animations and effects
   - replace ugly models
+  - effect of camera acceleration and braking
   - More buildings and furniture for houses
     - doors
     - table

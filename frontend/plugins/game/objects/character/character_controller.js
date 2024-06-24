@@ -50,7 +50,7 @@ class CharacterController {
 
   update (gameObject) {
     this.state.update(gameObject)
-    this.observer.updatePosition()
+    this.observer.updateFromEngine()
   }
 
   remove () {
