@@ -116,6 +116,7 @@ class Character {
         // move object to the correct coord
         if (Math.abs(this.mesh.position.x - this.state.x) < ALLOWED_POSITION_DELTA && Math.abs(this.mesh.position.z - this.state.y) < ALLOWED_POSITION_DELTA) {
           this.dst = null
+          return
         }
         const dx = this.dst.x - this.mesh.position.x
         const dy = this.dst.y - this.mesh.position.z
