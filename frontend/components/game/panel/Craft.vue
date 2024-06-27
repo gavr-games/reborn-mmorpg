@@ -1,6 +1,7 @@
 <template>
   <GameDraggablePanel :panel-id="'craft'">
     <div v-if="showCraftPanel" id="craft-panel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <h4 class="heading">
           Craft
@@ -48,9 +49,6 @@
             </div>
           </div>
         </div>
-        <button type="button" class="rpgui-button" @click="showCraftPanel = false">
-          <p>Close</p>
-        </button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -156,6 +154,9 @@ export default {
           }
         })
       }
+    },
+    close () {
+      this.showCraftPanel = false
     }
   }
 }

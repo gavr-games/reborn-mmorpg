@@ -1,42 +1,40 @@
 <template>
   <div id="effects-panel">
-    <div v-for="(effect, effectId) in effects" :key="effectId" :class="`effect ${effect['group']}`" :title="effect['group']">
-    </div>
+    <div v-for="(effect, effectId) in effects" :key="effectId" :class="`effect ${effect['group']}`" :title="effect['group']" />
   </div>
 </template>
 
 <script>
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 export default {
-  data() {
+  data () {
     return {
       effects: {},
-      currentPlayerId: 0,
+      currentPlayerId: 0
     }
   },
 
-  created() {
+  created () {
     this.currentPlayerId = this.$store.state.characters.selectedCharacterId
-    EventBus.$on("add_object", this.showEffects)
-    EventBus.$on("update_object", this.showEffects)
+    EventBus.$on('add_object', this.showEffects)
+    EventBus.$on('update_object', this.showEffects)
   },
 
-  beforeDestroy() {
-    EventBus.$off("add_object", this.showEffects)
-    EventBus.$off("update_object", this.showEffects)
+  beforeDestroy () {
+    EventBus.$off('add_object', this.showEffects)
+    EventBus.$off('update_object', this.showEffects)
   },
 
   methods: {
-    showEffects(data) {
+    showEffects (data) {
       if (data.Properties && data.Properties.player_id && data.Properties.player_id == this.currentPlayerId) {
         this.effects = data.Effects
       }
-    },
+    }
   }
 }
 </script>
-
 
 <style lang="scss">
 #effects-panel {

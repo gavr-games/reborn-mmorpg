@@ -1,6 +1,7 @@
 <template>
   <GameDraggablePanel :panelId="'item_info'">
     <div v-if="showItemInfoPanel" id="item_info-panel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <h4 class="heading">
           {{ itemInfo["kind"] }}
@@ -26,9 +27,6 @@
         <div v-if="itemInfo['health']">
           Health: {{ itemInfo["health"] }}/{{ itemInfo["max_health"] }}
         </div>
-        <button type="button" class="rpgui-button" @click="showItemInfoPanel = false">
-          <p>Close</p>
-        </button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -57,6 +55,9 @@ export default {
     showItemInfo (data) {
       this.showItemInfoPanel = true
       this.itemInfo = data
+    },
+    close () {
+      this.showItemInfoPanel = false
     }
   }
 }

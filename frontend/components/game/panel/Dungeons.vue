@@ -1,6 +1,7 @@
 <template>
   <GameDraggablePanel :panelId="'dungeons'">
     <div v-if="showDungeonsPanel" id="dungeons-panel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <h4 class="heading">
           Dungeons
@@ -42,9 +43,6 @@
         </div>
         <button type="button" class="rpgui-button" @click="goToDungeon()">
           <p>Go To Dungeon</p>
-        </button>
-        <button type="button" class="rpgui-button" @click="showDungeonsPanel = false">
-          <p>Close</p>
         </button>
       </div>
     </div>
@@ -122,6 +120,9 @@ export default {
           dragonIds: this.selectedDragons
         }
       })
+    },
+    close () {
+      this.showDungeonsPanel = false
     }
   }
 }

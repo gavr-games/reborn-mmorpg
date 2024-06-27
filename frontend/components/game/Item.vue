@@ -1,16 +1,16 @@
 <template>
   <div class="game-item">
     <div @contextmenu="showActions($event)">
-      <div class="item-amount" v-if="item['amount'] > 0">{{ item['amount'] }}</div>
-      <GameItemsIcon v-bind:item="item['kind']" />
+      <div v-if="item['amount'] > 0" class="item-amount">
+        {{ item['amount'] }}
+      </div>
+      <GameItemsIcon :item="item['kind']" />
     </div>
-    <div class="actions-menu game-panel" v-if="showActionsMenu">
+    <div v-if="showActionsMenu" class="actions-menu game-panel">
+      <GameCloseIcon :close-callback="close" :x="-32" :y="-32" />
       <div class="game-panel-content">
         <div v-for="(action, actionKey) in item.actions" :key="actionKey" class="action-item" @click="handleAction(actionKey)">
           {{ actionKey }}
-        </div>
-        <div class="action-item" @click="showActionsMenu = false">
-          close
         </div>
       </div>
     </div>
@@ -18,33 +18,35 @@
 </template>
 
 <script>
-import { EventBus } from "~/plugins/game/event_bus";
+import { EventBus } from '~/plugins/game/event_bus'
 
 export default {
-  props: ["item"],
+  props: ['item'],
 
-  data() {
+  data () {
     return {
-      showActionsMenu: false,
+      showActionsMenu: false
     }
   },
 
   methods: {
-    showActions(e) {
+    showActions (e) {
       e.preventDefault()
       this.showActionsMenu = true
     },
-    handleAction(actionKey) {
+    handleAction (actionKey) {
       this.showActionsMenu = false
-      EventBus.$emit("perform-game-action", {
+      EventBus.$emit('perform-game-action', {
         cmd: this.item.actions[actionKey].cmd,
-        params: this.item.actions[actionKey].params.replace("self", this.item.id)
-      });
+        params: this.item.actions[actionKey].params.replace('self', this.item.id)
+      })
     },
+    close () {
+      this.showActionsMenu = false
+    }
   }
 }
 </script>
-
 
 <style lang="scss">
 .game-item {

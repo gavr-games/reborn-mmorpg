@@ -1,6 +1,7 @@
 <template>
   <GameDraggablePanel :panelId="'feed'">
     <div v-if="showFeedPanel" id="feed-panel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <h4 class="heading">
           Feed
@@ -10,9 +11,6 @@
         </div>
         <div>Drop food here:</div>
         <div class="empty-slot" @dragover="allowDrag" @drop="onDrop($event)" />
-        <button type="button" class="rpgui-button" @click="showFeedPanel = false">
-          <p>Close</p>
-        </button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -51,6 +49,9 @@ export default {
     },
     allowDrag (evt) {
       evt.preventDefault()
+    },
+    close () {
+      this.showFeedPanel = false
     }
   }
 }

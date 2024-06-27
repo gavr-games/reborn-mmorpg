@@ -1,7 +1,7 @@
 <template>
   <GameDraggablePanel :panel-id="container.id">
     <div v-if="showContainerPanel" :class="`game-container size-${container.size}`">
-      <a href="#" class="close-btn" @click="close()" />
+      <GameCloseIcon :close-callback="close" />
       <div v-for="(item, key) in container.items" :key="key" class="slot">
         <div
           draggable
@@ -150,19 +150,6 @@ export default {
   .empty-slot {
     width: 32px;
     height: 32px;
-  }
-  .close-btn {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    transform: rotate(45deg);
-    width: 16px;
-    height: 16px;
-    background-image: url("~assets/img/close.png");
-    &:hover {
-      transform: rotate(0deg);
-      transition: rotate 1s;
-    }
   }
 }
 </style>

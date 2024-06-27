@@ -1,6 +1,7 @@
 <template>
   <GameDraggablePanel :panel-id="'dragons'">
     <div v-if="showDragonsPanel" id="dragons-panel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <h4 class="heading">
           Dragons (Max {{ maxDragons }})
@@ -29,9 +30,6 @@
             </div>
           </div>
         </div>
-        <button type="button" class="rpgui-button" @click="showDragonsPanel = false">
-          <p>Close</p>
-        </button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -95,6 +93,9 @@ export default {
     },
     expNextLevel (level) {
       return Math.pow((level + 1) / EXP_AMOUNT_DIVIDER, EXP_INCREASE_POWER) - Math.pow(level / EXP_AMOUNT_DIVIDER, EXP_INCREASE_POWER)
+    },
+    close () {
+      this.showDragonsPanel = false
     }
   }
 }
@@ -108,6 +109,7 @@ export default {
   }
   .hint {
     font-size: 8px;
+    margin: 0;
   }
   .dragon {
     .dragon-title {

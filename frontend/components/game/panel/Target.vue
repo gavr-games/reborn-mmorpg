@@ -1,8 +1,8 @@
 <template>
-  <div id="target-info-panel" class="rpgui-container framed-golden" v-if="showTargetInfoPanel">
+  <div v-if="showTargetInfoPanel" id="target-info-panel" class="rpgui-container framed-golden">
     <h4>Target</h4>
     <div v-if="targetInfo">
-      {{ targetInfo["kind"] }} <br />
+      {{ targetInfo["kind"] }} <br>
       <a href="#" @click="triggerDeselect">Deselect</a>
     </div>
     <div id="fighting-panel">

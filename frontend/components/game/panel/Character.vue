@@ -1,6 +1,7 @@
 <template>
   <GameDraggablePanel :panelId="'character'">
     <div v-if="showCharacterInfoPanel" id="character-info-panel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <h4>Character</h4>
         <div v-for="(slotItem, slotKey) in characterInfo.slots" :key="slotKey">
@@ -9,9 +10,6 @@
             <GameItem v-bind:item="slotItem" />
           </span>
         </div>
-        <button type="button" class="rpgui-button" @click="close()">
-          <p>Close</p>
-        </button>
       </div>
     </div>
   </GameDraggablePanel>

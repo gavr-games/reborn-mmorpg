@@ -1,6 +1,7 @@
 <template>
   <GameDraggablePanel :panelId="'fuel'">
     <div v-if="showFuelPanel" id="fuel-panel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <h4 class="heading">
           Add fuel
@@ -10,9 +11,6 @@
         </div>
         <div>Drop fuel here:</div>
         <div class="empty-slot" @dragover="allowDrag" @drop="onDrop($event)" />
-        <button type="button" class="rpgui-button" @click="showFuelPanel = false">
-          <p>Close</p>
-        </button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -51,6 +49,9 @@ export default {
     },
     allowDrag (evt) {
       evt.preventDefault()
+    },
+    close () {
+      this.showFuelPanel = false
     }
   }
 }

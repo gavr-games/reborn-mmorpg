@@ -1,12 +1,10 @@
 <template>
   <GameDraggablePanel :panelId="'map'">
     <div :class="`game-panel ${showMapPanel ? '' : 'hide-map'}`">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <div class="pin" :style="{ left: left + 'px', top: top + 'px' }" />
         <img v-if="areaId != ''" id="area-map" :src="`/engine_api/maps/area_${areaId}_map.jpg`" alt="Area map"> <br>
-        <button type="button" class="rpgui-button" @click="showMapPanel = false">
-          <p>Close</p>
-        </button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -49,6 +47,9 @@ export default {
           this.top = document.getElementById('area-map').height - obj.Y - 10
         }
       }
+    },
+    close () {
+      this.showMapPanel = false
     }
   }
 }

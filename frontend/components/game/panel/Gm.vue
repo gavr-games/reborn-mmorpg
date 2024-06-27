@@ -1,6 +1,7 @@
 <template>
   <GameDraggablePanel :panelId="'gm'">
     <div v-if="showPanel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
         <h4>Game Master</h4>
         <a @click="showCreateGameObjectForm">Create Game Object</a> <br>
@@ -29,9 +30,6 @@
             <p>Update</p>
           </button>
         </div>
-        <button type="button" class="rpgui-button" @click="showPanel = false">
-          <p>Close</p>
-        </button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -94,6 +92,9 @@ export default {
           update_props: this.updateProps
         }
       })
+    },
+    close () {
+      this.showPanel = false
     }
   }
 }

@@ -1,5 +1,6 @@
 <template>
   <div v-if="showActionsMenu" class="actions-menu game-panel" :style="`top: ${y}px; left: ${x}px;`">
+    <GameCloseIcon :close-callback="close" :x="-32" :y="-32" />
     <div class="game-panel-content">
       <div
         v-for="(action, actionKey) in item.Properties.actions"
@@ -11,9 +12,6 @@
       </div>
       <div class="action-item" @click="showProperties">
         show properties
-      </div>
-      <div class="action-item" @click="showActionsMenu = false">
-        close
       </div>
     </div>
   </div>
@@ -117,6 +115,9 @@ export default {
       if (characterData.Properties.game_master === true) {
         this.isGameMaster = true
       }
+    },
+    close () {
+      this.showActionsMenu = false
     }
   }
 }

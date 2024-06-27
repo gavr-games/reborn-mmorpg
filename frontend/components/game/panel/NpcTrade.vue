@@ -1,26 +1,34 @@
 <template>
-  <GameDraggablePanel :panelId="'npc_trade'">
-    <div id="npc_trade-panel" class="game-panel" v-if="showNpcTradePanel">
+  <GameDraggablePanel :panel-id="'npc_trade'">
+    <div v-if="showNpcTradePanel" id="npc_trade-panel" class="game-panel">
+      <GameCloseIcon :close-callback="close" />
       <div class="game-panel-content">
-        <h4 class="heading" @click="toggleExpandTab('sells')">Buy</h4>
-        <div class="items" v-if="expandTabs['sells']">
+        <h4 class="heading" @click="toggleExpandTab('sells')">
+          Buy
+        </h4>
+        <div v-if="expandTabs['sells']" class="items">
           <div v-for="(item, itemName) in sellItems" :key="itemName" class="item">
-            <GameItemsIcon v-bind:item="itemName.split('/')[1]" />:{{ item.amount }}
+            <GameItemsIcon :item="itemName.split('/')[1]" />:{{ item.amount }}
             for
-            <GameItemsIcon v-bind:item="item.resource" />: {{ item.price }}
-            <button type="button" class="rpgui-button" @click="buyItem(itemName)"><p>Buy</p></button>
+            <GameItemsIcon :item="item.resource" />: {{ item.price }}
+            <button type="button" class="rpgui-button" @click="buyItem(itemName)">
+              <p>Buy</p>
+            </button>
           </div>
         </div>
-        <h4 class="heading" @click="toggleExpandTab('buys')">Sell</h4>
-        <div class="items" v-if="expandTabs['buys']">
+        <h4 class="heading" @click="toggleExpandTab('buys')">
+          Sell
+        </h4>
+        <div v-if="expandTabs['buys']" class="items">
           <div v-for="(item, itemName) in buyItems" :key="itemName" class="item">
-            <GameItemsIcon v-bind:item="itemName.split('/')[1]" />:{{ item.amount }}
+            <GameItemsIcon :item="itemName.split('/')[1]" />:{{ item.amount }}
             for
-            <GameItemsIcon v-bind:item="item.resource" />: {{ item.price }}
-            <button type="button" class="rpgui-button" @click="sellItem(itemName)"><p>Sell</p></button>
+            <GameItemsIcon :item="item.resource" />: {{ item.price }}
+            <button type="button" class="rpgui-button" @click="sellItem(itemName)">
+              <p>Sell</p>
+            </button>
           </div>
         </div>
-        <button type="button" class="rpgui-button" @click="showNpcTradePanel = false"><p>Close</p></button>
       </div>
     </div>
   </GameDraggablePanel>
@@ -82,6 +90,9 @@ export default {
           amount: 1
         }
       })
+    },
+    close () {
+      this.showNpcTradePanel = false
     }
   }
 }
@@ -91,7 +102,8 @@ export default {
 #npc_trade-panel {
   color: white;
   .heading {
-    margin-top: 0px;
+    margin: 0px;
+    padding-bottom: 8px;
   }
   .item {
     color: white;
