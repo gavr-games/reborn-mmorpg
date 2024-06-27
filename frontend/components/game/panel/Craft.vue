@@ -5,26 +5,46 @@
         <h4 class="heading">
           Craft
         </h4>
-        <div v-for="(craftItems, skillName) in craftInfo" :key="skillName">
-          <div class="skill">
-            <div class="skill-title" @click="toggleExpandSkill(skillName)">
-              {{ skillName }}
-            </div>
-            <div v-if="expandSkills[skillName]" class="craft-items">
-              <div v-for="(item, itemKey) in craftItems" :key="itemKey" class="craft-item">
-                <span>{{ item["title"] }}</span>
-                <p class="item-description">
-                  {{ item["description"] }}
-                </p>
-                <div class="craft-resources">
-                  <p v-for="(resourceCount, resourceName) in item.resources" :key="resourceName">
-                    <GameItemsIcon :item="resourceName" />:{{ resourceCount }}
-                  </p>
-                  <button type="button" class="rpgui-button" @click="craftItem(itemKey, item)">
-                    <p>Craft</p>
-                  </button>
+        <div id="craft-items-cont">
+          <div id="searchable-list">
+            <input v-model="searchTerm" type="text" placeholder="Search" @keyup="search">
+            <div v-if="searchTerm === ''">
+              <div v-for="(craftItems, skillName) in craftInfo" :key="skillName">
+                <div class="skill">
+                  <div class="skill-title" @click="toggleExpandSkill(skillName)">
+                    {{ capitalizeFirstLetter(skillName) }}
+                  </div>
+                  <div v-if="expandSkills[skillName]" class="craft-items">
+                    <div v-for="(item, itemKey) in craftItems" :key="itemKey">
+                      <a href="#" class="craft-item-link" @click="selectItem(itemKey)">{{ item["title"] }}</a>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
+            <div v-if="searchResults">
+              <div v-for="(item, itemKey) in searchResults" :key="itemKey">
+                <a href="#" class="craft-item-link" @click="selectItem(itemKey)">{{ item["title"] }}</a>
+              </div>
+            </div>
+          </div>
+          <div v-if="selectedItem" id="selected-item">
+            <div class="craft-item">
+              <div class="item-title">
+                <GameItemsIcon :item="selectedItemKey" />
+                <p>{{ selectedItem["title"] }}</p>
+              </div>
+              <p class="item-description">
+                {{ selectedItem["description"] }}
+              </p>
+              <div class="craft-resources">
+                <div v-for="(resourceCount, resourceName) in selectedItem.resources" :key="resourceName" @click="selectItem(resourceName)">
+                  <GameItemsIcon :item="resourceName" />{{ resourceCount }}
+                </div>
+              </div>
+              <button type="button" class="rpgui-button" @click="craftItem(selectedItemKey, selectedItem)">
+                <p>Craft</p>
+              </button>
             </div>
           </div>
         </div>
@@ -43,8 +63,13 @@ export default {
   data () {
     return {
       showCraftPanel: false,
+      searchTerm: '',
+      searchResults: {},
       craftInfo: {},
-      expandSkills: {}
+      craftItemsInfo: {},
+      expandSkills: {},
+      selectedItem: null,
+      selectedItemKey: ''
     }
   },
 
@@ -57,8 +82,25 @@ export default {
   },
 
   methods: {
+    search () {
+      this.searchResults = null
+      if (this.searchTerm !== '') {
+        for (const key in this.craftItemsInfo) {
+          if (key.toLowerCase().includes(this.searchTerm.toLowerCase())) {
+            if (this.searchResults === null) {
+              this.searchResults = {}
+            }
+            this.searchResults[key] = this.craftItemsInfo[key]
+          }
+        }
+      }
+    },
+    capitalizeFirstLetter (string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    },
     showCraftInfo (data) {
       this.showCraftPanel = true
+      this.craftItemsInfo = data
       const skillBasedData = {}
       Object.entries(data).forEach((entry) => {
         const [itemName, item] = entry
@@ -76,6 +118,12 @@ export default {
         this.expandSkills[skillName] = true
       }
       this.$forceUpdate()
+    },
+    selectItem (itemKey) {
+      if (itemKey in this.craftItemsInfo) {
+        this.selectedItemKey = itemKey
+        this.selectedItem = this.craftItemsInfo[itemKey]
+      }
     },
     craftItem (itemKey, item) {
       if (item.place_in_real_world) {
@@ -119,6 +167,39 @@ export default {
   .heading {
     margin-top: 0px;
   }
+  #craft-items-cont {
+    display: flex;
+  }
+  #searchable-list {
+    border-right: 1px solid #ccc;
+    padding-right: 5px;
+    input {
+      line-height: 10px;
+      margin-bottom: 7px;
+    }
+  }
+  #selected-item {
+    margin-left: 20px;
+    .craft-item {
+      .item-title {
+        display: flex;
+        p {
+          margin-left: 10px;
+          line-height: 10px;
+        }
+      }
+      .item-description {
+        color: grey;
+        margin: 0px;
+        font-size: 10px;
+        margin-bottom: 10px;
+      }
+      .craft-resources {
+        display: flex;
+        margin-bottom: 10px;
+      }
+    }
+  }
   .skill {
     .skill-title {
       color: white;
@@ -126,18 +207,14 @@ export default {
         text-decoration: underline;
       }
     }
-    .craft-item {
-      border: 1px solid white;
-      padding: 5px;
-      .item-description {
-        color: grey;
-        margin: 0px;
-        font-size: 10px;
-      }
-      .craft-resources {
-        display: flex;
-      }
-    }
+  }
+  .craft-item-link {
+    display: block;
+    border: none;
+    color: #ccc;
+    font-size: 10px;
+    line-height: 15px;
+    padding-left: 10px;
   }
 }
 </style>
