@@ -19,7 +19,6 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - add healer NPC
 - improve ALL visuals (https://store.steampowered.com/app/1726130/Pathless_Woods/)
   - refactor UI
-    - refactor drag and drop
   - add animations and effects
   - replace ugly models
   - effect of camera acceleration and braking

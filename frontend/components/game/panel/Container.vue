@@ -1,16 +1,16 @@
 <template>
-  <GameDraggablePanel v-bind:panelId="container.id">
-    <div :class="`game-container size-${container.size}`" v-if="showContainerPanel">
-      <a href="#" class="close-btn" @click="close()"></a>
+  <GameDraggablePanel :panel-id="container.id">
+    <div v-if="showContainerPanel" :class="`game-container size-${container.size}`">
+      <a href="#" class="close-btn" @click="close()" />
       <div v-for="(item, key) in container.items" :key="key" class="slot">
         <div
           draggable
           @dragstart="startDrag($event, item)"
           @dragend="endDrag($event)"
         >
-          <GameItem v-if="item !== null" v-bind:item="item" />
+          <GameItem v-if="item !== null" :item="item" />
         </div>
-        <div class="empty-slot" @dragover="allowDrag" @drop="onDrop($event, key)" v-if="item === null" />
+        <div v-if="item === null" class="empty-slot" @dragover="allowDrag" @drop="onDrop($event, key)" />
       </div>
     </div>
   </GameDraggablePanel>
@@ -23,7 +23,7 @@ export default {
   props: ['container'],
   data () {
     return {
-      showContainerPanel: true,
+      showContainerPanel: true
     }
   },
 
@@ -71,7 +71,6 @@ export default {
           if (item && item.id === data.item.Id) {
             this.container.items[index] = data.item.Properties
             this.$forceUpdate()
-            return
           }
         })
       }

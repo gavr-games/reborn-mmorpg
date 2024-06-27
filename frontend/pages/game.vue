@@ -1,5 +1,5 @@
 <template>
-  <div class="rpgui-content" style="overflow-y:scroll;">
+  <div class="rpgui-content" style="overflow-y:scroll;" @dragover="allowDrag" @drop="onDrop($event, key)">
     <canvas id="game-canvas" />
     <div id="fps" class="game-panel">
       <div class="game-panel-content">
@@ -107,6 +107,12 @@ export default {
           params: {}
         })
       }
+    },
+    onDrop (evt, pos) {
+      evt.stopPropagation()
+    },
+    allowDrag (evt) {
+      evt.preventDefault()
     }
   }
 }
