@@ -5,6 +5,6 @@ export default function removeAlpha (mesh, scene, alpha = ALPHA) {
     mesh.material = mesh.metadata.oldMaterial
   }
   mesh.getChildren().forEach((child) => {
-    removeAlpha(child, scene)
+    removeAlpha(child, scene, alpha)
   })
 }

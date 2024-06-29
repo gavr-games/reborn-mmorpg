@@ -10,7 +10,7 @@
       >
         {{ actionKey }}
       </div>
-      <div class="action-item" @click="showProperties">
+      <div v-if="isGameMaster" class="action-item" @click="showProperties">
         show properties
       </div>
     </div>

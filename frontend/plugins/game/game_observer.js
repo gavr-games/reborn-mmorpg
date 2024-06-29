@@ -11,6 +11,7 @@ import addAlpha from '~/plugins/game/utils/add_alpha'
 import removeAlpha from '~/plugins/game/utils/remove_alpha'
 
 const NON_TRANSPARENT_OBJECT_TYPES = ['player', 'surface']
+const INTERRACTABLE_OBJECT_ALPHA = 0.8
 
 class GameObserver {
   constructor () {
@@ -26,6 +27,8 @@ class GameObserver {
     this.renderObservers = []
     this.previousAlphaMeshes = []
     this.previousAlphaMeshesIds = []
+    this.pointerOverMesh = null // highlight interractable objects
+    this.pointerOverMeshId = null
     this.pickCoordsPlane = null // this plane is used for picking coords on pointer moved
   }
 
@@ -73,6 +76,7 @@ class GameObserver {
   }
 
   registerActions (scene) {
+    const gameObserver = this
     scene.onPointerMove = function (evt, result) {
       const ray = scene.createPickingRay(scene.pointerX, scene.pointerY, BABYLON.Matrix.Identity(), null)
       const hit = scene.pickWithRay(ray)
@@ -82,6 +86,21 @@ class GameObserver {
           x: pickedPoint.x,
           y: pickedPoint.z
         })
+      }
+      if (hit.pickedMesh) {
+        const gameObject = getMeshRoot(hit.pickedMesh)
+        if (gameObject && gameObject.metadata && gameObject.metadata.state.payload.Properties.actions !== undefined) {
+          if (gameObserver.pointerOverMeshId !== gameObject.metadata.state.payload.Properties.id) {
+            gameObserver.removePointerOverMesh()
+            addAlpha(gameObject, gameObserver.scene, INTERRACTABLE_OBJECT_ALPHA)
+            gameObserver.pointerOverMesh = gameObject
+            gameObserver.pointerOverMeshId = gameObject.metadata.state.payload.Properties.id
+          }
+        } else {
+          gameObserver.removePointerOverMesh()
+        }
+      } else {
+        gameObserver.removePointerOverMesh()
       }
     }
 
@@ -120,6 +139,14 @@ class GameObserver {
       this.resizeCanvas()
     })
     this.resizeCanvas()
+  }
+
+  removePointerOverMesh () {
+    if (this.pointerOverMeshId !== null) {
+      removeAlpha(this.pointerOverMesh, this.scene, INTERRACTABLE_OBJECT_ALPHA)
+      this.pointerOverMeshId = null
+      this.pointerOverMesh = null
+    }
   }
 
   // Makes objects transparent if character is behind something

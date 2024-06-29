@@ -9,11 +9,13 @@ export default function addAlpha (mesh, scene, alpha = ALPHA) {
     alphaMaterial.specularColor = new BABYLON.Color3(0.5, 0.6, 0.87)
     alphaMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1)
     alphaMaterial.ambientColor = new BABYLON.Color3(0.23, 0.98, 0.53)
-    alphaMaterial.alpha = ALPHA
-    mesh.metadata.oldMaterial = mesh.material
+    alphaMaterial.alpha = alpha
+    if (!mesh.metadata.oldMaterial) {
+      mesh.metadata.oldMaterial = mesh.material
+    }
     mesh.material = alphaMaterial
   }
   mesh.getChildren().forEach((child) => {
-    addAlpha(child, scene)
+    addAlpha(child, scene, alpha)
   })
 }
