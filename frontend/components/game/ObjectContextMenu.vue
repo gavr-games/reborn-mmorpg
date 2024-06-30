@@ -34,12 +34,14 @@ export default {
   },
 
   created () {
-    EventBus.$on('game-object-clicked', this.showActions)
+    EventBus.$on('game-object-right-clicked', this.showActions)
+    EventBus.$on('game-object-clicked', this.executeDefaultAction)
     EventBus.$on('my-character-info', this.setGameMaster)
   },
 
   beforeDestroy () {
-    EventBus.$off('game-object-clicked', this.showActions)
+    EventBus.$off('game-object-right-clicked', this.showActions)
+    EventBus.$off('game-object-clicked', this.executeDefaultAction)
     EventBus.$off('my-character-info', this.setGameMaster)
   },
 
@@ -50,6 +52,19 @@ export default {
         this.item = data.game_object
         this.x = data.x
         this.y = data.y
+      }
+    },
+    executeDefaultAction (data) {
+      if (data.game_object.Properties.actions) {
+        this.item = data.game_object
+        this.x = data.x
+        this.y = data.y
+        for (const key in this.item.Properties.actions) {
+          if (this.item.Properties.actions[key].default) {
+            this.handleAction(key)
+            return
+          }
+        }
       }
     },
     showProperties () {

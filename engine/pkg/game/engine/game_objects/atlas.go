@@ -99,6 +99,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"chop": map[string]interface{}{
 						"cmd":    "chop_tree",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 				},
 			},
@@ -117,6 +118,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"chop": map[string]interface{}{
 						"cmd":    "chop_tree",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 				},
 			},
@@ -135,6 +137,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"chop": map[string]interface{}{
 						"cmd":    "chop_tree",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 				},
 			},
@@ -155,6 +158,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"chip": map[string]interface{}{
 						"cmd":    "chip_rock",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 				},
 			},
@@ -183,6 +187,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"harvest": map[string]interface{}{
 						"cmd":    "harvest_plant",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -206,6 +211,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"harvest": map[string]interface{}{
 						"cmd":    "harvest_plant",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -228,6 +234,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"cut": map[string]interface{}{
 						"cmd":    "cut_plant",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 				},
 			},
@@ -246,6 +253,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"cut": map[string]interface{}{
 						"cmd":    "cut_plant",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 				},
 			},
@@ -272,6 +280,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"harvest": map[string]interface{}{
 						"cmd":    "harvest_plant",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -295,6 +304,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"harvest": map[string]interface{}{
 						"cmd":    "harvest_plant",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -335,6 +345,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 				},
 			},
@@ -371,6 +382,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 				},
 			},
@@ -407,6 +419,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -447,6 +460,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -487,6 +501,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -527,6 +542,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"dig": map[string]interface{}{
 						"cmd":    "dig_surface",
@@ -571,6 +587,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -611,6 +628,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"catch_fish": map[string]interface{}{
 						"cmd":    "catch_fish",
@@ -655,6 +673,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -682,6 +701,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"burn": map[string]interface{}{
 						"cmd":    "burn",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"extinguish": map[string]interface{}{
 						"cmd":    "extinguish",
@@ -740,6 +760,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"open": map[string]interface{}{
 						"cmd":    "open_container",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -772,6 +793,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -797,6 +819,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"open": map[string]interface{}{
 						"cmd":    "open_container",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"lift": map[string]interface{}{
 						"cmd":    "lift",
@@ -830,6 +853,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"open": map[string]interface{}{
 						"cmd":    "open_container",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"lift": map[string]interface{}{
 						"cmd":    "lift",
@@ -863,6 +887,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"open": map[string]interface{}{
 						"cmd":    "open_container",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 				},
 			},
@@ -899,6 +924,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"select as target": map[string]interface{}{
 						"cmd":    "select_target",
 						"params": "self",
+						"default": true,
 					},
 					"deselect target": map[string]interface{}{
 						"cmd":    "deselect_target",
@@ -946,6 +972,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -982,6 +1009,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1025,6 +1053,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1086,6 +1115,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1111,6 +1141,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1138,6 +1169,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1163,6 +1195,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1190,6 +1223,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1217,6 +1251,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1242,6 +1277,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1267,6 +1303,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1292,6 +1329,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1317,6 +1355,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1342,6 +1381,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1367,6 +1407,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1392,6 +1433,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1417,6 +1459,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1444,6 +1487,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1469,6 +1513,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1494,6 +1539,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1519,6 +1565,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1544,6 +1591,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1569,6 +1617,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1610,6 +1659,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"pickup": map[string]interface{}{
 						"cmd":    "pickup_item",
 						"params": "self",
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_item",
@@ -1713,6 +1763,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"exit": map[string]interface{}{
 						"cmd":    "exit_dungeon",
 						"params": "self",
+						"default": true,
 					},
 				},
 			},
@@ -1766,6 +1817,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"open": map[string]interface{}{
 						"cmd":    "open_door",
 						"params": "self",
+						"default": true,
 					},
 					"close": map[string]interface{}{
 						"cmd":    "close_door",
@@ -1795,6 +1847,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"hatch": map[string]interface{}{
 						"cmd":    "hatch_fire_dragon",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_building",
@@ -1829,6 +1882,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"info": map[string]interface{}{
 						"cmd":    "get_item_info",
 						"params": "self", // self - id of current object
+						"default": true,
 					},
 					"destroy": map[string]interface{}{
 						"cmd":    "destroy_claim",
@@ -1905,6 +1959,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"select as target": map[string]interface{}{
 						"cmd":    "select_target",
 						"params": "self",
+						"default": true,
 					},
 					"deselect target": map[string]interface{}{
 						"cmd":    "deselect_target",
@@ -1972,6 +2027,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"select as target": map[string]interface{}{
 						"cmd":    "select_target",
 						"params": "self",
+						"default": true,
 					},
 					"deselect target": map[string]interface{}{
 						"cmd":    "deselect_target",
@@ -2028,6 +2084,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"select as target": map[string]interface{}{
 						"cmd":    "select_target",
 						"params": "self",
+						"default": true,
 					},
 					"deselect target": map[string]interface{}{
 						"cmd":    "deselect_target",
@@ -2074,6 +2131,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"select as target": map[string]interface{}{
 						"cmd":    "select_target",
 						"params": "self",
+						"default": true,
 					},
 					"deselect target": map[string]interface{}{
 						"cmd":    "deselect_target",
@@ -2144,6 +2202,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"trade": map[string]interface{}{
 						"cmd":    "get_npc_trade_info",
 						"params": "self",
+						"default": true,
 					},
 				},
 			},
@@ -2159,6 +2218,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"dungeons": map[string]interface{}{
 						"cmd":    "get_npc_dungeons_info",
 						"params": "self",
+						"default": true,
 					},
 				},
 			},
@@ -2182,6 +2242,7 @@ func GetObjectsAtlas() map[string]map[string]interface{} {
 					"exit": map[string]interface{}{
 						"cmd":    "teleport_to",
 						"params": "self",
+						"default": true,
 					},
 				},
 			},

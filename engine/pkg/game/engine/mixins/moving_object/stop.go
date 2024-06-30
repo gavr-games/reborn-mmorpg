@@ -9,6 +9,12 @@ func (mObj *MovingObject) Stop(e entity.IEngine) {
 	obj := mObj.gameObj
 	obj.SetProperty("speed_x", 0.0)
 	obj.SetProperty("speed_y", 0.0)
-	obj.SetMoveToCoords(nil)
+	moveTo := obj.MoveToCoords()
+	if moveTo != nil {
+		if (moveTo.Callback != nil) {
+			moveTo.Callback()
+		}
+		obj.SetMoveToCoords(nil)
+	}
 	e.SendGameObjectUpdate(obj, "update_object")
 }

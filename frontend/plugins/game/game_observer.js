@@ -13,6 +13,9 @@ import removeAlpha from '~/plugins/game/utils/remove_alpha'
 const NON_TRANSPARENT_OBJECT_TYPES = ['player', 'surface']
 const INTERRACTABLE_OBJECT_ALPHA = 0.8
 
+const LEFT_MOUSE_BUTTON = 0
+const RIGHT_MOUSE_BUTTON = 2
+
 class GameObserver {
   constructor () {
     this.canvas = null
@@ -111,7 +114,7 @@ class GameObserver {
       if (hit.pickedMesh) {
         if (hit.pickedMesh.id === 'xy-coords-plane') {
           const pickedPoint = hit.pickedPoint
-          if (scene.getNodeByName('select-coords-item') === null) {
+          if (scene.getNodeByName('select-coords-item') === null && e.button === LEFT_MOUSE_BUTTON) {
             EventBus.$emit('perform-game-action', {
               cmd: 'move_xy',
               params: {
@@ -123,11 +126,19 @@ class GameObserver {
         } else {
           const gameObject = getMeshRoot(hit.pickedMesh)
           if (gameObject) {
-            EventBus.$emit('game-object-clicked', {
-              game_object: gameObject.metadata.state.payload,
-              x: e.pageX,
-              y: e.pageY
-            })
+            if (e.button === LEFT_MOUSE_BUTTON) {
+              EventBus.$emit('game-object-clicked', {
+                game_object: gameObject.metadata.state.payload,
+                x: e.pageX,
+                y: e.pageY
+              })
+            } else if (e.button === RIGHT_MOUSE_BUTTON) {
+              EventBus.$emit('game-object-right-clicked', {
+                game_object: gameObject.metadata.state.payload,
+                x: e.pageX,
+                y: e.pageY
+              })
+            }
           }
         }
       }
