@@ -125,6 +125,7 @@ export default {
     },
     craftItem (itemKey, item) {
       if (item.place_in_real_world) {
+        this.showCraftPanel = false
         EventBus.$emit('select-coords-and-rotation', {
           item_key: itemKey,
           item,

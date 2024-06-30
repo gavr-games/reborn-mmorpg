@@ -19,8 +19,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
 - Improve path finding
 - improve ALL visuals (https://store.steampowered.com/app/1726130/Pathless_Woods/)
   - refactor UI
-  - delayed actions for pickup and others
-  - default actions - select target, pickup
+  - default actions - select target, pickup, open container
   - make craft in real world easier
   - add animations and effects
   - replace ugly models

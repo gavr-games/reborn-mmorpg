@@ -16,6 +16,9 @@ func (mObj *MovingObject) PerformMoveTo(e entity.IEngine, tickDelta int64) {
 		}
 		if mObj.needToStop() {
 			mObj.Stop(e)
+			if (moveTo.Callback != nil) {
+				moveTo.Callback()
+			}
 		}
 	}
 }

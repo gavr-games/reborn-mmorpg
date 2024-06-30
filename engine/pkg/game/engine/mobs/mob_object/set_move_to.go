@@ -1,8 +1,8 @@
 package mob_object
 
 import (
-	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/entity"
+	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
 )
 
 func (mob *MobObject) setMoveTo(directionChangeTime float64) {
@@ -17,6 +17,7 @@ func (mob *MobObject) setMoveTo(directionChangeTime float64) {
 			},
 			DirectionChangeTime: directionChangeTime,
 			TimeUntilDirectionChange: 0,
+			Callback: nil,
 		})
 	}
 }

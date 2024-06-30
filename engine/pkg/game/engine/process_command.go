@@ -62,13 +62,17 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "get_npc_trade_info":
 			if npcObj, npcOk := e.GameObjects().Load(params.(string)); npcOk {
-				e.SendResponse("npc_trade_info", serializers.GetInfo(e, npcObj), player)
+				charGameObj.SetMoveToCoordsByObject(npcObj, func() {
+					e.SendResponse("npc_trade_info", serializers.GetInfo(e, npcObj), player)
+				})
 			}
 		case "get_npc_dungeons_info":
 			if npcObj, npcOk := e.GameObjects().Load(params.(string)); npcOk {
-				if dungeonsInfo, diErr := npcObj.(entity.INpcObject).GetDungeonsInfo(e, charGameObj); diErr == nil {
-					e.SendResponse("dungeons_info", dungeonsInfo, player)
-				}
+				charGameObj.SetMoveToCoordsByObject(npcObj, func() {
+					if dungeonsInfo, diErr := npcObj.(entity.INpcObject).GetDungeonsInfo(e, charGameObj); diErr == nil {
+						e.SendResponse("dungeons_info", dungeonsInfo, player)
+					}
+				})
 			}
 		case "npc_buy_item":
 			if npcObj, npcOk := e.GameObjects().Load(params.(map[string]interface{})["npc_id"].(string)); npcOk {
@@ -89,10 +93,18 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "open_container":
 			if cont, contOk := e.GameObjects().Load(params.(string)); contOk {
 				container := cont.(entity.IContainerObject)
-				if container.CheckAccess(e, player) {
-					e.SendResponse("container_items", container.GetItems(e), player)
+				callback := func () {
+					if container.CheckAccess(e, player) {
+						e.SendResponse("container_items", container.GetItems(e), player)
+					} else {
+						e.SendSystemMessage("You don't have access to this container", player)
+					}
+				}
+				// Container in real world, not in character inventory
+				if visible := cont.GetProperty("visible"); visible != nil && visible.(bool) {
+					charGameObj.SetMoveToCoordsByObject(cont, callback) // go to container to open it
 				} else {
-					e.SendSystemMessage("You don't have access to this container", player)
+					callback() // try to open immediately
 				}
 			}
 		case "equip_item":
@@ -109,19 +121,27 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "pickup_item":
 			if item, itemOk := e.GameObjects().Load(params.(string)); itemOk {
-				item.(entity.IPickableObject).Pickup(e, player)
+				charGameObj.SetMoveToCoordsByObject(item, func() {
+					item.(entity.IPickableObject).Pickup(e, player)
+				})
 			}
 		case "destroy_item":
 			if item, itemOk := e.GameObjects().Load(params.(string)); itemOk {
-				item.(entity.IDestroyableObject).Destroy(e, player)
+				charGameObj.SetMoveToCoordsByObject(item, func() {
+					item.(entity.IDestroyableObject).Destroy(e, player)
+				})
 			}
 		case "destroy_building":
 			if building, buildingOk := e.GameObjects().Load(params.(string)); buildingOk {
-				building.(entity.IBuildingObject).Destroy(e, player)
+				charGameObj.SetMoveToCoordsByObject(building, func() {
+					building.(entity.IBuildingObject).Destroy(e, player)
+				})
 			}
 		case "destroy_claim":
 			if claim, claimOk := e.GameObjects().Load(params.(string)); claimOk {
-				claim.(entity.IClaimObeliskObject).Destroy(e, player)
+				charGameObj.SetMoveToCoordsByObject(claim, func() {
+					claim.(entity.IClaimObeliskObject).Destroy(e, player)
+				})
 			}
 		case "catch_fish":
 			if rod, rodOk := e.GameObjects().Load(params.(string)); rodOk {
@@ -134,11 +154,15 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "close_door":
 			if door, doorOk := e.GameObjects().Load(params.(string)); doorOk {
-				door.(entity.IDoorObject).Close(e, player)
+				charGameObj.SetMoveToCoordsByObject(door, func() {
+					door.(entity.IDoorObject).Close(e, player)
+				})
 			}
 		case "open_door":
 			if door, doorOk := e.GameObjects().Load(params.(string)); doorOk {
-				door.(entity.IDoorObject).Open(e, player)
+				charGameObj.SetMoveToCoordsByObject(door, func() {
+					door.(entity.IDoorObject).Open(e, player)
+				})
 			}
 		case "put_to_container":
 			if item, itemOk := e.GameObjects().Load(params.(map[string]interface{})["item_id"].(string)); itemOk {
@@ -150,7 +174,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "lift":
 			if item, itemOk := e.GameObjects().Load(params.(string)); itemOk {
-				charGameObj.SetMoveToCoordsByObject(item)
+				charGameObj.SetMoveToCoordsByObject(item, nil)
 				delayed_actions.Start(e, charGameObj, "Lift", map[string]interface{}{
 					"characterId": charGameObj.Id(),
 					"itemId":      item.Id(),
@@ -166,7 +190,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 				clone.SetX(x)
 				clone.SetY(y)
 				clone.Rotate(rotation)
-				charGameObj.SetMoveToCoordsByObject(clone)
+				charGameObj.SetMoveToCoordsByObject(clone, nil)
 				delayed_actions.Start(e, charGameObj, "PutLifted", map[string]interface{}{
 					"characterId": charGameObj.Id(),
 					"x":           x,
@@ -182,7 +206,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "chop_tree":
 			if tree, treeOk := e.GameObjects().Load(params.(string)); treeOk {
 				if tree.(entity.ITreeObject).CheckChop(e, charGameObj) {
-					charGameObj.SetMoveToCoordsByObject(tree)
+					charGameObj.SetMoveToCoordsByObject(tree, nil)
 					delayed_actions.Start(e, charGameObj, "Chop", map[string]interface{}{
 						"characterId": charGameObj.Id(),
 						"treeId":      tree.Id(),
@@ -192,7 +216,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "chip_rock":
 			if rock, rockOk := e.GameObjects().Load(params.(string)); rockOk {
 				if rock.(entity.IRockObject).CheckChip(e, charGameObj) {
-					charGameObj.SetMoveToCoordsByObject(rock)
+					charGameObj.SetMoveToCoordsByObject(rock, nil)
 					delayed_actions.Start(e, charGameObj, "Chip", map[string]interface{}{
 						"characterId": charGameObj.Id(),
 						"rockId":      rock.Id(),
@@ -202,7 +226,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "cut_plant":
 			if plant, plantOk := e.GameObjects().Load(params.(string)); plantOk {
 				if plant.(entity.IPlantObject).CheckCut(e, charGameObj) {
-					charGameObj.SetMoveToCoordsByObject(plant)
+					charGameObj.SetMoveToCoordsByObject(plant, nil)
 					delayed_actions.Start(e, charGameObj, "CutPlant", map[string]interface{}{
 						"characterId": charGameObj.Id(),
 						"plantId":     plant.Id(),
@@ -212,7 +236,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 		case "harvest_plant":
 			if plant, plantOk := e.GameObjects().Load(params.(string)); plantOk {
 				if plant.(entity.IPlantObject).CheckHarvest(e, charGameObj) {
-					charGameObj.SetMoveToCoordsByObject(plant)
+					charGameObj.SetMoveToCoordsByObject(plant, nil)
 					delayed_actions.Start(e, charGameObj, "HarvestPlant", map[string]interface{}{
 						"characterId": charGameObj.Id(),
 						"plantId":     plant.Id(),
@@ -239,12 +263,14 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "hatch_fire_dragon":
 			if hatchery, hatcheryOk := e.GameObjects().Load(params.(string)); hatcheryOk {
-				if hatchery.(entity.IHatcheryObject).CheckHatch(e, charGameObj) {
-					delayed_actions.Start(e, hatchery, "Hatch", map[string]interface{}{
-						"hatcheryId": hatchery.Id(),
-						"mobPath":    hatchery.GetProperty("hatch_mob"),
-					}, -1.0)
-				}
+				charGameObj.SetMoveToCoordsByObject(hatchery, func() {
+					if hatchery.(entity.IHatcheryObject).CheckHatch(e, charGameObj) {
+						delayed_actions.Start(e, hatchery, "Hatch", map[string]interface{}{
+							"hatcheryId": hatchery.Id(),
+							"mobPath":    hatchery.GetProperty("hatch_mob"),
+						}, -1.0)
+					}
+				})
 			}
 		case "town_teleport":
 			delayed_actions.Start(e, charGameObj, "TownTeleport", map[string]interface{}{
@@ -256,7 +282,9 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}, -1.0)
 		case "teleport_to":
 			if teleport, teleportOk := e.GameObjects().Load(params.(string)); teleportOk {
-				teleport.(entity.ITeleportObject).TeleportTo(e, charGameObj)
+        charGameObj.SetMoveToCoordsByObject(teleport, func() {
+				  teleport.(entity.ITeleportObject).TeleportTo(e, charGameObj)
+        })
 			}
 		case "follow":
 			mobId := params.(string)
@@ -283,7 +311,9 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			charGameObj.(entity.ICharacterObject).MeleeHit(e)
 		case "pay_rent":
 			if claim, claimOk := e.GameObjects().Load(params.(string)); claimOk {
-				claim.(entity.IClaimObeliskObject).ExtendRent(e)
+				charGameObj.SetMoveToCoordsByObject(claim, func() {
+					claim.(entity.IClaimObeliskObject).ExtendRent(e)
+				})
 			}
 		case "teleport_dragon_to_owner":
 			if dragon, dragonOk := e.GameObjects().Load(params.(string)); dragonOk {
@@ -299,27 +329,37 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "evolve":
 			if obj, objOk := e.GameObjects().Load(params.(string)); objOk {
-				obj.(entity.IEvolvableObject).Evolve(e, player)
+				charGameObj.SetMoveToCoordsByObject(obj, func() {
+					obj.(entity.IEvolvableObject).Evolve(e, player)
+				})
 			}
 		case "feed":
 			id := params.(map[string]interface{})["id"].(string)
 			foodId := params.(map[string]interface{})["food_id"].(string)
 			if obj, objOk := e.GameObjects().Load(id); objOk {
-				obj.(entity.IFeedableObject).Feed(e, foodId, player)
+				charGameObj.SetMoveToCoordsByObject(obj, func() {
+					obj.(entity.IFeedableObject).Feed(e, foodId, player)
+				})
 			}
 		case "add_fuel":
 			id := params.(map[string]interface{})["id"].(string)
 			fuelId := params.(map[string]interface{})["fuel_id"].(string)
 			if obj, objOk := e.GameObjects().Load(id); objOk {
-				obj.(entity.IBurningObject).AddFuel(e, fuelId, player)
+				charGameObj.SetMoveToCoordsByObject(obj, func() {
+					obj.(entity.IBurningObject).AddFuel(e, fuelId, player)
+				})
 			}
 		case "burn":
 			if burningObj, bOk := e.GameObjects().Load(params.(string)); bOk {
-				burningObj.(entity.IBurningObject).Burn(e, player)
+				charGameObj.SetMoveToCoordsByObject(burningObj, func() {
+					burningObj.(entity.IBurningObject).Burn(e, player)
+				})
 			}
 		case "extinguish":
 			if burningObj, bOk := e.GameObjects().Load(params.(string)); bOk {
-				burningObj.(entity.IBurningObject).Extinguish(e, player)
+				charGameObj.SetMoveToCoordsByObject(burningObj, func() {
+					burningObj.(entity.IBurningObject).Extinguish(e, player)
+				})
 			}
 		case "gm_create_object":
 			gm.CreateObject(e, charGameObj, params.(map[string]interface{}))

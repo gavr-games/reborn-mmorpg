@@ -153,6 +153,9 @@ class Character {
   }
 
   updateFromEngine () {
+    if (!this.mesh) {
+      return
+    }
     this.dst = null
     // Character stopped, but we have difference in positions between engine and client
     if (this.state.speed_x === 0 && this.state.speed_y === 0 && (this.mesh.position.x !== this.state.x || this.mesh.position.y !== this.state.y)) {

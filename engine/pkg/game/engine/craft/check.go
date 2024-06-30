@@ -172,7 +172,7 @@ func Check(e entity.IEngine, player *entity.Player, params map[string]interface{
 				return false
 			} else {
 				// move to object to craft it
-				charGameObj.SetMoveToCoordsByObject(tempGameObj)
+				charGameObj.SetMoveToCoordsByObject(tempGameObj, nil)
 			}
 		}
 	}

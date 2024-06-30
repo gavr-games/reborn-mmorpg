@@ -16,4 +16,5 @@ type MoveToCoords struct {
 	Bounds utils.Bounds
 	DirectionChangeTime float64 // how often to change movement direction
 	TimeUntilDirectionChange float64 // how much time left until next direction change
+	Callback func() // execute some code, when moveTo iis finished
 }

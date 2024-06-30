@@ -4,6 +4,8 @@ import Atlas from '~/plugins/game/atlas/atlas'
 import GameObserver from '~/plugins/game/game_observer'
 import addAlpha from '~/plugins/game/utils/add_alpha'
 
+const ALPHA = 0.8
+
 class SelectCoordsObserver {
   constructor () {
     this.scene = null
@@ -36,7 +38,7 @@ class SelectCoordsObserver {
     mesh.doNotSyncBoundingInfo = true
     mesh.isPickable = false
     this.mesh = mesh
-    addAlpha(this.mesh, this.scene, 0.7)
+    addAlpha(this.mesh, this.scene, ALPHA)
     GameObserver.grid.create()
   }
 

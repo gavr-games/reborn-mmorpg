@@ -2,10 +2,11 @@ package entity
 
 import (
 	"encoding/json"
-	"go.uber.org/atomic"
 	"math"
 	"reflect"
 	"sync"
+
+	"go.uber.org/atomic"
 
 	"github.com/gavr-games/reborn-mmorpg/pkg/game/constants"
 	"github.com/gavr-games/reborn-mmorpg/pkg/utils"
@@ -38,7 +39,7 @@ type IGameObject interface {
 	SetCurrentAction(currentAction *DelayedAction)
 	MoveToCoords() *MoveToCoords
 	SetMoveToCoords(moveToCoords *MoveToCoords)
-	SetMoveToCoordsByObject(moveToObj IGameObject)
+	SetMoveToCoordsByObject(moveToObj IGameObject, callback func())
 	SetMoveToCoordsByXY(x float64, y float64)
 	Properties() map[string]interface{}
 	SetProperties(properties map[string]interface{})
@@ -273,7 +274,7 @@ func (obj *GameObject) SetMoveToCoords(moveToCoords *MoveToCoords) {
 	obj.moveToCoords.Store(moveToCoords)
 }
 
-func (obj *GameObject) SetMoveToCoordsByObject(moveToObj IGameObject) {
+func (obj *GameObject) SetMoveToCoordsByObject(moveToObj IGameObject, callback func()) {
 	obj.SetMoveToCoords(&MoveToCoords{
 		Mode: MoveCloseToBounds,
 		Bounds: utils.Bounds{
@@ -284,6 +285,7 @@ func (obj *GameObject) SetMoveToCoordsByObject(moveToObj IGameObject) {
 		},
 		DirectionChangeTime:      constants.MoveToDefaultDirectionChangeTime,
 		TimeUntilDirectionChange: 0,
+		Callback: callback,
 	})
 }
 
@@ -298,6 +300,7 @@ func (obj *GameObject) SetMoveToCoordsByXY(x float64, y float64) {
 		},
 		DirectionChangeTime:      constants.MoveToDefaultDirectionChangeTime,
 		TimeUntilDirectionChange: 0,
+		Callback: nil,
 	})
 }
 
