@@ -40,7 +40,7 @@ type IGameObject interface {
 	MoveToCoords() *MoveToCoords
 	SetMoveToCoords(moveToCoords *MoveToCoords)
 	SetMoveToCoordsByObject(moveToObj IGameObject, callback func())
-	SetMoveToCoordsByXY(x float64, y float64)
+	SetMoveToCoordsByXY(x float64, y float64, callback func())
 	Properties() map[string]interface{}
 	SetProperties(properties map[string]interface{})
 	GetProperty(key string) interface{}
@@ -289,7 +289,7 @@ func (obj *GameObject) SetMoveToCoordsByObject(moveToObj IGameObject, callback f
 	})
 }
 
-func (obj *GameObject) SetMoveToCoordsByXY(x float64, y float64) {
+func (obj *GameObject) SetMoveToCoordsByXY(x float64, y float64, callback func()) {
 	obj.SetMoveToCoords(&MoveToCoords{
 		Mode: MoveToExactCoords,
 		Bounds: utils.Bounds{
@@ -300,7 +300,7 @@ func (obj *GameObject) SetMoveToCoordsByXY(x float64, y float64) {
 		},
 		DirectionChangeTime:      constants.MoveToDefaultDirectionChangeTime,
 		TimeUntilDirectionChange: 0,
-		Callback: nil,
+		Callback: callback,
 	})
 }
 

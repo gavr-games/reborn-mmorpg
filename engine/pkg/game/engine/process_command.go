@@ -52,7 +52,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			"move_north_east", "move_north_west", "move_south_east", "move_south_west":
 			charGameObj.(entity.IMovingObject).SetXYSpeeds(e, cmd.(string))
 		case "move_xy":
-			charGameObj.SetMoveToCoordsByXY(params.(map[string]interface{})["x"].(float64), params.(map[string]interface{})["y"].(float64))
+			charGameObj.SetMoveToCoordsByXY(params.(map[string]interface{})["x"].(float64), params.(map[string]interface{})["y"].(float64), nil)
 		case "get_character_info":
 			e.SendResponse("character_info", serializers.GetInfo(e, charGameObj), player)
 		case "get_item_info":
@@ -121,7 +121,7 @@ func ProcessCommand(e entity.IEngine, characterId int, command map[string]interf
 			}
 		case "pickup_item":
 			if item, itemOk := e.GameObjects().Load(params.(string)); itemOk {
-				charGameObj.SetMoveToCoordsByObject(item, func() {
+				charGameObj.SetMoveToCoordsByXY(item.X() + item.Width() / 2.0, item.Y() + item.Height() / 2.0, func() {
 					item.(entity.IPickableObject).Pickup(e, player)
 				})
 			}

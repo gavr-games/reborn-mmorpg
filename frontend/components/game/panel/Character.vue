@@ -1,14 +1,14 @@
 <template>
   <GameDraggablePanel :panelId="'character'">
     <div v-if="showCharacterInfoPanel" id="character-info-panel" class="game-panel">
-      <GameCloseIcon :close-callback="close" />
-      <div class="game-panel-content">
-        <h4>Character</h4>
-        <div v-for="(slotItem, slotKey) in characterInfo.slots" :key="slotKey">
-          <span>{{ slotKey }}:</span>
-          <span v-if="slotItem">
-            <GameItem v-bind:item="slotItem" />
-          </span>
+      <div id="character">
+        <GameCloseIcon :close-callback="close" />
+        <div class="game-panel-content">
+          <div v-for="(slotItem, slotKey) in characterInfo.slots" :id="slotKey" :key="slotKey" class="slot" :title="slotKey">
+            <span v-if="slotItem">
+              <GameItem v-bind:item="slotItem" />
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -66,5 +66,34 @@ export default {
 
 <style lang="scss">
 #character-info-panel {
+  #character {
+    width: 140px;
+    height: 314px;
+    background-image: url("~assets/img/character-bg.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    .slot {
+      width: 32px;
+      height: 32px;
+      border: 1px solid white;
+      position: absolute;
+    }
+    #back {
+      left: 126px;
+      top: 48px;
+    }
+    #body {
+      left: 76px;
+      top: 108px;
+    }
+    #left_arm {
+      left: 124px;
+      top: 198px;
+    }
+    #right_arm {
+      left: 24px;
+      top: 198px;
+    }
+  }
 }
 </style>
