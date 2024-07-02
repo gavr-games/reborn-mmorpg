@@ -28,6 +28,7 @@ Later proceed to `pkg/game/engine/process_command.go` for possible actions in th
     - normal walls
 
 ## TODO
+- BUG: sometimes game area is changed during visionupdater and we can see monster in town
 - BUG: dungeon keeper not available after coming back from dungeon
 - BUG: deselect target, when killed by dragons
 - BUG: monster ghosts stay after death

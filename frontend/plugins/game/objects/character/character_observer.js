@@ -15,6 +15,7 @@ const ALLOWED_POSITION_DELTA = 0.1 // sync stoped object position between engine
 class Character {
   constructor (state, myCharacterId) {
     this.myCharacterId = myCharacterId
+    this.myCharacter = false
     this.scene = null
     this.canvas = null
     this.state = state
@@ -78,11 +79,14 @@ class Character {
       }
     }
     // character of the logged in player
-    if (this.state.player_id === this.myCharacterId && this.camera === null) {
+    if (this.state.player_id === this.myCharacterId) {
+      this.myCharacter = true
+    }
+    if (this.myCharacter && this.camera === null) {
       this.camera = new Camera(this.scene, this.canvas, this)
       this.camera.create()
     }
-    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
+    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh, this.scene)
     this.nickname = new Nickname(this.state.name, this.scene)
     this.updateAdditionalObjects()
     if (addRenderObserver) {
@@ -147,7 +151,7 @@ class Character {
       this.targetHighlight.update(this.mesh.position)
     }
     // character of the logged in player
-    if (this.state.player_id === this.myCharacterId) {
+    if (this.myCharacter) {
       this.camera.update(this.mesh.position)
     }
   }
@@ -174,7 +178,7 @@ class Character {
     EventBus.$off('start_delayed_action', this.startActionCallback)
     EventBus.$off('cancel_delayed_action', this.cancelActionCallback)
     EventBus.$off('finish_delayed_action', this.cancelActionCallback)
-    if (this.state.player_id === this.myCharacterId && this.camera !== null) {
+    if (this.myCharacter && this.camera !== null) {
       this.camera.remove()
       this.camera = null
     }
@@ -210,7 +214,7 @@ class Character {
     this.meshRotation = Math.PI / 2
     this.removeMesh()
     this.create(false)
-    if (this.state.player_id === this.myCharacterId && this.camera !== null) {
+    if (this.myCharacter && this.camera !== null) {
       this.camera.updateLockedTarget(this.mesh)
     }
   }

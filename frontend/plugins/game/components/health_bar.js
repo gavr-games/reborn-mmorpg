@@ -5,16 +5,17 @@ const HealthBarHeight = 0.2
 const HealthBarAlpha = 0.6
 
 class HealthBar {
-  constructor (value, maxValue, pos, scene) {
+  constructor (value, maxValue, mesh, scene) {
     this.scene = scene
     this.value = value
     this.maxValue = maxValue
+    const pos = mesh.position
 
     // draw healthbar plane
     this.plane = BABYLON.MeshBuilder.CreatePlane('healthbar-plane', { height: HealthBarHeight, width: HealthBarWidth }, scene)
     this.plane.position.x = pos.x
     this.plane.position.z = pos.z
-    this.plane.position.y = 0.1
+    this.plane.position.y = mesh.getHierarchyBoundingVectors().max.y + HealthBarHeight * 2
     this.plane.material = new BABYLON.StandardMaterial('HealthBarMaterial', scene)
     this.plane.material.diffuseColor.set(1, 0, 0)
     this.plane.material.alpha = HealthBarAlpha

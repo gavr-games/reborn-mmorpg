@@ -88,6 +88,19 @@ func GenerateTown(e entity.IEngine) {
 			gaMap.Cells <- &world_maps.WorldCell{X: TownSize / 2.0 + 1.0, Y: y, SurfaceKind: "surface/stone_road"}
 		}
 	}
+	// Create grass
+	for x := 1.0; x < TownSize - 2.0; x++ {
+		e.CreateGameObject("surface/grass", x, 1.0, 0.0, townId, nil)
+		e.CreateGameObject("surface/grass", x, TownSize - 2.0, 0.0, townId, nil)
+		gaMap.Cells <- &world_maps.WorldCell{X: x, Y: 1.0, SurfaceKind: "surface/grass"}
+		gaMap.Cells <- &world_maps.WorldCell{X: x, Y: TownSize - 2.0, SurfaceKind: "surface/grass"}
+	}
+	for y := 1.0; y < TownSize - 2.0; y++ {
+		e.CreateGameObject("surface/grass", 1.0, y, 0.0, townId, nil)
+		e.CreateGameObject("surface/grass", TownSize - 2.0, y, 0.0, townId, nil)
+		gaMap.Cells <- &world_maps.WorldCell{X: 1.0, Y: y, SurfaceKind: "surface/grass"}
+		gaMap.Cells <- &world_maps.WorldCell{X: TownSize - 2.0, Y: 0.0, SurfaceKind: "surface/grass"}
+	}
 
 	// Create town floor
 	for x := WallSize; x < TownSize / 2.0; x++ {

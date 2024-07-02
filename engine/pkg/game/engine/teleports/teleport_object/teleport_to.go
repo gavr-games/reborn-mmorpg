@@ -82,7 +82,7 @@ func (teleport *TeleportObject) TeleportTo(e entity.IEngine, charGameObj entity.
 		charGameObj.(entity.ICharacterObject).Move(e, x, y, area.Id())
 		e.SendGameObjectUpdate(charGameObj, "update_object")
 
-		e.SendSystemMessage("You has been teleported.", player)
+		e.SendSystemMessage("You have been teleported.", player)
 		return true, nil
 	} else {
 		return false, errors.New("player not found")

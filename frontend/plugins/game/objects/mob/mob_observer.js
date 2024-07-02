@@ -54,7 +54,7 @@ class MobObserver {
     mesh.setEnabled(true)
     mesh.doNotSyncBoundingInfo = true
     this.mesh = mesh
-    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh.position, this.scene)
+    this.healthbar = new HealthBar(this.state.health, this.state.max_health, this.mesh, this.scene)
     this.updatePosition()
     GameObserver.addRenderObserver(`mob-${this.state.id}`, this)
   }

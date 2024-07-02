@@ -1,4 +1,6 @@
 import * as BABYLON from 'babylonjs'
+import { FurMaterial, WaterMaterial } from 'babylonjs-materials'
+import GameObserver from '~/plugins/game/game_observer'
 import freezeMaterials from '~/plugins/game/utils/freeze_materials'
 
 /**
@@ -158,8 +160,39 @@ class Loader {
         surface + '.glb'
       )
       task.onSuccess = (task) => {
-        // This should be changed if surface models of aother structure are imported
-        this.atlas.set(surface + 'Surface', this.taskToMesh(task))
+        let mesh = this.taskToMesh(task)
+        if (surface === 'grass') {
+          // Ground template
+          const groundMaterial = new FurMaterial('grass-material', this.scene)
+          groundMaterial.highLevelFur = false
+          groundMaterial.furLength = 0.3 // Represents the maximum length of the fur, which is then adjusted randomly. Default value is 1.
+          groundMaterial.furAngle = 0 // Represents the angle the fur lies on the mesh from 0 to Math.PI/2. The default angle of 0 gives fur sticking straight up and PI/2 lies along the mesh.
+          groundMaterial.furColor = new BABYLON.Color3(0.02, 0.61, 0.46)
+          const ground = BABYLON.MeshBuilder.CreateGround('ground', { height: 1, width: 1, subdivisions: 50 }, this.scene)
+          ground.position.y = 0
+          ground.material = groundMaterial
+          ground.position.x = -100
+          ground.position.z = -100
+          ground.doNotSyncBoundingInfo = true
+          ground.isPickable = false
+          ground.freezeWorldMatrix()
+          ground.material.freeze()
+          mesh = ground
+        }
+        if (surface === 'water') {
+          const water = new WaterMaterial('water', this.scene, new BABYLON.Vector2(512, 512))
+          water.backFaceCulling = true
+          water.bumpTexture = new BABYLON.Texture('/game_assets/textures/waterbump.png', this.scene)
+          water.windForce = 0
+          water.waveHeight = 0.0
+          water.bumpHeight = 0.05
+          water.windDirection = new BABYLON.Vector2(1, 1)
+          water.waterColor = new BABYLON.Color3(0, 0, 221 / 255)
+          water.colorBlendFactor = 0.0
+          water.addToRenderList(GameObserver.light.skybox)
+          mesh.material = water
+        }
+        this.atlas.set(surface + 'Surface', mesh)
       }
     })
   }

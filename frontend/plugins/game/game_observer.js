@@ -60,11 +60,11 @@ class GameObserver {
 
     // this.scene.performancePriority = BABYLON.ScenePerformancePriority.Aggressive
     this.scene.clearColor = BABYLON.Color3.FromInts(66, 245, 102) // default grass color for world
+    this.createObjects()
 
     this.loader = new Loader(
       this.scene,
       () => {
-        this.createObjects()
         this.runRenderLoop()
         this.scene.registerBeforeRender(() => {
           this.castAlphaRay()
