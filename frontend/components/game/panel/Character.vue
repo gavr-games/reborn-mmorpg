@@ -4,7 +4,7 @@
       <div id="character">
         <GameCloseIcon :close-callback="close" />
         <div class="game-panel-content">
-          <div v-for="(slotItem, slotKey) in characterInfo.slots" :id="slotKey" :key="slotKey" class="slot" :title="slotKey">
+          <div v-for="(slotItem, slotKey) in characterInfo.slots" :id="slotKey" :key="slotKey" class="slot" :title="slotKey" @dragover="allowDrag" @drop="onDrop">
             <span v-if="slotItem">
               <GameItem v-bind:item="slotItem" />
             </span>
@@ -55,6 +55,17 @@ export default {
       if (this.characterInfo.id === data.character_id) {
         this.characterInfo.slots[data.slot] = null
       }
+    },
+    onDrop (evt) {
+      evt.stopPropagation()
+      const itemID = evt.dataTransfer.getData('item_id')
+      EventBus.$emit('perform-game-action', {
+        cmd: 'equip_item',
+        params: itemID
+      })
+    },
+    allowDrag (evt) {
+      evt.preventDefault()
     },
     close () {
       this.showCharacterInfoPanel = false
