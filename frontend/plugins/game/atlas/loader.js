@@ -163,21 +163,21 @@ class Loader {
         let mesh = this.taskToMesh(task)
         if (surface === 'grass') {
           // Ground template
-          const groundMaterial = new FurMaterial('grass-material', this.scene)
-          groundMaterial.highLevelFur = false
-          groundMaterial.furLength = 0.3 // Represents the maximum length of the fur, which is then adjusted randomly. Default value is 1.
-          groundMaterial.furAngle = 0 // Represents the angle the fur lies on the mesh from 0 to Math.PI/2. The default angle of 0 gives fur sticking straight up and PI/2 lies along the mesh.
-          groundMaterial.furColor = new BABYLON.Color3(0.02, 0.61, 0.46)
-          const ground = BABYLON.MeshBuilder.CreateGround('ground', { height: 1, width: 1, subdivisions: 50 }, this.scene)
-          ground.position.y = 0
-          ground.material = groundMaterial
-          ground.position.x = -100
-          ground.position.z = -100
-          ground.doNotSyncBoundingInfo = true
-          ground.isPickable = false
-          ground.freezeWorldMatrix()
-          ground.material.freeze()
-          mesh = ground
+          const grassMaterial = new FurMaterial('grass-material', this.scene)
+          grassMaterial.highLevelFur = false
+          grassMaterial.furLength = 0.3 // Represents the maximum length of the fur, which is then adjusted randomly. Default value is 1.
+          grassMaterial.furAngle = 0 // Represents the angle the fur lies on the mesh from 0 to Math.PI/2. The default angle of 0 gives fur sticking straight up and PI/2 lies along the mesh.
+          grassMaterial.furColor = new BABYLON.Color3(0.02, 0.61, 0.46)
+          const grass = BABYLON.MeshBuilder.CreateGround('grass', { height: 1, width: 1, subdivisions: 50 }, this.scene)
+          grass.position.y = 0
+          grass.material = grassMaterial
+          grass.position.x = -100
+          grass.position.z = -100
+          grass.doNotSyncBoundingInfo = true
+          grass.isPickable = false
+          grass.freezeWorldMatrix()
+          grass.material.freeze()
+          mesh = grass
         }
         if (surface === 'water') {
           const water = new WaterMaterial('water', this.scene, new BABYLON.Vector2(512, 512))
